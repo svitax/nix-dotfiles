@@ -8,5 +8,8 @@
     extraConfig = {
       init.defaultBranch = "master";
     };
+    delta = {
+    	enable = true;
+    };
   };
 }
