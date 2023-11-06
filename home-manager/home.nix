@@ -14,7 +14,6 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
-
     ./fish.nix
     ./git.nix
   ];
@@ -35,7 +34,7 @@
 
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
-  # home.packages = with pkgs; [ steam ];
+  home.packages = with pkgs; [ neovim ];
 
   # Enable home-manager
   programs.home-manager.enable = true;
