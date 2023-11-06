@@ -16,6 +16,7 @@
     # ./nvim.nix
 
     ./fish.nix
+    ./git.nix
   ];
 
   nixpkgs = {
