@@ -9,7 +9,7 @@
       init.defaultBranch = "master";
     };
     delta = {
-    	enable = true;
+      enable = true;
     };
   };
 }

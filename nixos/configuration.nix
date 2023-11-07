@@ -121,12 +121,12 @@
   };
 
   programs.fish = {
-  	enable = true;
-	vendor = {
-		completions.enable = true;
-		config.enable = true;
-		functions.enable = true;
-	};
+    enable = true;
+    vendor = {
+      completions.enable = true;
+      config.enable = true;
+      functions.enable = true;
+    };
   };
 
   # List packages installed in system profile. To search, run:
