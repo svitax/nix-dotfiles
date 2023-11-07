@@ -17,6 +17,7 @@
     ./fish.nix
     ./git.nix
     ./starship.nix
+    ./kitty.nix
     ./fonts.nix
   ];
 
