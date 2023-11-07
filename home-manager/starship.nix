@@ -1,13 +1,10 @@
 { pkgs, lib, ... }:
 
-with lib;
-with builtins;
-
 let
   promptOrder = [ "shell" "nix_shell" "username" "hostname" "directory" "character" ];
   rightPromptOrder = [ "aws" "docker_context" "python" "nodejs" "lua" "golang" "rust" "cmd_duration " "jobs" ];
-  promptFormat = concatStrings (map (s: "\$${s}") promptOrder);
-  rightPromptFormat = concatStrings (map (s: "\$${s}") rightPromptOrder);
+  promptFormat = lib.concatStrings (map (s: "\$${s}") promptOrder);
+  rightPromptFormat = lib.concatStrings (map (s: "\$${s}") rightPromptOrder);
 in
 {
   programs.starship = {
