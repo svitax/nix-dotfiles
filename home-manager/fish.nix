@@ -4,7 +4,7 @@
     enable = true;
     shellAbbrs = {
       nixrs = "sudo nixos-rebuild --flake . switch";
-      hms = "home-manager --flake . switch";
+      nv = "nvim";
       vim = "nvim";
       vi = "nvim";
       v = "nvim";
