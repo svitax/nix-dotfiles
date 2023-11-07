@@ -111,12 +111,22 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.svitax = {
     isNormalUser = true;
+    shell = pkgs.fish;
     description = "svitax";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       firefox
       #  thunderbird
     ];
+  };
+
+  programs.fish = {
+  	enable = true;
+	vendor = {
+		completions.enable = true;
+		config.enable = true;
+		functions.enable = true;
+	};
   };
 
   # List packages installed in system profile. To search, run:
