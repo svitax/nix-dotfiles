@@ -17,6 +17,7 @@
     ./fish.nix
     ./git.nix
     ./starship.nix
+    ./fonts.nix
   ];
 
   nixpkgs = {
