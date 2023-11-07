@@ -3,7 +3,7 @@
   programs.fish = {
     enable = true;
     shellAbbrs = {
-      nixrs = "nixos-rebuild --flake . switch";
+      nixrs = "sudo nixos-rebuild --flake . switch";
       hms = "home-manager --flake . switch";
       vim = "nvim";
       vi = "nvim";
