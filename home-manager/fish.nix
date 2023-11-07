@@ -15,6 +15,10 @@
     	# Clear screen and scrollback
 	clear = "printf '\\033[2J\\033[3J\\033[1;1H'";
     };
+    functions = {
+    	# Disable greeting
+	fish_greeting = "";
+    };
 	'';
     plugins = [
     	# Enable a plugin from nixpkgs
