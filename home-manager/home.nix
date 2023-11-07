@@ -34,7 +34,10 @@
 
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
-  home.packages = with pkgs; [ neovim ];
+  home.packages = with pkgs; [ 
+  	neovim 
+	lazygit
+  ];
 
   # Enable home-manager
   programs.home-manager.enable = true;
