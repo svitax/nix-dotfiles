@@ -41,6 +41,7 @@
     neovim
     lazygit
     nix-prefetch-github # prefetch sources from github for nix build tool
+    exa
   ];
 
   # Enable home-manager
