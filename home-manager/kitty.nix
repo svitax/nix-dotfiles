@@ -1,4 +1,8 @@
-{pkgs, config, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   home.file.".config/kitty/pager.sh".source = ./pager.sh;
   programs.kitty = {
     enable = true;
