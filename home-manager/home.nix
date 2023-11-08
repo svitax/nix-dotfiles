@@ -40,6 +40,7 @@
   home.packages = with pkgs; [
     neovim
     lazygit
+    nix-prefetch-github # prefetch sources from github for nix build tool
   ];
 
   # Enable home-manager

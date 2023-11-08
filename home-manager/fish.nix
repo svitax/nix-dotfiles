@@ -28,6 +28,19 @@
     plugins = [
       # Enable a plugin from nixpkgs
       { name = "autopair"; src = pkgs.fishPlugins.autopair.src; }
+      { name = "sponge"; src = pkgs.fishPlugins.sponge.src; }
+      { name = "puffer"; src = pkgs.fishPlugins.puffer.src; }
+      { name = "colored_man_pages"; src = pkgs.fishPlugins.colored-man-pages.src; }
+      # nix-prefetch-github (for rev and hash)
+      # {
+      #   name = "colored_man_pages";
+      #   src = pkgs.fetchFromGitHub {
+      #     owner = "PatrickF1";
+      #     repo = "colored_man_pages.fish";
+      #     rev = "f885c2507128b70d6c41b043070a8f399988bc7a";
+      #     sha256 = "ii9gdBPlC1/P1N9xJzqomrkyDqIdTg+iCg0mwNVq2EU=";
+      #   };
+      # }
     ];
   };
 }
