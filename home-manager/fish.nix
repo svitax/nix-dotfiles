@@ -2,9 +2,9 @@
   programs.fish = {
     enable = true;
     shellAbbrs = {
-      lla = "exa --no-user --header --group-directories-first --icons --all --binary --long --git";
-      llg = "exa --no-user --header --group-directories-first --icons --all --binary --long --git --git-ignore";
-      llt = "exa --no-user --header --group-directories-first --icons --tree --level 2";
+      lla = "eza --no-user --header --group-directories-first --icons --all --binary --long --git";
+      llg = "eza --no-user --header --group-directories-first --icons --all --binary --long --git --git-ignore";
+      llt = "eza --no-user --header --group-directories-first --icons --tree --level 2";
       nixrs = "sudo nixos-rebuild --flake . switch";
       nv = "nvim";
       vim = "nvim";
