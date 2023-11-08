@@ -16,6 +16,7 @@
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
+    ./chromium.nix
     ./fish.nix
     ./git.nix
     ./starship.nix
