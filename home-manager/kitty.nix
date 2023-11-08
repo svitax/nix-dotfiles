@@ -8,6 +8,8 @@
       size = 16;
     };
     settings = {
+      scrollback_lines = 10000;
+      tab_bar_style = "hidden";
       scrollback_pager = "~/.config/kitty/pager.sh";
     };
   };
