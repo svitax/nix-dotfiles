@@ -22,6 +22,7 @@
     ./git.nix
     ./kitty.nix
     ./starship.nix
+    ./yazi.nix
   ];
 
   colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
