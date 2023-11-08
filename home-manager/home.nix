@@ -18,10 +18,10 @@
     # ./nvim.nix
     ./chromium.nix
     ./fish.nix
-    ./git.nix
-    ./starship.nix
-    ./kitty.nix
     ./fonts.nix
+    ./git.nix
+    ./kitty.nix
+    ./starship.nix
   ];
 
   colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
