@@ -33,6 +33,8 @@
         config.allowUnfree = true;
       });
   in {
+    # Formatter for your nix files, available through 'nix fmt'
+    # Other options beside 'alejandra' include 'nixpkgs-fmt'
     formatter = forEachSystem (pkgs: pkgs.alejandra);
 
     # NixOS configuration entrypoint
