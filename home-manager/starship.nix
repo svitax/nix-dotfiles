@@ -1,12 +1,13 @@
-{ pkgs, lib, ... }:
-
-let
-  promptOrder = [ "shell" "nix_shell" "username" "hostname" "directory" "character" ];
-  rightPromptOrder = [ "aws" "docker_context" "python" "nodejs" "lua" "golang" "rust" "cmd_duration " "jobs" ];
+{
+  pkgs,
+  lib,
+  ...
+}: let
+  promptOrder = ["shell" "nix_shell" "username" "hostname" "directory" "character"];
+  rightPromptOrder = ["aws" "docker_context" "python" "nodejs" "lua" "golang" "rust" "cmd_duration " "jobs"];
   promptFormat = lib.concatStrings (map (s: "\$${s}") promptOrder);
   rightPromptFormat = lib.concatStrings (map (s: "\$${s}") rightPromptOrder);
-in
-{
+in {
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
@@ -82,7 +83,7 @@ in
         symbol = " ";
         format = "[$symbol($virtualenv )]($style) ";
         style = "bright-black";
-        python_binary = [ "./venv/bin/python" "python" "python3" "python2" ];
+        python_binary = ["./venv/bin/python" "python" "python3" "python2"];
       };
       rust = {
         symbol = " ";
