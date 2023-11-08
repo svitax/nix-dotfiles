@@ -11,6 +11,7 @@
       vim = "nvim";
       vi = "nvim";
       v = "nvim";
+      cl = "clear";
     };
     shellAliases = {
       # Clear screen and scrollback
