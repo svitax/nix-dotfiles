@@ -12,6 +12,7 @@
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
+    inputs.nix-colors.homeManagerModules.default
 
     # You can also split up your configuration and import pieces of it here:
     # ./nvim.nix
@@ -21,6 +22,8 @@
     ./kitty.nix
     ./fonts.nix
   ];
+
+  colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
 
   nixpkgs = {
     # You can add overlays here

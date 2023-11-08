@@ -16,9 +16,8 @@
     };
 
     # TODO: Add any other flake you might need
+    nix-colors.url = "github:misterio77/nix-colors";
     # hardware.url = "github:nixos/nixos-hardware";
-
-    # nix-colors.url = "github:misterio77/nix-colors";
   };
 
   outputs = {
