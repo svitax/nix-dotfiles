@@ -16,6 +16,7 @@
       };
     };
     theme = {
+      manager.syntect_theme = "~/.config/bat/themes/gruvbox-dark-hard.tmTheme";
       status = {
         separator_open = "";
         separator_close = "";
