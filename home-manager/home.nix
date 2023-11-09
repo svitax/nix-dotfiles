@@ -24,6 +24,7 @@
     ./starship.nix
     ./yazi.nix
     ./zellij.nix
+    ./zoxide.nix
   ];
 
   colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
@@ -56,6 +57,7 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
+    fzf
     lazygit
     nix-prefetch-github # prefetch sources from github for nix build tool
     unstable.eza
