@@ -13,6 +13,7 @@
       cl = "clear";
       use = "nix-shell --command fish -p";
       zj = "zellij";
+      dot = "cd ~/nix-dotfiles";
       ya = "yazi";
     };
     shellAliases = {
