@@ -20,4 +20,9 @@
       config.allowUnfree = true;
     };
   };
+
+  # zjstatus zellij statusbar plugin
+  zjstatus = final: prev: {
+    zjstatus = inputs.zjstatus.packages.${prev.system}.default;
+  };
 }

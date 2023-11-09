@@ -23,6 +23,7 @@
     ./neovim.nix
     ./starship.nix
     ./yazi.nix
+    ./zellij.nix
   ];
 
   colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
@@ -34,6 +35,7 @@
       # outputs.overlays.additions
       # outputs.overlays.modifications
       outputs.overlays.unstable-packages
+      outputs.overlays.zjstatus
 
       # You can also add overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
@@ -58,6 +60,9 @@
     nix-prefetch-github # prefetch sources from github for nix build tool
     unstable.eza
     ghq
+    # rust
+    rustup
+    gcc
   ];
 
   # Enable home-manager

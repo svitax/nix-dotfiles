@@ -1,0 +1,66 @@
+{
+  pkgs,
+  config,
+  ...
+}: {
+  home.file.".config/zellij/layouts/default.kdl".text = ''
+    layout {
+         	pane
+         	pane size=1 borderless=true {
+         		plugin location="file:${pkgs.zjstatus}/bin/zjstatus.wasm" {
+    	format_left "{mode} #[fg=#89B4FA,bold]{session} {tabs}"
+    	format_right "{command_git_branch}"
+    	format_space ""
+
+    	border_enabled "false"
+    	border_char "-"
+    	border_format "#[fg=#6C7086]{char}"
+    	border_position "top"
+
+    	hide_frame_for_single_pane "true"
+
+    	mode_normal "#[bg=blue] "
+    	mode_tmux "#[bg=#ffc387] "
+
+    	tab_normal "#[fg=#6C7086] {name} "
+    	tab_active "#[fg=#9399B2,bold,italic] {name} "
+
+    	// {command_NAME} needs zellij 0.39.0 or newer
+    	command_git_branch_command "git rev-parse --abbrev-ref HEAD"
+    	command_git_branch_format "#[fg=blue] {stdout} "
+    	command_git_branch_interval "10"
+    }
+         	}
+         }
+  '';
+  # home.file.".config/zellij/plugins".source = ./zellij-plugins;
+  # xdg.configFile."zellij/plugins" = ./zellij-plugins;
+  programs.zellij = {
+    enable = true;
+    settings = {
+      default_mode = "normal";
+      ui.pane_frames.rounded_corners = true;
+      theme = "custom";
+      themes.custom = {
+        fg = "#${config.colorScheme.colors.base05}"; # 05
+        bg = "#${config.colorScheme.colors.base00}"; # 00
+        black = "#${config.colorScheme.colors.base03}"; #03
+        red = "#${config.colorScheme.colors.base08}"; #08
+        green = "#${config.colorScheme.colors.base0B}"; # OB
+        yellow = "#${config.colorScheme.colors.base0A}"; #0A
+        blue = "#${config.colorScheme.colors.base0D}"; # 0D
+        magenta = "#${config.colorScheme.colors.base0E}"; # 0E
+        cyan = "#${config.colorScheme.colors.base0C}"; # 0C
+        white = "#${config.colorScheme.colors.base07}"; # 07
+        orange = "#${config.colorScheme.colors.base09}"; #09
+      };
+    };
+  };
+  programs.fish.interactiveShellInit = ''
+     	if status is-interactive; and type -q zellij
+    	set -gx ZELLIJ_AUTO_ATTACH true
+    	set -gx ZELLIJ_AUTO_EXIT true
+    	eval (zellij setup --generate-auto-start fish | string collect)
+    end
+  '';
+}
