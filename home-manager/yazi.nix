@@ -3,9 +3,18 @@
   pkgs,
   ...
 }: {
+  programs.fish.interactiveShellInit = ''
+    function yacd
+    	set tmp (mktemp -t "yazi-cwd.XXXXX")
+    	yazi --cwd-file="$tmp"
+    	if set cwd (cat -- "$tmp") && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]
+    		cd -- "$cwd"
+    	end
+    	rm -f -- "$tmp"
+    end
+  '';
   programs.yazi = {
     enable = true;
-    enableFishIntegration = true;
     settings = {
       manager = {
         layout = [0 4 3];
