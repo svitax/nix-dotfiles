@@ -10,7 +10,9 @@
       manager = {
         layout = [0 4 3];
         sort_by = "natural";
+        sort_reverse = false;
         sort_dir_first = true;
+        show_symlink = true;
       };
     };
     theme = {
