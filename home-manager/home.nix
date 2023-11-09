@@ -15,12 +15,12 @@
     inputs.nix-colors.homeManagerModules.default
 
     # You can also split up your configuration and import pieces of it here:
-    # ./nvim.nix
     ./chromium.nix
     ./fish.nix
     ./fonts.nix
     ./git.nix
     ./kitty.nix
+    ./neovim.nix
     ./starship.nix
     ./yazi.nix
   ];
@@ -54,7 +54,6 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
-    neovim
     lazygit
     nix-prefetch-github # prefetch sources from github for nix build tool
     unstable.eza
