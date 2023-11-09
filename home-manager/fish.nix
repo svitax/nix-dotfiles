@@ -11,6 +11,8 @@
       vi = "nvim";
       v = "nvim";
       cl = "clear";
+      use = "nix-shell --command fish -p";
+      zj = "zellij";
     };
     shellAliases = {
       # Clear screen and scrollback
