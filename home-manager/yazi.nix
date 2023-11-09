@@ -16,7 +16,7 @@
     theme = {
       status = {
         separator_open = "";
-	separator_close = "";
+        separator_close = "";
         mode_normal = {
           bg = "black";
           fg = "lightblue";
