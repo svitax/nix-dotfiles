@@ -12,6 +12,8 @@
       size = 14;
     };
     settings = {
+      # hide_window_decorations = true;
+      wayland_titlebar_color = "#${config.colorScheme.colors.base00}";
       scrollback_lines = 10000;
       tab_bar_style = "hidden";
       scrollback_pager = "~/.config/kitty/pager.sh";
