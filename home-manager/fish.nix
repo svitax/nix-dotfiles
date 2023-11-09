@@ -13,6 +13,7 @@
       cl = "clear";
       use = "nix-shell --command fish -p";
       zj = "zellij";
+      ya = "yazi";
     };
     shellAliases = {
       # Clear screen and scrollback
