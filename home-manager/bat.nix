@@ -1,7 +1,8 @@
 {pkgs, ...}: {
-  home.file.".config/bat/themes/gruvbox-dark-hard.tmTheme".source = ./gruvbox-dark-hard.tmTheme;
+  home.file.".config/bat/themes/gruvbox-dark-hard.tmTheme".source = ./config/bat/themes/gruvbox-dark-hard.tmTheme;
   programs.bat = {
     enable = true;
-    config = {theme = "~/.config/bat/themes/gruvbox-dark-hard.tmTheme";};
+    # TODO: bat can't find this path for some reason, but yazi does
+    # config = {theme = "~/.config/bat/themes/gruvbox-dark-hard.tmTheme";};
   };
 }

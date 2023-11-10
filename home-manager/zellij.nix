@@ -84,8 +84,7 @@
        	}
        }
   '';
-  home.file.".config/zellij/plugins".source = ./zellij-plugins;
-  # xdg.configFile."zellij/plugins" = ./zellij-plugins;
+  home.file.".config/zellij/plugins".source = ./config/zellij/plugins;
   programs.zellij = {
     enable = true;
     settings = {
