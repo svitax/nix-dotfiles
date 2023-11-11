@@ -21,6 +21,7 @@
     ./fish.nix
     ./fonts.nix
     ./git.nix
+    ./helix.nix
     ./kitty.nix
     ./neovim.nix
     ./starship.nix
@@ -59,6 +60,7 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
+    wl-clipboard
     fzf
     lazygit
     nix-prefetch-github # prefetch sources from github for nix build tool
