@@ -2,47 +2,45 @@
   pkgs,
   config,
   ...
-}: {
+}: let
+  colors = config.colorScheme.colors;
+in {
   programs.zellij = {
     enable = true;
     settings = {
-      default_mode = "normal";
       ui.pane_frames.rounded_corners = true;
       theme = "custom";
       themes.custom = {
-        fg = "#${config.colorScheme.colors.base05}"; # 05
-        bg = "#${config.colorScheme.colors.base00}"; # 00
-        black = "#${config.colorScheme.colors.base03}"; #03
-        red = "#${config.colorScheme.colors.base08}"; #08
-        green = "#${config.colorScheme.colors.base0B}"; # OB
-        yellow = "#${config.colorScheme.colors.base0A}"; #0A
-        blue = "#${config.colorScheme.colors.base0D}"; # 0D
-        magenta = "#${config.colorScheme.colors.base0E}"; # 0E
-        cyan = "#${config.colorScheme.colors.base0C}"; # 0C
-        white = "#${config.colorScheme.colors.base07}"; # 07
-        orange = "#${config.colorScheme.colors.base09}"; #09
+        fg = "#${colors.base05}"; # 05
+        bg = "#${colors.base00}"; # 00
+        black = "#${colors.base03}"; #03
+        red = "#${colors.base08}"; #08
+        green = "#${colors.base0B}"; # OB
+        yellow = "#${colors.base0A}"; #0A
+        blue = "#${colors.base0D}"; # 0D
+        magenta = "#${colors.base0E}"; # 0E
+        cyan = "#${colors.base0C}"; # 0C
+        white = "#${colors.base07}"; # 07
+        orange = "#${colors.base09}"; #09
       };
     };
   };
   home.file.".config/zellij/plugins".source = ./config/zellij/plugins;
   home.file.".config/zellij/layouts/default.kdl".text = ''
-    default_mode "normal"
+    default_mode "locked"
     keybinds {
       normal {
         bind "Alt a" { SwitchToMode "tmux"; }
-        bind "Alt g" { SwitchToMode "locked"; }
       }
 
       locked {
         bind "Alt a" { SwitchToMode "tmux"; }
-        bind "Alt g" { SwitchToMode "normal"; }
       }
 
       tmux {
-        bind "Alt a" { SwitchToMode "normal"; }
-        bind "Alt g" { SwitchToMode "locked"; }
-        bind "s" { NewPane "Right"; SwitchToMode "normal"; }
-        bind "v" { NewPane "Down"; SwitchToMode "normal"; }
+        bind "Alt a" { SwitchToMode "locked"; }
+        bind "s" { NewPane "Right"; SwitchToMode "locked"; }
+        bind "v" { NewPane "Down"; SwitchToMode "locked"; }
         bind "r" { SwitchToMode "RenameTab"; }
         bind "h" { MoveFocus "Left"; }
         bind "j" { MoveFocus "Down"; }
@@ -55,16 +53,16 @@
         bind "L" { Resize "Right"; }
         bind "n" { GoToNextTab; }
         bind "p" { GoToPreviousTab; }
-        bind "c" { NewTab; SwitchToMode "normal"; }
-        bind "x" { CloseFocus; SwitchToMode "normal"; }
-        bind "e" { EditScrollback; SwitchToMode "normal"; }
-        bind "Esc" "Space" "Enter" { SwitchToMode "normal"; }
+        bind "c" { NewTab; SwitchToMode "locked"; }
+        bind "x" { CloseFocus; SwitchToMode "locked"; }
+        bind "e" { EditScrollback; SwitchToMode "locked"; }
+        bind "Esc" "Space" "Enter" { SwitchToMode "locked"; }
       }
 
       RenameTab {
         bind "Alt a" { SwitchToMode "tmux"; }
-        bind "Enter" { SwitchToMode "normal"; }
-        bind "Esc" { UndoRenameTab; SwitchToMode "normal"; }
+        bind "Enter" { SwitchToMode "locked"; }
+        bind "Esc" { UndoRenameTab; SwitchToMode "locked"; }
       }
 
       shared_except "locked" {
@@ -121,26 +119,27 @@
       pane
       pane size=1 borderless=true {
         plugin location="file:${pkgs.zjstatus}/bin/zjstatus.wasm" {
-          format_left "{mode} #[fg=#89B4FA,bold]{session} {tabs}"
-          format_right "{command_git_branch}"
-          format_space ""
+          format_left "{mode}#[fg=#${colors.base0E},bg=#${colors.base02},bold] {session} {tabs}"
+          format_right "#[bg=#${colors.base02}]{command_git_branch}"
+          format_space "#[bg=#${colors.base02}]"
 
           border_enabled "false"
           border_char "-"
-          border_format "#[fg=#6C7086]{char}"
+          border_format "#[fg=#${colors.base02}]{char}"
           border_position "top"
 
           hide_frame_for_single_pane "true"
 
-          mode_normal "#[bg=blue,fg=black,bold] {name} "
-          mode_tmux "#[bg=#ffc387,fg=black,bold] {name} "
+          mode_normal "#[fg=#${colors.base00},bg=#${colors.base0D},bold] {name} "
+          mode_locked "#[fg=#${colors.base00},bg=#${colors.base0B},bold] {name} "
+          mode_tmux "#[fg=#${colors.base00},bg=#${colors.base09},bold] {name} "
 
-          tab_normal "#[fg=#6C7086] {name} "
-          tab_active "#[fg=#9399B2,bold,italic] {name} "
+          tab_normal "#[fg=#${colors.base04},bg=#${colors.base02}] {name} "
+          tab_active "#[fg=#${colors.base06},bg=#${colors.base02},bold,italic] {name} "
 
           // {command_NAME} needs zellij 0.39.0 or newer
           command_git_branch_command "git rev-parse --abbrev-ref HEAD"
-          command_git_branch_format "#[fg=blue] {stdout} "
+          command_git_branch_format "#[fg=#${colors.base0D}] {stdout} "
           command_git_branch_interval "10"
         }
       }
