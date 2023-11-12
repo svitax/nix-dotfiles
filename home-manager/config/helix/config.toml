@@ -41,6 +41,14 @@ tabpad = "·"
 [keys.normal]
 esc = ["collapse_selection", "keep_primary_selection"]
 ";" = "repeat_last_motion"
+X = "extend_line_above"
+# If you find having text remain selected while you have switched to insert or append mode
+i = ["insert_mode", "collapse_selection"]
+a = ["append_mode", "collapse_selection"]
+# Scroll line up and down
+C-n = ["move_line_down", "scroll_down"]
+C-p = ["move_line_up", "scroll_down"]
+# Move line up and down
 C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
 C-k = [
   "extend_to_line_bounds",
@@ -48,9 +56,18 @@ C-k = [
   "move_line_up",
   "paste_before",
 ]
+# Delete to end of line
 D = [
   "extend_to_line_end",
   "yank_main_selection_to_clipboard",
   "delete_selection",
 ]
+
+[keys.select]
 X = "extend_line_above"
+# Delete to end of line
+D = [
+  "extend_to_line_end",
+  "yank_main_selection_to_clipboard",
+  "delete_selection",
+]
