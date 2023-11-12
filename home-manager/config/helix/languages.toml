@@ -1,14 +1,3 @@
-[language-server.pyright]
-command = "pyright-langserver"
-args = ["--stdio"]
-
-[language-server.pyright.config]
-lint = true
-inlayHint.enable = true
-
-[language-server.ruff-lsp]
-command = "ruff-lsp"
-
 [[language]]
 name = "python"
 scope = "source.python"
@@ -16,7 +5,27 @@ auto-format = true
 indent = { tab-width = 4, unit = " " }
 formatter = { command = "black", args = ["-", "-q"] }
 roots = ["pyproject.toml", "pyrightconfig.json", "Poetry.lock"]
-language-servers = [
-	{ name = "pyright"},
-	{ name = "ruff-lsp"},
-]
+language-servers = [{ name = "pyright" }, { name = "ruff-lsp" }]
+[language-server.pyright]
+command = "pyright-langserver"
+args = ["--stdio"]
+config = { lint = true, inlayHint = { enable = true } }
+[language-server.ruff-lsp]
+command = "ruff-lsp"
+
+[[language]]
+name = "nix"
+auto-format = true
+roots = [".nixd.json", "flake.nix", ".git"]
+language-servers = [{ name = "nixd" }]
+# [language-server.nil]
+# config = { nil = { formatting = { command = ["alejandra", "-q"] } } }
+[language-server.nixd]
+command = "nixd"
+config = { nixd = { formatting = { command = "nix fmt -- -" } } }
+# TODO: not sure if this will work
+# config = { nixd = { formatting = { command = "treefmt --stdin {file}" } } }
+
+[[language]]
+name = "toml"
+auto-format = true
