@@ -116,33 +116,31 @@ in {
       }
     }
     layout {
-      tab name="terminal" {
-        pane
-        pane size=1 borderless=true {
-          plugin location="file:${pkgs.zjstatus}/bin/zjstatus.wasm" {
-            format_left "{mode}#[fg=#${colors.base0E},bg=#${colors.base02},bold] {session} {tabs}"
-            format_right "#[bg=#${colors.base02}]{command_git_branch}"
-            format_space "#[bg=#${colors.base02}]"
+      pane
+      pane size=1 borderless=true {
+        plugin location="file:${pkgs.zjstatus}/bin/zjstatus.wasm" {
+          format_left "{mode}#[fg=#${colors.base0E},bg=#${colors.base02},bold] {session} {tabs}"
+          format_right "#[bg=#${colors.base02}]{command_git_branch}"
+          format_space "#[bg=#${colors.base02}]"
 
-            border_enabled "false"
-            border_char "-"
-            border_format "#[fg=#${colors.base02}]{char}"
-            border_position "top"
+          border_enabled "false"
+          border_char "-"
+          border_format "#[fg=#${colors.base02}]{char}"
+          border_position "top"
 
-            hide_frame_for_single_pane "true"
+          hide_frame_for_single_pane "true"
 
-            mode_normal "#[fg=#${colors.base00},bg=#${colors.base0D},bold] {name} "
-            mode_locked "#[fg=#${colors.base00},bg=#${colors.base0B},bold] {name} "
-            mode_tmux "#[fg=#${colors.base00},bg=#${colors.base09},bold] {name} "
+          mode_normal "#[fg=#${colors.base00},bg=#${colors.base0D},bold] {name} "
+          mode_locked "#[fg=#${colors.base00},bg=#${colors.base0B},bold] {name} "
+          mode_tmux "#[fg=#${colors.base00},bg=#${colors.base09},bold] {name} "
 
-            tab_normal "#[fg=#${colors.base04},bg=#${colors.base02}] {name} "
-            tab_active "#[fg=#${colors.base06},bg=#${colors.base02},bold,italic] {name} "
+          tab_normal "#[fg=#${colors.base04},bg=#${colors.base02}] {name} "
+          tab_active "#[fg=#${colors.base06},bg=#${colors.base02},bold,italic] {name} "
 
-            // {command_NAME} needs zellij 0.39.0 or newer
-            command_git_branch_command "git rev-parse --abbrev-ref HEAD"
-            command_git_branch_format "#[fg=#${colors.base0D}] {stdout} "
-            command_git_branch_interval "10"
-          }
+          // {command_NAME} needs zellij 0.39.0 or newer
+          command_git_branch_command "git rev-parse --abbrev-ref HEAD"
+          command_git_branch_format "#[fg=#${colors.base0D}] {stdout} "
+          command_git_branch_interval "10"
         }
       }
     }
