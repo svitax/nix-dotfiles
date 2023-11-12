@@ -2,8 +2,9 @@
 name = "python"
 scope = "source.python"
 auto-format = true
+rulers = [80]
 indent = { tab-width = 4, unit = " " }
-formatter = { command = "black", args = ["-", "-q"] }
+# formatter = { command = "black", args = ["-", "-q"] }
 roots = ["pyproject.toml", "pyrightconfig.json", "Poetry.lock"]
 language-servers = [{ name = "pyright" }, { name = "ruff-lsp" }]
 [language-server.pyright]
