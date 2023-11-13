@@ -13,11 +13,13 @@
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
     inputs.nix-colors.homeManagerModules.default
+    inputs.nix-index-database.hmModules.nix-index
     # inputs.neovim-flake.nixosModules."x86_64-linux".hm
 
     # You can also split up your configuration and import pieces of it here:
     ./bat.nix
     ./chromium.nix
+    ./direnv.nix
     ./fish.nix
     ./fonts.nix
     ./git.nix

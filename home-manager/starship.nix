@@ -71,7 +71,7 @@ in {
       };
       nix_shell = {
         symbol = " ";
-        format = "[$symbol$state($name )]($style)";
+        format = "[$symbol($name )]($style)";
         style = "bright-black";
       };
       nodejs = {
@@ -94,4 +94,9 @@ in {
   };
   programs.bash.enable = true;
   # home.file.".config/starship/starship.toml".source = ./starship.toml;
+  # using nix-direnv results in a ton of noise when I enter a project directory.
+  # set direnv_log_format to an empty string to suppress that noise
+  programs.fish.interactiveShellInit = ''
+    set -gx DIRENV_LOG_FORMAT ""
+  '';
 }
