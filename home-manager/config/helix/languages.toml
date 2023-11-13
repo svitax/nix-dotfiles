@@ -16,7 +16,8 @@ command = "ruff-lsp"
 
 [[language]]
 name = "nix"
-auto-format = true
+# NOTE: nixd formatting (with nix fmt) deletes malformed nix files. keep auto-format off until fixed or workaround is found. for now make sure flake.nix has inputs, outputs, and description before formatting
+auto-format = false
 roots = [".nixd.json", "flake.nix", ".git"]
 language-servers = [{ name = "nixd" }]
 # [language-server.nil]
