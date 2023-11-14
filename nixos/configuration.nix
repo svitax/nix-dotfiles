@@ -115,7 +115,6 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.svitax = {
     isNormalUser = true;
-    shell = pkgs.fish;
     description = "svitax";
     extraGroups = ["networkmanager" "wheel"];
     packages = with pkgs; [
@@ -124,6 +123,7 @@
     ];
   };
 
+  users.defaultUserShell = pkgs.fish;
   programs.fish = {
     enable = true;
     vendor = {
