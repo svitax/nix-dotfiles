@@ -47,7 +47,7 @@ i = ["insert_mode", "collapse_selection"]
 a = ["append_mode", "collapse_selection"]
 # Scroll line up and down
 C-n = ["move_line_down", "scroll_down"]
-C-p = ["move_line_up", "scroll_down"]
+C-p = ["move_line_up", "scroll_up"]
 # Move line up and down
 C-j = ["extend_to_line_bounds", "delete_selection", "paste_after"]
 C-k = [
