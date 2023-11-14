@@ -29,7 +29,7 @@ in {
       };
       directory = {
         style = "blue";
-        read_only = " ";
+        read_only = " 󰌾";
         truncation_length = 4;
         truncate_to_repo = false;
       };
@@ -41,18 +41,28 @@ in {
         style = "yellow";
       };
       jobs = {
-        symbol = "";
+        symbol = " ";
         style = "bold red";
         number_threshold = 1;
         format = "[$symbol]($style)";
       };
       aws = {
-        symbol = "  ";
+        symbol = "󰸏 ";
         format = "[$symbol($profile )(\($region\) )]($style) ";
         style = "bright-black";
         region_aliases = {
           us-east-1 = "va";
         };
+      };
+      azure = {
+        symbol = " ";
+        format = "[$symbol($subscription )]($style) ";
+        style = "bright-black";
+      };
+      gcloud = {
+        symbol = "󱇶 ";
+        format = "[$symbol($account )(\($region\) )]($style) ";
+        style = "bright-black";
       };
       docker_context = {
         symbol = " ";
