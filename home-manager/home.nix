@@ -62,7 +62,6 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
-    unstable.nixd # TODO: add to helix.nix once 23.11 hits
     unstable.ruff-lsp # TODO: add to helix.nix once 23.11 hits
     file # needed for fifc (fish)
     ripgrep

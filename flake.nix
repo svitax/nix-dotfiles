@@ -41,6 +41,11 @@
     lib = nixpkgs.lib // home-manager.lib;
     systems = ["x86_64-linux"];
     forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
+    forEachSupportedSystem = f:
+      lib.genAttrs systems (system:
+        f {
+          pkgs = import nixpkgs {inherit system;};
+        });
     pkgsFor = lib.genAttrs systems (system:
       import nixpkgs {
         inherit system;
@@ -64,5 +69,14 @@
         modules = [./nixos/configuration.nix];
       };
     };
+    devShells = forEachSupportedSystem ({pkgs}: {
+      default = pkgs.mkShell {
+        name = "nix-dotfiles";
+        packages = with pkgs; [
+          alejandra
+          nixd
+        ];
+      };
+    });
   };
 }

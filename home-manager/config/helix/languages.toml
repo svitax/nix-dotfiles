@@ -25,9 +25,7 @@ language-servers = [{ name = "nixd" }]
 [language-server.nixd]
 command = "nixd"
 config = { nixd = { formatting = { command = "nix fmt -- -" } } }
-# TODO: not sure if this will work
-# config = { nixd = { formatting = { command = "treefmt --stdin {file}" } } }
-
+# config = { nixd = { formatting = { command = "treefmt --stdin {file}" } } } # TODO: not sure if this will work
 [[language]]
 name = "toml"
 auto-format = true
