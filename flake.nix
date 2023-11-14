@@ -20,14 +20,9 @@
     # TODO: Add any other flake you might need
     nix-colors.url = "github:misterio77/nix-colors";
     zjstatus.url = "github:dj95/zjstatus";
-    nix-index-database = {
-      url = "github:Mic92/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    # neovim-flake = {
-    #   url = "github:gvolpe/neovim-flake";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
+
+    nix-index-database.url = "github:Mic92/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
     # hardware.url = "github:nixos/nixos-hardware";
   };
 
