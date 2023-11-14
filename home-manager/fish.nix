@@ -26,6 +26,21 @@
     functions = {
       # Disable greeting
       fish_greeting = "";
+      flakify = {
+        body =
+          /*
+          fish
+          */
+          ''
+            if not test -e flake.nix
+              nix flake new -t github:nix-community/nix-direnv .
+            else if not test -e .envrc
+              echo "use flake" > .envrc
+              direnv allow
+            end
+            $EDITOR flake.nix
+          '';
+      };
       subcommand_abbr = {
         body =
           /*
