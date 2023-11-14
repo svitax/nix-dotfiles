@@ -41,23 +41,28 @@
     lib = nixpkgs.lib // home-manager.lib;
     systems = ["x86_64-linux"];
     forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
-    forEachSupportedSystem = f:
-      lib.genAttrs systems (system:
-        f {
-          pkgs = import nixpkgs {inherit system;};
-        });
     pkgsFor = lib.genAttrs systems (system:
       import nixpkgs {
         inherit system;
         config.allowUnfree = true;
       });
+    forEachSupportedSystem = f:
+      lib.genAttrs systems (system:
+        f {
+          pkgs = import nixpkgs {inherit system;};
+        });
   in {
+    inherit lib;
+    # Your custom packages
+    # Accessible through 'nix build', 'nix shell', etc
+    packages = forEachSystem (pkgs: import ./pkgs {inherit pkgs;});
+
     # Formatter for your nix files, available through 'nix fmt'
     # Other options beside 'alejandra' include 'nixpkgs-fmt'
     formatter = forEachSystem (pkgs: pkgs.alejandra);
 
     # Your custom packages and modifications, exported as overlays
-    overlays = import ./overlays {inherit inputs;};
+    overlays = import ./overlays {inherit inputs outputs;};
 
     # NixOS configuration entrypoint
     # Available through 'nixos-rebuild --flake .#your-hostname'
