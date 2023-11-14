@@ -1,0 +1,12 @@
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}: {
+  programs.fzf = {
+    enable = true;
+    # enableFishIntegration = true;
+    defaultOptions = ["--multi" "--bind 'alt-a:select-all,alt-d:kill-word,alt-t:toggle-all,ctrl-j:accept,ctrl-k:kill-line,ctrl-n:down,ctrl-p:up,up:previous-history,down:next-history'" "--height 50%" "--reverse" "--tiebreak end"];
+  };
+}

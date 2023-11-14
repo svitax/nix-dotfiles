@@ -22,6 +22,7 @@
     ./direnv.nix
     ./fish.nix
     ./fonts.nix
+    ./fzf.nix
     ./git.nix
     ./helix.nix
     ./kitty.nix
@@ -69,7 +70,6 @@
     fd
     poetry
     wl-clipboard
-    fzf
     lazygit
     nix-prefetch-github # prefetch sources from github for nix build tool
     unstable.eza
