@@ -9,6 +9,7 @@ FILE_PATHS=$(live-grep --exit-on-execution | tr '\n' ' ' | sed 's/ *$//')
 if [[ -n "$FILE_PATHS" ]]; then
   # Focus the pane containing Helix editor
   # zellij action toggle-floating-panes
+  zellij action move-focus up
 
   # Send ":" to start command input in Helix
   # wezterm cli send-text --pane-id "$HELIX_PANE_ID" --no-paste ":"

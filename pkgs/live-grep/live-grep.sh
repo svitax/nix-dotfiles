@@ -6,7 +6,7 @@ GREEN="#b8bb26"
 PURPLE="#d3869b"
 
 # Key bindings
-COPY_FILE_PATH='ctrl-y:execute(echo -n {1}:{2} | wl-copy)'
+COPY_FILE_PATH='ctrl-y:execute(echo -n {1}:{2} | wl-copy),alt-a:select-all,alt-d:kill-word,alt-t:toggle-all,ctrl-j:accept,ctrl-k:kill-line,ctrl-n:down,ctrl-p:up,up:previous-history,down:next-history'
 KEYS="$COPY_FILE_PATH"
 
 # Optional flag for execution and exit behavior
@@ -27,6 +27,8 @@ IFS=$'\n' readarray -t selected_matches < <(
       --preview 'bat {1} --highlight-line {2}' \
       --preview-window 'right,+{2}+3/3,~3' \
       --scrollbar '▍' \
+      --reverse \
+      --tiebreak 'end' \
       --bind "$KEYS"
 )
 

@@ -64,6 +64,6 @@ C-k = [
 X = "extend_line_above"
 
 [keys.normal.space]
-"/" = ":pipe-to zellij run --direction down --close-on-exit -- helix-live-grep"
 q = ":quit-all"
 x = ":buffer-close"
+"/" = { "/" = ":pipe-to zellij run --direction down --close-on-exit -- helix-live-grep", g = "global_search" }
