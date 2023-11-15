@@ -91,7 +91,8 @@ in {
       };
       python = {
         symbol = " ";
-        format = "[$symbol($virtualenv )]($style) ";
+        # format = "[$symbol($virtualenv )]($style) ";
+        format = "[$symbol($version )]($style) ";
         style = "bright-black";
         python_binary = ["./venv/bin/python" "python" "python3" "python2"];
       };
