@@ -10,9 +10,13 @@ language-servers = [{ name = "pyright" }, { name = "ruff-lsp" }]
 [language-server.pyright]
 command = "pyright-langserver"
 args = ["--stdio"]
-config = { lint = true, inlayHint = { enable = true } }
+config = { python = { analysis = { autoSearchPaths = true, useLibraryCodeForTypes = true, diagnosticMode = "openFilesOnly", autoImportCompletions = false } } }
 [language-server.ruff-lsp]
 command = "ruff-lsp"
+# TODO: use pylyzer when nixpkgs.pylyzer is fixed
+[language-server.pylyzer]
+command = "pylyzer"
+args = ["--server"]
 
 [[language]]
 name = "nix"
