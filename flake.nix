@@ -48,6 +48,11 @@
         });
   in {
     inherit lib;
+
+    # Your custom flake templates
+    # Accessible through 'nix flake init -t github:username/reponame#template'
+    templates = ./templates;
+
     # Your custom packages
     # Accessible through 'nix build', 'nix shell', etc
     packages = forEachSystem (pkgs: import ./pkgs {inherit pkgs;});

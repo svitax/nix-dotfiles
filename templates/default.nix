@@ -1,0 +1,3 @@
+{
+  poetry.path = ./poetry;
+}
