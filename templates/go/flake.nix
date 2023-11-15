@@ -20,9 +20,11 @@
         packages = with pkgs; [
           # go 1.20 (specified by overlay)
           go
+          gopls
 
           # goimports, godoc, etc.
           gotools
+          go-tools
 
           # https://github.com/golangci/golangci-lint
           golangci-lint
