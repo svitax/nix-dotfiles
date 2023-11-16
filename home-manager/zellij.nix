@@ -107,7 +107,7 @@ in {
 
             // {command_NAME} needs zellij 0.39.0 or newer
             command_git_branch_command "git rev-parse --abbrev-ref HEAD"
-            command_git_branch_format "{stdout}#[fg=#${colors.base09},bg=#${colors.base02},bold] something"
+            command_git_branch_format "#[fg=#${colors.base04},bg=#${colors.base02},bold]󰘬 {stdout} "
             command_git_branch_interval "10"
           }
         }
