@@ -95,6 +95,8 @@
 
         subcommand_abbr git c "commit -am"
         subcommand_abbr npm i "install"
+
+        bind \ef -M insert 'commandline "zellij-smart-sessionizer" && commandline -f execute && commandline -f repaint'
       '';
     plugins = [
       # Enable a plugin from nixpkgs
