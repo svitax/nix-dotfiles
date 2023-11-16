@@ -41,6 +41,10 @@ in {
           bind "Alt a" { SwitchToMode "tmux"; }
         }
 
+        shared_except "normal" "locked" {
+          bind "Esc" "Space" "Enter" { SwitchToMode "locked"; }
+        }
+
         tmux {
           bind "Alt a" { SwitchToMode "locked"; }
           bind "s" { NewPane "Right"; SwitchToMode "locked"; }
@@ -59,11 +63,18 @@ in {
           bind "p" { GoToPreviousTab; }
           bind "c" { NewTab; SwitchToMode "locked"; }
           bind "x" { CloseFocus; SwitchToMode "locked"; }
+          bind "z" { ToggleFocusFullscreen; SwitchToMode "locked"; }
           bind "q" { Quit; }
           bind "e" { EditScrollback; SwitchToMode "locked"; }
+          bind "s" {
+            LaunchOrFocusPlugin "zellij:session-manager" {
+              floating true
+              move_to_focused_tab true
+            }
+            SwitchToMode "Normal"
+          }
           bind "t" { ToggleFloatingPanes; SwitchToMode "locked"; }
           bind "T" { TogglePaneEmbedOrFloating; SwitchToMode "locked"; }
-          bind "Esc" "Space" "Enter" { SwitchToMode "locked"; }
         }
 
         RenameTab {
@@ -96,7 +107,7 @@ in {
 
             // {command_NAME} needs zellij 0.39.0 or newer
             command_git_branch_command "git rev-parse --abbrev-ref HEAD"
-            command_git_branch_format "#[fg=#${colors.base0D}] {stdout} "
+            command_git_branch_format "{stdout}#[fg=#${colors.base09},bg=#${colors.base02},bold] something"
             command_git_branch_interval "10"
           }
         }
