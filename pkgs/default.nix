@@ -6,4 +6,5 @@
   # Personal scripts
   live-grep = pkgs.callPackage ./live-grep {};
   helix-live-grep = pkgs.callPackage ./helix-live-grep {};
+  zellij-smart-sessionizer = pkgs.callPackage ./zellij-smart-sessionizer {};
 }

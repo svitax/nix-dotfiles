@@ -64,6 +64,7 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
+    zellij-smart-sessionizer
     live-grep # workaround for live-grep in helix until provided by core or plugins
     helix-live-grep # workaround for live-grep in helix until provided by core or plugins
     file # needed for fifc (fish)

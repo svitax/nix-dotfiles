@@ -15,7 +15,7 @@
       use = "nix-shell --command fish -p";
       ya = "yazi";
       zj = "zellij";
-      zs = "~/projects/zellij-smart-sessionizer/zellij-smart-sessionizer"; # TODO fix this
+      zs = "zellij-smart-sessionizer";
       dot = "cd ~/nix-dotfiles";
       prj = "cd ~/projects";
     };
