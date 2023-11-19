@@ -9,7 +9,7 @@
     shellIntegration.enableFishIntegration = true;
     font = {
       name = "JetBrainsMono Nerd Font";
-      size = 12;
+      size = 16;
     };
     settings = {
       # hide_window_decorations = true;
