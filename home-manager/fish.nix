@@ -83,8 +83,8 @@
         # Set default editor because home.sessionVariables and environment.variables doesn't get picked up by fish
         # due to this https://nix-community.github.io/home-manager/index.html#why_are_the_session_variables_not_set
         # (home-manager isn't managing my fish shell configuration)
-        set -gx EDITOR "hx"
-        set -gx VISUAL "hx"
+        set -gx EDITOR "nvim"
+        set -gx VISUAL "nvim"
 
         # Use vim bindings and cursors
         fish_vi_key_bindings
