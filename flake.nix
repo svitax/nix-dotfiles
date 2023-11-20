@@ -78,6 +78,7 @@
       default = pkgs.mkShell {
         name = "nix-dotfiles";
         packages = with pkgs; [
+          lua-language-server
           alejandra
           nixd
           taplo
