@@ -8,11 +8,9 @@
     enable = true;
     # defaultEditor = true;
     plugins = with pkgs; [
-    	vimPlugins.nvim-treesitter.withAllGrammars
+      vimPlugins.nvim-treesitter.withAllGrammars
     ];
-    extraPackages = with pkgs; [
-      lua-language-server
-    ];
+    extraPackages = with pkgs; [lua-language-server nixd];
   };
   xdg.configFile.nvim = {
     # TODO: figure out a way to not hard code a path to my nix-dotfiles directory
