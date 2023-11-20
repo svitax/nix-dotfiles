@@ -30,6 +30,12 @@
       # Deduplicate and optimize nix store
       auto-optimise-store = true;
     };
+    # Enable automatic garbage collection
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
   };
 
   home-manager = {
