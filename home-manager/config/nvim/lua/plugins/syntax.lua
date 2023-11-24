@@ -27,4 +27,6 @@ return {
     end,
     -- build = ":TSUpdate",
   },
+  { "folke/todo-comments.nvim", opts = { signs = false, highlight = { after = "" } } },
+  { "chrisgrieser/nvim-puppeteer" },
 }
