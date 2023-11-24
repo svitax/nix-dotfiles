@@ -33,7 +33,7 @@
     alejandra
     nixd
     taplo
-    python311Packages.jupytext
+    # python311Packages.jupytext
   ];
   xdg.configFile.nvim = {
     # TODO: figure out a way to not hard code a path to my nix-dotfiles directory
