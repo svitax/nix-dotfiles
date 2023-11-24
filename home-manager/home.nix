@@ -70,7 +70,7 @@
     ripgrep
     fd
     poetry
-    wl-clipboard
+    # wl-clipboard # causes weird flickering in neovim + tmux
     lazygit
     nix-prefetch-github # prefetch sources from github for nix build tool
     unstable.eza
