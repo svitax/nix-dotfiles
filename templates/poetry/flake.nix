@@ -10,7 +10,7 @@
     formatter.${system} = pkgs.alejandra;
     devShells.${system}.default = pkgs.mkShell {
       name = "nix-poetry-template";
-      packages = [pkgs.python3 pkgs.poetry pkgs.ruff-lsp pkgs.nodePackages.pyright pkgs.nixd pkgs.alejandra pkgs.taplo];
+      packages = [pkgs.python3 pkgs.poetry pkgs.ruff-lsp pkgs.nodePackages.pyright pkgs.nixd pkgs.alejandra pkgs.taplo pkgs.python311Packages.debugpy];
       # Workaround in linux: python downloads ELF's that can't find glibc
       # You would see errors like: error while loading shared libraries: name.so: cannot open shared object file: No such file or directory
       LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
