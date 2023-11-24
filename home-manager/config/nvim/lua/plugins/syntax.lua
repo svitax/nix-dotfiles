@@ -1,10 +1,10 @@
 return {
   -- Highlight, edit, and navigate code
   {
-    'nvim-treesitter/nvim-treesitter',
+    "nvim-treesitter/nvim-treesitter",
     version = false,
     dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
+      "nvim-treesitter/nvim-treesitter-textobjects",
     },
     -- Configure Treesitter
     -- See `:help nvim-treesitter`
@@ -18,13 +18,13 @@ return {
           init_selection = "<CR>",
           node_incremental = "<CR>",
           scope_incremental = false,
-          node_decremental = "<BS>"
+          node_decremental = "<BS>",
         },
-      }
+      },
     },
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
-    end
+    end,
     -- build = ":TSUpdate",
   },
 }

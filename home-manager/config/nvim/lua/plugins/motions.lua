@@ -3,23 +3,24 @@ return {
   {
     -- TODO: Telescope integration
     -- TODO: flash hg don't go italic
-    'folke/flash.nvim',
+    "folke/flash.nvim",
     event = "VeryLazy",
     opts = {
       modes = {
         search = { enabled = false },
         jump = { autojump = true },
         treesitter = { label = { after = false } },
-        treesitter_search = { label = { after = false } }
+        treesitter_search = { label = { after = false } },
       },
     },
     keys = {
       {
         "s",
         mode = { "n", "x", "o" },
-        function() require("flash").jump() end,
-        desc =
-        "flash"
+        function()
+          require("flash").jump()
+        end,
+        desc = "flash",
       },
       -- {
       -- 	"<CR>",
@@ -31,17 +32,19 @@ return {
       {
         "<S-CR>",
         mode = { "n", "x", "o" },
-        function() require("flash").treesitter_search() end,
-        desc =
-        "flash treesitter search"
+        function()
+          require("flash").treesitter_search()
+        end,
+        desc = "flash treesitter search",
       },
-      {
-        "<C-s>",
-        mode = { "c" },
-        function() require("flash").toggle() end,
-        desc =
-        "toggle flash search"
-      }
-    }
+      -- {
+      --   "<C-s>",
+      --   mode = { "c" },
+      --   function()
+      --     require("flash").toggle()
+      --   end,
+      --   desc = "toggle flash search",
+      -- },
+    },
   },
 }

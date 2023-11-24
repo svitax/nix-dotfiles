@@ -1,11 +1,33 @@
 return {
   icons = {
+    folds = {
+      -- suffix = "",
+      suffix = "",
+    },
     diagnostics = {
-      Error = '● ',
-      Information = '● ',
-      Hint = '● ',
-      Warn = '● ',
-    }
+      Error = "● ",
+      Information = "● ",
+      Hint = "● ",
+      Warn = "● ",
+    },
+    dap = {
+      breakpoint = "◯",
+      breakpoint_condition = "",
+      breakpoint_rejected = "",
+      log_point = "󰆉",
+      stopped = "",
+      expanded = "▾",
+      collapsed = "▸",
+      current_frame = "▸",
+      pause = "",
+      play = "",
+      step_into = "",
+      step_over = "",
+      step_out = "",
+      step_back = "",
+      run_last = "↻",
+      terminate = "",
+    },
   },
   kinds = {
     Array = " ",
@@ -46,5 +68,5 @@ return {
     Unit = " ",
     Value = " ",
     Variable = " ",
-  }
+  },
 }

@@ -5,6 +5,7 @@ return {
     opts = { render = "background", enable_named_colors = true },
     event = "BufReadPost",
   },
+  { "folke/tokyonight.nvim", opts = {} },
   {
     "svitax/nightfox.nvim",
     branch = "gruvfox",
@@ -14,7 +15,7 @@ return {
           keywords = "NONE",
           functions = "bold",
           comments = "italic",
-        }
+        },
       },
       groups = {
         gruvfox = {
@@ -28,7 +29,7 @@ return {
           -- look into cmp config for window and documentation (nvim-cmp/lua/cmp/config/default.lua)
           PmenuSel = { fg = "palette.bg1", bg = "palette.blue" }, -- I only want to change cmp Pmenu sel
           PmenuThumb = { bg = "palette.sel0" },
-          NormalFloat = { bg = "palette.bg3" },                   -- I only want to change cmp float (documentation)
+          NormalFloat = { bg = "palette.bg3" }, -- I only want to change cmp float (documentation)
 
           CmpItemMenuDefault = { fg = "palette.red", bg = "palette.red" },
           CmpItemAbbr = { fg = "palette.fg1" },
@@ -69,8 +70,8 @@ return {
           NvimSurroundHighlight = { fg = "palette.bg0", bg = "palette.magenta" },
 
           -- FloatBorder = { fg = "palette.comment" },
-        }
-      }
+        },
+      },
     },
   },
 }

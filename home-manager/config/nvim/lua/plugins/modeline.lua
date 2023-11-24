@@ -10,18 +10,18 @@ local components = {
       local lower = str:lower()
       return lower:sub(1, 1):upper() .. lower:sub(2)
     end,
-    color = { gui = "bold" }
+    color = { gui = "bold" },
   },
   filename = {
     "filename",
-    fmt = function (filename, _)
+    fmt = function(filename, _)
       -- if utils.is_buf_unnamed() then
       --   return ""
       -- end
       return filename
     end,
     file_status = false,
-    color = { fg = palette.fg2, gui = "bold" }
+    color = { fg = palette.fg2, gui = "bold" },
   },
   search_count = {
     function()
@@ -40,7 +40,7 @@ local components = {
       local total = ((count.total > count.maxcount) and too_many) or count.total
       return ("%s/%s"):format(count.current, total)
     end,
-    color = { fg = palette.blue.base, bg = palette.bg0 }
+    color = { fg = palette.blue.base, bg = palette.bg0 },
   },
   diagnostics = {
     "diagnostics",
@@ -48,8 +48,8 @@ local components = {
       error = icons.diagnostics.Error,
       warn = icons.diagnostics.Warn,
       info = icons.diagnostics.Information,
-      hint = icons.diagnostics.Hint
-    }
+      hint = icons.diagnostics.Hint,
+    },
   },
   filetype = {
     "filetype",
@@ -60,7 +60,7 @@ return {
   { "nvim-tree/nvim-web-devicons", lazy = true },
   -- Set lualine as statusline
   {
-    'nvim-lualine/lualine.nvim',
+    "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
     init = function()
       vim.g.lualine_laststatus = vim.o.laststatus
@@ -74,13 +74,13 @@ return {
     end,
     -- See `:help lualine.txt`
     opts = function(_, opts)
-      local palette = require("nightfox.palette").load('gruvfox')
+      local palette = require("nightfox.palette").load("gruvfox")
       return {
         options = {
           icons_enabled = true,
           theme = {
             normal = {
-              a = { fg = palette.bg0, bg = palette.green.base, },
+              a = { fg = palette.bg0, bg = palette.green.base },
               b = { fg = palette.fg2, bg = palette.sel0 },
               c = { fg = palette.fg2, bg = palette.sel0 },
             },
@@ -108,10 +108,10 @@ return {
             components.filetype,
           },
           lualine_y = {},
-          lualine_z = {}
+          lualine_z = {},
         },
-        extensions = { "lazy" }
+        extensions = { "lazy" },
       }
-    end
+    end,
   },
 }
