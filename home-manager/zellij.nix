@@ -103,7 +103,7 @@ in {
                 mode_normal "#[fg=#${colors.base00},bg=#${colors.base0D},bold] {name} "
                 mode_locked "#[fg=#${colors.base00},bg=#${colors.base0B},bold] {name} "
                 mode_tmux "#[fg=#${colors.base00},bg=#${colors.base09},bold] {name} "
-          
+
                 tab_normal "#[fg=#${colors.base04},bg=#${colors.base02}] {name} "
                 tab_active "#[fg=#${colors.base06},bg=#${colors.base02},bold,italic] {name} "
 
