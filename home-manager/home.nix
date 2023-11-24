@@ -18,7 +18,6 @@
 
     # You can also split up your configuration and import pieces of it here:
     ./bat.nix
-    ./chromium.nix
     ./direnv.nix
     ./fish.nix
     ./fonts.nix
