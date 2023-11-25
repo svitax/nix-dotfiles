@@ -17,6 +17,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    flake-parts.url = "github:hercules-ci/flake-parts";
+
     # TODO: Add any other flake you might need
     nix-colors.url = "github:misterio77/nix-colors";
     zjstatus.url = "github:dj95/zjstatus";
@@ -33,55 +35,55 @@
     self,
     nixpkgs,
     home-manager,
+    flake-parts,
     ...
   } @ inputs: let
     inherit (self) outputs;
     lib = nixpkgs.lib // home-manager.lib;
-    systems = ["x86_64-linux"];
-    forEachSystem = f: lib.genAttrs systems (system: f pkgsFor.${system});
-    pkgsFor = lib.genAttrs systems (system:
-      import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      });
-    forEachSupportedSystem = f:
-      lib.genAttrs systems (system:
-        f {
-          pkgs = import nixpkgs {inherit system;};
-        });
-  in {
-    inherit lib;
+  in
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
 
-    # Your custom flake templates
-    # Accessible through 'nix flake init -t github:username/reponame#template'
-    templates = import ./templates;
+      perSystem = {
+        pkgs,
+        system,
+        ...
+      }: {
+        # Your custom packages
+        # Accessible through 'nix build', 'nix shell', etc
+        packages.default = import ./pkgs {inherit pkgs;};
 
-    # Your custom packages
-    # Accessible through 'nix build', 'nix shell', etc
-    packages = forEachSystem (pkgs: import ./pkgs {inherit pkgs;});
+        # Formatter for your nix files, available through 'nix fmt'
+        # Other options beside 'alejandra' include 'nixpkgs-fmt'
+        formatter = pkgs.alejandra;
 
-    # Formatter for your nix files, available through 'nix fmt'
-    # Other options beside 'alejandra' include 'nixpkgs-fmt'
-    formatter = forEachSystem (pkgs: pkgs.alejandra);
+        devShells.default = pkgs.mkShell {
+          name = "nix-dotfiles";
+          packages = with pkgs; [];
+        };
+      };
 
-    # Your custom packages and modifications, exported as overlays
-    overlays = import ./overlays {inherit inputs outputs;};
+      flake = {
+        # Your custom flake templates
+        # Accessible through 'nix flake init -t github:username/reponame#template'
+        templates = import ./templates;
 
-    # NixOS configuration entrypoint
-    # Available through 'nixos-rebuild --flake .#your-hostname'
-    nixosConfigurations = {
-      # FIXME: replace with your hostname
-      nixos = nixpkgs.lib.nixosSystem {
-        specialArgs = {inherit inputs outputs;};
-        # > Our main nixos configuration file <
-        modules = [./nixos/configuration.nix];
+        # Your custom packages and modifications, exported as overlays
+        overlays = import ./overlays {inherit inputs outputs;};
+
+        # NixOS configuration entrypoint
+        # Available through 'nixos-rebuild --flake .#your-hostname'
+        nixosConfigurations = {
+          # FIXME: replace with your hostname
+          nixos = nixpkgs.lib.nixosSystem {
+            specialArgs = {inherit inputs outputs;};
+            # > Our main nixos configuration file <
+            modules = [./nixos/configuration.nix];
+          };
+        };
       };
     };
-    devShells = forEachSupportedSystem ({pkgs}: {
-      default = pkgs.mkShell {
-        name = "nix-dotfiles";
-        packages = with pkgs; [];
-      };
-    });
-  };
 }
