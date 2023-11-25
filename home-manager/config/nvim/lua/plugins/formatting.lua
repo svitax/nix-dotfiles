@@ -68,7 +68,7 @@ return {
     end,
     keys = {
       {
-        "<leader>k",
+        "K",
         "<cmd>Format<cr>",
         mode = "",
         desc = "Format document",
