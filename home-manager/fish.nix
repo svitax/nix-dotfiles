@@ -126,15 +126,15 @@
           hash = "sha256-6b1zmjtemNLNPx4qsXtm27AbtjwIZWkzJAo21/aVZzM=";
         };
       }
-      {
-        name = "fifc";
-        src = pkgs.fetchFromGitHub {
-          owner = "gazorby";
-          repo = "fifc";
-          rev = "95fc121e245a783ec0b3a235d320a84f1f87ccfd";
-          hash = "sha256-p5E4Mx6j8hcM1bDbeftikyhfHxQ+qPDanuM1wNqGm6E=";
-        };
-      }
+      # {
+      #   name = "fifc";
+      #   src = pkgs.fetchFromGitHub {
+      #     owner = "gazorby";
+      #     repo = "fifc";
+      #     rev = "95fc121e245a783ec0b3a235d320a84f1f87ccfd";
+      #     hash = "sha256-p5E4Mx6j8hcM1bDbeftikyhfHxQ+qPDanuM1wNqGm6E=";
+      #   };
+      # }
       # {
       #   name = "colored_man_pages";
       #   src = pkgs.fetchFromGitHub {
