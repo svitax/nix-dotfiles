@@ -57,6 +57,6 @@ return {
         use_telescope = true,
       }
     end,
-    keys = { { "<leader>t", "<cmd>Neogit<cr>", desc = "Neogit" } },
+    keys = { { "<leader>m", "<cmd>Neogit<cr>", desc = "Neogit" } },
   },
 }
