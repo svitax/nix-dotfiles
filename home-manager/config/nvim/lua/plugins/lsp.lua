@@ -78,7 +78,7 @@ return {
         -- Setup keymaps
         local keymap_opts = { buffer = buffer, remap = false }
 
-        vim.keymap.set("n", "K", vim.lsp.buf.hover, keymap_opts)
+        vim.keymap.set("n", "<leader>k", vim.lsp.buf.hover, { buffer = buffer, remap = false, desc = "Show docs" })
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, keymap_opts)
         vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, opts)
         vim.keymap.set("n", "gr", vim.lsp.buf.references, keymap_opts)
