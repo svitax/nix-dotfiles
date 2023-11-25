@@ -124,6 +124,7 @@ in {
         bind c new-window -c "#{pane_current_path}" # new window and retain cwd
         bind C new-session # new session
         bind d detach-client # detach client
+        bind e send-keys "tmux capture-pane -p -S - | nvim -c 'set buftype=nofile' +" Enter
         bind s split-window -v -c "#{pane_current_path}" # split window horizontally
         bind v split-window -h -c "#{pane_current_path}" # split window vertically
         bind x kill-pane # kill pane
