@@ -7,7 +7,7 @@
   programs.neovim = {
     enable = true;
     withPython3 = true;
-    # defaultEditor = true;
+    defaultEditor = true;
     plugins = with pkgs; [
       vimPlugins.nvim-treesitter.withAllGrammars
     ];
