@@ -32,25 +32,19 @@
       # Disable greeting
       fish_greeting = "";
       flakify = {
-        body =
-          /*
-          fish
-          */
-          ''
-            if not test -e flake.nix
-              nix flake new -t github:nix-community/nix-direnv .
-            else if not test -e .envrc
-              echo "use flake" > .envrc
-              direnv allow
-            end
-            $EDITOR flake.nix
-          '';
+        body = ''
+          if not test -e flake.nix
+            nix flake new -t github:nix-community/nix-direnv .
+          else if not test -e .envrc
+            echo "use flake" > .envrc
+            direnv allow
+          end
+          $EDITOR flake.nix
+        '';
       };
       subcommand_abbr = {
         body =
-          /*
-          fish
-          */
+          # fish
           ''
             # `g co`, `npm i`, etc. subcommand expansion with `abbr`.
             set -l cmd "$argv[1]"
@@ -81,9 +75,7 @@
       };
     };
     interactiveShellInit =
-      /*
-      fish
-      */
+      # fish
       ''
         # Set default editor because home.sessionVariables and environment.variables doesn't get picked up by fish
         # due to this https://nix-community.github.io/home-manager/index.html#why_are_the_session_variables_not_set

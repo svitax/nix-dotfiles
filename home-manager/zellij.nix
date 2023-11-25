@@ -29,9 +29,7 @@ in {
   };
   home.file.".config/zellij/plugins".source = ./config/zellij/plugins;
   home.file.".config/zellij/layouts/default.kdl".text =
-    /*
-    kdl
-    */
+    # kdl
     ''
       default_mode "locked"
       keybinds {

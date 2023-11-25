@@ -15,50 +15,58 @@
       drawbox = true;
     };
     commands = {
-      open = ''
-        ''${{
-          case $(file --mime-type "$f" -bL) in
-            text/*|application/json) $EDITOR "$f";;
-            *) xdg-open "$f" ;;
-          esac
-        }}
-      '';
-      trash = ''
-        ''${{
-          files=$(printf "$fx" | tr '\n' ';')
-          while [ "$files" ]; do
-            file=''${files%%;*}
-            ${pkgs.trash-cli}/bin/trash-put "$(basename "$file")"
-            if [ "$files" = "$file" ]; then
-              files=""
-            else
-              files="''${files#*;}"
-            fi
-          done
-        }}
-      '';
+      open =
+        # bash
+        ''
+          ''${{
+            case $(file --mime-type "$f" -bL) in
+              text/*|application/json) $EDITOR "$f";;
+              *) xdg-open "$f" ;;
+            esac
+          }}
+        '';
+      trash =
+        # bash
+        ''
+          ''${{
+            files=$(printf "$fx" | tr '\n' ';')
+            while [ "$files" ]; do
+              file=''${files%%;*}
+              ${pkgs.trash-cli}/bin/trash-put "$(basename "$file")"
+              if [ "$files" = "$file" ]; then
+                files=""
+              else
+                files="''${files#*;}"
+              fi
+            done
+          }}
+        '';
       clear_trash = ''${pkgs.trash-cli}/bin/trash-empty'';
       restore_trash = ''${pkgs.trash-cli}/bin/trash-restore'';
-      fzf_jump = ''
-        ''${{
-          res="$(${pkgs.fd}/bin/fd -d 1 --hidden --exclude=.git | ${pkgs.fzf}/bin/fzf --prompt='Jump to location> ' --multi --ansi | sed 's/\\/\\\\/g;s/"/\\"/g')"
+      fzf_jump =
+        # bash
+        ''
+          ''${{
+            res="$(${pkgs.fd}/bin/fd -d 1 --hidden --exclude=.git | ${pkgs.fzf}/bin/fzf --prompt='Jump to location> ' --multi --ansi | sed 's/\\/\\\\/g;s/"/\\"/g')"
 
-          if [ -d "$res" ]; then
-            cmd="cd"
-          else
-            cmd="select"
-          fi
-          lf -remote "send $id $cmd \"$res\""
-        }}
-      '';
-      fzy = ''
-        ''${{
-          path=$(ls -a1 | ${pkgs.fzy}/bin/fzy -l "$(( $(tput lines) - 1 ))")
-          [ -z "$path" ] && exit
-          [ -d "$path" ] && cmd='cd' || cmd='select'
-          lf -remote "send $id $cmd '$path'"
-        }}
-      '';
+            if [ -d "$res" ]; then
+              cmd="cd"
+            else
+              cmd="select"
+            fi
+            lf -remote "send $id $cmd \"$res\""
+          }}
+        '';
+      fzy =
+        # bash
+        ''
+          ''${{
+            path=$(ls -a1 | ${pkgs.fzy}/bin/fzy -l "$(( $(tput lines) - 1 ))")
+            [ -z "$path" ] && exit
+            [ -d "$path" ] && cmd='cd' || cmd='select'
+            lf -remote "send $id $cmd '$path'"
+          }}
+        '';
       dragon-out = ''%${pkgs.xdragon}/bin/xdragon -a -x "$fx"'';
       editor-open = ''$$EDITOR $f'';
     };
@@ -71,7 +79,7 @@
       "<enter>" = "open";
 
       a = "push %touch<space>";
-      A = "push :mkdir<space>";
+      A = "push %mkdir<space>";
 
       c = "clear";
 

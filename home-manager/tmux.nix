@@ -1,6 +1,5 @@
 {
   pkgs,
-  lib,
   config,
   ...
 }: let
@@ -47,9 +46,7 @@ in {
   # };
   home.packages = with pkgs; [gitmux];
   home.file.".config/.config/tmux/gitmux.conf".text =
-    /*
-    yml
-    */
+    # yaml
     ''
       tmux:
         symbols:
@@ -89,9 +86,7 @@ in {
     shell = "${pkgs.fish}/bin/fish";
     prefix = "M-a";
     extraConfig =
-      /*
-      sh
-      */
+      # bash
       ''
         set -g default-terminal "xterm-kitty"
         set -ga terminal-overrides ",*256col*:Tc"
@@ -194,57 +189,65 @@ in {
       tmux-fzf-url
       {
         plugin = tmux-mode-indicator;
-        extraConfig = ''
-          # set -g @mode_indicator_prefix_prompt "▍WAIT"
-          # set -g @mode_indicator_prefix_mode_style 'fg=green,bold'
-          # set -g @mode_indicator_empty_prompt "▍TMUX"
-          # set -g @mode_indicator_empty_mode_style 'fg=orange,bold'
-          # set -g @mode_indicator_copy_prompt "▍COPY"
-          # set -g @mode_indicator_copy_mode_style 'fg=yellow,bold'
-          # set -g @mode_indicator_sync_prompt "▍SYNC"
-          # set -g @mode_indicator_sync_mode_style 'fg=red,bold'
+        extraConfig =
+          # bash
+          ''
+            # set -g @mode_indicator_prefix_prompt "▍WAIT"
+            # set -g @mode_indicator_prefix_mode_style 'fg=green,bold'
+            # set -g @mode_indicator_empty_prompt "▍TMUX"
+            # set -g @mode_indicator_empty_mode_style 'fg=orange,bold'
+            # set -g @mode_indicator_copy_prompt "▍COPY"
+            # set -g @mode_indicator_copy_mode_style 'fg=yellow,bold'
+            # set -g @mode_indicator_sync_prompt "▍SYNC"
+            # set -g @mode_indicator_sync_mode_style 'fg=red,bold'
 
-          set -g @mode_indicator_prefix_prompt "  Wait  "
-          set -g @mode_indicator_prefix_mode_style 'bg=orange,fg=#${colors.base00},bold'
-          set -g @mode_indicator_empty_prompt "  Tmux  "
-          set -g @mode_indicator_empty_mode_style 'bg=green,fg=#${colors.base00},bold'
-          set -g @mode_indicator_copy_prompt "  Copy  "
-          set -g @mode_indicator_copy_mode_style 'bg=yellow,fg=#${colors.base01},bold'
-          set -g @mode_indicator_sync_prompt "  Sync  "
-          set -g @mode_indicator_sync_mode_style 'bg=red,fg=#${colors.base00},bold'
-        '';
+            set -g @mode_indicator_prefix_prompt "  Wait  "
+            set -g @mode_indicator_prefix_mode_style 'bg=orange,fg=#${colors.base00},bold'
+            set -g @mode_indicator_empty_prompt "  Tmux  "
+            set -g @mode_indicator_empty_mode_style 'bg=green,fg=#${colors.base00},bold'
+            set -g @mode_indicator_copy_prompt "  Copy  "
+            set -g @mode_indicator_copy_mode_style 'bg=yellow,fg=#${colors.base01},bold'
+            set -g @mode_indicator_sync_prompt "  Sync  "
+            set -g @mode_indicator_sync_mode_style 'bg=red,fg=#${colors.base00},bold'
+          '';
       }
       {
         plugin = t-smart-tmux-session-manager;
-        extraConfig = ''
-          set -g @t-bind 'f'
-          set -g @t-fzf-find-binding 'ctrl-b:change-prompt( )+reload(fd -H -d 2 -t d -E .Trash . ~)'
-          set -g @t-fzf-prompt '  '
+        extraConfig =
+          # bash
+          ''
+            set -g @t-bind 'f'
+            set -g @t-fzf-find-binding 'ctrl-b:change-prompt( )+reload(fd -H -d 2 -t d -E .Trash . ~)'
+            set -g @t-fzf-prompt '  '
 
-          # change default fzf results
-          # set -g @t-fzf-default-results 'sessions' # show tmux sessions by default
-          # set -g @t-fzf-default-results 'zoxide' # show zoxide results by default
+            # change default fzf results
+            # set -g @t-fzf-default-results 'sessions' # show tmux sessions by default
+            # set -g @t-fzf-default-results 'zoxide' # show zoxide results by default
 
-          bind -n M-f run-shell "t" # session switcher
-        '';
+            bind -n M-f run-shell "t" # session switcher
+          '';
       }
       {
         plugin = tmuxPlugins.resurrect;
-        extraConfig = ''
-          set -g @resurrect-capture-pane-contents 'on'
+        extraConfig =
+          # bash
+          ''
+            set -g @resurrect-capture-pane-contents 'on'
 
-          resurrect_dir="$HOME/.config/tmux/resurrect"
-          set -g @resurrect-dir $resurrect_dir
-        '';
+            resurrect_dir="$HOME/.config/tmux/resurrect"
+            set -g @resurrect-dir $resurrect_dir
+          '';
       }
       {
         plugin = tmuxPlugins.continuum;
-        extraConfig = ''
-          set -g @continuum-restore 'on'
-          # set -g @continuum-boot 'on'
-          # set -g @continuum-save-interval '10'
-          # set -g @continuum-systemd-start-cmd 'start-server'
-        '';
+        extraConfig =
+          # bash
+          ''
+            set -g @continuum-restore 'on'
+            # set -g @continuum-boot 'on'
+            # set -g @continuum-save-interval '10'
+            # set -g @continuum-systemd-start-cmd 'start-server'
+          '';
       }
       # ? joshmedeski/tmux-nerd-font-window-name
       # ? roosta/tmux-fuzzback
@@ -252,9 +255,7 @@ in {
     ];
   };
   programs.fish.interactiveShellInit =
-    /*
-    fish
-    */
+    # fish
     ''
       fish_add_path ${t-smart-tmux-session-manager}/share/tmux-plugins/t-smart-tmux-session-manager/bin/
 
