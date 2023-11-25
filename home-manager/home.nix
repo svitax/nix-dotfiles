@@ -25,6 +25,7 @@
     ./git.nix
     ./helix.nix
     ./kitty.nix
+    ./lf.nix
     ./neovim.nix
     ./starship.nix
     ./tmux.nix
