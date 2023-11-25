@@ -46,8 +46,8 @@ return {
             ["<c-c>"] = "close",
           },
           i = {
-            ["<c-j>"] = "move_selection_next",
-            ["<c-k>"] = "move_selection_previous",
+            -- ["<c-j>"] = "move_selection_next",
+            -- ["<c-k>"] = "move_selection_previous",
             ["<c-f>"] = "to_fuzzy_refine",
             ["<c-c>"] = "close",
             -- ["<c-o>"] = "preview_scrolling_left",
@@ -72,6 +72,11 @@ return {
         "<leader>f",
         require("util").telescope("files", { cwd = vim.fn.expand("%:h") }),
         desc = "Open file picker at cwd",
+      },
+      {
+        "<leader>/",
+        require("util").telescope("live_grep", { cwd = vim.fn.expand("%:h") }),
+        desc = "Open live grep at cwd",
       },
       {
         "<leader>F",

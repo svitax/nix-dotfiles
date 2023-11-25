@@ -1,5 +1,6 @@
 return {
   icons = {
+    ellipsis = "…",
     folds = {
       -- suffix = "",
       suffix = "",

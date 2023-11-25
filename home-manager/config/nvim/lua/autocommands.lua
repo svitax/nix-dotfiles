@@ -69,3 +69,28 @@ autocmd("CmdlineLeave", {
     end)
   end,
 })
+
+augroup("toggle_rel_num", { clear = true })
+autocmd("InsertEnter", {
+  desc = "Turn off relative line number when in insert mode",
+  callback = function()
+    vim.o.relativenumber = false
+  end,
+  group = "toggle_rel_num",
+})
+autocmd("InsertLeave", {
+  desc = "Turn on relative line number when leaving insert mode",
+  callback = function()
+    vim.o.relativenumber = true
+  end,
+  group = "toggle_rel_num",
+})
+
+augroup("highlight_on_yank", { clear = true })
+autocmd("TextYankPost", {
+  desc = "Highlight selection on yank",
+  callback = function()
+    vim.highlight.on_yank({ higroup = "Visual" })
+  end,
+  group = "highlight_on_yank",
+})

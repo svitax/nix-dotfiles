@@ -16,6 +16,10 @@ map("v", "<C-k>", ":m '<-2<cr>gv=gv", { desc = "Move selection up" })
 map({ "n", "v" }, "n", "nzzzv", { desc = "Go to next match (centered)" })
 map({ "n", "v" }, "N", "Nzzzv", { desc = "Go to previous match (centered)" })
 
+-- Stays in visual mode while indenting
+map({ "v" }, ">", ">gv", { desc = "Indent right" })
+map({ "v" }, "<", "<gv", { desc = "Indent left" })
+
 -- Goto
 map("", "mm", "%", { remap = true, desc = "Goto matching bracket" })
 map("", "ge", "G", { desc = "Goto last line" })

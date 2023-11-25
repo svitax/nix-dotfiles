@@ -7,14 +7,7 @@ return {
     config = function(_, opts)
       local which_key = require("wf.builtin.which_key")
       local leader_key_prefixes = { n = { ["<space>g"] = "debug", ["<space>m"] = "localleader" } }
-      local m_key_prefixes = {
-        n = {
-          ["md"] = "Surround delete",
-          ["mr"] = "Surround replace",
-          ["ms"] = "Surround add",
-          ["mm"] = "Goto matching bracket",
-        },
-      }
+      local m_key_prefixes = {}
 
       vim.keymap.set(
         "n",
@@ -43,4 +36,22 @@ return {
   --   "stevearc/dressing.nvim",
   --   opts = { select = { telescope = require("telescope.themes").get_ivy({ ... }) }, input = { enabled = false } },
   -- },
+  {
+    "shellRaining/hlchunk.nvim",
+    event = { "UIEnter" },
+    opts = function()
+      local palette = require("nightfox.palette").load("gruvfox")
+      return {
+        exclude_filetypes = {
+          NeogitStatus = true,
+          NeogitCommitMessage = true,
+          NeogitConsole = true,
+        },
+        chunk = { style = palette.magenta.base, notify = false },
+        indent = { enable = false },
+        line_num = { enable = false },
+        blank = { enable = false },
+      }
+    end,
+  },
 }

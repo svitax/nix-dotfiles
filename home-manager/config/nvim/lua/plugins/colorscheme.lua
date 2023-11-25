@@ -69,6 +69,18 @@ return {
 
           NvimSurroundHighlight = { fg = "palette.bg0", bg = "palette.magenta" },
 
+          NeogitNormal = { bg = "palette.bg1" },
+          NeogitWinSeparator = { bg = "palette.bg1", fg = "palette.comment" },
+          NeogitNotification = { bg = "palette.bg1" },
+          NeogitCursorLine = { bg = "palette.bg3" },
+          NeogitCursorLineNr = { fg = "palette.comment" },
+          NeogitDiffHeader = { bg = "palette.bg4", fg = "palette.blue", style = "underline" },
+          NeogitDiffHeaderHighlight = { bg = "palette.bg4", fg = "palette.orange", style = "bold,underline" },
+          NeogitDiffContext = { bg = "palette.bg1" },
+          NeogitDiffContextHighlight = { bg = "palette.bg2" },
+          NeogitHunkHeader = { fg = "palette.fg2", bg = "palette.bg3", gui = "bold" },
+          NeogitHunkHeaderHighlight = { bg = "palette.magenta", fg = "palette.bg1", gui = "bold" },
+
           -- FloatBorder = { fg = "palette.comment" },
         },
       },

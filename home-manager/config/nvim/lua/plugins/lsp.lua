@@ -47,14 +47,14 @@ return {
       -- define the property 'filetypes' to the map in question
       servers = {
         lua_ls = {},
-        nixd = {},
+        nil_ls = {},
         pyright = {},
         yamlls = {},
         taplo = {},
       },
       -- You can do any additional LSP server setup here
       -- return true if you don't want this server to be setup with lspconfig
-      -- TODO: not set up in config function yet
+      -- FIXME: not set up in config function yet
       setup = {
         -- -- example to setup with typescript.nvim
         -- tsserver = function (_, opts)

@@ -77,7 +77,7 @@ vim.opt.listchars:append("tab:» ")
 vim.opt.mouse = "a" -- Enable mouse mode
 vim.opt.number = true -- Print line number
 vim.opt.pumheight = 10 -- Maximum number of entries in a popup
--- vim.opt.relativenumber = true -- Relative line numbers
+vim.opt.relativenumber = true -- Relative line numbers
 vim.opt.scrolloff = 4 -- Lines of context
 vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
 vim.opt.shiftround = true -- Round indent
@@ -99,6 +99,12 @@ vim.opt.updatetime = 250 -- Decrease update time
 -- Remove this option if you want your OS clipboard to remain independent
 -- See `:help clipboard`
 vim.o.clipboard = "unnamedplus"
+
+-- Netrw
+vim.g.netrw_browse_split = 0
+vim.g.netrw_banner = 0
+vim.g.netrw_winsize = 25
+vim.cmd([[ let g:netrw_list_hide='.*\.un\~$']])
 
 vim.cmd.colorscheme("gruvfox")
 

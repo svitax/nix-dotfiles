@@ -119,14 +119,6 @@ return {
             i = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
             c = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
           },
-          ["<C-j>"] = {
-            i = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-            c = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
-          },
-          ["<C-k>"] = {
-            i = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-            c = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-          },
           ["<C-d>"] = cmp.mapping.scroll_docs(-4),
           ["<C-u>"] = cmp.mapping.scroll_docs(4),
           ["<CR>"] = cmp.mapping(function(fallback)
