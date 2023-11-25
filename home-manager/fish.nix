@@ -5,8 +5,13 @@
       lla = "eza --no-user --header --group-directories-first --icons --all --binary --long --git";
       llg = "eza --no-user --header --group-directories-first --icons --all --binary --long --git --git-ignore";
       llt = "eza --no-user --header --group-directories-first --icons --tree --level 2";
-      nixrs = "sudo nixos-rebuild --flake . switch";
-      sw = "sudo nixos-rebuild --flake . switch";
+      # sw = "sudo nixos-rebuild --flake . switch";
+      sw = "nh os switch --nom .";
+      swd = "nh os switch --nom --dry .";
+      cla = "nh clean all --keep 3";
+      clad = "nh clean all --keep 3 --dry";
+      clu = "nh clean user --keep 3";
+      clud = "nh clean user --keep 3 --dry";
       nv = "nvim";
       vim = "nvim";
       vi = "nvim";
