@@ -42,7 +42,8 @@
     extraSpecialArgs = {inherit inputs outputs;};
     users = {
       # Import your home-manager configuration
-      svitax = import ../home-manager/home.nix;
+      # svitax = import ../home-manager/home.nix;
+      svitax = import ../home-manager;
     };
   };
 

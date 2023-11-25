@@ -67,17 +67,15 @@
     zellij-smart-sessionizer
     live-grep # workaround for live-grep in helix until provided by core or plugins
     helix-live-grep # workaround for live-grep in helix until provided by core or plugins
-    file # needed for fifc (fish)
     ripgrep
     fd
-    poetry
     # wl-clipboard # causes weird flickering in neovim + tmux
     xclip
     lazygit
     nix-prefetch-github # prefetch sources from github for nix build tool
-    unstable.eza
+    eza
     ghq
-    # rust
+    # TODO: don't use rustup
     rustup
     gcc
   ];
