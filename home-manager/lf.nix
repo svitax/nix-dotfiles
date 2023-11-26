@@ -19,7 +19,7 @@
         # bash
         ''
           ''${{
-            case $(file --mime-type "$f" -bL) in
+            case $(${pkgs.file}/bin/file --mime-type "$f" -bL) in
               text/*|application/json) $EDITOR "$f";;
               *) xdg-open "$f" ;;
             esac
