@@ -3,7 +3,7 @@
   config,
   ...
 }: let
-  colors = config.colorScheme.colors;
+  inherit (config.colorScheme) colors;
 in {
   programs.zellij = {
     enable = true;
