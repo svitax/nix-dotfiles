@@ -1,18 +1,13 @@
 return {
   {
-    "lmburns/lf.nvim",
-    dependencies = { "akinsho/toggleterm.nvim" },
-    -- init = function()
-    --   vim.g.lf_netrw = 1
-    -- end,
-    opts = {
-      winblend = 0,
-      escape_quit = false,
-      border = "",
+    "is0n/fm-nvim",
+    opts = { ui = { float = { border = "" }, mappings = { q = ":q<CR>" } } },
+    keys = {
+      {
+        "<leader>e",
+        "<cmd>Lf %<cr>",
+        desc = "File explorer",
+      },
     },
-    config = function(_, opts)
-      require("lf").setup(opts)
-      vim.keymap.set("n", "<leader>e", "<cmd>Lf<cr>", { desc = "File explorer" })
-    end,
   },
 }
