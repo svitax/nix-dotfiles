@@ -5,7 +5,7 @@
 }: let
   addons = inputs.firefox-addons.packages.${pkgs.system};
 in {
-  home.packages = with pkgs; [firefox-gnome-theme];
+  home.file.".mozilla/firefox/svitax/chrome/firefox-gnome-theme".source = inputs.firefox-gnome-theme;
   programs.firefox = {
     enable = true;
     profiles.svitax = {
@@ -16,6 +16,13 @@ in {
         "browser.download.panel.shown" = true;
         "identity.fxaccounts.enabled" = false;
         "sigon.rememberSignons" = false;
+        # Firefox gnome theme ## - https://github.com/rafaelmardojai/firefox-gnome-theme/blob/v120/configuration/user.js
+        # (copied into here becase home-manager already writes to user.js)
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # Enable customChrome.css
+        "browser.uidensity" = 0; # Set UI density to normal
+        "svg.context-properties.content.enabled" = true; # Enable SVG context-properties
+        "browser.theme.dark-private-windows" = false; # Disable private window dark theme
+        "widget.gtk.rounded-bottom-corners.enabled" = true; # Enable rounded bottom window corners
       };
       extensions = with addons; [
         bitwarden
@@ -25,6 +32,16 @@ in {
         tridactyl
         youtube-shorts-block
       ];
+      userChrome =
+        # css
+        ''
+          @import "firefox-gnome-theme/userChrome.css";
+        '';
+      userContent =
+        # css
+        ''
+          @import "firefox-gnome-theme/userContent.css"
+        '';
       search = {
         default = "Google";
         force = true;
@@ -58,11 +75,6 @@ in {
           url = "https://en.wikipedia.org/wiki/Special:Search?search=%s&go=Go";
         }
       ];
-      userChrome =
-        # css
-        ''
-          /* some css */
-        '';
     };
   };
 }

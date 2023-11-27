@@ -32,6 +32,9 @@
     firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     firefox-addons.inputs.nixpkgs.follows = "nixpkgs";
 
+    firefox-gnome-theme.url = "github:rafaelmardojai/firefox-gnome-theme";
+    firefox-gnome-theme.flake = false;
+
     # hardware.url = "github:nixos/nixos-hardware";
   };
 
