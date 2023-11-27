@@ -46,7 +46,7 @@
     ...
   } @ inputs: let
     inherit (self) outputs;
-    lib = nixpkgs.lib // home-manager.lib;
+    # lib = nixpkgs.lib // home-manager.lib;
   in
     flake-parts.lib.mkFlake {inherit inputs;} {
       systems = [
@@ -69,7 +69,7 @@
 
         devShells.default = pkgs.mkShell {
           name = "nix-dotfiles";
-          packages = with pkgs; [];
+          # packages = with pkgs; [];
         };
       };
 
