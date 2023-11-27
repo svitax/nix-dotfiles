@@ -3,7 +3,7 @@
   config,
   ...
 }: let
-  colors = config.colorScheme.colors;
+  inherit (config.colorScheme) colors;
 
   t-smart-tmux-session-manager = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "t-smart-tmux-session-manager";
