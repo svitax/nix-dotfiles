@@ -28,7 +28,7 @@ return {
 
           -- look into cmp config for window and documentation (nvim-cmp/lua/cmp/config/default.lua)
           -- PmenuSel = { fg = "palette.bg1", bg = "palette.blue" }, -- I only want to change cmp Pmenu sel
-          -- PmenuThumb = { bg = "palette.sel0" },
+          PmenuThumb = { bg = "palette.bg2" },
           NormalFloat = { bg = "palette.bg1" }, -- I only want to change cmp float (documentation)
 
           CmpItemMenuDefault = { fg = "palette.red", bg = "palette.red" },
