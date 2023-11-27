@@ -3,6 +3,9 @@
   inputs,
   ...
 }: {
+}: let
+  addons = inputs.firefox-addons.packages.${pkgs.system};
+in {
   home.packages = with pkgs; [firefox-gnome-theme];
   programs.firefox = {
     enable = true;
@@ -13,13 +16,13 @@
         "identity.fxaccounts.enabled" = false;
         "sigon.rememberSignons" = false;
       };
-      extensions = [
-        inputs.firefox-addons.packages."x86_64-linux".bitwarden
-        inputs.firefox-addons.packages."x86_64-linux".ublock-origin
-        inputs.firefox-addons.packages."x86_64-linux".sponsorblock
-        inputs.firefox-addons.packages."x86_64-linux".darkreader
-        inputs.firefox-addons.packages."x86_64-linux".tridactyl
-        inputs.firefox-addons.packages."x86_64-linux".youtube-shorts-block
+      extensions = with addons; [
+        bitwarden
+        ublock-origin
+        sponsorblock
+        darkreader
+        tridactyl
+        youtube-shorts-block
       ];
       search.engines = {
         "Nix Packages" = {
