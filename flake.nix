@@ -28,6 +28,10 @@
 
     nix-index-database.url = "github:Mic92/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
+    firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+    firefox-addons.inputs.nixpkgs.follows = "nixpkgs";
+
     # hardware.url = "github:nixos/nixos-hardware";
   };
 

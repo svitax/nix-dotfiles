@@ -3,9 +3,7 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 {
   inputs,
-  lib,
   outputs,
-  config,
   pkgs,
   ...
 }: {
@@ -125,8 +123,8 @@
     description = "svitax";
     extraGroups = ["networkmanager" "wheel"];
     packages = with pkgs; [
-      firefox
-      #  thunderbird
+      # firefox
+      # thunderbird
     ];
   };
 
