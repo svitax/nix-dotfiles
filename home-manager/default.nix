@@ -73,6 +73,7 @@
     xclip
     lazygit
     nurl # prefetch sources for nix build tool
+    nix-init # generate nix packages from urls
     ghq
     # TODO: don't use rustup
     rustup
