@@ -1,7 +1,7 @@
 return {
   {
     "luukvbaal/statuscol.nvim",
-    event = "UIEnter",
+    event = "BufReadPost",
     opts = function()
       local builtin = require("statuscol.builtin")
       -- To display pretty fold icons in `statuscolumn` and show it according to `fillchars`
