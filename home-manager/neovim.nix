@@ -10,9 +10,11 @@
     plugins = with pkgs; [
       vimPlugins.nvim-treesitter.withAllGrammars
     ];
+    # extraPackages = with pkgs; [];
     extraLuaPackages = ps: [ps.magick];
     extraPython3Packages = p:
       with p; [
+        # Neovim needs access to these packages for molten-nvim
         pynvim
         jupyter-client
         cairosvg
@@ -20,8 +22,9 @@
         # kaleido
         pnglatex
         pyperclip
-        ipython
         nbformat
+        # Neovim needs this to open ipython repls
+        ipython
       ];
   };
   home.packages = with pkgs; [
@@ -31,6 +34,7 @@
     selene
     alejandra
     nil
+    statix
     taplo
   ];
   xdg.configFile.nvim = {
