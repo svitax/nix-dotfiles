@@ -40,6 +40,7 @@ return {
       "saadparwaiz1/cmp_luasnip",
       "lukas-reineke/cmp-under-comparator", -- TODO: still using default sorting
       "rcarriga/cmp-dap",
+      { "petertriho/cmp-git", opts = { filetypes = { "NeogitCommitMessage", "gitcommit", "octo" } } },
     },
     -- Configure nvim-cmp
     -- See `:help cmp`
@@ -75,6 +76,7 @@ return {
         nvim_lsp = "lsp",
         obsidian = "obsidian",
         dap = "dap",
+        git = "git",
       }
 
       return {
@@ -151,6 +153,7 @@ return {
           { name = "luasnip" },
           { name = "async_path", option = { trailing_slash = true } },
           { name = "buffer", keyword_length = 4, max_item_count = 5, group_index = 2 },
+          { name = "git" },
         }),
         cmdline = {
           sources = {
@@ -193,8 +196,12 @@ return {
               item.menu = "(" .. entry.source.source.client.name .. ")"
             end
 
+            if entry.source.name == "git" then
+              item.kind = "  "
+            end
+
             if entry.source.name == "copilot" then
-              item.kind = ""
+              item.kind = "  "
               item.abbr = item.abbr .. "..."
               item.menu = "(copilot)"
             end
