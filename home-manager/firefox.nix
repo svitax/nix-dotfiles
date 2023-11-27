@@ -3,6 +3,7 @@
   inputs,
   ...
 }: {
+  home.packages = with pkgs; [firefox-gnome-theme];
   programs.firefox = {
     enable = true;
     profiles.svitax = {
