@@ -17,6 +17,13 @@
       vim = "nvim";
       vi = "nvim";
       v = "nvim";
+      neogit = "nvim -c :Neogit";
+      ngit = "nvim -c :Neogit";
+      ng = "nvim -c :Neogit";
+      diffview = "nvim -c :DiffviewOpen";
+      ndiff = "nvim -c :DiffviewOpen";
+      nlog = "nvim -c :DiffviewFileHistory";
+      lg = "lazygit";
       cl = "clear";
       use = "nix-shell --command fish -p";
       ya = "yazi";
