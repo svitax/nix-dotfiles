@@ -30,17 +30,28 @@
       }: let
         inherit (poetry2nix.lib.mkPoetry2Nix {inherit pkgs;}) mkPoetryApplication;
         pkgs = nixpkgs.legacyPackages.${system};
+        python = pkgs.python311;
       in {
         # Your custom packages
         # Accessible through 'nix build', 'nix shell', etc
         packages = {
-          imgapp = mkPoetryApplication {projectDir = self;};
+          imgapp = mkPoetryApplication {
+            inherit python;
+            projectDir = self;
+          };
           default = self.packages.${system}.imgapp;
         };
         devShells.default = pkgs.mkShell {
           name = "poetry2nix-demo";
-          buildInputs = [pkgs.python3 pkgs.poetry pkgs.pyright pkgs.ruff-lsp];
+          packages = [pkgs.python3 pkgs.poetry pkgs.pyright pkgs.ruff-lsp];
           env = {
+            # Workaround in linux: python downloads ELF's that can't find glibc
+            # You would see errors like: error while loading shared libraries: name.so cannot open shared object file: No such file or directory
+            LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
+              pkgs.stdenv.cc.cc
+              # Add any missing library needed
+              # You can use the nix-index package to locate them, e.g. nix-locate -w --top-level --at-root /lib/libudev.so.1
+            ];
             # Put the venv in the repo, so direnv can access it
             POETRY_VIRTUALENVS_IN_PROJECT = "true";
             POETRY_VIRTUALENVS_PATH = "{project-dir}/.venv";
