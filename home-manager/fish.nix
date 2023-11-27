@@ -2,9 +2,10 @@
   programs.fish = {
     enable = true;
     shellAbbrs = {
-      lla = "eza --no-user --header --group-directories-first --icons --all --binary --long --git";
-      llg = "eza --no-user --header --group-directories-first --icons --all --binary --long --git --git-ignore";
-      llt = "eza --no-user --header --group-directories-first --icons --tree --level 2";
+      ll = "eza --no-user --header --group-directories-first --all --binary";
+      lla = "eza --no-user --header --group-directories-first --all --binary --long";
+      llg = "eza --no-user --header --group-directories-first --all --binary --long --git-ignore";
+      llt = "eza --no-user --header --group-directories-first --tree --level 2";
       # sw = "sudo nixos-rebuild --flake . switch";
       sw = "nh os switch --nom .";
       swd = "nh os switch --nom --dry .";

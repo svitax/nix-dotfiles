@@ -17,6 +17,7 @@
     # You can also split up your configuration and import pieces of it here:
     ./bat.nix
     ./direnv.nix
+    ./eza.nix
     ./firefox.nix
     ./fish.nix
     ./fonts.nix
@@ -72,7 +73,6 @@
     xclip
     lazygit
     nurl # prefetch sources for nix build tool
-    eza
     ghq
     # TODO: don't use rustup
     rustup
