@@ -1,8 +1,4 @@
-{
-  pkgs,
-  config,
-  ...
-}: {
+{pkgs, ...}: {
   xdg.configFile."lf/icons".source = ./config/lf/icons;
   xdg.configFile."pistol/pistol.conf".source = ./config/lf/pistol.conf;
   programs.lf = {

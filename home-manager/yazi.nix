@@ -1,8 +1,4 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{...}: {
   programs.fish.interactiveShellInit = ''
     function yacd
     	set tmp (mktemp -t "yazi-cwd.XXXXX")

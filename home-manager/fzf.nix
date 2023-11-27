@@ -1,9 +1,4 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}: {
+{...}: {
   programs.fzf = {
     enable = true;
     # enableFishIntegration = true;
