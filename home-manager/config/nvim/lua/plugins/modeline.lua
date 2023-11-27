@@ -40,7 +40,7 @@ local components = {
       local total = ((count.total > count.maxcount) and too_many) or count.total
       return ("%s/%s"):format(count.current, total)
     end,
-    color = { fg = palette.blue.base, bg = palette.bg0 },
+    color = { fg = palette.blue.base },
   },
   diagnostics = {
     "diagnostics",
