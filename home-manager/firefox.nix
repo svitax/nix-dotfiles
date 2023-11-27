@@ -10,6 +10,8 @@ in {
   programs.firefox = {
     enable = true;
     profiles.svitax = {
+      id = 0;
+      isDefault = true;
       settings = {
         "dom.security.https_only_mode" = true;
         "browser.download.panel.shown" = true;
