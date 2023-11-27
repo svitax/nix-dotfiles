@@ -86,6 +86,9 @@ return {
             col_offset = -3,
             side_padding = 0,
           },
+          documentation = {
+            winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+          },
         },
         -- enable cmp in dap buffers
         enabled = function()
