@@ -16,6 +16,7 @@ in {
         "browser.download.panel.shown" = true;
         "identity.fxaccounts.enabled" = false;
         "sigon.rememberSignons" = false;
+        "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
         # Firefox gnome theme ## - https://github.com/rafaelmardojai/firefox-gnome-theme/blob/v120/configuration/user.js
         # (copied into here becase home-manager already writes to user.js)
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # Enable customChrome.css
