@@ -113,7 +113,7 @@
         name = "colored_man_pages";
         src = pkgs.fishPlugins.colored-man-pages.src;
       }
-      # nix-prefetch-github (for rev and hash)
+      # nurl (for rev and hash)
       {
         name = "fish-gqh";
         src = pkgs.fetchFromGitHub {

@@ -72,7 +72,7 @@
     # wl-clipboard # causes weird flickering in neovim + tmux
     xclip
     lazygit
-    nix-prefetch-github # prefetch sources from github for nix build tool
+    nurl # prefetch sources for nix build tool
     eza
     ghq
     # TODO: don't use rustup
