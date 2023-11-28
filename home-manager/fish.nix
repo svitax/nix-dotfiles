@@ -13,6 +13,7 @@
       clad = "nh clean all --keep 3 --dry";
       clu = "nh clean user --keep 3";
       clud = "nh clean user --keep 3 --dry";
+      use = "nix-shell --command fish -p";
       nv = "nvim";
       vim = "nvim";
       vi = "nvim";
@@ -24,11 +25,11 @@
       ndiff = "nvim -c :DiffviewOpen";
       nlog = "nvim -c :DiffviewFileHistory";
       lg = "lazygit";
-      cl = "clear";
-      use = "nix-shell --command fish -p";
+      si = "sioyek";
       ya = "yazi";
       zj = "zellij";
       zs = "zellij-smart-sessionizer";
+      cl = "clear";
       dot = "cd ~/nix-dotfiles";
       prj = "cd ~/projects";
     };
