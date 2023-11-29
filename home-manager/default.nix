@@ -27,6 +27,7 @@
     ./kitty.nix
     ./lf.nix
     ./neovim.nix
+    ./mimeapps.nix
     ./papis.nix
     ./sioyek.nix
     ./starship.nix
