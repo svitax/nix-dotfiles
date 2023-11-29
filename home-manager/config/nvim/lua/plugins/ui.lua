@@ -20,7 +20,7 @@ return {
       )
 
       vim.keymap.set(
-        "n",
+        { "n", "x" },
         "m",
         which_key({
           text_insert_in_advance = "m",
