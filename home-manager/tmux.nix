@@ -45,7 +45,7 @@ in {
   #   recursive = true;
   # };
   home.packages = with pkgs; [gitmux];
-  home.file.".config/.config/tmux/gitmux.conf".text =
+  home.file.".config/tmux/gitmux.conf".text =
     # yaml
     ''
       tmux:
@@ -168,7 +168,7 @@ in {
         set -ga status-left "#[fg=$color_purple,bold]#S " # session name
         set -g status-left-length 200
         set -g status-right ""
-        # set -g status-right "#[fg=white,nobold]#(gitmux -cfg $HOME/.config/tmux/gitmux.conf '#{pane_current_path}')"
+        # set -g status-right "#[fg=white,nobold]#(gitmux -cfg $HOME/tmux/gitmux.conf '#{pane_current_path}')"
         set -g status-position bottom
         set -g status-style "bg=$color_gray,fg=$color_fg"
 
