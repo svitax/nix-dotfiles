@@ -11,7 +11,6 @@
       [settings]
       add-file-name={doc[year]}-{doc[author_list][0][family]}-{doc[title]}
       add-folder-name={doc[year]}-{doc[author_list][0][family]}-{doc[title]}
-      # database-backend=whoosh
       default-library=papers
       file-browser=lf
       notes-name=notes.md
