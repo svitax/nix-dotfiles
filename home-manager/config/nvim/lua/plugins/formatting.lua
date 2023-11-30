@@ -52,6 +52,14 @@ return {
         vim.b.disable_autoformat = false
         vim.g.disable_autoformat = false
       end, { desc = "Re-enable autoformat on save" })
+      vim.api.nvim_create_user_command("FormatToggle", function(args)
+        if args.bang then
+          -- FormatToggle! will toggle formatting just for this buffer
+          vim.b.disable_autoformat = not vim.b.disable_autoformat
+        else
+          vim.g.disable_autoformat = not vim.g.disable_autoformat
+        end
+      end, { desc = "Toggle autoformat on save", bang = true })
 
       -- Command to run async formatting
       vim.api.nvim_create_user_command("Format", function(args)
@@ -73,6 +81,7 @@ return {
         mode = "",
         desc = "Format document",
       },
+      { "<leader>z", "<cmd>FormatToggle<cr>", desc = "Toggle format on save" },
     },
   },
 }
