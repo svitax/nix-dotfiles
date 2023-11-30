@@ -30,8 +30,8 @@ in {
         ublock-origin
         sponsorblock
         darkreader
-        tridactyl
         youtube-shorts-block
+        vimium-c
       ];
       userChrome =
         # css
