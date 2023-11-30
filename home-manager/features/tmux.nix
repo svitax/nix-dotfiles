@@ -106,6 +106,7 @@ in {
         set -g set-clipboard on          # use system clipboard
         set -g status-interval 1         # update the status bar every 3 seconds
         set -g focus-events on           # TODO: learn how this works
+        set -g detach-on-destroy off # don't exit from tmux when closing a session
         setw -g automatic-rename on      # automatically rename windows based on the application within
         set -g set-titles on             # use titles in tabs
         set -g set-titles-string "#I:#W" # Set parent terminal title to reflect current window in tmux session
@@ -120,7 +121,7 @@ in {
         bind r source-file ~/.config/tmux/tmux.conf # Easier reload of config
         bind s split-window -v -c "#{pane_current_path}" # split window horizontally
         bind v split-window -h -c "#{pane_current_path}" # split window vertically
-        bind x kill-pane # kill pane
+        bind x kill-pane # skip "kill-pane 1? (y/n)" prompt
 
         # vim MAPPINGS
         not_tmux="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?(g?(view|n?vim?x?)(diff)?|fzf)$'"
@@ -219,7 +220,7 @@ in {
           # bash
           ''
             set -g @t-bind 'f'
-            set -g @t-fzf-find-binding 'ctrl-b:change-prompt( )+reload(fd -H -d 2 -t d -E .Trash . ~)'
+            set -g @t-fzf-find-binding 'ctrl-b:change-prompt( )+reload(fd -H -d 2 -t d . ~)'
             set -g @t-fzf-prompt '  '
 
             # change default fzf results
