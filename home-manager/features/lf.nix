@@ -7,7 +7,7 @@
       icons = true;
       ignorecase = true;
       preview = true;
-      hidden = true;
+      # hidden = true;
       drawbox = true;
     };
     commands = {
