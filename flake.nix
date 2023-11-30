@@ -19,7 +19,6 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    # TODO: Add any other flake you might need
     nix-colors.url = "github:misterio77/nix-colors";
     zjstatus.url = "github:dj95/zjstatus";
 
@@ -35,6 +34,7 @@
     firefox-gnome-theme.url = "github:rafaelmardojai/firefox-gnome-theme";
     firefox-gnome-theme.flake = false;
 
+    # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
   };
 
