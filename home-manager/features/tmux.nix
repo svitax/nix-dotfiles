@@ -112,14 +112,12 @@ in {
         set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'  # undercurl support
         set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'  # underscore colours - needs tmux-3.0
 
-        # Easier reload of config
-        bind o source-file ~/.config/tmux/tmux.conf
-
         # prefix MAPPINGS
         bind c new-window -c "#{pane_current_path}" # new window and retain cwd
         bind C new-session # new session
         bind d detach-client # detach client
         bind e send-keys "tmux capture-pane -p -S - | nvim -c 'set buftype=nofile' +" Enter
+        bind r source-file ~/.config/tmux/tmux.conf # Easier reload of config
         bind s split-window -v -c "#{pane_current_path}" # split window horizontally
         bind v split-window -h -c "#{pane_current_path}" # split window vertically
         bind x kill-pane # kill pane
