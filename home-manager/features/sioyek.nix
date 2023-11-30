@@ -5,9 +5,9 @@ in {
     enable = true;
     config = {
       custom_background_color = "#${colors.base00}";
-      custom_text_color = "#${colors.base06}";
+      custom_text_color = "#${colors.base05}";
 
-      page_separator_color = "#${colors.base00}";
+      page_separator_color = "#${colors.base01}";
       search_highlight_color = "#${colors.base0A}";
       status_bar_color = "#${colors.base00}";
       status_bar_text_color = "#${colors.base06}";
@@ -45,7 +45,7 @@ in {
       goto_definition = "gd";
       add_highlight = "ah";
       fit_to_page_width_smart = "aa";
-      toggle_custom_colors = "dd";
+      toggle_custom_color = "dd";
       screen_down = "<C-d>";
       screen_up = "<C-u>";
       goto_left_smart = "gh";
