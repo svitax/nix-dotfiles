@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   home.packages = with pkgs; [
     papis
   ];
@@ -6,7 +10,7 @@
     # ini
     ''
       [papers]
-      dir=~/Documents/papers
+      dir=${config.home.homeDirectory}/Documents/papers
 
       [settings]
       add-file-name={doc[year]}-{doc[author_list][0][family]}-{doc[title]}
