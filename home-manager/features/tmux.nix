@@ -224,7 +224,7 @@ in {
 
             # change default fzf results
             # set -g @t-fzf-default-results 'sessions' # show tmux sessions by default
-            # set -g @t-fzf-default-results 'zoxide' # show zoxide results by default
+            set -g @t-fzf-default-results 'zoxide' # show zoxide results by default
 
             bind -n M-f run-shell "t" # session switcher
           '';
