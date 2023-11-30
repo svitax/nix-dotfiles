@@ -182,6 +182,10 @@ in {
         # set -g popup-border-lines rounded
 
         run-shell ${tmux-mode-indicator}/share/tmux-plugins/tmux-mode-indicator/mode_indicator.tmux
+
+        set -g @continuum-save-interval '5'
+        set -g @continuum-restore 'on'
+        run-shell ${pkgs.tmuxPlugins.continuum}/share/tmux-plugins/continuum/continuum.tmux
       '';
     plugins = with pkgs; [
       tmux-fzf-url
@@ -236,17 +240,17 @@ in {
             set -g @resurrect-dir $resurrect_dir
           '';
       }
-      {
-        plugin = tmuxPlugins.continuum;
-        extraConfig =
-          # bash
-          ''
-            set -g @continuum-restore 'on'
-            # set -g @continuum-boot 'on'
-            # set -g @continuum-save-interval '10'
-            # set -g @continuum-systemd-start-cmd 'start-server'
-          '';
-      }
+      # {
+      #   plugin = tmuxPlugins.continuum;
+      #   extraConfig =
+      #     # bash
+      #     ''
+      #       set -g @continuum-restore 'on'
+      #       set -g @continuum-save-interval '5' # minutes
+      #       # set -g @continuum-boot 'on'
+      #       # set -g @continuum-systemd-start-cmd 'start-server'
+      #     '';
+      # }
       # ? joshmedeski/tmux-nerd-font-window-name
       # ? roosta/tmux-fuzzback
       # ? sainnhe/tmux-fzf
