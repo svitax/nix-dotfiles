@@ -1,0 +1,26 @@
+diff --git a/papis/commands/bibtex.py b/papis/commands/bibtex.py
+index f34e76df..7b707f1a 100644
+--- a/papis/commands/bibtex.py
++++ b/papis/commands/bibtex.py
+@@ -542,9 +542,14 @@ def _iscited(ctx: click.Context, _files: List[str]) -> None:
+ @cli.command("import")
+ @click.help_option("-h", "--help")
+ @click.option("-o", "--out", help="Out folder to export", default=None)
++@click.option(
++    "--link/--no-link",
++    help="Instead of copying the file to the library, create a link to "
++         "its original location",
++    default=False)
+ @papis.cli.all_option()
+ @click.pass_context
+-def _import(ctx: click.Context, out: Optional[str], _all: bool) -> None:
++def _import(ctx: click.Context, out: Optional[str], _all: bool, link: bool) -> None:
+     """
+     Import documents to papis
+         e.g. papis bibtex read mybib.bib import
+@@ -585,4 +590,4 @@ def _import(ctx: click.Context, out: Optional[str], _all: bool) -> None:
+         else:
+             logger.info("\tFound %d file(s).", len(filepaths))
+ 
+-        papis.commands.add.run(filepaths, data=doc)
++        papis.commands.add.run(filepaths, data=doc, link=link)
