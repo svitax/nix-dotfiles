@@ -44,6 +44,7 @@ return {
           n = {
             s = flash,
             ["<c-c>"] = "close",
+            ["<c-q>"] = require("trouble.providers.telescope").open_with_trouble,
           },
           i = {
             -- ["<c-j>"] = "move_selection_next",
@@ -54,6 +55,7 @@ return {
             -- ["<c-i>"] = "preview_scrolling_right",
             ["<c-;>"] = "cycle_previewers_next",
             ["<c-,>"] = "cycle_previewers_prev",
+            ["<c-q>"] = require("trouble.providers.telescope").open_with_trouble,
           },
         },
       },
@@ -102,16 +104,6 @@ return {
         "<leader>S",
         require("util").telescope("lsp_workspace_symbols"),
         desc = "Open workspace symbol picker",
-      },
-      {
-        "<leader>d",
-        require("util").telescope("diagnostics", { bufnr = 0 }),
-        desc = "Open diagnostics picker",
-      },
-      {
-        "<leader>D",
-        require("util").telescope("diagnostics"),
-        desc = "Open workspace diagnostics picker",
       },
       {
         "<leader>'",
