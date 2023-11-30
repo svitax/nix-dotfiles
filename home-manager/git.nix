@@ -8,6 +8,7 @@ in {
     extraConfig = {
       init.defaultBranch = "master";
     };
+    ignores = [".direnv" "result"];
     delta = {
       enable = true;
       options = {
