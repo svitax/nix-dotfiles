@@ -15,26 +15,26 @@
     # inputs.neovim-flake.nixosModules."x86_64-linux".hm
 
     # You can also split up your configuration and import pieces of it here:
-    ./bat.nix
-    ./direnv.nix
-    ./eza.nix
-    ./firefox.nix
-    ./fish.nix
-    ./fonts.nix
-    ./fzf.nix
-    ./git.nix
-    ./helix.nix
-    ./kitty.nix
-    ./lf.nix
-    ./neovim.nix
-    ./mimeapps.nix
-    ./papis.nix
-    ./sioyek.nix
-    ./starship.nix
-    ./tmux.nix
-    ./yazi.nix
-    ./zellij.nix
-    ./zoxide.nix
+    ./features/bat.nix
+    ./features/direnv.nix
+    ./features/eza.nix
+    ./features/firefox.nix
+    ./features/fish.nix
+    ./features/fonts.nix
+    ./features/fzf.nix
+    ./features/git.nix
+    ./features/helix.nix
+    ./features/kitty.nix
+    ./features/lf.nix
+    ./features/neovim.nix
+    ./features/mimeapps.nix
+    ./features/papis.nix
+    ./features/sioyek.nix
+    ./features/starship.nix
+    ./features/tmux.nix
+    ./features/yazi.nix
+    ./features/zellij.nix
+    ./features/zoxide.nix
   ];
 
   colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
