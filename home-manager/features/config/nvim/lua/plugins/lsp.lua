@@ -48,7 +48,6 @@ return {
       servers = {
         lua_ls = {},
         nil_ls = {},
-        pyright = {},
         yamlls = {},
         taplo = {},
       },

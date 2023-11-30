@@ -1,5 +1,6 @@
 return {
-  { "neovim/nvim-lspconfig", opts = { servers = { ruff_lsp = {} } } },
+  { "neovim/nvim-lspconfig", opts = { servers = { ruff_lsp = {}, pyright = {} } } },
+  { "mfussenegger/nvim-lint", opts = { linters_by_ft = { python = { "mypy" } } } },
   {
     "klafyvel/vim-slime-cells",
     dependencies = { "jpalardy/vim-slime", "anuvyklack/hydra.nvim" },
