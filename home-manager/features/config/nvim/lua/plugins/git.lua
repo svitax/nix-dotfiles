@@ -41,7 +41,7 @@ return {
         disable_hint = true,
         disable_commit_confirmation = true,
         disable_insert_on_commit = true,
-        kind = "tab",
+        kind = "replace",
         use_per_project_settings = true,
         remember_settings = true,
         ignored_settings = {
