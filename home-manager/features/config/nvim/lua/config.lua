@@ -7,7 +7,7 @@ return {
     },
     diagnostics = {
       Error = "● ",
-      Information = "● ",
+      Info = "● ",
       Hint = "● ",
       Warn = "● ",
     },
