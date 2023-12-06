@@ -28,6 +28,8 @@
     firefox-gnome-theme.url = "github:rafaelmardojai/firefox-gnome-theme";
     firefox-gnome-theme.flake = false;
 
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+
     # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
   };

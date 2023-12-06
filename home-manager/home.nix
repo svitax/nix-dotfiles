@@ -48,7 +48,7 @@
       outputs.overlays.zjstatus
 
       # You can also add overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
+      inputs.neovim-nightly-overlay.overlay
     ];
     # Configure your nixpkgs instance
     config = {
