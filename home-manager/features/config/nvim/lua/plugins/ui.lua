@@ -37,6 +37,34 @@ return {
   --   opts = { select = { telescope = require("telescope.themes").get_ivy({ ... }) }, input = { enabled = false } },
   -- },
   {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {
+      messages = { enabled = false },
+      cmdline = { enabled = true, view = "cmdline" },
+      notify = { enabled = true, view = "notify" },
+      presets = {
+        bottom_search = true,
+        long_message_to_split = true,
+        inc_rename = false,
+        lsp_doc_border = true,
+        command_palette = false,
+      },
+      popupmenu = { backend = "cmp" },
+      lsp = {
+        progress = { enabled = false }, -- NOTE: fidget.nvim behaves and looks nicer
+        signature = { enabled = false, auto_open = { enabled = false } },
+        documentation = { view = "messages" },
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          ["vim.lsp.util.stylize_markdown"] = true,
+          ["cmp.entry.get_documentation"] = true,
+        },
+      },
+    },
+    dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
+  },
+  {
     "shellRaining/hlchunk.nvim",
     event = { "UIEnter" },
     opts = function()
