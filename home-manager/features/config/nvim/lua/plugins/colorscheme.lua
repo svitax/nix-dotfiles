@@ -2,7 +2,7 @@ return {
   {
     -- Highlight hex/rgb/css colors
     "NvChad/nvim-colorizer.lua",
-    event = { "BufNew", "BufRead" },
+    event = "BufReadPost",
     opts = {
       user_default_options = {
         names = false,
@@ -88,6 +88,15 @@ return {
           NeogitDiffContextHighlight = { bg = "palette.bg2" },
           NeogitHunkHeader = { fg = "palette.fg2", bg = "palette.bg3", gui = "bold" },
           NeogitHunkHeaderHighlight = { bg = "palette.magenta", fg = "palette.bg1", gui = "bold" },
+
+          TelescopeBorder = { fg = "palette.bg4" },
+          TelescopeSelectionCaret = { fg = "palette.yellow" },
+          TelescopeSelection = { link = "Cursorline" },
+          TelescopeMatching = { link = "Search" },
+          TelescopeNormal = { link = "Normal" },
+          TelescopeTitle = { fg = "palette.bg1", bg = "palette.green" },
+          TelescopePromptNormal = { link = "TelescopeNormal" },
+          TelescopePromptBorder = { link = "TelescopeBorder" },
 
           -- FloatBorder = { fg = "palette.comment" },
         },
