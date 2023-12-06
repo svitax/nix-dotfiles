@@ -47,5 +47,5 @@ return {
   },
   { "folke/todo-comments.nvim", opts = { signs = false, highlight = { after = "" } } },
   { "chrisgrieser/nvim-puppeteer" },
-  { "calops/hmts.nvim", event = "VeryLazy" },
+  { "calops/hmts.nvim", ft = { "nix" }, opts = {} },
 }
