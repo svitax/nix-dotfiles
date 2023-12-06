@@ -21,11 +21,13 @@ return {
     },
     dependencies = {
       "nvim-treesitter/nvim-treesitter-textobjects",
+      "RRethy/nvim-treesitter-endwise",
     },
     -- Configure Treesitter
     -- See `:help nvim-treesitter`
     -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
     opts = {
+      endwise = { enable = true },
       highlight = { enable = true, additional_vim_regex_highlighting = { "markdown" } },
       indent = { enable = true },
       incremental_selection = {
