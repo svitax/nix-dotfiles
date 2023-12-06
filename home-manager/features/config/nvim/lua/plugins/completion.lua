@@ -22,6 +22,7 @@ return {
   -- Autocompletion
   {
     "hrsh7th/nvim-cmp",
+    lazy = true,
     version = false,
     event = { "InsertEnter", "CmdlineEnter" },
     dependencies = {
