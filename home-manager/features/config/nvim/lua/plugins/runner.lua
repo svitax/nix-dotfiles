@@ -48,6 +48,7 @@ return {
       vim.keymap.set("n", "<leader>go", "<cmd>lua require('dap').step_out()<cr>", { desc = "Step out" })
       vim.keymap.set("n", "<leader>gw", "<cmd>lua require('dap').step_over()<cr>", { desc = "Step over" })
       vim.keymap.set("n", "<leader>gn", "<cmd>lua require('projector').next()<cr>", { desc = "Step to next" }) -- next task?
+      vim.keymap.set("n", "<leader>gv", "<cmd>FzfLua dap_variables<cr>", { desc = "List variables" })
       vim.keymap.set("n", "<leader>gx", "<cmd>lua require('projector').kill()<cr>", { desc = "Kill task/debug session" }) -- kill task
       -- vim.keymap.set("n", "<leader>g<C-c>", "dap_edit_condition", { desc = "Edit breakpoint condition on current line" }) -- set_breakpoint condition
       -- vim.keymap.set("n", "<leader>g<C-l>", "dap_edit_log", { desc = "Edit breakpoint log message on current line" }) -- set breakpoint log message

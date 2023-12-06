@@ -49,6 +49,7 @@ return {
           "NeogitPushPopup--force",
           "NeogitCommitPopup--alow-empty",
         },
+        integrations = { fzf_lua = true },
         signs = {
           section = { icons.dap.collapsed, icons.dap.expanded },
           item = { icons.dap.collapsed, icons.dap.expanded },
