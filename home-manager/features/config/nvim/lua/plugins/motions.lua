@@ -24,7 +24,6 @@ return {
     -- TODO: Telescope integration
     -- TODO: flash hg don't go italic
     "folke/flash.nvim",
-    event = "VeryLazy",
     opts = {
       modes = {
         search = { enabled = false },
