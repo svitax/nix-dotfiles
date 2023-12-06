@@ -104,10 +104,6 @@ autocmd("VimEnter", {
   desc = "Open Telescope on VimEnter if directory",
   callback = function()
     local buffer_path = vim.fn.argv(0)
-    if vim.fn.isdirectory(buffer_path) == 1 then
-      local ts = require("util").telescope("files")
-      vim.api.nvim_buf_delete(0, { force = true })
-      ts()
     end
   end,
 })

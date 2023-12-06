@@ -12,7 +12,6 @@ return {
       "rcarriga/nvim-dap-ui",
       "mfussenegger/nvim-dap-python",
       "LiadOz/nvim-dap-repl-highlights",
-      "nvim-telescope/telescope-dap.nvim",
     },
     config = function()
       local icons = require("config").icons.dap
@@ -28,7 +27,6 @@ return {
 
       require("nvim-dap-repl-highlights").setup()
       -- require("nvim-dap-virtual-text").setup()
-      require("telescope").load_extension("dap")
 
       -- Set up the ui
       require("dapui").setup({

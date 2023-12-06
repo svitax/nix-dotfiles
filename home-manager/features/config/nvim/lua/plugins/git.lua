@@ -49,15 +49,11 @@ return {
           "NeogitPushPopup--force",
           "NeogitCommitPopup--alow-empty",
         },
-        integrations = {
-          telescope = true,
-        },
         signs = {
           section = { icons.dap.collapsed, icons.dap.expanded },
           item = { icons.dap.collapsed, icons.dap.expanded },
         },
         commit_popup = { kind = "auto" },
-        use_telescope = true,
       }
     end,
     keys = { { "<leader>t", "<cmd>Neogit<cr>", desc = "Neogit" } },
