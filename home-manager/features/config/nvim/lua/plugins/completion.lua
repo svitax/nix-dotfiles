@@ -2,6 +2,7 @@ return {
   -- Snippet engine
   {
     "L3MON4D3/LuaSnip",
+    event = "InsertEnter",
     opts = {
       -- Don't store snippet history for less overhead
       history = false,
