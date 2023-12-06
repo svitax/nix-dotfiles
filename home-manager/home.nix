@@ -33,7 +33,6 @@
     ./features/sioyek.nix
     ./features/starship.nix
     ./features/tmux.nix
-    ./features/yazi.nix
     ./features/zellij.nix
     ./features/zoxide.nix
   ];

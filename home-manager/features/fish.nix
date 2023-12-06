@@ -26,7 +26,6 @@
       nlog = "nvim -c :DiffviewFileHistory";
       lg = "lazygit";
       si = "sioyek";
-      ya = "yazi";
       zj = "zellij";
       zs = "zellij-smart-sessionizer";
       cl = "clear";
