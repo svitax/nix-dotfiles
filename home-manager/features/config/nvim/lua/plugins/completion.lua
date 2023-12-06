@@ -2,15 +2,6 @@ return {
   -- Snippet engine
   {
     "L3MON4D3/LuaSnip",
-    dependencies = {
-      -- Adds a number of user-friendly snippets
-      {
-        "rafamadriz/friendly-snippets",
-        config = function()
-          require("luasnip.loaders.from_vscode").lazy_load()
-        end,
-      },
-    },
     opts = {
       -- Don't store snippet history for less overhead
       history = false,
