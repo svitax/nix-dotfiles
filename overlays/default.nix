@@ -20,16 +20,6 @@ in {
     papis = addPatches prev.papis [./papis-bibtex-import-link.patch];
   };
 
-  # When applied, the unstable nixpkgs set (declared in the flake inputs) will
-  # be accessible through 'pkgs.unstable'
-  unstable-packages = final: _prev: {
-    unstable = import inputs.nixpkgs-unstable {
-      inherit (final) system;
-      # system = final.system;
-      config.allowUnfree = true;
-    };
-  };
-
   # zjstatus zellij statusbar plugin
   zjstatus = final: prev: {
     zjstatus = inputs.zjstatus.packages.${prev.system}.default;
