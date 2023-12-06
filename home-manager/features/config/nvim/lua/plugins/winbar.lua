@@ -32,6 +32,15 @@ return {
       }
       return {
         bar = { sources = { directory, filename } },
+        sources = {
+          path = {
+            modified = function(sym)
+              return sym:merge({
+                name = sym.name .. "[+]",
+              })
+            end,
+          },
+        },
         general = {
           enable = function(buf, win)
             return not vim.api.nvim_win_get_config(win).zindex
