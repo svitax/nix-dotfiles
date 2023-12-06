@@ -45,7 +45,7 @@ in {
   #   recursive = true;
   # };
   home.packages = with pkgs; [gitmux];
-  home.file.".config/tmux/gitmux.conf".text =
+  home.file.".config/tmux/gitmux.yml".text =
     # yaml
     ''
       tmux:
@@ -70,12 +70,12 @@ in {
           insertions: "#[fg=#${colors.base0B},nobold]"
           deletions: "#[fg=#${colors.base08},nobold]"
           modified: "#[fg=#${colors.base0A},nobold]"
-          untracked: "#[fg=#${colors.base03},nobold]"
-          stashed: "#[fg=#${colors.base03},nobold]"
+          untracked: "#[fg=#${colors.base04},nobold]"
+          stashed: "#[fg=#${colors.base04},nobold]"
           clean: "#[fg=#${colors.base0B},nobold]"
           divergence: "#[fg=#${colors.base0D},nobold]"
           remote: "#[fg=#${colors.base03},nobold]"
-        layout: [flags, " ", "divergence", " ", branch, .., remote-branch]
+        layout: [flags, " ", "divergence", " ", branch]
         options:
           branch_max_len: 0
           hide_clean: false
@@ -166,8 +166,7 @@ in {
         set -g status-left "#{tmux_mode_indicator} " # tmux mode
         set -ga status-left "#[fg=$color_purple,bold]#S " # session name
         set -g status-left-length 200
-        set -g status-right ""
-        # set -g status-right "#[fg=white,nobold]#(gitmux -cfg $HOME/tmux/gitmux.conf '#{pane_current_path}')"
+        set -g status-right "#[fg=white,nobold]#(gitmux -cfg $HOME/.config/tmux/gitmux.yml)"
         set -g status-position bottom
         set -g status-style "bg=$color_gray,fg=$color_fg"
 
