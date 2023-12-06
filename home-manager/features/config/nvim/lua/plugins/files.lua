@@ -271,17 +271,17 @@ return {
 
       return {
         columns = {
-          {
-            "type",
-            icons = {
-              directory = "-",
-              fifo = "p",
-              file = "-",
-              link = "",
-              socket = "s",
-            },
-            highlight = "Comment",
-          },
+          -- {
+          --   "type",
+          --   icons = {
+          --     directory = "-",
+          --     fifo = "p",
+          --     file = "-",
+          --     link = "",
+          --     socket = "s",
+          --   },
+          --   highlight = "Comment",
+          -- },
           { "permissions", highlight = "Comment" },
           { "size", highlight = "Special" },
           { "mtime", highlight = "Number" },
