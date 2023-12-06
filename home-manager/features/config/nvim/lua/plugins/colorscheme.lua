@@ -1,11 +1,19 @@
 return {
   {
     -- Highlight hex/rgb/css colors
-    "brenoprata10/nvim-highlight-colors",
-    opts = { render = "background", enable_named_colors = true },
-    event = "BufReadPost",
+    "NvChad/nvim-colorizer.lua",
+    event = { "BufNew", "BufRead" },
+    opts = {
+      user_default_options = {
+        names = false,
+        mode = "virtualtext",
+        virtualtext = "▋",
+        always_update = true,
+        rgb_fn = true,
+        hsl_fn = true,
+      },
+    },
   },
-  { "folke/tokyonight.nvim", opts = {} },
   {
     "svitax/nightfox.nvim",
     branch = "gruvfox",
