@@ -8,14 +8,18 @@ return {
       local icon_kind_opts = configs.opts.icons.kinds
 
       local filename = {
-        get_symbols = function(buff, win, cursor)
-          local symbols = sources.path.get_symbols(buff, win, cursor)
+        get_symbols = function(buf, win, cursor)
+          local symbols = sources.path.get_symbols(buf, win, cursor)
+          if vim.api.nvim_buf_get_name(buf):find("oil") then
+            symbols[#symbols].name = ""
+            symbols[#symbols].icon = ""
+          end
           return { symbols[#symbols] }
         end,
       }
 
       local directory = {
-        get_symbols = function(buff, win, cursor)
+        get_symbols = function(buf, win, cursor)
           return {
             bar.dropbar_symbol_t:new({
               icon = icon_kind_opts.symbols.Folder,
