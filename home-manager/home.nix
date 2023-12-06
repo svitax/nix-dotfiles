@@ -22,6 +22,7 @@
     ./features/fish.nix
     ./features/fonts.nix
     ./features/fzf.nix
+    ./features/ghq.nix
     ./features/git.nix
     ./features/helix.nix
     ./features/kitty.nix
@@ -76,7 +77,6 @@
     lazygit
     nurl # prefetch sources for nix build tool
     nix-init # generate nix packages from urls
-    ghq
     # TODO: don't use rustup
     rustup
     gcc
