@@ -30,9 +30,9 @@ return {
       return {
         relculright = true,
         segments = {
-          { sign = { namespace = { "gitsigns" }, maxwidth = 1 }, click = "v:lua.ScSa" },
           { sign = { name = { ".*" }, maxwidth = 1 }, click = "v:lua.ScSa" },
           { text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" },
+          { sign = { namespace = { "gitsigns" }, maxwidth = 1 }, click = "v:lua.ScSa" },
           { text = { foldcolumn, " " }, click = "v:lua.ScFa" },
         },
       }

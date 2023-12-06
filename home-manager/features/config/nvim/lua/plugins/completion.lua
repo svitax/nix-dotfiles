@@ -70,6 +70,12 @@ return {
         obsidian = "obsidian",
         dap = "dap",
         git = "git",
+        -- obsidian.nvim automatically registers its sources. define source names else my config errors
+        -- https://github.com/epwalsh/obsidian.nvim/blob/main/lua/obsidian/init.lua#L161
+        -- (find the names of the sources that are automatically registered and add them to this table)
+        obsidian = "obsidian",
+        obsidian_new = "obsidian",
+        obsidian_tags = "obsidian",
       }
 
       return {
