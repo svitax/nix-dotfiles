@@ -10,11 +10,12 @@ return {
       local filename = {
         get_symbols = function(buf, win, cursor)
           local symbols = sources.path.get_symbols(buf, win, cursor)
+          local sym = symbols[#symbols]
           if vim.api.nvim_buf_get_name(buf):find("oil") then
-            symbols[#symbols].name = ""
-            symbols[#symbols].icon = ""
+            sym.name = ""
+            sym.icon = ""
           end
-          return { symbols[#symbols] }
+          return { sym }
         end,
       }
 
