@@ -273,24 +273,13 @@ return {
         columns = {
           -- {
           --   "type",
-          --   icons = {
-          --     directory = "-",
-          --     fifo = "p",
-          --     file = "-",
-          --     link = "",
-          --     socket = "s",
-          --   },
+          --   icons = { directory = "-", fifo = "p", file = "-", link = "", socket = "s" },
           --   highlight = "Comment",
           -- },
           { "permissions", highlight = "Comment" },
           { "size", highlight = "Special" },
           { "mtime", highlight = "Number" },
-          {
-            "icon",
-            default_file = "",
-            directory = "",
-            add_padding = false,
-          },
+          { "icon", default_file = "", directory = "", add_padding = false },
         },
         win_options = {
           number = false,
@@ -309,24 +298,9 @@ return {
             return name == ".."
           end,
         },
-        float = {
-          border = "solid",
-          win_options = {
-            winblend = 0,
-          },
-        },
-        preview = {
-          border = "solid",
-          win_options = {
-            winblend = 0,
-          },
-        },
-        progress = {
-          border = "solid",
-          win_options = {
-            winblend = 0,
-          },
-        },
+        float = { border = "solid", win_options = { winblend = 0 } },
+        preview = { border = "solid", win_options = { winblend = 0 } },
+        progress = { border = "solid", win_options = { winblend = 0 } },
         keymaps = {
           ["g?"] = "actions.show_help",
           ["K"] = preview_mapping,
