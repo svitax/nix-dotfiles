@@ -30,7 +30,8 @@ return {
       { "ml", "<Plug>(nvim-surround-normal-cur)", desc = "Surround add (current line)" },
       { "md", "<Plug>(nvim-surround-delete)", desc = "Surround delete" },
       { "mr", "<Plug>(nvim-surround-change)", desc = "Surround replace" },
-      { mode = "x", "ms", "<Plug>(nvim-surround-visual)", desc = "Surround add" },
+      -- BUG: noice shows a "failed to run config for nvim-surround"
+      { mode = { "o", "x" }, "ms", "<Plug>(nvim-surround-visual)", desc = "Surround add" },
     },
   },
 }
