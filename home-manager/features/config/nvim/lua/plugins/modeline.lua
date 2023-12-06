@@ -12,6 +12,16 @@ local components = {
     end,
     color = { gui = "bold" },
   },
+  inactive_mode = {
+    "mode",
+    -- icon = { " " },
+    fmt = function(str)
+      -- return ""
+      local lower = str:lower()
+      return lower:sub(1, 1):upper() .. lower:sub(2)
+    end,
+    color = { gui = "bold", bg = palette.fg3 },
+  },
   filename = {
     "filename",
     fmt = function(filename, _)
@@ -94,20 +104,22 @@ return {
           section_separators = "",
         },
         sections = {
-          lualine_a = {
-            components.mode,
-          },
+          lualine_a = { components.mode },
           lualine_b = {
             components.search_count,
-            components.filename,
-            -- { "branch", color = { fg = palette.magenta.base, bg = palette.bg0.base } }
+            -- components.filename,
           },
           lualine_c = {},
-          lualine_x = {
-            components.diagnostics,
-            components.filetype,
-          },
-          lualine_y = {},
+          lualine_x = { components.diagnostics },
+          lualine_y = { "location", "progress", components.filetype },
+          lualine_z = {},
+        },
+        inactive_sections = {
+          lualine_a = { components.inactive_mode },
+          lualine_b = {},
+          lualine_c = {},
+          lualine_x = { components.diagnostics },
+          lualine_y = { "location", "progress", components.filetype },
           lualine_z = {},
         },
         extensions = { "lazy" },
