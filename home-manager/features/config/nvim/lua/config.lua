@@ -11,6 +11,18 @@ return {
       Hint = "● ",
       Warn = "● ",
     },
+    git = {
+      signs = {
+        add = "▍",
+        change = "▍",
+        -- delete = "",
+        -- topdelete = "",
+        delete = "▁",
+        topdelete = "▔",
+        changedelete = "▍",
+        untracked = "▍",
+      },
+    },
     dap = {
       breakpoint = "◯",
       breakpoint_condition = "",
