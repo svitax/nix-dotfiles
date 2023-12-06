@@ -3,6 +3,22 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     version = false,
+    event = "FileType",
+    cmd = {
+      "TSInstall",
+      "TSInstallSync",
+      "TSInstallInfo",
+      "TSUninstall",
+      "TSUpdate",
+      "TSUpdateSync",
+      "TSBufEnable",
+      "TSBufToggle",
+      "TSEnable",
+      "TSToggle",
+      "TSModuleInfo",
+      "TSEditQuery",
+      "TSEditQueryUserAfter",
+    },
     dependencies = {
       "nvim-treesitter/nvim-treesitter-textobjects",
     },
