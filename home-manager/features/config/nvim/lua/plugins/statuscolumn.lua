@@ -2,6 +2,7 @@ return {
   {
     "luukvbaal/statuscol.nvim",
     event = "BufReadPost",
+    branch = "0.10", -- TODO: remove when 0.10 releases
     opts = function()
       local builtin = require("statuscol.builtin")
       -- To display pretty fold icons in `statuscolumn` and show it according to `fillchars`
