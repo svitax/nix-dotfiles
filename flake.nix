@@ -66,17 +66,6 @@
           name = "nix-dotfiles";
           # packages = with pkgs; [];
         };
-
-        # Standalone home-manager configuration entrypoint
-        # Available through 'home-manager --flake .#your-username@your-hostname'
-        legacyPackages.homeConfigurations = {
-          # FIXME: replace with your username@hostname
-          svitax = inputs.home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            modules = [./home-manager/home.nix];
-            extraSpecialArgs = {inherit inputs outputs;};
-          };
-        };
       };
 
       flake = {
@@ -95,6 +84,17 @@
             specialArgs = {inherit inputs outputs;};
             # > Our main nixos configuration file <
             modules = [./nixos/configuration.nix];
+          };
+        };
+
+        # Standalone home-manager configuration entrypoint
+        # Available through 'home-manager --flake .#your-username@your-hostname'
+        homeConfigurations = {
+          # FIXME: replace with your username@hostname
+          svitax = home-manager.lib.homeManagerConfiguration {
+            modules = [./home-manager/home.nix];
+            pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
+            extraSpecialArgs = {inherit inputs outputs;};
           };
         };
       };
