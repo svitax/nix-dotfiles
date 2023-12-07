@@ -19,7 +19,7 @@ return {
         winopts = {
           height = 0.40,
           width = 1.00,
-          row = 1.00,
+          row = 0.87,
           col = 0.00,
           -- border = utils.static.borders.solid,
           preview = {
