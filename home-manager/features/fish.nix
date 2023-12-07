@@ -23,6 +23,7 @@
       neogit = "nvim -c :Neogit";
       ngit = "nvim -c :Neogit";
       ng = "nvim -c :Neogit";
+      nf = "nvim -c :Oil";
       diffview = "nvim -c :DiffviewOpen";
       ndiff = "nvim -c :DiffviewOpen";
       nlog = "nvim -c :DiffviewFileHistory";
