@@ -62,6 +62,12 @@ return {
           ["cmp.entry.get_documentation"] = true,
         },
       },
+      views = {
+        -- NOTE: if you have cmdheight>0, mini will overlap with the modeline.
+        -- offset the default row position for mini (-1) by your cmdheight
+        mini = { position = { row = -2 } },
+        notify = { merge = true, replace = true },
+      },
       routes = {
         {
           -- reroute long notifications to splits
