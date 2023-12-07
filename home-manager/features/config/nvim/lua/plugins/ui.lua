@@ -40,9 +40,6 @@ return {
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {
-      messages = { enabled = false },
-      cmdline = { enabled = true, view = "cmdline" },
-      notify = { enabled = true, view = "notify" },
       presets = {
         bottom_search = true,
         long_message_to_split = true,
@@ -50,6 +47,10 @@ return {
         lsp_doc_border = true,
         command_palette = false,
       },
+      cmdline = { enabled = false, view = "cmdline" },
+      messages = { enabled = false },
+      -- cmdline = { enabled = true, view = "cmdline" }, -- i don't like how this replaces my statusline and the hlgs
+      -- messages = { enabled = true }, -- this automatically sets cmdheight to 0
       popupmenu = { backend = "cmp" },
       lsp = {
         progress = { enabled = false }, -- NOTE: fidget.nvim behaves and looks nicer
@@ -61,8 +62,15 @@ return {
           ["cmp.entry.get_documentation"] = true,
         },
       },
+      routes = {
+        {
+          -- reroute long notifications to splits
+          filter = { event = "notify", min_height = 10 },
+          view = "split",
+        },
+      },
     },
-    dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
+    dependencies = { "MunifTanjim/nui.nvim" },
   },
   {
     "shellRaining/hlchunk.nvim",
