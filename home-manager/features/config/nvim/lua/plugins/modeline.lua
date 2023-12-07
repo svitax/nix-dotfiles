@@ -20,7 +20,7 @@ local components = {
       local lower = str:lower()
       return lower:sub(1, 1):upper() .. lower:sub(2)
     end,
-    color = { gui = "bold", bg = palette.fg3 },
+    color = { gui = "bold", fg = palette.bg1, bg = palette.fg3 },
   },
   filename = {
     "filename",
@@ -91,8 +91,8 @@ return {
           theme = {
             normal = {
               a = { fg = palette.bg0, bg = palette.green.base },
-              b = { fg = palette.fg2, bg = palette.sel0 },
-              c = { fg = palette.fg2, bg = palette.sel0 },
+              b = { fg = palette.fg2, bg = palette.bg3 },
+              c = { fg = palette.fg2, bg = palette.bg3 },
             },
             insert = { a = { fg = palette.bg0, bg = palette.blue.base } },
             command = { a = { fg = palette.bg0, bg = palette.yellow.base } },
