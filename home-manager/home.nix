@@ -16,6 +16,7 @@
 
     # You can also split up your configuration and import pieces of it here:
     ./features/bat.nix
+    ./features/colors.nix
     ./features/direnv.nix
     ./features/eza.nix
     ./features/firefox.nix
@@ -36,8 +37,6 @@
     ./features/zellij.nix
     ./features/zoxide.nix
   ];
-
-  colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
 
   nixpkgs = {
     # You can add overlays here
