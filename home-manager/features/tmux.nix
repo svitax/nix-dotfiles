@@ -160,7 +160,7 @@ in {
         color_purple="#${colors.base0E}"
         color_gray="#${colors.base02}"
         color_light_gray="#${colors.base03}"
-        # color_statusline="#172a1a"
+        # color_statusline="#282828"
         color_statusline="#${colors.base01}"
 
         set -g status-left "#{tmux_mode_indicator} " # tmux mode
@@ -168,7 +168,7 @@ in {
         set -g status-left-length 200
         set -g status-right "#[fg=white,nobold]#(gitmux -cfg $HOME/.config/tmux/gitmux.yml)"
         set -g status-position bottom
-        set -g status-style "bg=$color_gray,fg=$color_fg"
+        set -g status-style "bg=$color_statusline,fg=$color_fg"
 
         setw -g window-status-format "   #[fg=#${colors.base04},bg=default]#W"
         setw -g window-status-current-format " 󰁔 #[fg=$color_fg,bold]#W"
