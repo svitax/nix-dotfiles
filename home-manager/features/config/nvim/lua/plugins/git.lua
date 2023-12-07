@@ -44,9 +44,14 @@ return {
         end
 
         -- stylua: ignore start
-        -- map("n", "]h", gs.next_hunk, "Next hunk")
-        -- map("n", "[h", gs.prev_hunk, "Previous hunk")
-        -- map({ "o", "x" }, "ih", ":<C-u>Gitsigns select_hunk<cr>", "Gitsigns select hunk")
+        map("n", "mz", gs.stage_hunk, "Stage hunk")
+        map("n", "mx", gs.undo_stage_hunk, "Undo stage hunk")
+        map("v", "mz", function () gs.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, "Stage hunk")
+        map("v", "mx", function () gs.undo_stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, "Undo stage hunk")
+        map("", "]h", gs.next_hunk, "Next hunk")
+        map("", "[h", gs.prev_hunk, "Previous hunk")
+        map({ "o", "x" }, "ih", ":<C-u>Gitsigns select_hunk<cr>", "Gitsigns select hunk")
+        -- stylua: ignore end
       end,
     },
   },
