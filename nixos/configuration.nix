@@ -10,8 +10,6 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    # Import home-manager's NixOS module
-    inputs.home-manager.nixosModules.home-manager
   ];
 
   nixpkgs = {
@@ -33,14 +31,6 @@
       automatic = true;
       dates = "weekly";
       options = "--delete-older-than 7d";
-    };
-  };
-
-  home-manager = {
-    extraSpecialArgs = {inherit inputs outputs;};
-    users = {
-      # Import your home-manager configuration
-      svitax = import ../home-manager/home.nix;
     };
   };
 

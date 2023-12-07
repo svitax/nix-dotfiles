@@ -9,6 +9,8 @@
       # sw = "sudo nixos-rebuild --flake . switch";
       sw = "nh os switch --nom .";
       swd = "nh os switch --nom --dry .";
+      hm = "nh home switch --nom .";
+      hmd = "nh home switch --nom --dry .";
       cla = "nh clean all --keep 3";
       clad = "nh clean all --keep 3 --dry";
       clu = "nh clean user --keep 3";
