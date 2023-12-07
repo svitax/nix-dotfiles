@@ -10,11 +10,32 @@ return {
       signs = {
         add = { text = gitsigns_icons.add },
         change = { text = gitsigns_icons.change },
+        delete = { text = gitsigns_icons.delete, show_count = true },
+        topdelete = { text = gitsigns_icons.topdelete, show_count = true },
+        changedelete = { text = gitsigns_icons.changedelete, show_count = true },
+        untracked = { text = gitsigns_icons.untracked },
+      },
+      _signs_staged_enable = true,
+      _signs_staged = {
+        add = { text = gitsigns_icons.add },
+        change = { text = gitsigns_icons.change },
         delete = { text = gitsigns_icons.delete },
         topdelete = { text = gitsigns_icons.topdelete },
         changedelete = { text = gitsigns_icons.changedelete },
-        untracked = { text = gitsigns_icons.untracked },
       },
+      count_chars = {
+        [1] = "",
+        [2] = "₂",
+        [3] = "₃",
+        [4] = "₄",
+        [5] = "₅",
+        [6] = "₆",
+        [7] = "₇",
+        [8] = "₈",
+        [9] = "₉",
+        ["+"] = "₊",
+      },
+      attach_to_untracked = true,
       on_attach = function(buffer)
         local gs = package.loaded.gitsigns
 
