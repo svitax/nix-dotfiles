@@ -7,6 +7,7 @@
 
     # Home manager
     home-manager = {
+      # url = "github:nix-community/home-manager/release-23.05";
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -84,17 +85,6 @@
             specialArgs = {inherit inputs outputs;};
             # > Our main nixos configuration file <
             modules = [./nixos/configuration.nix];
-          };
-        };
-
-        # Standalone home-manager configuration entrypoint
-        # Available through 'home-manager --flake .#your-username@your-hostname'
-        homeConfigurations = {
-          # FIXME: replace with your username@hostname
-          svitax = home-manager.lib.homeManagerConfiguration {
-            modules = [./home-manager/home.nix];
-            pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
-            extraSpecialArgs = {inherit inputs outputs;};
           };
         };
       };
