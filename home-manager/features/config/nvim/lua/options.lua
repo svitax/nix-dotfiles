@@ -41,8 +41,8 @@ vim.opt.scrolloff = 4 -- Lines of context
 vim.opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
 vim.opt.shiftround = true -- Round indent
 vim.opt.shiftwidth = 2 -- Size of an indent
--- vim.opt.shortmess:append({ W = true, I = true, c = true, C = true })
--- vim.opt.shortmess = o.shortmess .. 'c'
+vim.opt.shortmess = "filnxtToOFSc"
+--- vim.opt.shortmess = o.shortmess .. "c"
 vim.opt.showmode = false -- Don't show mode since we have it on the statusline
 vim.opt.sidescrolloff = 8 -- Columns of context
 vim.opt.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shift the text each time
