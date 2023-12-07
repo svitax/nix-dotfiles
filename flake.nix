@@ -67,6 +67,13 @@
           name = "nix-dotfiles";
           # packages = with pkgs; [];
         };
+
+        legacyPackages.homeConfigurations = {
+          svitax = inputs.home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            modules = [./home-manager/home.nix];
+          };
+        };
       };
 
       flake = {

@@ -3,15 +3,15 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 {
   inputs,
-  outputs,
+  # outputs,
   pkgs,
   ...
 }: {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    # Import home-manager's NixOS module
-    inputs.home-manager.nixosModules.home-manager
+    # # Import home-manager's NixOS module
+    # inputs.home-manager.nixosModules.home-manager
   ];
 
   nixpkgs = {
@@ -36,13 +36,13 @@
     };
   };
 
-  home-manager = {
-    extraSpecialArgs = {inherit inputs outputs;};
-    users = {
-      # Import your home-manager configuration
-      svitax = import ../home-manager/home.nix;
-    };
-  };
+  # home-manager = {
+  #   extraSpecialArgs = {inherit inputs outputs;};
+  #   users = {
+  #     # Import your home-manager configuration
+  #     svitax = import ../home-manager/home.nix;
+  #   };
+  # };
 
   # Bootloader.
   boot.loader.grub.enable = true;
@@ -140,9 +140,10 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
     inputs.nh.packages."x86_64-linux".default
+    home-manager
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
