@@ -34,7 +34,7 @@
     ./features/sioyek.nix
     ./features/starship.nix
     ./features/tmux.nix
-    ./features/zellij.nix
+    # ./features/zellij.nix
     ./features/zoxide.nix
   ];
 
@@ -44,7 +44,7 @@
       # Add overlays your own flake exports (from overlays and pkgs dir):
       outputs.overlays.additions
       outputs.overlays.modifications
-      outputs.overlays.zjstatus
+      # outputs.overlays.zjstatus
 
       # You can also add overlays exported from other flakes:
       inputs.neovim-nightly-overlay.overlay
