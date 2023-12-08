@@ -48,6 +48,7 @@
 
       # You can also add overlays exported from other flakes:
       inputs.neovim-nightly-overlay.overlay
+      # inputs.nix-nvim.overlays.default
     ];
     # Configure your nixpkgs instance
     config = {
@@ -65,6 +66,7 @@
   # Add stuff for your user as you see fit:
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
+    # nvim-pkg # nvim-flake output
     zellij-smart-sessionizer
     live-grep # workaround for live-grep in helix until provided by core or plugins
     helix-live-grep # workaround for live-grep in helix until provided by core or plugins

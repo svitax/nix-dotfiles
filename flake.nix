@@ -30,6 +30,8 @@
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
 
+    # nix-nvim.url = "github:svitax/nvim-flake";
+
     # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
   };
