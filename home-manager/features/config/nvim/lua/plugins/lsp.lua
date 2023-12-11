@@ -17,7 +17,6 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    event = { "FileType" },
     cmd = { "LspInfo", "LspStart" },
     dependencies = {
       -- Useful status updates for LSP
