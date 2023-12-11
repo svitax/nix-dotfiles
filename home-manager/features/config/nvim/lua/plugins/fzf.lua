@@ -134,7 +134,7 @@ return {
       },
       {
         "<leader>/",
-        "<cmd>FzfLua live_grep cwd=" .. vim.loop.cwd() .. "<cr>",
+        "<cmd>FzfLua live_grep_native cwd=" .. vim.loop.cwd() .. "<cr>",
         desc = "Open live grep at cwd",
       },
       {
