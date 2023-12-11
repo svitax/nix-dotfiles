@@ -1,0 +1,51 @@
+{
+    "neodev": {
+        "library": {
+            "enabled": true,
+            "plugins": false
+        }
+    },
+    "neoconf": {
+        "plugins": {
+            "lua_ls": {
+                "enabled": true
+            },
+            "lspconfig": {
+                "enabled": true
+            }
+        }
+    },
+    "lspconfig": {
+        "lua_ls": {
+            "Lua": {
+                "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
+                "runtime": {
+                    "version": "LuaJIT"
+                },
+                "workspace": {
+                    "checkThirdParty": false
+                },
+                "format": {
+                    "enable": false
+                },
+                "completion": {
+                    "showWord": "Disable"
+                },
+                "diagnostics": {
+                    "globals": [
+                        "vim"
+                    ]
+                },
+                "hint": {
+                    "enable": true,
+                    "setType": true,
+                    "arrayIndex": "Disable",
+                    "await": true,
+                    "paramName": "All",
+                    "paramType": true,
+                    "semicolon": "SameLine"
+                }
+            }
+        }
+    }
+}

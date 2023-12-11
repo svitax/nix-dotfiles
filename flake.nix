@@ -14,7 +14,6 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     nix-colors.url = "github:misterio77/nix-colors";
-    zjstatus.url = "github:dj95/zjstatus";
 
     nh.url = "github:viperML/nh";
     nh.inputs.nixpkgs.follows = "nixpkgs";
@@ -31,9 +30,11 @@
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
 
     # nix-nvim.url = "github:svitax/nvim-flake";
+    nvim-fennec.url = "path:./modules/neovim";
 
     # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
+    # zjstatus.url = "github:dj95/zjstatus";
   };
 
   outputs = {
@@ -86,7 +87,7 @@
           nixos = nixpkgs.lib.nixosSystem {
             specialArgs = {inherit inputs outputs;};
             # > Our main nixos configuration file <
-            modules = [./nixos/configuration.nix];
+            modules = [./hosts/fennec/configuration.nix];
           };
         };
       };
