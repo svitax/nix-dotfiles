@@ -239,7 +239,6 @@ return {
             end
 
             if entry.source.name == "copilot" then
-              item.kind = "  "
               item.abbr = item.abbr .. "..."
               item.menu = "(copilot)"
             end
