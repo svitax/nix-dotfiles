@@ -40,7 +40,6 @@
   outputs = {
     self,
     nixpkgs,
-    home-manager,
     flake-parts,
     ...
   } @ inputs: let
@@ -64,11 +63,22 @@
 
         # Formatter for your nix files, available through 'nix fmt'
         # Other options beside 'alejandra' include 'nixpkgs-fmt'
-        formatter = pkgs.alejandra;
+        formatter = pkgs.writeShellApplication {
+          name = "lint";
+          runtimeInputs = [
+            pkgs.alejandra
+            pkgs.fd
+            pkgs.stylua
+          ];
+          text = ''
+            fd '.*\.nix' . -X alejandra -- {} \;
+            fd '.*\.lua' . -X stylua {} \;
+          '';
+        };
 
         devShells.default = pkgs.mkShell {
           name = "nix-dotfiles";
-          packages = with pkgs; [ just ];
+          packages = with pkgs; [just];
         };
       };
 
