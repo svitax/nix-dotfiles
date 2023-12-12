@@ -69,9 +69,9 @@
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
     # nvim-fennec # nvim-flake output
-    zellij-smart-sessionizer
-    live-grep # workaround for live-grep in helix until provided by core or plugins
-    helix-live-grep # workaround for live-grep in helix until provided by core or plugins
+    # zellij-smart-sessionizer
+    # live-grep # workaround for live-grep in helix until provided by core or plugins
+    # helix-live-grep # workaround for live-grep in helix until provided by core or plugins
     ripgrep
     fd
     # wl-clipboard # causes weird flickering in neovim + tmux
