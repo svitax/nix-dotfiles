@@ -79,9 +79,6 @@
     lazygit
     nurl # prefetch sources for nix build tool
     nix-init # generate nix packages from urls
-    # TODO: don't use rustup
-    rustup
-    gcc
   ];
 
   # Enable home-manager

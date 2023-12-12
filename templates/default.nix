@@ -16,4 +16,7 @@
 
   python.path = ./python;
   python.description = "";
+
+  rust.path = ./rust;
+  rust.description = "";
 }

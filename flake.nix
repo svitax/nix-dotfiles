@@ -7,7 +7,6 @@
 
     # Home manager
     home-manager = {
-      # url = "github:nix-community/home-manager/release-23.05";
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -29,10 +28,9 @@
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
 
+    # NOTE: Add any other flake you might need
     # nix-nvim.url = "github:svitax/nvim-flake";
     # nvim-fennec.url = "path:./modules/neovim";
-
-    # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
     # zjstatus.url = "github:dj95/zjstatus";
   };
