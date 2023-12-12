@@ -1,7 +1,7 @@
 return {
     {
         "neovim/nvim-lspconfig",
-        event = { "BufReadPost", "BufNewFile" },
+        event = "VeryLazy",
         cmd = { "LspInfo", "LspStart" },
         dependencies = {
             -- Useful status updates for LSP
