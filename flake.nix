@@ -30,7 +30,7 @@
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
 
     # nix-nvim.url = "github:svitax/nvim-flake";
-    nvim-fennec.url = "path:./modules/neovim";
+    # nvim-fennec.url = "path:./modules/neovim";
 
     # TODO: Add any other flake you might need
     # hardware.url = "github:nixos/nixos-hardware";
@@ -68,7 +68,7 @@
 
         devShells.default = pkgs.mkShell {
           name = "nix-dotfiles";
-          # packages = with pkgs; [];
+          packages = with pkgs; [ just ];
         };
       };
 

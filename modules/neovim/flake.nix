@@ -5,12 +5,10 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    # Add bleeding-edge plugins here.
-    # They can be updated with `nix flake update` (make sure to commit the generated flake.lock)
-    # wf-nvim = {
-    #   url = "github:Cassin01/wf.nvim";
-    #   flake = false;
-    # };
+    neovim-src = {
+      url = "github:neovim/neovim";
+      flake = false;
+    };
   };
 
   outputs = inputs @ {
@@ -19,7 +17,6 @@
     flake-parts,
     ...
   }: let
-    inherit (self) outputs;
     # This is where the Neovim derivation is built.
     neovim-overlay = import ./nix/neovim-overlay.nix {inherit inputs;};
   in
@@ -31,11 +28,7 @@
         "aarch64-darwin"
       ];
 
-      perSystem = {
-        pkgs,
-        system,
-        ...
-      }: let
+      perSystem = {system, ...}: let
         pkgs = import nixpkgs {
           inherit system;
           overlays = [
@@ -45,6 +38,7 @@
         shell = pkgs.mkShell {
           name = "nvim";
           buildInputs = with pkgs; [
+            npins
             lua-language-server
             nil
             stylua
@@ -54,7 +48,7 @@
       in {
         packages = rec {
           default = nvim;
-          nvim = pkgs.nvim-fennec;
+          nvim = pkgs.nvim-pkg;
         };
         devShells = {
           default = shell;

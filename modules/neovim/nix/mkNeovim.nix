@@ -19,6 +19,7 @@ with lib;
     withNodeJs ? false,
     viAlias ? true,
     vimAlias ? true,
+    neovim-src,
   }: let
     defaultPlugin = {
       plugin = null; # e.g. nvim-lspconfig
@@ -99,7 +100,18 @@ with lib;
           resolvedExtraLuaPackages
         }"'';
   in
-    pkgs.wrapNeovimUnstable pkgs.neovim-unwrapped (neovimConfig
+    pkgs.wrapNeovimUnstable (pkgs.neovim-unwrapped.overrideAttrs (
+      _: {
+        # Use Neovim nightly
+        src = neovim-src;
+        version = neovim-src.shortRev or "dirty";
+        patches = [];
+        preConfigure = ''
+          sed -i cmake.config/versiondef.h.in -e "s/@NVIM_VERSION_PRELEASE@/-dev-$version/"
+        '';
+      }
+    ))
+    (neovimConfig
       // {
         wrapperArgs =
           escapeShellArgs neovimConfig.wrapperArgs
