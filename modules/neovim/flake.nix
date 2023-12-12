@@ -35,7 +35,12 @@
             neovim-overlay
           ];
         };
-        shell = pkgs.mkShell {
+      in {
+        packages = rec {
+          default = nvim;
+          nvim = pkgs.nvim-pkg;
+        };
+        devShells.default = pkgs.mkShell {
           name = "nvim";
           buildInputs = with pkgs; [
             npins
@@ -45,13 +50,17 @@
             luajitPackages.luacheck
           ];
         };
-      in {
-        packages = rec {
-          default = nvim;
-          nvim = pkgs.nvim-pkg;
-        };
-        devShells = {
-          default = shell;
+        formatter = pkgs.writeShellApplication {
+          name = "lint";
+          runtimeInputs = [
+            pkgs.alejandra
+            pkgs.fd
+            pkgs.stylua
+          ];
+          text = ''
+            fd '.*\.nix' . -X alejandra -- {} \;
+            fd '.*\.lua' . -X stylua {} \;
+          '';
         };
       };
 
