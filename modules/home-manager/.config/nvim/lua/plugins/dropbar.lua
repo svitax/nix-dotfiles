@@ -11,7 +11,7 @@ return {
                 get_symbols = function(buf, win, cursor)
                     local symbols = sources.path.get_symbols(buf, win, cursor)
                     local filename = symbols[#symbols]
-                    if vim.api.nvim_buf_get_name(buf):find("oil") then
+                    if vim.bo[buf].filetype == "oil" then
                         filename.name = ""
                         filename.icon = ""
                     end
