@@ -59,6 +59,28 @@ return {
                 },
             })
 
+            -- stylua: ignore start
+            vim.keymap.set( "n", "<leader>gr", "<cmd>lua require('dap').restart()<cr>", { desc = "Restart debugging session" }) -- restart task
+            vim.keymap.set( "n", "<leader>gb", "<cmd>lua require('dap').toggle_breakpoint()<cr>", { desc = "Toggle breakpoint" })
+            vim.keymap.set( "n", "<leader>gc", "<cmd>lua require('dap').continue()<cr>", { desc = "Continue program execution" }) -- continue task
+            vim.keymap.set("n", "<leader>gh", "<cmd>lua require('dap').pause()<cr>", { desc = "Pause program execution" })
+            vim.keymap.set("n", "<leader>gi", "<cmd>lua require('dap').step_into()<cr>", { desc = "Step in" })
+            vim.keymap.set("n", "<leader>go", "<cmd>lua require('dap').step_out()<cr>", { desc = "Step out" })
+            vim.keymap.set("n", "<leader>gw", "<cmd>lua require('dap').step_over()<cr>", { desc = "Step over" })
+            vim.keymap.set("n", "<leader>gv", "<cmd>FzfLua dap_variables<cr>", { desc = "List variables" })
+            vim.keymap.set( "n", "<leader>gx", "<cmd>lua require('dap').terminate()<cr>", { desc = "Kill debug session" }
+            ) -- kill task
+            -- vim.keymap.set("n", "<leader>g<C-c>", "dap_edit_condition", { desc = "Edit breakpoint condition on current line" }) -- set_breakpoint condition
+            -- vim.keymap.set("n", "<leader>g<C-l>", "dap_edit_log", { desc = "Edit breakpoint log message on current line" }) -- set breakpoint log message
+            -- vim.keymap.set("n", "<leader>gs", "", { desc = "Switch" })
+            -- vim.keymap.set("n", "<leader>gst", "dap_switch_thread", { desc = "Switch current thread" })
+            -- vim.keymap.set("n", "<leader>gsf", "dap_switch_stack_frame", { desc = "Switch stack frame" })
+            -- vim.keymap.set("n", "<leader>ge", "dap_enable_exceptions", { desc = "Enable exception breakpoints" })
+            -- vim.keymap.set("n", "<leader>gE", "dap_disable_exceptions", { desc = "Disable exception breakpoints" })
+            -- dap-ui
+            vim.keymap.set("n", "<leader>ge", "<cmd>lua require('dapui').eval()<cr>", { desc = "Evaluate" })
+            -- stylua: ignore end
+
             -- Open ui on start
             require("dap").listeners.after.event_initialized["dapui_config"] = function()
                 require("dapui").open()
