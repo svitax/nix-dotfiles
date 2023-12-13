@@ -11,27 +11,28 @@ return {
             },
             highlight = { duration = 1000 },
             keymaps = {
-                insert = "",
-                insert_line = "",
-                normal = "",
-                normal_cur = "",
-                normal_line = "",
-                normal_cur_line = "",
-                visual = "",
-                visual_line = "",
-                delete = "",
-                change = "",
-                change_line = "",
+                insert = false,
+                insert_line = false,
+                normal = false,
+                normal_cur = false,
+                normal_line = false,
+                normal_cur_line = false,
+                visual = false,
+                visual_line = false,
+                delete = false,
+                change = false,
+                change_line = false,
             },
-            -- keymaps = { normal = "ms", delete = "md", change = "mr" },
         },
-        keys = {
-            { "ms", "<Plug>(nvim-surround-normal)", desc = "Surround add" },
-            { "ml", "<Plug>(nvim-surround-normal-cur)", desc = "Surround add (current line)" },
-            { "md", "<Plug>(nvim-surround-delete)", desc = "Surround delete" },
-            { "mr", "<Plug>(nvim-surround-change)", desc = "Surround replace" },
-            -- BUG: noice shows a "failed to run config for nvim-surround"
-            { mode = { "o", "x" }, "ms", "<Plug>(nvim-surround-visual)", desc = "Surround add" },
-        },
+        config = function(_, opts)
+            require("nvim-surround").setup(opts)
+
+            vim.keymap.set({ "o", "x" }, "ms", "<Plug>(nvim-surround-visual)", { desc = "Surround add" })
+
+            vim.keymap.set("n", "ms", "<Plug>(nvim-surround-normal)", { desc = "Surround add" })
+            vim.keymap.set("n", "ml", "<Plug>(nvim-surround-normal-cur)", { desc = "Surround add (current line)" })
+            vim.keymap.set("n", "md", "<Plug>(nvim-surround-delete)", { desc = "Surround delete" })
+            vim.keymap.set("n", "mr", "<Plug>(nvim-surround-change)", { desc = "Surround replace" })
+        end,
     },
 }
