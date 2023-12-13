@@ -11,4 +11,13 @@ return {
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = { src = { cmp = { enabled = true } } },
     },
+    {
+        "hrsh7th/nvim-cmp",
+        opts = function(_, opts)
+            local cmp = require("cmp")
+            opts.sources = cmp.config.sources(vim.list_extend(opts.sources, {
+                { name = "crates" },
+            }))
+        end,
+    },
 }

@@ -37,7 +37,6 @@ return {
             servers = {},
             -- You can do any additional LSP server setup here
             -- return true if you don't want this server to be setup with lspconfig
-            -- FIXME: not set up in config function yet
             setup = {
                 -- -- example to setup with typescript.nvim
                 -- tsserver = function (_, opts)
@@ -58,21 +57,8 @@ return {
                 -- Setup keymaps
                 local keymap_opts = { buffer = buffer, noremap = true }
 
-                local function show_documentation()
-                    local filetype = vim.bo.filetype
-                    if vim.tbl_contains({ "vim", "help" }, filetype) then
-                        vim.cmd("h " .. vim.fn.expand("<cword>"))
-                    elseif vim.tbl_contains({ "main" }, filetype) then
-                        vim.cmd("Man " .. vim.fn.expand("<cword>"))
-                    elseif vim.fn.expand("%:t") == "Cargo.toml" and require("crates").popup_available() then
-                        require("crates").show_popup()
-                    else
-                        vim.lsp.buf.hover()
-                    end
-                end
-
                 -- stylua: ignore
-                vim.keymap.set( "n", "<leader>k", show_documentation, { buffer = buffer, noremap = true, desc = "Show docs" })
+                vim.keymap.set( "n", "<leader>k", vim.lsp.buf.hover, { buffer = buffer, desc = "Show docs" })
                 vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<cr>", keymap_opts)
                 vim.keymap.set("n", "gy", "<cmd>TroubleToggle lsp_type_definitions<cr>", keymap_opts)
                 vim.keymap.set("n", "gr", "<cmd>TroubleToggle lsp_references<cr>", keymap_opts)
@@ -91,6 +77,10 @@ return {
                 --   vim.lsp.buf.format({ async = true })
                 -- end, { desc = "Format document", expr = true, buffer = buffer, remap = false })
             end
+
+            require("util").lsp.on_attach(function(client, buffer)
+                on_attach(client, buffer)
+            end)
 
             -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
             -- local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -130,11 +120,21 @@ return {
             }
 
             for server, server_config in pairs(opts.servers) do
-                local config = { capabilities = capabilities, on_attach = on_attach }
+                local config = { capabilities = capabilities }
 
                 if server_config then
                     for k, v in pairs(server_config) do
                         config[k] = v
+                    end
+                end
+
+                if opts.setup[server] then
+                    if opts.setup[server](server, config) then
+                        return
+                    end
+                elseif opts.setup["*"] then
+                    if opts.setup["*"](server, config) then
+                        return
                     end
                 end
 

@@ -55,20 +55,19 @@ return {
             end
 
             local cmp_source_names = {
-                path = "path",
                 buffer = "buffer",
                 cmdline = "cmd",
-                crates = "crates",
-                luasnip = "snippet",
-                nvim_lsp = "lsp",
                 dap = "dap",
                 git = "git",
+                luasnip = "snippet",
+                nvim_lsp = "lsp",
                 -- obsidian.nvim automatically registers its sources. define source names else my config errors
                 -- https://github.com/epwalsh/obsidian.nvim/blob/main/lua/obsidian/init.lua#L161
                 -- (find the names of the sources that are automatically registered and add them to this table)
                 obsidian = "obsidian",
                 obsidian_new = "obsidian",
                 obsidian_tags = "obsidian",
+                path = "path",
             }
 
             return {
@@ -172,7 +171,6 @@ return {
                     { name = "buffer", keyword_length = 4, max_item_count = 5, group_index = 2 },
                     { name = "path", entry_filter = entry_filter },
                     { name = "git" },
-                    { name = "crates" },
                 }),
                 cmdline = {
                     sources = {
