@@ -34,10 +34,7 @@ return {
             -- Feel free to add/remove any LSPs that you want here.
             -- If you want to override the default filetypes that your language server will attach to you can
             -- define the property 'filetypes' to the map in question
-            servers = {
-                yamlls = {},
-                taplo = {},
-            },
+            servers = {},
             -- You can do any additional LSP server setup here
             -- return true if you don't want this server to be setup with lspconfig
             -- FIXME: not set up in config function yet

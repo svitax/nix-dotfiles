@@ -16,9 +16,34 @@
         }
     },
     "lspconfig": {
+        "jsonls": {
+            "json": {
+                "format": {
+                    "enable": true
+                },
+                "validate": {
+                    "enable": true
+                }
+            }
+        },
+        "yamlls": {
+            "redhat.telemetry.enabled": false,
+            "yaml": {
+                "keyOrdering": false,
+                "format": {
+                    "enable": true
+                },
+                "validate": true,
+                "schemaStore": {
+                    // Must disable builtin schemaStore support to use schemas from schemastore.nvim plugin
+                    "enable": false,
+                    // Avoid TypeError: Cannot read properties of undefined (reading 'length')
+                    "url": ""
+                }
+            }
+        },
         "lua_ls": {
             "Lua": {
-                "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
                 "runtime": {
                     "version": "LuaJIT"
                 },
@@ -36,7 +61,7 @@
                         "vim"
                     ]
                 },
-                "hint": {
+                "hint": { // inlay hints
                     "enable": true,
                     "setType": true,
                     "arrayIndex": "Disable",
