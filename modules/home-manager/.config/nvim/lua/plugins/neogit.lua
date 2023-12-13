@@ -14,11 +14,13 @@ return {
                 kind = "replace",
                 use_per_project_settings = true,
                 remember_settings = true,
+                graph_style = "unicode",
                 ignored_settings = {
                     "NeogitPushPopup--force-with-lease",
                     "NeogitPushPopup--force",
                     "NeogitCommitPopup--alow-empty",
                 },
+                status = { recent_commit_count = 20 },
                 integrations = { fzf_lua = true },
                 signs = {
                     section = { icons.dap.collapsed, icons.dap.expanded },
