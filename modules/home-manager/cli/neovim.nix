@@ -35,7 +35,6 @@
     alejandra
     nil
     statix
-    taplo
     just
     vscode-langservers-extracted # html/css/json/eslint
   ];

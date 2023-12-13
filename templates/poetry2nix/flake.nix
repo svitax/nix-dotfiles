@@ -43,7 +43,7 @@
         };
         devShells.default = pkgs.mkShell {
           name = "poetry2nix-demo";
-          packages = [pkgs.python3 pkgs.poetry pkgs.pyright pkgs.ruff-lsp];
+          packages = [pkgs.python3 pkgs.poetry pkgs.pyright pkgs.ruff-lsp pkgs.taplo];
           env = {
             # Workaround in linux: python downloads ELF's that can't find glibc
             # You would see errors like: error while loading shared libraries: name.so cannot open shared object file: No such file or directory

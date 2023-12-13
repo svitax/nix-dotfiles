@@ -26,6 +26,7 @@
         # We want the unwrapped version, "rust-analyzer" (wrapped) comes with nixpkgs' toolchain
         pkgs.rust-analyzer-unwrapped
         pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter # debugging adapter
+        pkgs.taplo # toml language server
       ];
       env = {RUST_BACKTRACE = "full";};
       RUST_SRC_PATH = "${toolchain}/lib/rustlib/src/rust/library";
