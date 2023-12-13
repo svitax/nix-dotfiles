@@ -61,8 +61,21 @@ return {
                 -- Setup keymaps
                 local keymap_opts = { buffer = buffer, noremap = true }
 
+                local function show_documentation()
+                    local filetype = vim.bo.filetype
+                    if vim.tbl_contains({ "vim", "help" }, filetype) then
+                        vim.cmd("h " .. vim.fn.expand("<cword>"))
+                    elseif vim.tbl_contains({ "main" }, filetype) then
+                        vim.cmd("Man " .. vim.fn.expand("<cword>"))
+                    elseif vim.fn.expand("%:t") == "Cargo.toml" and require("crates").popup_available() then
+                        require("crates").show_popup()
+                    else
+                        vim.lsp.buf.hover()
+                    end
+                end
+
                 -- stylua: ignore
-                vim.keymap.set( "n", "<leader>k", vim.lsp.buf.hover, { buffer = buffer, noremap = true, desc = "Show docs" })
+                vim.keymap.set( "n", "<leader>k", show_documentation, { buffer = buffer, noremap = true, desc = "Show docs" })
                 vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<cr>", keymap_opts)
                 vim.keymap.set("n", "gy", "<cmd>TroubleToggle lsp_type_definitions<cr>", keymap_opts)
                 vim.keymap.set("n", "gr", "<cmd>TroubleToggle lsp_references<cr>", keymap_opts)

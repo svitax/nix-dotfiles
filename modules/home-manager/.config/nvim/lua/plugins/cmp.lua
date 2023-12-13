@@ -58,6 +58,7 @@ return {
                 path = "path",
                 buffer = "buffer",
                 cmdline = "cmd",
+                crates = "crates",
                 luasnip = "snippet",
                 nvim_lsp = "lsp",
                 dap = "dap",
@@ -171,6 +172,7 @@ return {
                     { name = "buffer", keyword_length = 4, max_item_count = 5, group_index = 2 },
                     { name = "path", entry_filter = entry_filter },
                     { name = "git" },
+                    { name = "crates" },
                 }),
                 cmdline = {
                     sources = {
