@@ -10,7 +10,7 @@ return {
                 auto_show_console = true,
                 disable_hint = true,
                 disable_commit_confirmation = true,
-                disable_insert_on_commit = true,
+                disable_insert_on_commit = false,
                 kind = "replace",
                 use_per_project_settings = true,
                 remember_settings = true,
