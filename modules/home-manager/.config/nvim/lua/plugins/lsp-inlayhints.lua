@@ -4,6 +4,8 @@ return {
         branch = "anticonceal",
         opts = {},
         config = function(_, opts)
+            require("lsp-inlayhints").setup(opts)
+
             vim.api.nvim_create_augroup("LspAttach_inlayhints", {})
             vim.api.nvim_create_autocmd("LspAttach", {
                 group = "LspAttach_inlayhints",
@@ -18,7 +20,11 @@ return {
                 end,
             })
 
-            require("lsp-inlayhints").setup(opts)
+            vim.api.nvim_create_user_command("InlayHintsToggle", function()
+                require("lsp-inlayhints").toggle()
+            end, { desc = "Toggle lsp inlay hints" })
+
+            vim.keymap.set("n", "<leader>i", "<cmd>InlayHintsToggle<cr>", { desc = "Toggle inlay hints" })
         end,
     },
 }
