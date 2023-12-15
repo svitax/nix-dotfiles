@@ -7,6 +7,7 @@ return {
             "BufReadPre " .. vim.fn.expand("~") .. "/OneDrive/Apps/remotely-save/obsidian-vault/**.md",
             "BufNewFile " .. vim.fn.expand("~") .. "/OneDrive/Apps/remotely-save/obsidian-vault/**.md",
         },
+        cmd = { "ObsidianQuickSwitch" },
         opts = {
             -- dir = "~/OneDrive/Apps/remotely-save/obsidian-vault/",
             workspaces = {
