@@ -1,0 +1,12 @@
+diff --git a/src/main.rs b/src/main.rs
+index dd09ab5..8eb705d 100644
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -168,6 +168,7 @@ fn get_single_selection(list: String, preview: Option<&str>) -> Result<String, T
+         .height(Some("50%"))
+         .preview(preview)
+         .multi(false)
++        .reverse(true)
+         .color(Some("dark"))
+         .build()
+         .map_err(TmsError::FuzzyFindError)?;

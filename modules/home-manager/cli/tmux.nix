@@ -5,17 +5,6 @@
 }: let
   inherit (config.colorScheme) colors;
 
-  t-smart-tmux-session-manager = pkgs.tmuxPlugins.mkTmuxPlugin {
-    pluginName = "t-smart-tmux-session-manager";
-    rtpFilePath = "t-smart-tmux-session-manager.tmux";
-    version = "unstable-2023-11-15";
-    src = pkgs.fetchFromGitHub {
-      owner = "joshmedeski";
-      repo = "t-smart-tmux-session-manager";
-      rev = "0fa0d6be8996c0bfd030fc67e49e782727375671";
-      sha256 = "sha256-B+NPeR0BZMX4wFtNK3M7shF2T5arXdIrFcVDRvplUT8=";
-    };
-  };
   tmux-mode-indicator = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "tmux-mode-indicator";
     rtpFilePath = "mode_indicator.tmux";
@@ -60,6 +49,13 @@ in {
     yq-go # required for tmux-nerd-font-window-name
     tmux-sessionizer
   ];
+  home.file.".config/tms/default-config.toml".text =
+    # toml
+    ''
+      search_paths = ['${config.home.homeDirectory}/projects']
+      default_session = "${config.home.homeDirectory}/nix-dotfiles"
+      display_full_path = true
+    '';
   home.file.".config/tmux/gitmux.yml".text =
     # yaml
     ''
@@ -151,6 +147,8 @@ in {
         bind C new-session # new session
         bind d detach-client # detach client
         bind e send-keys "tmux capture-pane -p -S - | nvim -c 'set buftype=nofile' +" Enter
+        bind j display-popup -E "tms switch"
+        bind o display-popup -E "tms"
         bind r source-file ~/.config/tmux/tmux.conf # Easier reload of config
         bind s split-window -v -c "#{pane_current_path}" # split window horizontally
         bind v split-window -h -c "#{pane_current_path}" # split window vertically
@@ -158,12 +156,14 @@ in {
 
         # vim MAPPINGS
         not_tmux="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?(g?(view|n?vim?x?)(diff)?|fzf)$'"
-        bind-key -n 'M-h' if-shell "$not_tmux" 'send-keys M-h' 'select-pane -R'
-        bind-key -n 'M-j' if-shell "$not_tmux" 'send-keys M-j' 'select-pane -D'
-        bind-key -n 'M-k' if-shell "$not_tmux" 'send-keys M-k' 'select-pane -U'
-        bind-key -n 'M-l' if-shell "$not_tmux" 'send-keys M-l' 'select-pane -L'
+        bind-key -n 'C-h' if-shell "$not_tmux" 'send-keys C-h' 'select-pane -R'
+        bind-key -n 'C-j' if-shell "$not_tmux" 'send-keys C-j' 'select-pane -D'
+        bind-key -n 'C-k' if-shell "$not_tmux" 'send-keys C-k' 'select-pane -U'
+        bind-key -n 'C-l' if-shell "$not_tmux" 'send-keys C-l' 'select-pane -L'
 
         # base MAPPINGS
+        bind -n M-j display-popup -E "tms switch"
+        bind -n M-o display-popup -E "tms"
         bind -n M-n next-window
         bind -n M-p previous-window
 
@@ -247,22 +247,6 @@ in {
           '';
       }
       {
-        plugin = t-smart-tmux-session-manager;
-        extraConfig =
-          # bash
-          ''
-            set -g @t-bind 'f'
-            set -g @t-fzf-find-binding 'ctrl-b:change-prompt( )+reload(fd -H -d 2 -t d . ~)'
-            set -g @t-fzf-prompt '  '
-
-            # change default fzf results
-            # set -g @t-fzf-default-results 'sessions' # show tmux sessions by default
-            set -g @t-fzf-default-results 'zoxide' # show zoxide results by default
-
-            bind -n M-f run-shell "t" # session switcher
-          '';
-      }
-      {
         plugin = tmuxPlugins.resurrect;
         extraConfig =
           # bash
@@ -293,9 +277,7 @@ in {
   programs.fish.interactiveShellInit =
     # fish
     ''
-      fish_add_path ${t-smart-tmux-session-manager}/share/tmux-plugins/t-smart-tmux-session-manager/bin/
-
-      set -Ux T_SESSION_USE_GIT_ROOT true # use git root for session name
-      set -Ux T_SESSION_NAME_INCLUDE_PARENT true # include parent dir in session name
+      bind \ej -M insert 'commandline "tms switch" && commandline -f execute && commandline -f repaint'
+      bind \eo -M insert 'commandline "tms" && commandline -f execute && commandline -f repaint'
     '';
 }

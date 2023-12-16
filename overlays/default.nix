@@ -18,6 +18,7 @@ in {
     # my papis patch to add --link flag to bibtex import
     # papis bibtex read ~/OneDrive/docs/lib.bib import --all --link
     papis = addPatches prev.papis [./papis-bibtex-import-link.patch];
+    tmux-sessionizer = addPatches prev.tmux-sessionizer [./tmux-sessionizer-reverse-layout.patch ./tmux-sessionizer-switch-attatch-if-outside-tmux.patch];
   };
 
   # zjstatus zellij statusbar plugin
