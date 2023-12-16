@@ -38,13 +38,28 @@
       sha256 = "sha256-xMpasqXlLeTYL/TVnEfRHsawZDLONVyp5pn3Q8HFzLA=";
     };
   };
+  tmux-nerd-font-window-name = pkgs.tmuxPlugins.mkTmuxPlugin {
+    pluginName = "tmux-nerd-font-window-name";
+    rtpFilePath = "tmux-nerd-font-window-name.tmux";
+    version = "unstable-2023-12-13";
+    src = pkgs.fetchFromGitHub {
+      owner = "joshmedeski";
+      repo = "tmux-nerd-font-window-name";
+      rev = "410d5becb3a5c118d5fabf89e1633d137906caf1";
+      hash = "sha256-HqSaOcnb4oC0AtS0aags2A5slsPiikccUSuZ1sVuago=";
+    };
+  };
 in {
   # xdg.configFile.nvim = {
   #   # TODO: figure out a way to not hard code a path to my nix-dotfiles directory
   #   source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-dotfiles/home-manager/config/nvim";
   #   recursive = true;
   # };
-  home.packages = with pkgs; [gitmux];
+  home.packages = with pkgs; [
+    gitmux
+    yq-go # required for tmux-nerd-font-window-name
+    tmux-sessionizer
+  ];
   home.file.".config/tmux/gitmux.yml".text =
     # yaml
     ''
@@ -80,6 +95,24 @@ in {
           branch_max_len: 0
           hide_clean: false
           branch_trim: right
+    '';
+  home.file.".config/tmux/tmux-nerd-font-window-name.yml".text =
+    # yaml
+    ''
+      config:
+        fallback-icon: "?"
+        multi-pane-icon: ""
+        show-name: true
+        icon-position: "left"
+      icons:
+        nvim: ""
+        fish: ""
+        zsh: ""
+        bash: ""
+        nh: ""
+        python3.10: ""
+        python3.11: ""
+        python: ""
     '';
   programs.tmux = {
     enable = true;
@@ -189,6 +222,7 @@ in {
       '';
     plugins = with pkgs; [
       tmux-fzf-url
+      tmux-nerd-font-window-name
       {
         plugin = tmux-mode-indicator;
         extraConfig =
@@ -253,7 +287,6 @@ in {
       #       # set -g @continuum-systemd-start-cmd 'start-server'
       #     '';
       # }
-      # ? joshmedeski/tmux-nerd-font-window-name
       # ? roosta/tmux-fuzzback
       # ? sainnhe/tmux-fzf
     ];
