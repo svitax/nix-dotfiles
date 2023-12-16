@@ -162,17 +162,17 @@ in {
         bind-key -n 'C-l' if-shell "$not_tmux" 'send-keys C-l' 'select-pane -L'
 
         # base MAPPINGS
-        bind -n M-j display-popup -E "tms switch"
+        bind -n M-z display-popup -E "tms switch"
         bind -n M-o display-popup -E "tms"
         bind -n M-n next-window
         bind -n M-p previous-window
 
         # copy-mode MAPPINGS
         bind -n M-x copy-mode\; send-keys -X start-of-line\; send-keys -X search-backward '#{prompt}' \; send-keys -X jump-backward '#{prompt}'\; send-keys -X next-space \; send-keys -X cursor-right
-        bind-key -T copy-mode-vi 'M-l' select-pane -R
-        bind-key -T copy-mode-vi 'M-j' select-pane -D
-        bind-key -T copy-mode-vi 'M-k' select-pane -U
-        bind-key -T copy-mode-vi 'M-h' select-pane -L
+        bind-key -T copy-mode-vi 'C-l' select-pane -R
+        bind-key -T copy-mode-vi 'C-j' select-pane -D
+        bind-key -T copy-mode-vi 'C-k' select-pane -U
+        bind-key -T copy-mode-vi 'C-h' select-pane -L
 
         bind-key -T copy-mode-vi Enter send -X copy-selection-and-cancel
         bind-key -T copy-mode-vi 'v' send -X begin-selection
@@ -277,7 +277,7 @@ in {
   programs.fish.interactiveShellInit =
     # fish
     ''
-      bind \ej -M insert 'commandline "tms switch" && commandline -f execute && commandline -f repaint'
+      bind \ez -M insert 'commandline "tms switch" && commandline -f execute && commandline -f repaint'
       bind \eo -M insert 'commandline "tms" && commandline -f execute && commandline -f repaint'
     '';
 }
