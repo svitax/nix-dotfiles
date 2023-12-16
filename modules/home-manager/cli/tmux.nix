@@ -137,7 +137,7 @@ in {
         set -g mouse on                  # enable mouse support
         set -g renumber-windows on       # renumber all windows when any window is closed
         set -g set-clipboard on          # use system clipboard
-        set -g status-interval 1         # update the status bar every 3 seconds
+        set -g status-interval 3         # update the status bar every 3 seconds
         set -g focus-events on           # TODO: learn how this works
         set -g detach-on-destroy off # don't exit from tmux when closing a session
         setw -g automatic-rename on      # automatically rename windows based on the application within
@@ -182,7 +182,6 @@ in {
         #  │                    joshmedeski theme                     │
         #  ╰──────────────────────────────────────────────────────────╯
 
-        # TODO: use nix-colors for this
         color_bg="#${colors.base00}"
         color_fg="#${colors.base05}"
         color_green="#${colors.base0B}"
@@ -203,8 +202,8 @@ in {
         set -g status-position bottom
         set -g status-style "bg=$color_statusline,fg=$color_fg"
 
-        setw -g window-status-format "   #[fg=#${colors.base04},bg=default]#W"
-        setw -g window-status-current-format " 󰁔 #[fg=$color_fg,bold]#W"
+        set -g window-status-format " #[fg=#${colors.base04}]#W "
+        set -g window-status-current-format " #[fg=$color_fg,bold]#W*"
 
         set -g message-command-style bg=default,fg=yellow
         set -g message-style bg=default,fg=yellow

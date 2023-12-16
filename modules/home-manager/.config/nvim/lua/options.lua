@@ -25,7 +25,7 @@ vim.opt.grepprg = "rg --vimgrep"
 vim.opt.hlsearch = false -- Set highlight on search
 vim.opt.ignorecase = true -- Case insensitive searching UNLESS \C or capital in search
 vim.opt.inccommand = "nosplit" -- Preview incremental substitute
--- vim.opt.laststatus = 3 -- Global status line
+vim.opt.laststatus = 3 -- Global status line
 vim.opt.list = true -- Show some invisible characters (tabs...)
 vim.opt.listchars:append("lead:⋅")
 vim.opt.listchars:append("leadmultispace:⋅")
