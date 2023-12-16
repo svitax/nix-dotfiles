@@ -109,6 +109,8 @@ in {
         python3.10: ""
         python3.11: ""
         python: ""
+        cat: "󰄛"
+        bat: "󰭟"
     '';
   programs.tmux = {
     enable = true;
