@@ -1,5 +1,5 @@
-{config, ...}: let
-  inherit (config.colorScheme) colors;
+{ config, ... }:
+let inherit (config.colorScheme) colors;
 in {
   programs.sioyek = {
     enable = true;

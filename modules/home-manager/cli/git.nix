@@ -1,14 +1,12 @@
-{config, ...}: let
-  inherit (config.colorScheme) colors;
+{ config, ... }:
+let inherit (config.colorScheme) colors;
 in {
   programs.git = {
     enable = true;
     userName = "Igor Barale";
     userEmail = "svitaxiom@gmail.com";
-    extraConfig = {
-      init.defaultBranch = "master";
-    };
-    ignores = [".direnv" "result"];
+    extraConfig = { init.defaultBranch = "master"; };
+    ignores = [ ".direnv" "result" ];
     delta = {
       enable = true;
       options = {
@@ -57,12 +55,14 @@ in {
           # Blame
           blame-code-style = "syntax";
           blame-format = "{author:>18} ({commit:>8}) {timestamp:<13} ";
-          blame-palette = "'#000000' '#${colors.base00}' '#${colors.base01}' '#${colors.base02}'";
+          blame-palette =
+            "'#000000' '#${colors.base00}' '#${colors.base01}' '#${colors.base02}'";
           # Merge conflicts
           merge-conflict-begin-symbol = "⌃";
           merge-conflict-end-symbol = "⌄";
           merge-conflict-ours-diff-header-style = "'#${colors.base0A}' bold";
-          merge-conflict-theirs-diff-header-style = "'#${colors.base0A}' bold overline";
+          merge-conflict-theirs-diff-header-style =
+            "'#${colors.base0A}' bold overline";
           merge-conflict-ours-diff-header-decoration-style = "";
           merge-conflict-theirs-diff-header-decoration-style = "";
         };

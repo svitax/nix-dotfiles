@@ -1,11 +1,5 @@
-{
-  pkgs,
-  config,
-  ...
-}: {
-  home.packages = with pkgs; [
-    papis
-  ];
+{ pkgs, config, ... }: {
+  home.packages = with pkgs; [ papis ];
   home.file.".config/papis/config".text =
     # ini
     ''

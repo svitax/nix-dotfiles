@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   xdg.configFile."lf/icons".source = ../.config/lf/icons;
   xdg.configFile."pistol/pistol.conf".source = ../.config/lf/pistol.conf;
   programs.lf = {
@@ -37,8 +37,8 @@
             done
           }}
         '';
-      clear_trash = ''${pkgs.trash-cli}/bin/trash-empty'';
-      restore_trash = ''${pkgs.trash-cli}/bin/trash-restore'';
+      clear_trash = "${pkgs.trash-cli}/bin/trash-empty";
+      restore_trash = "${pkgs.trash-cli}/bin/trash-restore";
       fzf_jump =
         # bash
         ''
@@ -64,7 +64,7 @@
           }}
         '';
       dragon-out = ''%${pkgs.xdragon}/bin/xdragon -a -x "$fx"'';
-      editor-open = ''$$EDITOR $f'';
+      editor-open = "$$EDITOR $f";
     };
     keybindings = {
       "\\\"" = "";
@@ -105,7 +105,8 @@
       "g/" = "/";
 
       ee = "editor-open";
-      V = ''''$${pkgs.bat}/bin/bat --paging=always --theme=gruvbox-dark-hard "$f"'';
+      V = ''
+        ''$${pkgs.bat}/bin/bat --paging=always --theme=gruvbox-dark-hard "$f"'';
     };
     extraConfig = let
       previewer = pkgs.writeShellScriptBin "pv.sh" ''

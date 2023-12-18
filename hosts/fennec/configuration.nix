@@ -1,12 +1,7 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-{
-  inputs,
-  outputs,
-  pkgs,
-  ...
-}: {
+{ inputs, outputs, pkgs, ... }: {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -16,9 +11,7 @@
 
   nixpkgs = {
     # Configure your nixpkgs instance
-    config = {
-      allowUnfree = true;
-    };
+    config = { allowUnfree = true; };
   };
 
   nix = {
@@ -37,7 +30,7 @@
   };
 
   home-manager = {
-    extraSpecialArgs = {inherit inputs outputs;};
+    extraSpecialArgs = { inherit inputs outputs; };
     users = {
       # Import your home-manager configuration
       svitax = import ./home.nix;
@@ -120,11 +113,12 @@
   users.users.svitax = {
     isNormalUser = true;
     description = "svitax";
-    extraGroups = ["networkmanager" "wheel"];
-    packages = with pkgs; [
-      # firefox
-      # thunderbird
-    ];
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs;
+      [
+        # firefox
+        # thunderbird
+      ];
   };
 
   users.defaultUserShell = pkgs.fish;

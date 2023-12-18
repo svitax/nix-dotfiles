@@ -1,11 +1,5 @@
-{
-  pkgs,
-  config,
-  ...
-}: {
-  home.packages = with pkgs; [
-    ghq
-  ];
+{ pkgs, config, ... }: {
+  home.packages = with pkgs; [ ghq ];
   programs.git.extraConfig = {
     ghq.root = "${config.home.homeDirectory}/projects";
   };
@@ -19,6 +13,6 @@
     gcr = "ghq create";
   };
   programs.fish.functions = {
-    gcd = {body = ''cd $GHQ_ROOT/$(ghq list | fzf)'';};
+    gcd = { body = "cd $GHQ_ROOT/$(ghq list | fzf)"; };
   };
 }

@@ -1,9 +1,5 @@
-{
-  pkgs,
-  config,
-  ...
-}: let
-  inherit (config.colorScheme) colors;
+{ pkgs, config, ... }:
+let inherit (config.colorScheme) colors;
 in {
   programs.zellij = {
     enable = true;
@@ -18,7 +14,7 @@ in {
         black = "#${colors.base03}"; # 03
         red = "#${colors.base08}"; # 08
         green = "#${colors.base0B}"; # OB
-        yellow = "#${colors.base0A}"; #0A
+        yellow = "#${colors.base0A}"; # 0A
         blue = "#${colors.base0D}"; # 0D
         magenta = "#${colors.base0E}"; # 0E
         cyan = "#${colors.base0C}"; # 0C

@@ -1,6 +1,25 @@
-{lib, ...}: let
-  promptOrder = ["shlvl" "shell" "nix_shell" "username" "hostname" "directory" "character"];
-  rightPromptOrder = ["aws" "docker_context" "python" "nodejs" "lua" "golang" "rust" "cmd_duration " "jobs"];
+{ lib, ... }:
+let
+  promptOrder = [
+    "shlvl"
+    "shell"
+    "nix_shell"
+    "username"
+    "hostname"
+    "directory"
+    "character"
+  ];
+  rightPromptOrder = [
+    "aws"
+    "docker_context"
+    "python"
+    "nodejs"
+    "lua"
+    "golang"
+    "rust"
+    "cmd_duration "
+    "jobs"
+  ];
   promptFormat = lib.concatStrings (map (s: "\$${s}") promptOrder);
   rightPromptFormat = lib.concatStrings (map (s: "\$${s}") rightPromptOrder);
 in {
@@ -30,9 +49,7 @@ in {
           truncation_length = 4;
           truncate_to_repo = false;
         };
-        fill = {
-          symbol = " ";
-        };
+        fill = { symbol = " "; };
         cmd_duration = {
           format = "[$duration]($style) ";
           style = "yellow";
@@ -45,11 +62,9 @@ in {
         };
         aws = {
           symbol = "󰸏 ";
-          format = "[$symbol($profile )(\($region\) )]($style) ";
+          format = "[$symbol($profile )(($region) )]($style) ";
           style = "bright-black";
-          region_aliases = {
-            us-east-1 = "va";
-          };
+          region_aliases = { us-east-1 = "va"; };
         };
         azure = {
           symbol = " ";
@@ -58,7 +73,7 @@ in {
         };
         gcloud = {
           symbol = "󱇶 ";
-          format = "[$symbol($account )(\($region\) )]($style) ";
+          format = "[$symbol($account )(($region) )]($style) ";
           style = "bright-black";
         };
         docker_context = {
@@ -91,7 +106,7 @@ in {
           # format = "[$symbol($virtualenv )]($style) ";
           format = "[$symbol($version )]($style) ";
           style = "bright-black";
-          python_binary = ["./venv/bin/python" "python" "python3" "python2"];
+          python_binary = [ "./venv/bin/python" "python" "python3" "python2" ];
         };
         rust = {
           symbol = " ";

@@ -1,10 +1,12 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   programs.fish = {
     enable = true;
     shellAbbrs = {
       ll = "eza --no-user --header --group-directories-first --all --binary";
-      lla = "eza --no-user --header --group-directories-first --all --binary --long";
-      llg = "eza --no-user --header --group-directories-first --all --binary --long --git-ignore";
+      lla =
+        "eza --no-user --header --group-directories-first --all --binary --long";
+      llg =
+        "eza --no-user --header --group-directories-first --all --binary --long --git-ignore";
       llt = "eza --no-user --header --group-directories-first --tree --level 2";
       # sw = "sudo nixos-rebuild --flake . switch";
       sw = "nh os switch --nom .";
@@ -155,5 +157,6 @@
   # i generated poetry.fish with `poetry completions fish > ./poetry.fish`
   # and then removed mangled double quotes with `sed -i.bak -E "s/'([a-z]*[[:blank:]][a-z]*)''/\1'/g" ./poetry.fish
   # https://github.com/python-poetry/poetry/issues/5929
-  home.file.".config/fish/completions/poetry.fish".source = ../.config/fish/completions/poetry.fish;
+  home.file.".config/fish/completions/poetry.fish".source =
+    ../.config/fish/completions/poetry.fish;
 }

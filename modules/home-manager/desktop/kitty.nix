@@ -1,5 +1,5 @@
-{config, ...}: let
-  inherit (config.colorScheme) colors;
+{ config, ... }:
+let inherit (config.colorScheme) colors;
 in {
   home.file.".config/kitty/pager.sh".source = ../.config/kitty/pager.sh;
   programs.kitty = {

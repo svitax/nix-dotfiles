@@ -1,4 +1,4 @@
-{inputs, ...}: {
+{ inputs, ... }: {
   colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
 }
 # scheme: "Gruvbox dark, hard"
