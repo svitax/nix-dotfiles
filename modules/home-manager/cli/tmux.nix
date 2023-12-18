@@ -1,8 +1,5 @@
-{
-  pkgs,
-  config,
-  ...
-}: let
+{ pkgs, config, ... }:
+let
   inherit (config.colorScheme) colors;
 
   tmux-mode-indicator = pkgs.tmuxPlugins.mkTmuxPlugin {
@@ -39,58 +36,16 @@
     };
   };
 in {
-  # xdg.configFile.nvim = {
-  #   # TODO: figure out a way to not hard code a path to my nix-dotfiles directory
-  #   source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/nix-dotfiles/home-manager/config/nvim";
-  #   recursive = true;
-  # };
   home.packages = with pkgs; [
-    gitmux
     yq-go # required for tmux-nerd-font-window-name
     tmux-sessionizer
   ];
   home.file.".config/tms/default-config.toml".text =
     # toml
     ''
-      search_paths = ['${config.home.homeDirectory}/projects']
-      default_session = "${config.home.homeDirectory}/nix-dotfiles"
+      search_paths = ['${config.home.homeDirectory}/projects', '${config.home.homeDirectory}/nix-dotfiles', '${config.home.homeDirectory}/OneDrive']
+      default_session = "nix-dotfiles"
       display_full_path = true
-    '';
-  home.file.".config/tmux/gitmux.yml".text =
-    # yaml
-    ''
-      tmux:
-        symbols:
-          branch: "󰘬 "
-          hashprefix: ":"
-          ahead: ↑·
-          behind: ↓·
-          staged: "● "
-          conflict: " "
-          modified: " "
-          untracked: "… "
-          clean: ✔
-          stashed: " "
-          insertions: " "
-          deletions: " "
-        styles:
-          state: "#[fg=#${colors.base08},nobold]"
-          branch: "#[fg=#${colors.base0E},nobold]"
-          staged: "#[fg=#${colors.base0B},nobold]"
-          conflict: "#[fg=#${colors.base08},nobold]"
-          insertions: "#[fg=#${colors.base0B},nobold]"
-          deletions: "#[fg=#${colors.base08},nobold]"
-          modified: "#[fg=#${colors.base0A},nobold]"
-          untracked: "#[fg=#${colors.base04},nobold]"
-          stashed: "#[fg=#${colors.base04},nobold]"
-          clean: "#[fg=#${colors.base0B},nobold]"
-          divergence: "#[fg=#${colors.base0D},nobold]"
-          remote: "#[fg=#${colors.base03},nobold]"
-        layout: [flags, " ", "divergence", " ", branch]
-        options:
-          branch_max_len: 0
-          hide_clean: false
-          branch_trim: right
     '';
   home.file.".config/tmux/tmux-nerd-font-window-name.yml".text =
     # yaml
@@ -102,9 +57,9 @@ in {
         icon-position: "left"
       icons:
         nvim: ""
-        fish: ""
-        zsh: ""
-        bash: ""
+        fish: ""
+        zsh: ""
+        bash: ""
         nh: ""
         python3.10: ""
         python3.11: ""
@@ -149,7 +104,7 @@ in {
         bind C new-session # new session
         bind d detach-client # detach client
         bind e send-keys "tmux capture-pane -p -S - | nvim -c 'set buftype=nofile' +" Enter
-        bind j display-popup -E "tms switch"
+        bind i display-popup -E "tms switch"
         bind o display-popup -E "tms"
         bind r source-file ~/.config/tmux/tmux.conf # Easier reload of config
         bind s split-window -v -c "#{pane_current_path}" # split window horizontally
@@ -158,23 +113,23 @@ in {
 
         # vim MAPPINGS
         not_tmux="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?(g?(view|n?vim?x?)(diff)?|fzf)$'"
-        bind-key -n 'C-h' if-shell "$not_tmux" 'send-keys C-h' 'select-pane -R'
-        bind-key -n 'C-j' if-shell "$not_tmux" 'send-keys C-j' 'select-pane -D'
-        bind-key -n 'C-k' if-shell "$not_tmux" 'send-keys C-k' 'select-pane -U'
-        bind-key -n 'C-l' if-shell "$not_tmux" 'send-keys C-l' 'select-pane -L'
+        bind-key -n 'M-h' if-shell "$not_tmux" 'send-keys M-h' 'select-pane -R'
+        bind-key -n 'M-j' if-shell "$not_tmux" 'send-keys M-j' 'select-pane -D'
+        bind-key -n 'M-k' if-shell "$not_tmux" 'send-keys M-k' 'select-pane -U'
+        bind-key -n 'M-l' if-shell "$not_tmux" 'send-keys M-l' 'select-pane -L'
 
         # base MAPPINGS
-        bind -n M-z display-popup -E "tms switch"
+        bind -n M-i display-popup -E "tms switch"
         bind -n M-o display-popup -E "tms"
         bind -n M-n next-window
         bind -n M-p previous-window
 
         # copy-mode MAPPINGS
         bind -n M-x copy-mode\; send-keys -X start-of-line\; send-keys -X search-backward '#{prompt}' \; send-keys -X jump-backward '#{prompt}'\; send-keys -X next-space \; send-keys -X cursor-right
-        bind-key -T copy-mode-vi 'C-l' select-pane -R
-        bind-key -T copy-mode-vi 'C-j' select-pane -D
-        bind-key -T copy-mode-vi 'C-k' select-pane -U
-        bind-key -T copy-mode-vi 'C-h' select-pane -L
+        bind-key -T copy-mode-vi 'M-l' select-pane -R
+        bind-key -T copy-mode-vi 'M-j' select-pane -D
+        bind-key -T copy-mode-vi 'M-k' select-pane -U
+        bind-key -T copy-mode-vi 'M-h' select-pane -L
 
         bind-key -T copy-mode-vi Enter send -X copy-selection-and-cancel
         bind-key -T copy-mode-vi 'v' send -X begin-selection
@@ -196,21 +151,23 @@ in {
         color_light_gray="#${colors.base03}"
         # color_statusline="#282828"
         color_statusline="#${colors.base01}"
+        color_comment="#928374"
 
         set -g status-left "#{tmux_mode_indicator} " # tmux mode
-        set -ga status-left "#[fg=$color_purple,bold]#S " # session name
+        set -ga status-left "#[fg=#${colors.base05}]#S " # session name
         set -g status-left-length 200
-        set -g status-right "#[fg=white,nobold]#(gitmux -cfg $HOME/.config/tmux/gitmux.yml)"
+        # set -g status-right "#[fg=white,nobold]#(gitmux -cfg $HOME/.config/tmux/gitmux.yml)"
+        set -g status-right ""
         set -g status-position bottom
-        set -g status-style "bg=$color_statusline,fg=$color_fg"
+        set -g status-style "bg=#${colors.base01},fg=#${colors.base05}"
 
-        set -g window-status-format " #[fg=#${colors.base04}]#W "
-        set -g window-status-current-format " #[fg=$color_fg,bold]#W*"
+        set -g window-status-format " #[fg=#${colors.base05}]#W "
+        set -g window-status-current-format " #[fg=#${colors.base0E},bold]#W*"
 
         set -g message-command-style bg=default,fg=yellow
         set -g message-style bg=default,fg=yellow
-        set -g pane-active-border-style "fg=magenta,bg=default"
-        set -g pane-border-style "fg=brightblack,bg=default"
+        set -g pane-active-border-style "fg=#${colors.base04},bg=default"
+        set -g pane-border-style "fg=#${colors.base01},bg=default"
 
         # set -g popup-border-style "fg=#{color_bg},bg=''${color_bg}"
         # set -g popup-border-lines rounded
@@ -229,23 +186,14 @@ in {
         extraConfig =
           # bash
           ''
-            # set -g @mode_indicator_prefix_prompt "▍WAIT"
-            # set -g @mode_indicator_prefix_mode_style 'fg=green,bold'
-            # set -g @mode_indicator_empty_prompt "▍TMUX"
-            # set -g @mode_indicator_empty_mode_style 'fg=orange,bold'
-            # set -g @mode_indicator_copy_prompt "▍COPY"
-            # set -g @mode_indicator_copy_mode_style 'fg=yellow,bold'
-            # set -g @mode_indicator_sync_prompt "▍SYNC"
-            # set -g @mode_indicator_sync_mode_style 'fg=red,bold'
-
-            set -g @mode_indicator_prefix_prompt "  Wait  "
-            set -g @mode_indicator_prefix_mode_style 'bg=orange,fg=#${colors.base00},bold'
-            set -g @mode_indicator_empty_prompt "  Tmux  "
-            set -g @mode_indicator_empty_mode_style 'bg=green,fg=#${colors.base00},bold'
-            set -g @mode_indicator_copy_prompt "  Copy  "
-            set -g @mode_indicator_copy_mode_style 'bg=yellow,fg=#${colors.base01},bold'
-            set -g @mode_indicator_sync_prompt "  Sync  "
-            set -g @mode_indicator_sync_mode_style 'bg=red,fg=#${colors.base00},bold'
+            set -g @mode_indicator_prefix_prompt " WA "
+            set -g @mode_indicator_prefix_mode_style 'bg=#7c6f64,fg=#${colors.base06}'
+            set -g @mode_indicator_empty_prompt " TM "
+            set -g @mode_indicator_empty_mode_style 'bg=#7c6f64,fg=#${colors.base06}'
+            set -g @mode_indicator_copy_prompt " CP "
+            set -g @mode_indicator_copy_mode_style 'bg=#7c6f64,fg=#${colors.base06}'
+            set -g @mode_indicator_sync_prompt " SY "
+            set -g @mode_indicator_sync_mode_style 'bg=#7c6f64,fg=#${colors.base06}'
           '';
       }
       {
@@ -279,7 +227,7 @@ in {
   programs.fish.interactiveShellInit =
     # fish
     ''
-      bind \ez -M insert 'commandline "tms switch" && commandline -f execute && commandline -f repaint'
+      bind \ei -M insert 'commandline "tms switch" && commandline -f execute && commandline -f repaint'
       bind \eo -M insert 'commandline "tms" && commandline -f execute && commandline -f repaint'
     '';
 }
