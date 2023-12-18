@@ -1,10 +1,12 @@
-{inputs}: final: prev:
-with final.pkgs.lib; let
+{ inputs }:
+final: prev:
+with final.pkgs.lib;
+let
   pkgs = final;
 
   # Use this to create a plugin from an input
 
-  mkNeovim = pkgs.callPackage ./mkNeovim.nix {};
+  mkNeovim = pkgs.callPackage ./mkNeovim.nix { };
 
   all-plugins = with pkgs.vimPlugins; [
     # plugins from nixpkgs go in here.
