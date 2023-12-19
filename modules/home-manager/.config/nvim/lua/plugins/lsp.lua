@@ -4,13 +4,6 @@ return {
         event = "VeryLazy",
         cmd = { "LspInfo", "LspStart" },
         dependencies = {
-            -- Useful status updates for LSP
-            -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-            {
-                "j-hui/fidget.nvim",
-                opts = { progress = { ignore_done_already = true, display = { render_limit = 3 } } },
-            },
-
             -- Additional lua configuration, makes nvim stuff amazing!
             { "folke/neodev.nvim", opts = {} },
             { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
