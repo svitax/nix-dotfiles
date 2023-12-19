@@ -92,6 +92,41 @@ return {
                     StatusLineHeader = { fg = "palette.fg1", bg = "palette.bg4" },
                     StatusLineHeaderModified = { fg = "palette.yellow", bg = "palette.bg4", style = "bold" },
                     -- statusline end
+
+                    -- HTML start
+                    htmlBold = { style = "bold" },
+                    htmlBoldItalic = { style = "bold,italic" },
+                    htmlH1 = { fg = "palette.red", style = "bold" },
+                    htmlH2 = { fg = "palette.red", style = "bold" },
+                    htmlH3 = { fg = "palette.red", style = "bold" },
+                    htmlH4 = { fg = "palette.red", style = "bold" },
+                    htmlH5 = { fg = "palette.red", style = "bold" },
+                    htmlH6 = { fg = "palette.red", style = "bold" },
+                    htmlItalic = { style = "italic" },
+                    htmlLink = { fg = "palette.blue", style = "underline" },
+                    htmlSpecialChar = { link = "SpecialChar" },
+                    htmlSpecialTagName = { fg = "palette.magenta" },
+                    htmlString = { fg = "palette.comment" },
+                    htmlTagName = { link = "Tag" },
+                    htmlTitle = { link = "Title" },
+                    -- HTML end
+
+                    -- Markdown start
+                    markdownBold = { style = "bold" },
+                    markdownBoldItalic = { style = "bold,italic" },
+                    markdownCode = { fg = "palette.green" },
+                    markdownCodeBlock = { fg = "palette.green" },
+                    markdownError = { link = "NONE" },
+                    markdownEscape = { fg = "NONE" },
+                    markdownH1 = { link = "htmlH1" },
+                    markdownH2 = { link = "htmlH2" },
+                    markdownH3 = { link = "htmlH3" },
+                    markdownH4 = { link = "htmlH4" },
+                    markdownH5 = { link = "htmlH5" },
+                    markdownH6 = { link = "htmlH6" },
+                    markdownListMarker = { fg = "palette.yellow" },
+                    -- Markdown end
+
                     Hlargs = { link = "@parameter" },
 
                     NvimSurroundHighlight = { fg = "palette.bg0", bg = "palette.magenta" },
