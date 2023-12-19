@@ -1,6 +1,6 @@
 return {
     { "mfussenegger/nvim-lint", opts = { linters_by_ft = { nix = { "statix" } } } },
-    { "stevearc/conform.nvim", opts = { formatters_by_ft = { nix = { "alejandra" } } } },
+    { "stevearc/conform.nvim", opts = { formatters_by_ft = { nix = { "nixfmt" } } } },
     {
         "neovim/nvim-lspconfig",
         opts = {
