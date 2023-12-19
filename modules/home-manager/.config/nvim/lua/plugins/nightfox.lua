@@ -59,6 +59,52 @@ return {
                     IncSearch = { fg = "NONE", bg = "palette.sel1" },
                     LineNr = { fg = "palette.comment" },
 
+                    -- nvim-cmp start
+                    CmpItemAbbrMatch = { fg = "palette.blue" },
+                    CmpItemAbbrMatchFuzzy = { link = "CmpItemAbbrMatch" },
+
+                    CmpCompletion = { link = "Pmenu" },
+                    CmpCompletionSbar = { link = "PmenuSbar" },
+                    CmpCompletionSel = { link = "PmenuSel" },
+                    CmpCompletionThumb = { link = "PmenuThumb" },
+                    CmpCompletionBorder = { fg = "palette.comment" },
+
+                    CmpItemKindField = { fg = "palette.red" },
+                    CmpItemKindProperty = { fg = "palette.red" },
+                    CmpItemKindEvent = { fg = "palette.red" },
+                    CmpItemKindText = { fg = "palette.green" },
+                    CmpItemKindEnum = { fg = "palette.green" },
+                    CmpItemKindKeyword = { fg = "palette.green" },
+                    CmpItemKindConstant = { fg = "palette.yellow" },
+                    CmpItemKindConstructor = { fg = "palette.yellow" },
+                    CmpItemKindReference = { fg = "palette.yellow" },
+                    CmpItemKindFunction = { fg = "palette.magenta" },
+                    CmpItemKindStruct = { fg = "palette.magenta" },
+                    CmpItemKindClass = { fg = "palette.magenta" },
+                    CmpItemKindModule = { fg = "palette.magenta" },
+                    CmpItemKindOperator = { fg = "palette.magenta" },
+                    CmpItemKindVariable = { fg = "palette.blue" },
+                    CmpItemKindFile = { fg = "palette.blue" },
+                    CmpItemKindUnit = { fg = "palette.orange" },
+                    CmpItemKindSnippet = { fg = "palette.orange" },
+                    CmpItemKindFolder = { fg = "palette.orange" },
+                    CmpItemKindMethod = { fg = "palette.blue" },
+                    CmpItemKindValue = { fg = "palette.blue" },
+                    CmpItemKindEnumMember = { fg = "palette.blue" },
+                    CmpItemKindInterface = { fg = "palette.cyan" },
+                    CmpItemKindColor = { fg = "palette.cyan" },
+                    CmpItemKindTypeParameter = { fg = "palette.cyan" },
+                    -- nvim-cmp end
+
+                    -- which-key start
+                    WhichKey = { link = "Identifier" },
+                    WhichKeyGroup = { link = "Function" },
+                    WhichKeyDesc = { link = "Conditional" },
+                    WhichKeySeperator = { link = "Comment" },
+                    WhichKeySeparator = { link = "Comment" },
+                    WhichKeyFloat = { bg = "palette.bg1" },
+                    WhichKeyValue = { link = "Comment" },
+                    -- which-key end
                     Hlargs = { link = "@parameter" },
 
                     NvimSurroundHighlight = { fg = "palette.bg0", bg = "palette.magenta" },
