@@ -3,6 +3,7 @@ vim.cmd.colorscheme("gruvfox")
 -- See `:help vim.o`
 -- NOTE: You can change these options as you wish!
 vim.opt.autowrite = true -- Enable auto write
+vim.opt.autoindent = true
 vim.opt.backup = false
 vim.opt.breakindent = true -- Enable break indent
 vim.opt.cmdheight = 1
@@ -11,7 +12,7 @@ vim.opt.confirm = true -- Confirm to save changes before exiting modified buffer
 vim.opt.completeopt = "menuone,noselect"
 vim.opt.colorcolumn = "120"
 vim.opt.cursorline = true -- Enable highlighting of the current line
-vim.opt.expandtab = true -- Use spaces instead of tabs
+vim.opt.expandtab = true
 -- vim.opt.foldmethod = "expr"
 -- vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.fillchars:append("diff:╱")
@@ -46,10 +47,13 @@ vim.opt.showmode = false -- Don't show mode since we have it on the statusline
 vim.opt.sidescrolloff = 8 -- Columns of context
 vim.opt.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shift the text each time
 vim.opt.smartcase = true
+vim.opt.smartindent = true
 vim.wo.signcolumn = "yes" -- Keep signcolumn on by default
+vim.opt.softtabstop = 4
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.swapfile = false
+vim.opt.tabstop = 4
 vim.opt.termguicolors = true -- NOTE: You should make sure your terminal supports this
 vim.opt.timeoutlen = 300
 vim.opt.tabstop = 4 -- Identation of 4 spaces
