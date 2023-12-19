@@ -14,6 +14,7 @@ autocmd("OptionSet", {
         end
     end,
 })
+
 augroup("FixVirtualEditCursorPos", {})
 autocmd("ModeChanged", {
     desc = "Keep cursor position after entering normal mode from visual mode with virtual edit enabled.",
@@ -46,6 +47,7 @@ autocmd("FileType", {
         "git",
         "dap-float",
         "CodeAction",
+        "help",
         "",
     },
     callback = function(event)
