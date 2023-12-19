@@ -4,6 +4,7 @@ return {
         version = "^3",
         ft = { "rust" },
         dependencies = { "lvimuser/lsp-inlayhints.nvim" },
+        -- TODO: nvim-dap doesn't pick up the adapter from this plugin
     },
     {
         "saecki/crates.nvim",
