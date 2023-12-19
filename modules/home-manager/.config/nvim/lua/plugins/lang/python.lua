@@ -35,7 +35,7 @@ return {
                     },
                 },
                 mode = { "n" },
-                body = "<localleader>c", -- this is the key that triggers the hydra
+                body = "<leader>E", -- this is the key that triggers the hydra
                 heads = {
                     { "j", keys("]b"), { desc = "down" } },
                     { "k", keys("[b"), { desc = "up" } },
@@ -48,8 +48,8 @@ return {
             })
             vim.keymap.set("n", "]b", "<Plug>SlimeCellsNext", { desc = "Next cell" })
             vim.keymap.set("n", "[b", "<Plug>SlimeCellsPrev", { desc = "Previous cell" })
-            vim.keymap.set("n", "<localleader>e", "<Plug>SlimeCellsSendAndGoToNext", { desc = "Evluate cell" })
-            vim.keymap.set({ "x", "o" }, "<localleader>e", "<Plug>SlimeRegionSend", { desc = "Evaluate region" })
+            vim.keymap.set("n", "<leader>e", "<Plug>SlimeCellsSendAndGoToNext", { desc = "Evluate cell" })
+            vim.keymap.set({ "x", "o" }, "<leader>e", "<Plug>SlimeRegionSend", { desc = "Evaluate region" })
         end,
     },
     -- { "gabenespoli/vim-jupycent" },
