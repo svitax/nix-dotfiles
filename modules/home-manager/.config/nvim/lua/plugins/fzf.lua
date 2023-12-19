@@ -130,14 +130,15 @@ return {
             end, {})
         end,
         keys = {
-            { "<leader>f", "<cmd>FzfLua files cwd=" .. vim.loop.cwd() .. "<cr>", desc = "Open file picker at cwd" },
             {
                 "<leader>/",
-                "<cmd>FzfLua live_grep_native cwd=" .. vim.loop.cwd() .. "<cr>",
-                desc = "Open live grep at cwd",
+                "<cmd>FzfLua live_grep_native resume=true cwd=" .. vim.loop.cwd() .. "<cr>",
+                desc = "Global search at cwd",
             },
+            { "<leader>f", "<cmd>FzfLua files cwd=" .. vim.loop.cwd() .. "<cr>", desc = "Open file picker at cwd" },
             { "<leader>F", "<cmd>FzfLua files<cr>", desc = "Open file picker" },
             { "<leader>b", "<cmd>FzfLua buffers<cr>", desc = "Open buffer picker" },
+            { "<leader>B", "<cmd>FzfLua blines<cr>", desc = "Search in current buffer" },
             { "<leader>j", "<cmd>FzfLua jumps<cr>", desc = "Open jumplist picker" },
             { "<leader>s", "<cmd>FzfLua lsp_document_symbols<cr>", desc = "Open symbol picker" },
             { "<leader>S", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Open workspace symbol picker" },
@@ -146,6 +147,7 @@ return {
             { "<leader>d", "<cmd>FzfLua lsp_document_diagnostics<cr>", desc = "Open diagnostic pickers" },
             { "<leader>D", "<cmd>FzfLua lsp_workspace_diagnostics<cr>", desc = "Open workspace diagnostic picker" },
             { "<leader>x", "<cmd>FzfLua quickfix<cr>", desc = "Open quickfix list" },
+            { "<leader>?", "<cmd>FzfLua commands<cr>", desc = "Open command palette" },
         },
     },
 }
