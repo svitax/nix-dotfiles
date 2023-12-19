@@ -3,6 +3,17 @@ local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 -- local command = vim.api.nvim_create_user_command
 
+augroup("TextwidthRelativeColorcolumn", {})
+autocmd("OptionSet", {
+    desc = "Set colorcolumn according to textwidth.",
+    group = "TextwidthRelativeColorcolumn",
+    pattern = "textwidth",
+    callback = function()
+        if vim.v.option_new ~= 0 then
+            vim.opt_local.colorcolumn = "+1"
+        end
+    end,
+})
 augroup("close_with_q", { clear = true })
 autocmd("FileType", {
     desc = "Close certain filetypes with 'q'",
