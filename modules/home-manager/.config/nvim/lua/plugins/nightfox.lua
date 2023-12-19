@@ -65,6 +65,17 @@ return {
                     CmpItemKindTypeParameter = { fg = "palette.cyan" },
                     -- nvim-cmp end
 
+                    -- nvim-dap-ui start
+                    DapUIPlayPause = { fg = "palette.green" },
+                    DapUIRestart = { fg = "palette.green" },
+                    DapUIStepBack = { fg = "palette.cyan" },
+                    DapUIStepInto = { fg = "palette.cyan" },
+                    DapUIStepOut = { fg = "palette.cyan" },
+                    DapUIStepOver = { fg = "palette.cyan" },
+                    DapUIStop = { fg = "palette.red" },
+                    DapUIUnavailable = { fg = "palette.comment" },
+                    -- nvim-dap-ui end
+
                     -- which-key start
                     WhichKey = { link = "Identifier" },
                     WhichKeyGroup = { link = "Function" },
