@@ -33,16 +33,17 @@ return {
 
             -- Override vim.lsp.util.stylize_markdown to use treesitter
             -- Needs Neovim >= 0.10
+            -- NOTE: Noice does it better
             -- vim.lsp.util.stylize_markdown = function(bufnr, contents, opts)
-            --   contents = vim.lsp.util._normalize_markdown(contents, {
-            --     width = vim.lsp.util._make_floating_popup_size(contents, opts)
-            --   })
-            --   vim.bo[bufnr].filetype = "markdown"
-            --   vim.treesitter.start(bufnr)
-            --   vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, contents)
-            --
-            --   return contents
+            --     contents = vim.lsp.util._normalize_markdown(contents, {
+            --         width = vim.lsp.util._make_floating_popup_size(contents, opts),
+            --     })
+            --     vim.bo[bufnr].filetype = "markdown"
+            --     vim.treesitter.start(bufnr)
+            --     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, contents)
+            --     return contents
             -- end
+
             ---Filter out unwanted entries
             ---@param entry cmp.Entry
             ---@param _ cmp.Context ignored
@@ -78,6 +79,11 @@ return {
                 file_in_path = true,
                 runtime = true,
             }
+
+            ---@return integer[] buffer numbers
+            local function source_buf_get_bufnrs()
+                return vim.b.large_file and {} or { vim.api.nvim_get_current_buf() }
+            end
 
             return {
                 -- cmp floating window config
@@ -178,7 +184,13 @@ return {
                         max_item_count = 20,
                         entry_filter = entry_filter, -- Suppress LSP completion when workspace is not ready yet
                     },
-                    { name = "buffer", keyword_length = 4, max_item_count = 5, group_index = 2 },
+                    {
+                        name = "buffer",
+                        keyword_length = 4,
+                        max_item_count = 5,
+                        group_index = 2,
+                        option = { get_bufnrs = source_buf_get_bufnrs },
+                    },
                     { name = "path", entry_filter = entry_filter },
                     { name = "git" },
                 }),
