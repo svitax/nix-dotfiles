@@ -43,7 +43,6 @@ require("lazy").setup({
 require("options")
 require("keymaps")
 require("autocommands")
-require("lightbulb")
 
 -- Netrw
 vim.g.netrw_browse_split = 0
