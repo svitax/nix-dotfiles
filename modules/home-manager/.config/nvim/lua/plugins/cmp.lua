@@ -1,6 +1,7 @@
 return {
     { "hrsh7th/cmp-cmdline", event = "CmdlineEnter", dependencies = "hrsh7th/nvim-cmp" },
     { "hrsh7th/cmp-nvim-lsp", event = "InsertEnter", dependencies = { "hrsh7th/nvim-cmp", "neovim/nvim-lspconfig" } },
+    { "hrsh7th/cmp-nvim-lsp-signature-help", event = "InsertEnter", dependencies = { "hrsh7th/nvim-cmp" } },
     { "hrsh7th/cmp-path", event = { "CmdlineEnter", "InsertEnter" }, dependencies = { "hrsh7th/nvim-cmp" } },
     { "hrsh7th/cmp-buffer", event = { "CmdlineEnter", "InsertEnter" }, dependencies = "hrsh7th/nvim-cmp" },
     { "rcarriga/cmp-dap", lazy = true, dependencies = { "mfussenegger/nvim-dap", "hrsh7th/nvim-cmp" } },
@@ -61,6 +62,7 @@ return {
                 git = "git",
                 luasnip = "snippet",
                 nvim_lsp = "lsp",
+                nvim_lsp_signature_help = "signature",
                 -- obsidian.nvim automatically registers its sources. define source names else my config errors
                 -- https://github.com/epwalsh/obsidian.nvim/blob/main/lua/obsidian/init.lua#L161
                 -- (find the names of the sources that are automatically registered and add them to this table)
@@ -170,6 +172,7 @@ return {
                 }),
                 sources = cmp.config.sources({
                     { name = "luasnip", max_item_count = 3 },
+                    { name = "nvim_lsp_signature_help" },
                     {
                         name = "nvim_lsp",
                         max_item_count = 20,
