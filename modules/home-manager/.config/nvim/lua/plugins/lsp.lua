@@ -49,6 +49,7 @@ return {
         },
         config = function(_, opts)
             -- [[ Configure LSP ]]
+            -- neoconf
             local plugin = require("lazy.core.config").spec.plugins["neoconf.nvim"]
             require("neoconf").setup(require("lazy.core.plugin").values(plugin, "opts", false))
 
@@ -142,7 +143,7 @@ return {
             end
 
             -- diagnostics
-            for name, icon in pairs(require("icons").diagnostics) do
+            for name, icon in pairs(require("utils.icons").diagnostics) do
                 name = "DiagnosticSign" .. name
                 vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
             end

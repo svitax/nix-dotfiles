@@ -13,7 +13,7 @@ return {
             "LiadOz/nvim-dap-repl-highlights",
         },
         config = function()
-            local icons = require("icons").dap
+            local icons = require("utils.icons").dap
 
             -- Dap icon customization
             -- stylua: ignore start
@@ -29,7 +29,11 @@ return {
 
             -- Set up the ui
             require("dapui").setup({
-                icons = { expanded = icons.expanded, collapsed = icons.collapsed, current_frame = icons.current_frame },
+                icons = {
+                    expanded = icons.expanded,
+                    collapsed = icons.collapsed,
+                    current_frame = icons.stack_frame_current,
+                },
                 mappings = {
                     expand = { "<CR>", "<2-LeftMouse>" },
                     open = "o",

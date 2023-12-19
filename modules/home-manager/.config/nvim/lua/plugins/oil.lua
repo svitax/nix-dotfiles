@@ -1,3 +1,5 @@
+local icons = require("utils.icons")
+
 ---Change window-local directory to `dir`
 ---@param dir string
 ---@return nil
@@ -282,7 +284,7 @@ return {
                     { "permissions", highlight = "Comment" },
                     { "size", highlight = "Special" },
                     { "mtime", highlight = "Number" },
-                    { "icon", default_file = "", directory = "", add_padding = false },
+                    { "icon", default_file = icons.kinds.File, directory = icons.kinds.Folder, add_padding = false },
                 },
                 win_options = {
                     number = false,

@@ -1,4 +1,4 @@
-local gitsigns_icons = require("icons").git.signs
+local gitsigns_icons = require("utils.icons").git.signs
 return {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     {

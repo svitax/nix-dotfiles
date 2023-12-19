@@ -4,8 +4,8 @@ return {
         dependencies = { "kevinhwang91/promise-async" },
         event = "BufReadPost",
         opts = function()
-            local icons = require("icons").folds
-            local ellipsis = require("icons").ellipsis
+            local icons = require("utils.icons").folds
+            local ellipsis = require("utils.icons").ellipsis
 
             local handler = function(virtText, lnum, endLnum, width, truncate)
                 local newVirtText = {}

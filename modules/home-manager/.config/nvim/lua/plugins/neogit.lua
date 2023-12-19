@@ -3,7 +3,7 @@ return {
         "NeogitOrg/neogit",
         cmd = "Neogit",
         opts = function()
-            local icons = require("icons")
+            local icons = require("utils.icons")
 
             return {
                 console_timeout = 10000,
