@@ -5,16 +5,7 @@
             "plugins": false
         }
     },
-    "neoconf": {
-        "plugins": {
-            "lua_ls": {
-                "enabled": true
-            },
-            "lspconfig": {
-                "enabled": true
-            }
-        }
-    },
+    "neoconf": {},
     "lspconfig": {
         "jsonls": {
             "json": {
