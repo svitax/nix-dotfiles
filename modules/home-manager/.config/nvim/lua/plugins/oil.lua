@@ -489,7 +489,7 @@ return {
                 end,
             })
 
-            vim.keymap.set("n", "<leader>e", "<cmd>Oil<cr>", { desc = "File explorer" })
+            vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "File explorer" })
         end,
     },
 }
