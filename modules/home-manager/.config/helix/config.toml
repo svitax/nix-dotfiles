@@ -24,8 +24,9 @@ enable = true
 [editor.lsp]
 display-inlay-hints = true
 
-# [editor.statusline]
-# right = ["diagnostics", "selections", "position", "file-type"]
+[editor.statusline]
+left = ["mode", "spinner"]
+right = ["diagnostics", "selections", "position", "file-type"]
 
 [editor.whitespace.render]
 space = "all"
