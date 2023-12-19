@@ -66,7 +66,7 @@ return {
                 -- vim.keymap.set('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)
                 -- vim.keymap.set( "n", "<leader>r", vim.lsp.buf.rename, vim.tbl_deep_extend("keep", opts, { desc = "Rename symbol" }))
                 -- vim.keymap.set( { "n", "v" }, "<leader>a", vim.lsp.buf.code_action, { desc = "Perform code action", buffer = buffer, remap = true })
-                -- vim.keymap.set("n", "<leader>k", function()
+                -- vim.keymap.set("n", "K", function()
                 --   vim.lsp.buf.format({ async = true })
                 -- end, { desc = "Format document", expr = true, buffer = buffer, remap = false })
             end

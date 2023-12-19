@@ -16,7 +16,7 @@ return {
 
                         vim.keymap.set(
                             "n",
-                            "<leader>k",
+                            "K",
                             show_documentation,
                             { buffer = buffer, noremap = true, desc = "Show docs" }
                         )

@@ -7,7 +7,7 @@ return {
                 bindings = {
                     ["<C-d>"] = "ScrollOutputDown",
                     ["<C-u>"] = "ScrollOutputUp",
-                    ["<leader>k"] = "TogglePreview",
+                    ["K"] = "TogglePreview",
                     ["p"] = nil,
                     ["<C-j>"] = nil,
                     ["<C-k>"] = nil,
