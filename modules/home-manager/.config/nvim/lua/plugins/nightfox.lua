@@ -105,6 +105,13 @@ return {
                     WhichKeyFloat = { bg = "palette.bg1" },
                     WhichKeyValue = { link = "Comment" },
                     -- which-key end
+
+                    -- statusline start
+                    StatusLine = { fg = "palette.fg2", bg = "palette.bg3" }, -- status line of current window
+                    StatusLineNC = { fg = "palette.fg2", bg = "palette.bg3" }, -- status lines of not-current windows Note: if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
+                    StatusLineHeader = { fg = "palette.fg1", bg = "palette.bg4" },
+                    StatusLineHeaderModified = { fg = "palette.yellow", bg = "palette.bg4", style = "bold" },
+                    -- statusline end
                     Hlargs = { link = "@parameter" },
 
                     NvimSurroundHighlight = { fg = "palette.bg0", bg = "palette.magenta" },
