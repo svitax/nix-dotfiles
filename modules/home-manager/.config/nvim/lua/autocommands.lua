@@ -135,16 +135,3 @@ autocmd("TextYankPost", {
     end,
     group = "highlight_on_yank",
 })
-
-augroup("telescope_on_enter", { clear = true })
-autocmd("VimEnter", {
-    desc = "Open Telescope on VimEnter if directory",
-    callback = function()
-        local buffer_path = vim.fn.argv(0)
-        if vim.fn.isdirectory(buffer_path) == 1 or vim.bo.filetype == "oil" then
-            -- local ts = require("util").telescope("files")
-            -- ts()
-            require("fzf-lua").files({ cwd = vim.loop.cwd() })
-        end
-    end,
-})
