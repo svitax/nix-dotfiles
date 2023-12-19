@@ -24,6 +24,7 @@
       ngit = "nvim -c :Neogit";
       ng = "nvim -c :Neogit";
       nf = "nvim .";
+      ne = "nvim . -c ':FzfLua file_browser'";
       nn = "nvim -c :ObsidianQuickSwitch";
       diffview = "nvim -c :DiffviewOpen";
       ndiff = "nvim -c :DiffviewOpen";

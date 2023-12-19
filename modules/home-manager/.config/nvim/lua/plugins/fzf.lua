@@ -150,4 +150,15 @@ return {
             { "<leader>?", "<cmd>FzfLua commands<cr>", desc = "Open command palette" },
         },
     },
+    {
+        -- TODO: make this more like telescope-file-browser
+        -- add icons, file permissions, file size, last modified
+        -- add preview toggle
+        -- if select a file that doesn't exist, create it (<cr>)
+        -- BUG: unable to open sometimes when i'm in an oil buffer
+        "michel-garcia/fzf-lua-file-browser.nvim",
+        dependencies = { "ibhagwan/fzf-lua" },
+        opts = {},
+        keys = { { "<leader>e", "<cmd>FzfLua file_browser<cr>", desc = "Open file browser" } },
+    },
 }
