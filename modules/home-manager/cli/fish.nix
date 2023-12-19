@@ -22,7 +22,7 @@
       v = "nvim";
       neogit = "nvim -c :Neogit";
       ngit = "nvim -c :Neogit";
-      ng = "nvim -c :Neogit";
+      ng = "nvim -c :Neogit kind=replace";
       nf = "nvim . -c :GoToFile";
       ne = "nvim . -c ':FzfLua file_browser'";
       nn = "nvim -c :ObsidianQuickSwitch";

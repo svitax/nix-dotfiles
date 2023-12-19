@@ -11,7 +11,7 @@ return {
                 disable_hint = true,
                 disable_commit_confirmation = "auto",
                 disable_insert_on_commit = false,
-                kind = "replace",
+                kind = "split",
                 use_per_project_settings = true,
                 remember_settings = true,
                 graph_style = "unicode",
