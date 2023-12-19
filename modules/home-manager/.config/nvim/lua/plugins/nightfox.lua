@@ -7,7 +7,7 @@ return {
                 styles = {
                     keywords = "NONE",
                     functions = "bold",
-                    comments = "italic",
+                    comments = "NONE",
                 },
             },
             groups = {
