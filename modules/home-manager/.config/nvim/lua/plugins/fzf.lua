@@ -91,7 +91,10 @@ return {
                     }, " "),
                     fzf_opts = { ["--info"] = e("inline-right") },
                 },
-                lsp = { finder = { fzf_opts = { ["--info"] = e("inline-right") } } },
+                lsp = {
+                    finder = { fzf_opts = { ["--info"] = e("inline-right") } },
+                    code_actions = { previewer = "codeaction_native" },
+                },
                 defaults = { copen = false }, -- TODO: don't open builtin qf list because we're also opening a picker
                 keymap = {
                     builtin = {
