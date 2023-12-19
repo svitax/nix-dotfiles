@@ -70,18 +70,25 @@ return {
                 path = "path",
             }
 
+            local compltype_path = {
+                dir = true,
+                file = true,
+                file_in_path = true,
+                runtime = true,
+            }
+
             return {
                 -- cmp floating window config
                 window = {
                     completion = {
-                        winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
-                        col_offset = -3,
-                        side_padding = 0,
+                        scrolloff = vim.go.scrolloff,
+                        border = "rounded",
                     },
                     documentation = {
                         winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
                         max_width = 80,
                         max_height = 20,
+                        border = "rounded",
                     },
                 },
                 performance = { max_view_entries = 64 },
@@ -201,29 +208,79 @@ return {
                     },
                 },
                 formatting = {
-                    fields = { "kind", "abbr", "menu" },
-                    format = function(entry, item)
-                        local icons = require("icons").kinds
-
-                        if icons[item.kind] then
-                            item.kind = " " .. icons[item.kind] .. ""
-                            item.menu = "(" .. cmp_source_names[entry.source.name] .. ")"
+                    fields = { "abbr", "kind", "menu" },
+                    format = function(entry, cmp_item)
+                        local icons = require("utils.icons")
+                        local compltype = vim.fn.getcmdcompltype()
+                        local complpath = compltype_path[compltype]
+                        -- Fix cmp path completion not escaping special characters
+                        -- (e.g. `#`, spaces) in cmdline,
+                        if complpath then
+                            local path_escaped = vim.fn.fnameescape(cmp_item.word)
+                            cmp_item.word = path_escaped
+                            cmp_item.abbr = path_escaped
+                        end
+                        -- Use special icons for file / directory completions
+                        if cmp_item.kind == "File" or cmp_item.kind == "Folder" or complpath then
+                            if cmp_item.kind == "Folder" then -- Directories
+                                cmp_item.kind = icons.kinds.Folder
+                                cmp_item.kind_hl_group = "CmpItemKindFolder"
+                            else -- Files
+                                local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
+                                if devicons_ok then
+                                    local icon, icon_hl = devicons.get_icon(
+                                        vim.fs.basename(cmp_item.word),
+                                        vim.fn.fnamemodify(cmp_item.word, ":e"),
+                                        { default = true }
+                                    )
+                                    cmp_item.kind = icon and icon .. " " or icons.kinds.File
+                                    cmp_item.kind_hl_group = icon_hl or "CmpItemKindFile"
+                                end
+                            end
+                        else -- Use special icons for cmdline / calc completions
+                            ---@type table<string, string> override icons with `entry.source.name`
+                            local icon_override = {
+                                cmdline = icons.DotLarge,
+                                calc = icons.kinds.Calculator,
+                            }
+                            cmp_item.kind = icon_override[entry.source.name] or icons.kinds[cmp_item.kind] or ""
                         end
 
                         if entry.source_name == "nvim_lsp" then
-                            item.menu = "(" .. entry.source.source.client.name .. ")"
+                            cmp_item.menu = "(" .. entry.source.source.client.name .. ")"
+                        else
+                            cmp_item.menu = "(" .. cmp_source_names[entry.source.name] .. ")"
                         end
 
-                        if entry.source.name == "git" then
-                            item.kind = "  "
+                        ---@param field string
+                        ---@param min_width integer
+                        ---@param max_width integer
+                        ---@return nil
+                        local function clamp(field, min_width, max_width)
+                            if not cmp_item[field] or not type(cmp_item) == "string" then
+                                return
+                            end
+                            -- In case that min_width > max_width
+                            if min_width > max_width then
+                                min_width, max_width = max_width, min_width
+                            end
+                            local field_str = cmp_item[field]
+                            local field_width = vim.fn.strdisplaywidth(field_str)
+                            if field_width > max_width then
+                                local former_width = math.floor(max_width * 0.6)
+                                local latter_width = math.max(0, max_width - former_width - 1)
+                                cmp_item[field] = string.format(
+                                    "%s…%s",
+                                    field_str:sub(1, former_width),
+                                    field_str:sub(-latter_width)
+                                )
+                            elseif field_width < min_width then
+                                cmp_item[field] = string.format("%-" .. min_width .. "s", field_str)
+                            end
                         end
-
-                        if entry.source.name == "copilot" then
-                            item.abbr = item.abbr .. "..."
-                            item.menu = "(copilot)"
-                        end
-
-                        return item
+                        clamp("abbr", vim.go.pw, math.max(60, math.ceil(vim.o.columns * 0.4)))
+                        clamp("menu", 0, math.max(16, math.ceil(vim.o.columns * 0.2)))
+                        return cmp_item
                     end,
                 },
             }
