@@ -62,10 +62,10 @@ end, { expr = true })
 -- smart deletion, dd
 -- solves the issue where you want to delete an empty line, but dd will override your last yank
 -- will check you are deleting an empty line, if so - use the black hole register
-map("n", "dd", function()
-    if vim.api.nvim_get_current_line():match("^%s*$") then
-        return '"_dd'
-    else
-        return "dd"
-    end
-end, { noremap = true, expr = true })
+-- map("n", "dd", function()
+--     if vim.api.nvim_get_current_line():match("^%s*$") then
+--         return '"_dd'
+--     else
+--         return "dd"
+--     end
+-- end, { noremap = true, expr = true })

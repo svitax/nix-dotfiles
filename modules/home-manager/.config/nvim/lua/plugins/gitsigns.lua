@@ -36,6 +36,7 @@ return {
                 ["+"] = "₊",
             },
             attach_to_untracked = true,
+            max_file_length = 12000, -- lines
             on_attach = function(buffer)
                 local gs = package.loaded.gitsigns
 
@@ -43,14 +44,19 @@ return {
                     vim.keymap.set(mode, l, r, { buffer = buffer, desc = desc })
                 end
 
-        -- stylua: ignore start
-        map("n", "mz", gs.stage_hunk, "Stage hunk")
-        map("n", "mx", gs.undo_stage_hunk, "Undo stage hunk")
-        map("v", "mz", function () gs.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, "Stage hunk")
-        map("v", "mx", function () gs.undo_stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, "Undo stage hunk")
-        map("", "]h", gs.next_hunk, "Next hunk")
-        map("", "[h", gs.prev_hunk, "Previous hunk")
-        map({ "o", "x" }, "ih", ":<C-u>Gitsigns select_hunk<cr>", "Gitsigns select hunk")
+                -- stylua: ignore start
+                map("n", "ga", gs.stage_hunk, "Git stage hunk")
+                map("n", "gu", gs.undo_stage_hunk, "Git undo stage hunk")
+                map("n", "gU", gs.reset_hunk, "Git reset hunk")
+                map("x", "ga", function () gs.stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, "Git stage hunk")
+                map("x", "gu", function () gs.undo_stage_hunk {vim.fn.line('.'), vim.fn.line('v')} end, "Git undo stage hunk")
+                map("x", "gU", function () gs.reset_hunk {vim.fn.line('.'), vim.fn.line('v')} end, "Git reset hunk")
+                map("n", "gk", gs.preview_hunk, "Git preview hunk")
+                map("n", "gb", function () gs.blame_line({ full = true }) end, "Git toggle blame")
+                map("n", "gB", gs.toggle_current_line_blame, "Git blame line")
+                map("", "]h", gs.next_hunk, "Next git hunk")
+                map("", "[h", gs.prev_hunk, "Previous git hunk")
+                map({ "o", "x" }, "ih", ":<C-u>Gitsigns select_hunk<cr>", "Gitsigns select hunk")
                 -- stylua: ignore end
             end,
         },

@@ -76,6 +76,7 @@ return {
                     ["--margin"] = e("0"),
                     ["--preview-window"] = e("border-sharp"),
                 },
+                previewers = { git_diff = { pager = "delta --width=$FZF_PREVIEW_COLUMNS" } },
                 files = { fzf_opts = { ["--info"] = e("inline-right") } },
                 grep = {
                     rg_opts = table.concat({
@@ -148,6 +149,7 @@ return {
             { "<leader>D", "<cmd>FzfLua lsp_workspace_diagnostics<cr>", desc = "Open workspace diagnostic picker" },
             { "<leader>x", "<cmd>FzfLua quickfix<cr>", desc = "Open quickfix list" },
             { "<leader>?", "<cmd>FzfLua commands<cr>", desc = "Open command palette" },
+            { "<C-g>", "<cmd>FzfLua git_status<cr>", desc = "Open git status" },
         },
     },
     {

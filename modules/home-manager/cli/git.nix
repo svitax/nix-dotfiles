@@ -5,7 +5,12 @@ in {
     enable = true;
     userName = "Igor Barale";
     userEmail = "svitaxiom@gmail.com";
-    extraConfig = { init.defaultBranch = "master"; };
+    extraConfig = {
+      core.editor = "nvim";
+      init.defaultBranch = "master";
+      pull.rebase = true;
+    };
+
     ignores = [ ".direnv" "result" ];
     delta = {
       enable = true;

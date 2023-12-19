@@ -22,7 +22,7 @@ return {
                     PmenuSel = { bg = "palette.bg3" }, -- Popup menu: selected item.
                     PmenuSbar = { bg = "palette.bg3" }, -- Popup menu: scrollbar.
                     PmenuThumb = { bg = "palette.bg4" }, -- Popup menu: Thumb of the scrollbar.
-                    -- NormalFloat = { bg = "palette.bg1" }, -- I only want to change cmp float (documentation)
+                    NormalFloat = { bg = "palette.bg1" },
 
                     Search = { fg = "NONE", bg = "palette.sel1" },
                     IncSearch = { fg = "NONE", bg = "palette.sel1" },

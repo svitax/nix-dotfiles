@@ -51,12 +51,37 @@ return {
                 -- Setup keymaps
                 local keymap_opts = { buffer = buffer, noremap = true }
 
-                vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = buffer, desc = "Show docs" })
-                vim.keymap.set("n", "gd", vim.lsp.buf.definition, keymap_opts)
-                vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, keymap_opts)
-                vim.keymap.set("n", "gr", vim.lsp.buf.references, keymap_opts)
-                vim.keymap.set("n", "gi", vim.lsp.buf.implementation, keymap_opts)
-                vim.keymap.set("n", "gD", vim.lsp.buf.declaration, keymap_opts)
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("keep", { desc = "Show docs" }, keymap_opts))
+                vim.keymap.set(
+                    "n",
+                    "gd",
+                    vim.lsp.buf.definition,
+                    vim.tbl_extend("keep", { desc = "Goto definition" }, keymap_opts)
+                )
+                vim.keymap.set(
+                    "n",
+                    "gy",
+                    vim.lsp.buf.type_definition,
+                    vim.tbl_extend("keep", { desc = "Goto type definition" }, keymap_opts)
+                )
+                vim.keymap.set(
+                    "n",
+                    "gr",
+                    vim.lsp.buf.references,
+                    vim.tbl_extend("keep", { desc = "Goto references" }, keymap_opts)
+                )
+                vim.keymap.set(
+                    "n",
+                    "gi",
+                    vim.lsp.buf.implementation,
+                    vim.tbl_extend("keep", { desc = "Goto implementation" }, keymap_opts)
+                )
+                vim.keymap.set(
+                    "n",
+                    "gD",
+                    vim.lsp.buf.declaration,
+                    vim.tbl_extend("keep", { desc = "Goto declaration" }, keymap_opts)
+                )
                 vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help, keymap_opts)
                 -- vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<cr>", keymap_opts)
                 -- vim.keymap.set("n", "gy", "<cmd>TroubleToggle lsp_type_definitions<cr>", keymap_opts)

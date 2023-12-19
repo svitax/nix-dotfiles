@@ -7,13 +7,12 @@ return {
             vim.o.timeoutlen = 300
         end,
         opts = {
-
             plugins = {
                 marks = false,
                 registers = false,
                 spelling = { enabled = false },
                 presets = {
-                    operators = true,
+                    operators = false,
                     motions = false,
                     text_objects = false,
                     windows = false,
@@ -35,6 +34,7 @@ return {
         config = function(_, opts)
             require("which-key").setup(opts)
             require("which-key").register({
+                ["g"] = { name = "+goto/git" },
                 ["m"] = { name = "+surround" },
                 ["]"] = { name = "+next" },
                 ["["] = { name = "+prev" },
