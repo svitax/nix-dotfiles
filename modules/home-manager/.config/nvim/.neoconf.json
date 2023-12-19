@@ -48,7 +48,7 @@
                     "version": "LuaJIT"
                 },
                 "workspace": {
-                    "checkThirdParty": false
+                    "checkThirdParty": "Disable"
                 },
                 "format": {
                     "enable": false
@@ -58,8 +58,18 @@
                 },
                 "diagnostics": {
                     "globals": [
-                        "vim"
+                        "vim",
+                        "describe",
+                        "it",
+                        "assert",
+                        "stub"
+                    ],
+                    "disable": [
+                        "duplicate-set-field"
                     ]
+                },
+                "telemetry": {
+                    "enable": false
                 },
                 "hint": { // inlay hints
                     "enable": true,
