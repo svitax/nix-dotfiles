@@ -1,7 +1,7 @@
 return {
     {
         "ibhagwan/fzf-lua",
-        cmd = { "FzfLua" },
+        cmd = { "FzfLua", "GoToFile" },
         opts = function()
             local actions = require("fzf-lua").actions
             local e = vim.fn.shellescape
@@ -19,7 +19,7 @@ return {
                 winopts = {
                     height = 0.40,
                     width = 1.00,
-                    row = 0.87,
+                    row = 0.90,
                     col = 0.00,
                     -- border = utils.static.borders.solid,
                     preview = {
