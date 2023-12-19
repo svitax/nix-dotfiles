@@ -274,14 +274,51 @@ return {
                 callback = toggle_preview,
             }
 
+            local permission_hlgroups = setmetatable({
+                ["-"] = "OilPermissionNone",
+                ["r"] = "OilPermissionRead",
+                ["w"] = "OilPermissionWrite",
+                ["x"] = "OilPermissionExecute",
+            }, {
+                __index = function()
+                    return "OilDir"
+                end,
+            })
+
+            local type_hlgroups = setmetatable({
+                ["-"] = "OilTypeFile",
+                ["d"] = "OilTypeDir",
+                ["p"] = "OilTypeFifo",
+                ["l"] = "OilTypeLink",
+                ["s"] = "OilTypeSocket",
+            }, {
+                __index = function()
+                    return "OilTypeFile"
+                end,
+            })
+
             return {
                 columns = {
                     {
                         "type",
-                        icons = { directory = "-", fifo = "p", file = "-", link = "", socket = "s" },
-                        highlight = "Comment",
+                        icons = { directory = "d", fifo = "p", file = "-", link = "", socket = "s" },
+                        -- highlight = "Comment",
+                        highlight = function(type_str)
+                            return type_hlgroups[type_str]
+                        end,
                     },
-                    { "permissions", highlight = "Comment" },
+                    {
+                        "permissions",
+                        -- highlight = "Comment"
+                        highlight = function(permission_str)
+                            local hls = {}
+                            for i = 1, #permission_str do
+                                local char = permission_str:sub(i, i)
+                                table.insert(hls, { permission_hlgroups[char], i - 1, i })
+                            end
+                            return hls
+                        end,
+                    },
                     { "size", highlight = "Special" },
                     { "mtime", highlight = "Number" },
                     { "icon", default_file = icons.kinds.File, directory = icons.kinds.Folder, add_padding = false },
@@ -359,6 +396,37 @@ return {
                         end, 100)
                     end
                 end,
+            })
+
+            ---Set some default hlgroups for oil
+            ---@return nil
+            local function oil_sethl()
+                local sethl = require("utils.hl").set
+                sethl(0, "OilDir", { fg = "Directory" })
+                sethl(0, "OilDirIcon", { fg = "Directory" })
+                sethl(0, "OilLink", { fg = "Constant" })
+                sethl(0, "OilLinkTarget", { fg = "Comment" })
+                sethl(0, "OilCopy", { fg = "DiagnosticSignHint", bold = true })
+                sethl(0, "OilMove", { fg = "DiagnosticSignWarn", bold = true })
+                sethl(0, "OilChange", { fg = "DiagnosticSignWarn", bold = true })
+                sethl(0, "OilCreate", { fg = "DiagnosticSignInfo", bold = true })
+                sethl(0, "OilDelete", { fg = "DiagnosticSignError", bold = true })
+                sethl(0, "OilPermissionNone", { fg = "NonText" })
+                sethl(0, "OilPermissionRead", { fg = "DiagnosticSignWarn" })
+                sethl(0, "OilPermissionWrite", { fg = "DiagnosticSignError" })
+                sethl(0, "OilPermissionExecute", { fg = "DiagnosticSignOk" })
+                sethl(0, "OilTypeDir", { fg = "Directory" })
+                sethl(0, "OilTypeFifo", { fg = "Special" })
+                sethl(0, "OilTypeFile", { fg = "NonText" })
+                sethl(0, "OilTypeLink", { fg = "Constant" })
+                sethl(0, "OilTypeSocket", { fg = "OilSocket" })
+            end
+            oil_sethl()
+
+            vim.api.nvim_create_autocmd("ColorScheme", {
+                desc = "Set some default hlgroups for oil.",
+                group = vim.api.nvim_create_augroup("OilSetDefaultHlgroups", {}),
+                callback = oil_sethl,
             })
 
             vim.api.nvim_create_autocmd("FileType", {
