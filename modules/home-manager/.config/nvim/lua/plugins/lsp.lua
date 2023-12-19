@@ -58,17 +58,16 @@ return {
                 -- Setup keymaps
                 local keymap_opts = { buffer = buffer, noremap = true }
 
-                -- stylua: ignore
-                vim.keymap.set( "n", "<leader>k", vim.lsp.buf.hover, { buffer = buffer, desc = "Show docs" })
-                vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<cr>", keymap_opts)
-                vim.keymap.set("n", "gy", "<cmd>TroubleToggle lsp_type_definitions<cr>", keymap_opts)
-                vim.keymap.set("n", "gr", "<cmd>TroubleToggle lsp_references<cr>", keymap_opts)
+                vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = buffer, desc = "Show docs" })
+                vim.keymap.set("n", "gd", vim.lsp.buf.definition, keymap_opts)
+                vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, keymap_opts)
+                vim.keymap.set("n", "gr", vim.lsp.buf.references, keymap_opts)
                 vim.keymap.set("n", "gi", vim.lsp.buf.implementation, keymap_opts)
                 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, keymap_opts)
                 vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help, keymap_opts)
-                -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, keymap_opts)
-                -- vim.keymap.set("n", "gy", vim.lsp.buf.type_definition, keymap_opts)
-                -- vim.keymap.set("n", "gr", vim.lsp.buf.references, keymap_opts)
+                -- vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<cr>", keymap_opts)
+                -- vim.keymap.set("n", "gy", "<cmd>TroubleToggle lsp_type_definitions<cr>", keymap_opts)
+                -- vim.keymap.set("n", "gr", "<cmd>TroubleToggle lsp_references<cr>", keymap_opts)
                 -- vim.keymap.set('n', '<leader>wa', vim.lsp.buf.add_workspace_folder, opts)
                 -- vim.keymap.set('n', '<leader>wr', vim.lsp.buf.remove_workspace_folder, opts)
                 -- vim.keymap.set('n', '<leader>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end, opts)

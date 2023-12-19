@@ -6,10 +6,10 @@ return {
             local actions = require("fzf-lua").actions
             local e = vim.fn.shellescape
 
-            local function file_edit_or_trouble(selected, opts)
+            local function file_edit_or_qf(selected, opts)
                 if #selected > 1 then
                     require("fzf-lua").actions.file_sel_to_qf(selected, opts)
-                    vim.cmd("TroubleToggle quickfix")
+                    require("fzf-lua").quickfix()
                 else
                     require("fzf-lua").actions.file_edit(selected, opts)
                 end
@@ -92,7 +92,7 @@ return {
                     fzf_opts = { ["--info"] = e("inline-right") },
                 },
                 lsp = { finder = { fzf_opts = { ["--info"] = e("inline-right") } } },
-                defaults = { copen = false }, -- TODO: don't open builtin qf list because we're also opening trouble
+                defaults = { copen = false }, -- TODO: don't open builtin qf list because we're also opening a picker
                 keymap = {
                     builtin = {
                         ["<C-d>"] = "preview-page-down",
@@ -109,11 +109,11 @@ return {
                 },
                 actions = {
                     files = {
-                        ["default"] = file_edit_or_trouble,
+                        ["default"] = file_edit_or_qf,
                         ["ctrl-s"] = actions.file_split,
                         ["ctrl-v"] = actions.file_vsplit,
                         ["ctrl-t"] = actions.file_tabedit,
-                        -- ["ctrl-l"] = file_sel_to_trouble_ll,
+                        -- ["ctrl-l"] = file_sel_to_ll,
                     },
                 },
             }
@@ -140,6 +140,9 @@ return {
             { "<leader>S", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Open workspace symbol picker" },
             { "<leader>'", "<cmd>FzfLua resume<cr>", desc = "Open last picker" },
             { "<leader>a", "<cmd>FzfLua lsp_code_actions<cr>", desc = "Perform code action" },
+            { "<leader>d", "<cmd>FzfLua lsp_document_diagnostics<cr>", desc = "Open diagnostic pickers" },
+            { "<leader>D", "<cmd>FzfLua lsp_workspace_diagnostics<cr>", desc = "Open workspace diagnostic picker" },
+            { "<leader>x", "<cmd>FzfLua quickfix<cr>", desc = "Open quickfix list" },
         },
     },
 }
