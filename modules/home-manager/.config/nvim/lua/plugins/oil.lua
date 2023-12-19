@@ -360,6 +360,28 @@ return {
                     ["gt"] = "actions.toggle_trash",
                     ["gz"] = archive,
                     ["<C-c>"] = "actions.close",
+                    ["go"] = {
+                        mode = "n",
+                        buffer = true,
+                        desc = "Choose an external program to open the entry under the cursor",
+                        callback = function()
+                            local entry = require("oil").get_cursor_entry()
+                            local dir = require("oil").get_current_dir()
+                            if not entry or not dir then
+                                return
+                            end
+                            local entry_path = vim.fs.joinpath(dir, entry.name)
+                            local response
+                            vim.ui.input({ prompt = "Open with: ", completion = "shellcmd" }, function(r)
+                                response = r
+                            end)
+                            if not response then
+                                return
+                            end
+                            print("\n")
+                            vim.system({ response, entry_path })
+                        end,
+                    },
                 },
             }
         end,
