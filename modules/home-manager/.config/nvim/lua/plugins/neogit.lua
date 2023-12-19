@@ -23,7 +23,7 @@ return {
                 },
                 commit_popup = { kind = "auto" },
                 mappings = { popup = { ["F"] = "PullPopup", ["p"] = false } },
-                sections = { recent = { folded = false }, rebase = { folded = true } },
+                sections = { recent = { folded = true }, rebase = { folded = true } },
             }
         end,
         keys = { { "<leader>m", "<cmd>Neogit<cr>", desc = "Neogit" } },
