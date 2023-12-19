@@ -37,15 +37,26 @@ return {
                     }
                 end,
             }
-
             return {
                 bar = {
-                    sources = function(buf, _)
-                        if vim.bo[buf].ft == "terminal" then
-                            return { sources.terminal }
-                        end
-                        return { directory, filename }
+                    sources = function(buf)
+                        return vim.bo[buf].ft == "markdown" and { sources.markdown }
+                            or {
+                                require("dropbar.utils").source.fallback({
+                                    sources.lsp,
+                                    sources.treesitter,
+                                }),
+                            }
                     end,
+                    -- sources = function(buf, _)
+                    --     if vim.bo[buf].ft == "terminal" then
+                    --         return { sources.terminal }
+                    --     end
+                    --     if vim.bo[buf].ft == "markdown" then
+                    --         return { sources.markdown }
+                    --     end
+                    --     return { directory, filename }
+                    -- end,
                 },
                 sources = {
                     path = {
@@ -57,6 +68,7 @@ return {
                     },
                 },
                 general = {
+                    update_interval = 32,
                     enable = function(buf, win)
                         return not vim.api.nvim_win_get_config(win).zindex
                             and vim.bo[buf].buftype == ""
@@ -69,6 +81,13 @@ return {
                     end,
                 },
             }
+        end,
+        config = function(_, opts)
+            require("dropbar").setup(opts)
+            local api = require("dropbar.api")
+            vim.keymap.set("n", "<Leader>;", api.pick, { desc = "Winbar picker" })
+            vim.keymap.set("n", "[C", api.goto_context_start)
+            vim.keymap.set("n", "]C", api.select_next_context)
         end,
     },
 }
