@@ -1,4 +1,5 @@
 return {
+    { "LnL7/vim-nix" },
     { "mfussenegger/nvim-lint", opts = { linters_by_ft = { nix = { "statix" } } } },
     { "stevearc/conform.nvim", opts = { formatters_by_ft = { nix = { "nixfmt" } } } },
     {
