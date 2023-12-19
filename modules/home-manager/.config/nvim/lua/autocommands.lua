@@ -14,6 +14,30 @@ autocmd("OptionSet", {
         end
     end,
 })
+augroup("FixVirtualEditCursorPos", {})
+autocmd("ModeChanged", {
+    desc = "Keep cursor position after entering normal mode from visual mode with virtual edit enabled.",
+    pattern = "[vV\x16]*:n",
+    group = "FixVirtualEditCursorPos",
+    callback = function()
+        if vim.wo.ve:find("all") and vim.w.ve_cursor then
+            vim.api.nvim_win_set_cursor(0, {
+                vim.w.ve_cursor[2],
+                vim.w.ve_cursor[3] + vim.w.ve_cursor[4] - 1,
+            })
+        end
+    end,
+})
+autocmd("CursorMoved", {
+    desc = "Record cursor position in visual mode if virtualedit is set.",
+    group = "FixVirtualEditCursorPos",
+    callback = function()
+        if vim.wo.ve:find("all") then
+            vim.w.ve_cursor = vim.fn.getcurpos()
+        end
+    end,
+})
+
 augroup("close_with_q", { clear = true })
 autocmd("FileType", {
     desc = "Close certain filetypes with 'q'",
