@@ -26,6 +26,10 @@ map({ "v" }, "<", "<gv", { desc = "Indent left" })
 map({ "n" }, "j", [[(v:count > 1 ? 'm`' . v:count : 'g') . 'j']], { expr = true })
 map({ "n" }, "k", [[(v:count > 1 ? 'm`' . v:count : 'g') . 'k']], { expr = true })
 
+-- Scroll line up/down
+map({ "" }, "<C-e>", "2<C-e>")
+map({ "" }, "<C-y>", "2<C-y>")
+
 -- Goto
 map("", "mm", "%", { remap = true, desc = "Goto matching bracket" })
 map("", "ge", "G", { desc = "Goto last line" })
