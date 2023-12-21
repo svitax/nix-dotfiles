@@ -213,7 +213,8 @@ return {
                     name = "Sh",
                 },
                 rs = {
-                    color = "#dea584",
+                    -- color = "#dea584",
+                    color = "#e43a25",
                     cterm_color = "216",
                     icon = vim.trim(icons.ft.Rust),
                     name = "Rs",
