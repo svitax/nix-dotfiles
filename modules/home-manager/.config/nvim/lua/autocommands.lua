@@ -111,18 +111,14 @@ augroup("toggle_rel_num", { clear = true })
 autocmd("InsertEnter", {
     desc = "Turn off relative line number when in insert mode",
     callback = function()
-        if not vim.tbl_contains({ "NeogitCommitMessage" }, vim.bo[0].buftype) then
-            vim.o.relativenumber = false
-        end
+        vim.o.relativenumber = false
     end,
     group = "toggle_rel_num",
 })
 autocmd("InsertLeave", {
     desc = "Turn on relative line number when leaving insert mode",
     callback = function()
-        if vim.tbl_contains({ "NeogitCommitMessage" }, vim.bo[0].buftype) then
-            vim.o.relativenumber = true
-        end
+        vim.o.relativenumber = true
     end,
     group = "toggle_rel_num",
 })
