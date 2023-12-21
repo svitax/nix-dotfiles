@@ -105,11 +105,6 @@ end
 ---Get current filetype
 ---@return string
 function statusline.ft()
-    local devicons_ok, devicons = pcall(require, "nvim-web-devicons")
-    if devicons_ok then
-        local icon, _ = devicons.get_icon(vim.fn.expand("%:t"), vim.bo.ft, { default = true })
-        return vim.bo.ft == "" and "" or icon .. " " .. vim.bo.ft:gsub("^%l", string.upper)
-    end
     return vim.bo.ft == "" and "" or vim.bo.ft:gsub("^%l", string.upper)
 end
 
