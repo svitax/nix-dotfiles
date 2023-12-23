@@ -69,7 +69,7 @@
                     "await": true,
                     "paramName": "All",
                     "paramType": true,
-                    "semicolon": "SameLine"
+                    "semicolon": "Disable"
                 }
             }
         }
