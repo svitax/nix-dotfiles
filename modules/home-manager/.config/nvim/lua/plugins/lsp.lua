@@ -83,6 +83,12 @@ return {
                     vim.tbl_extend("keep", { desc = "Goto declaration" }, keymap_opts)
                 )
                 vim.keymap.set("i", "<C-s>", vim.lsp.buf.signature_help, keymap_opts)
+
+                vim.api.nvim_create_user_command("InlayHintsToggle", function()
+                    vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
+                end, { desc = "Toggle lsp inlay hints" })
+                vim.keymap.set("n", "<leader>i", "<cmd>InlayHintsToggle<cr>", { desc = "Toggle inlay hints" })
+
                 -- vim.keymap.set("n", "gd", "<cmd>TroubleToggle lsp_definitions<cr>", keymap_opts)
                 -- vim.keymap.set("n", "gy", "<cmd>TroubleToggle lsp_type_definitions<cr>", keymap_opts)
                 -- vim.keymap.set("n", "gr", "<cmd>TroubleToggle lsp_references<cr>", keymap_opts)
