@@ -145,8 +145,6 @@ return {
             { "<leader>S", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Open workspace symbol picker" },
             { "<leader>'", "<cmd>FzfLua resume<cr>", desc = "Open last picker" },
             { "<leader>a", "<cmd>FzfLua lsp_code_actions<cr>", desc = "Perform code action" },
-            { "<leader>d", "<cmd>FzfLua lsp_document_diagnostics<cr>", desc = "Open diagnostic pickers" },
-            { "<leader>D", "<cmd>FzfLua lsp_workspace_diagnostics<cr>", desc = "Open workspace diagnostic picker" },
             { "<leader>x", "<cmd>FzfLua quickfix<cr>", desc = "Open quickfix list" },
             { "<leader>?", "<cmd>FzfLua commands<cr>", desc = "Open command palette" },
             { "<C-g>", "<cmd>FzfLua git_status<cr>", desc = "Open git status" },
