@@ -54,7 +54,7 @@ return {
                 map("n", "gk", gs.preview_hunk, "Git preview hunk")
                 map("n", "gb", function () gs.blame_line({ full = true }) end, "Git toggle blame")
                 map("n", "gB", gs.toggle_current_line_blame, "Git blame line")
-                map("n", "gq", function () gs.setqflist("all", {open = false}) require("fzf-lua").quickfix() end, "Git changes to qflist")
+                map("n", "gq", function () gs.setqflist("all", {open = false}) vim.wait(50) require("fzf-lua").quickfix() end, "Git changes to qflist")
                 map("", "]h", gs.next_hunk, "Next git hunk")
                 map("", "[h", gs.prev_hunk, "Previous git hunk")
                 map({ "o", "x" }, "ih", ":<C-u>Gitsigns select_hunk<cr>", "Gitsigns select hunk")
