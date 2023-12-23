@@ -103,16 +103,14 @@ return {
                 experimental = { ghost_text = { hl_group = "CmpGhostText" } },
                 sorting = {
                     priority_weight = 2,
+                    ---@type table[]|function[]
                     comparators = {
-                        ---@type table[]|function[]
-                        comparators = {
-                            require("cmp-under-comparator").under,
-                            cmp.config.compare.kind,
-                            cmp.config.compare.locality,
-                            cmp.config.compare.recently_used,
-                            cmp.config.compare.exact,
-                            cmp.config.compare.score,
-                        },
+                        require("cmp-under-comparator").under,
+                        cmp.config.compare.kind,
+                        cmp.config.compare.locality,
+                        cmp.config.compare.recently_used,
+                        cmp.config.compare.exact,
+                        cmp.config.compare.score,
                     },
                 },
                 -- enable cmp in dap buffers
