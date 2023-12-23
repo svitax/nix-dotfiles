@@ -4,7 +4,28 @@ return {
         version = "^3",
         ft = { "rust" },
         dependencies = { "lvimuser/lsp-inlayhints.nvim" },
-        -- TODO: nvim-dap doesn't pick up the adapter from this plugin
+        init = function()
+            vim.g.rustaceanvim = {
+                server = {
+                    settings = {
+                        ["rust-analyzer"] = {
+                            assist = {
+                                importEnforceGranularity = true,
+                                importPrefix = "create",
+                            },
+                            cargo = {
+                                allFeatures = true,
+                            },
+                            checkOnSave = {
+                                command = "clippy",
+                            },
+                        },
+                    },
+                },
+                -- TODO: nvim-dap doesn't pick up the adapter from this plugin
+                dap = {},
+            }
+        end,
     },
     {
         "saecki/crates.nvim",
