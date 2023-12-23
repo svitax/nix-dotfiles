@@ -152,6 +152,11 @@ return {
                     TelescopePromptNormal = { link = "TelescopeNormal" },
                     TelescopePromptBorder = { link = "TelescopeBorder" },
 
+                    DiagnosticFloatingError = { link = "DiagnosticError" },
+                    DiagnosticFloatingWarn = { link = "DiagnosticWarn" },
+                    DiagnosticFloatingInfo = { link = "DiagnosticInfo" },
+                    DiagnosticFloatingHint = { link = "DiagnosticHint" },
+
                     -- FloatBorder = { fg = "palette.comment" },
                 },
             },
