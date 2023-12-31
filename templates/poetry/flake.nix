@@ -16,10 +16,11 @@
           pkgs.poetry
           pkgs.ruff-lsp
           pkgs.nodePackages.pyright
+          pkgs.python311Packages.debugpy
+          # pkgs.mypy # needs to be installed in the venv through poetry for neovim to pick up
           pkgs.nil
           pkgs.alejandra
           pkgs.taplo
-          pkgs.python311Packages.debugpy
         ];
         # Workaround in linux: python downloads ELF's that can't find glibc
         # You would see errors like: error while loading shared libraries: name.so: cannot open shared object file: No such file or directory
