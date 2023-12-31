@@ -11,7 +11,7 @@ in {
       pull.rebase = true;
     };
 
-    ignores = [ ".direnv" "result" ];
+    ignores = [ ".direnv/" "result" ];
     delta = {
       enable = true;
       options = {
