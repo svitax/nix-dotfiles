@@ -25,7 +25,7 @@ in {
   };
 
   # zjstatus zellij statusbar plugin
-  # zjstatus = final: prev: {
-  #   zjstatus = inputs.zjstatus.packages.${prev.system}.default;
-  # };
+  zjstatus = final: prev: {
+    zjstatus = inputs.zjstatus.packages.${prev.system}.default;
+  };
 }

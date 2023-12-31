@@ -31,10 +31,26 @@ in {
       keybinds {
         normal {
           bind "Alt a" { SwitchToMode "tmux"; }
+          bind "Alt h" { MoveFocus "Left"; }
+          bind "Alt j" { MoveFocus "Down"; }
+          bind "Alt k" { MoveFocus "Up"; }
+          bind "Alt l" { MoveFocus "Right"; }
+          bind "Alt H" { Resize "Left"; }
+          bind "Alt J" { Resize "Down"; }
+          bind "Alt K" { Resize "Up"; }
+          bind "Alt L" { Resize "Right"; }
         }
 
         locked {
           bind "Alt a" { SwitchToMode "tmux"; }
+          bind "Alt h" { MoveFocus "Left"; }
+          bind "Alt j" { MoveFocus "Down"; }
+          bind "Alt k" { MoveFocus "Up"; }
+          bind "Alt l" { MoveFocus "Right"; }
+          bind "Alt H" { Resize "Left"; }
+          bind "Alt J" { Resize "Down"; }
+          bind "Alt K" { Resize "Up"; }
+          bind "Alt L" { Resize "Right"; }
         }
 
         shared_except "normal" "locked" {
@@ -43,9 +59,16 @@ in {
 
         tmux {
           bind "Alt a" { SwitchToMode "locked"; }
-          bind "s" { NewPane "Right"; SwitchToMode "locked"; }
-          bind "v" { NewPane "Down"; SwitchToMode "locked"; }
+          bind "f" {
+            Run "zellij-smart-sessionizer" {
+              direction "Down"
+            }
+            SwitchToMode "locked";
+          }
+          bind "v" { NewPane "Right"; SwitchToMode "locked"; }
+          bind "s" { NewPane "Down"; SwitchToMode "locked"; }
           bind "r" { SwitchToMode "RenameTab"; }
+          bind "R" { SwitchToMode "RenameTab"; }
           bind "h" { MoveFocus "Left"; }
           bind "j" { MoveFocus "Down"; }
           bind "k" { MoveFocus "Up"; }
@@ -83,9 +106,9 @@ in {
           pane
           pane size=1 borderless=true {
               plugin location="file:${pkgs.zjstatus}/bin/zjstatus.wasm" {
-                format_left "{mode}#[fg=#${colors.base0E},bg=#${colors.base02},bold] {session} {tabs}"
-                format_right "#[bg=#${colors.base02}]{command_git_branch}"
-                format_space "#[bg=#${colors.base02}]"
+                format_left "{mode}#[fg=#${colors.base0E},bg=#${colors.base01},bold] {session} {tabs}"
+                format_right "#[bg=#${colors.base01}]{command_git_branch}"
+                format_space "#[bg=#${colors.base01}]"
 
                 border_enabled "false"
                 border_char "-"
@@ -94,26 +117,30 @@ in {
 
                 // hide_frame_for_single_pane "false"
 
-                mode_normal "#[fg=#${colors.base00},bg=#${colors.base0D},bold] {name} "
-                mode_locked "#[fg=#${colors.base00},bg=#${colors.base0B},bold] {name} "
-                mode_tmux "#[fg=#${colors.base00},bg=#${colors.base09},bold] {name} "
+                mode_normal "#[bg=#${colors.base03},fg=#${colors.base0D}] NO "
+                mode_locked "#[bg=#${colors.base03},fg=#${colors.base05}] LO "
+                mode_tmux "#[bg=#${colors.base03},fg=#${colors.base09}] TM "
+                mode_rename_tab "#[bg=#${colors.base03},fg=#${colors.base0D}] RN "
 
-                tab_normal "#[fg=#${colors.base04},bg=#${colors.base02}] {name} "
-                tab_active "#[fg=#${colors.base06},bg=#${colors.base02},bold,italic] {name} "
+                tab_normal "#[fg=#${colors.base04},bg=#${colors.base01}] {name} "
+                tab_active "#[fg=#${colors.base06},bg=#${colors.base01},bold,italic] {name} "
 
                 // {command_NAME} needs zellij 0.39.0 or newer
                 command_git_branch_command "git rev-parse --abbrev-ref HEAD"
-                command_git_branch_format "#[fg=#${colors.base04},bg=#${colors.base02},bold]󰘬 {stdout} "
+                command_git_branch_format "#[fg=#${colors.base04},bg=#${colors.base01},bold]󰘬 {stdout} "
                 command_git_branch_interval "10"
               }
           }
       }
     '';
-  # programs.fish.interactiveShellInit = ''
-  #    	if status is-interactive; and type -q zellij
-  #   	set -gx ZELLIJ_AUTO_ATTACH true
-  #   	set -gx ZELLIJ_AUTO_EXIT true
-  #   	eval (zellij setup --generate-auto-start fish | string collect)
-  #   end
-  # '';
+  programs.fish.interactiveShellInit =
+    # fish
+    ''
+      bind \ef -M insert 'commandline "zellij-smart-sessionizer" && commandline -f execute && commandline -f repaint'
+      # if status is-interactive; and type -q zellij
+      # 	set -gx ZELLIJ_AUTO_ATTACH true
+      # 	set -gx ZELLIJ_AUTO_EXIT true
+      # 	eval (zellij setup --generate-auto-start fish | string collect)
+      # end
+    '';
 }

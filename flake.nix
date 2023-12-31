@@ -32,7 +32,7 @@
     # nix-nvim.url = "github:svitax/nvim-flake";
     # nvim-fennec.url = "path:./modules/neovim";
     # hardware.url = "github:nixos/nixos-hardware";
-    # zjstatus.url = "github:dj95/zjstatus";
+    zjstatus.url = "github:dj95/zjstatus";
   };
 
   outputs = { self, nixpkgs, flake-parts, ... }@inputs:

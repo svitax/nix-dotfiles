@@ -31,7 +31,7 @@
     ../../modules/home-manager/cli/papis.nix
     ../../modules/home-manager/cli/starship.nix
     ../../modules/home-manager/cli/tmux.nix
-    # ../../modules/home-manager/cli/zellij.nix
+    ../../modules/home-manager/cli/zellij.nix
     ../../modules/home-manager/cli/zoxide.nix
   ];
 
@@ -41,7 +41,7 @@
       # Add overlays your own flake exports (from overlays and pkgs dir):
       outputs.overlays.additions
       outputs.overlays.modifications
-      # outputs.overlays.zjstatus
+      outputs.overlays.zjstatus
 
       # You can also add overlays exported from other flakes:
       inputs.neovim-nightly-overlay.overlay
@@ -64,7 +64,7 @@
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
     # nvim-fennec # nvim-flake output
-    # zellij-smart-sessionizer
+    zellij-smart-sessionizer
     # live-grep # workaround for live-grep in helix until provided by core or plugins
     # helix-live-grep # workaround for live-grep in helix until provided by core or plugins
     ripgrep
@@ -74,6 +74,7 @@
     lazygit
     nurl # prefetch sources for nix build tool
     nix-init # generate nix packages from urls
+    atool # extract and archive
   ];
 
   # Enable home-manager
