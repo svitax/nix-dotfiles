@@ -18,6 +18,7 @@
     ../../modules/home-manager/desktop/sioyek.nix
 
     ../../modules/home-manager/cli/bat.nix
+    ../../modules/home-manager/cli/emacs.nix
     ../../modules/home-manager/cli/direnv.nix
     ../../modules/home-manager/cli/eza.nix
     ../../modules/home-manager/cli/fish.nix
@@ -45,6 +46,7 @@
 
       # You can also add overlays exported from other flakes:
       inputs.neovim-nightly-overlay.overlay
+      inputs.emacs-overlay.overlay
       # inputs.nvim-fennec.overlays.default
     ];
     # Configure your nixpkgs instance

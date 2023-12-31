@@ -27,6 +27,7 @@
     firefox-gnome-theme.flake = false;
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
 
     # NOTE: Add any other flake you might need
     # nix-nvim.url = "github:svitax/nvim-flake";
