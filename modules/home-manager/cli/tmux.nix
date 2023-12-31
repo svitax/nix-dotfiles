@@ -66,6 +66,7 @@ in {
         python: ""
         cat: "󰄛"
         bat: "󰭟"
+        cargo: ""
     '';
   programs.tmux = {
     enable = true;
@@ -111,6 +112,11 @@ in {
         bind v split-window -h -c "#{pane_current_path}" # split window vertically
         bind x kill-pane # skip "kill-pane 1? (y/n)" prompt
 
+        bind -n M-H resize-pane -L 5
+        bind -n M-J resize-pane -D 5
+        bind -n M-K resize-pane -U 5
+        bind -n M-L resize-pane -R 5
+
         # vim MAPPINGS
         not_tmux="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?(g?(view|n?vim?x?)(diff)?|fzf)$'"
         bind-key -n 'M-h' if-shell "$not_tmux" 'send-keys M-h' 'select-pane -R'
@@ -134,6 +140,11 @@ in {
         bind-key -T copy-mode-vi Enter send -X copy-selection-and-cancel
         bind-key -T copy-mode-vi 'v' send -X begin-selection
         bind-key -T copy-mode-vi y send-keys -X copy-selection-no-clear 'reattach-to-user-namespace pbcopy'
+
+        setw -g mode-keys vi
+
+        bind Enter copy-mode
+        bind -n M-Enter copy-mode
 
         #  ╭──────────────────────────────────────────────────────────╮
         #  │                    joshmedeski theme                     │
@@ -187,13 +198,13 @@ in {
           # bash
           ''
             set -g @mode_indicator_prefix_prompt " WA "
-            set -g @mode_indicator_prefix_mode_style 'bg=#7c6f64,fg=#${colors.base06}'
+            set -g @mode_indicator_prefix_mode_style 'bg=#665c54,fg=#${colors.base06}'
             set -g @mode_indicator_empty_prompt " TM "
-            set -g @mode_indicator_empty_mode_style 'bg=#7c6f64,fg=#${colors.base06}'
+            set -g @mode_indicator_empty_mode_style 'bg=#665c54,fg=#${colors.base06}'
             set -g @mode_indicator_copy_prompt " CP "
-            set -g @mode_indicator_copy_mode_style 'bg=#7c6f64,fg=#${colors.base06}'
+            set -g @mode_indicator_copy_mode_style 'bg=#665c54,fg=#${colors.base06}'
             set -g @mode_indicator_sync_prompt " SY "
-            set -g @mode_indicator_sync_mode_style 'bg=#7c6f64,fg=#${colors.base06}'
+            set -g @mode_indicator_sync_mode_style 'bg=#665c54,fg=#${colors.base06}'
           '';
       }
       {
