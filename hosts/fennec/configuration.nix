@@ -37,6 +37,14 @@
     };
   };
 
+  boot.initrd.kernelModules = [ "amdgpu" ];
+  services.xserver.videoDrivers = [ "amdgpu" "radeon" ];
+  hardware.opengl = {
+    enable = true;
+    driSupport = true;
+    driSupport32Bit = true;
+  };
+
   # Bootloader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/vda";
