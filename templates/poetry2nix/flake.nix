@@ -45,6 +45,7 @@
               # You would see errors like: error while loading shared libraries: name.so cannot open shared object file: No such file or directory
               LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
                 pkgs.stdenv.cc.cc
+                pkgs.zlib
                 # Add any missing library needed
                 # You can use the nix-index package to locate them, e.g. nix-locate -w --top-level --at-root /lib/libudev.so.1
               ];
