@@ -14,6 +14,7 @@
     ../../modules/home-manager/fonts.nix
 
     ../../modules/home-manager/desktop/firefox.nix
+    ../../modules/home-manager/desktop/gnome.nix
     ../../modules/home-manager/desktop/kitty.nix
     ../../modules/home-manager/desktop/sioyek.nix
 
