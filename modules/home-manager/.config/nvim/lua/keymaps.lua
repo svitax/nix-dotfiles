@@ -41,7 +41,7 @@ map("", "gc", "M", { desc = "Goto window center" })
 map("", "gb", "L", { desc = "Goto window bottom" })
 map("n", "gn", ":bn<cr>", { desc = "Goto next buffer" })
 map("n", "gp", ":bp<cr>", { desc = "Goto previous buffer" })
-map("n", "ga", "<C-6>", { desc = "Goto alternate file" })
+map("n", "gA", "<C-6>", { desc = "Goto alternate file" })
 
 -- Redo
 map("n", "U", "<c-r>", { desc = "Redo" })
