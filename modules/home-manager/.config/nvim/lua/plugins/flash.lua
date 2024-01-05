@@ -5,9 +5,19 @@ return {
         -- TODO: flash hg don't go italic
         "folke/flash.nvim",
         opts = {
+            jump = {
+                -- automatically jump when there is only one match
+                autojump = true,
+                -- clear highlight after jump
+                nohlsearch = false,
+            },
+            highlight = {
+                -- show a backdrop with hl FlashBackdrop
+                backdrop = false,
+            },
+            prompt = { enabled = false },
             modes = {
                 search = { enabled = false },
-                jump = { autojump = true },
                 treesitter = { label = { after = false } },
                 treesitter_search = { label = { after = false } },
             },
@@ -24,14 +34,6 @@ return {
                     require("flash").jump()
                 end,
                 desc = "flash",
-            },
-            {
-                "<S-CR>",
-                mode = { "n", "x", "o" },
-                function()
-                    require("flash").treesitter_search()
-                end,
-                desc = "flash treesitter search",
             },
         },
     },
