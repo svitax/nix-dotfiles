@@ -16,6 +16,8 @@
       clu = "nh clean user --keep 3";
       clud = "nh clean user --keep 3 --dry";
       use = "nix-shell --command fish -p";
+      e = "emacs -nw";
+      em = "emacs -nw";
       nv = "nvim";
       vim = "nvim";
       vi = "nvim";
