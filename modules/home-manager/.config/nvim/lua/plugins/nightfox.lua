@@ -18,7 +18,7 @@ return {
                     ["@keyword.function"] = { style = "NONE" },
                     ["@keyword.operator"] = { fg = "palette.red" },
 
-                    Pmenu = { fg = "palette.fg1", bg = "palette.bg2" }, -- Popup menu: normal item.
+                    Pmenu = { fg = "palette.comment", bg = "palette.bg2" }, -- Popup menu: normal item.
                     PmenuSel = { bg = "palette.bg3" }, -- Popup menu: selected item.
                     PmenuSbar = { bg = "palette.bg3" }, -- Popup menu: scrollbar.
                     PmenuThumb = { bg = "palette.bg4" }, -- Popup menu: Thumb of the scrollbar.
@@ -89,8 +89,8 @@ return {
                     -- statusline start
                     StatusLine = { fg = "palette.fg2", bg = "palette.bg3" }, -- status line of current window
                     StatusLineNC = { fg = "palette.fg2", bg = "palette.bg3" }, -- status lines of not-current windows Note: if this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
-                    StatusLineHeader = { fg = "palette.fg1", bg = "palette.bg4" },
-                    StatusLineHeaderModified = { fg = "palette.yellow", bg = "palette.bg4", style = "bold" },
+                    StatusLineHeader = { fg = "palette.fg1", bg = "#665c54" },
+                    StatusLineHeaderModified = { fg = "palette.yellow", bg = "#665c54", style = "bold" },
                     -- statusline end
 
                     -- HTML start
