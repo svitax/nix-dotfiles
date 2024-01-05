@@ -35,4 +35,8 @@ in {
 
   home.file.".emacs.d/eshell/alias".source = ../.config/emacs/alias;
 
+  home.file.".emacs.d/xemacs_color.svg".source =
+    ../.config/emacs/xemacs_color.svg;
+  home.file.".emacs.d/emacs_gnu_color.svg".source =
+    ../.config/emacs/emacs_gnu_color.svg;
 }
