@@ -1,6 +1,6 @@
 return {
     { "folke/todo-comments.nvim", opts = { signs = false, highlight = { after = "" } } },
-    { "chrisgrieser/nvim-puppeteer" },
+    -- { "chrisgrieser/nvim-puppeteer" },
     { "calops/hmts.nvim", ft = { "nix" }, opts = {} },
     -- Highlight, edit, and navigate code
     {
