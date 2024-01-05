@@ -63,60 +63,60 @@ in {
         aws = {
           symbol = "󰸏 ";
           format = "[$symbol($profile )(($region) )]($style) ";
-          style = "bright-black";
+          style = "white";
           region_aliases = { us-east-1 = "va"; };
         };
         azure = {
           symbol = " ";
           format = "[$symbol($subscription )]($style) ";
-          style = "bright-black";
+          style = "white";
         };
         gcloud = {
           symbol = "󱇶 ";
           format = "[$symbol($account )(($region) )]($style) ";
-          style = "bright-black";
+          style = "white";
         };
         docker_context = {
           symbol = " ";
           format = "[$symbol($context )]($style)";
-          style = "bright-black";
+          style = "white";
         };
         golang = {
           symbol = " ";
           format = "[$symbol($version )]($style)";
-          style = "bright-black";
+          style = "white";
         };
         lua = {
           symbol = " ";
           format = "[$symbol($version )]($style)";
-          style = "bright-black";
+          style = "white";
         };
         nix_shell = {
           symbol = " ";
           format = "[$symbol($name )]($style)";
-          style = "bright-black";
+          style = "white";
         };
         nodejs = {
           symbol = " ";
           format = "[$symbol($version )]($style)";
-          style = "bright-black";
+          style = "white";
         };
         python = {
           symbol = " ";
           # format = "[$symbol($virtualenv )]($style) ";
           format = "[$symbol($version )]($style) ";
-          style = "bright-black";
+          style = "white";
           python_binary = [ "./venv/bin/python" "python" "python3" "python2" ];
         };
         rust = {
           symbol = " ";
           format = "[$symbol($version )]($style)";
-          style = "bright-black";
+          style = "white";
         };
         shlvl = {
           symbol = "λ ";
           format = "[$symbol($shlvl )]($style)";
-          style = "bright-black";
+          style = "white";
         };
       };
     };
