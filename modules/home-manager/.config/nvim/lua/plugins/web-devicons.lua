@@ -311,8 +311,6 @@ return {
                 [".envrc"] = { color = "#d0bf41", icon = vim.trim(icons.ft.Env), name = "Envrc" },
                 ["go.mod"] = { icon = vim.trim(icons.ft.Go), color = "#73a3b7", name = "GoMod" },
                 ["go.sum"] = { icon = vim.trim(icons.ft.Go), color = "#73a3b7", name = "GoSum" },
-                ["justfile"] = { color = "#d28446", icon = vim.trim(icons.kinds.File), name = "Just" },
-                ["JUSTFILE"] = { color = "#d28446", icon = vim.trim(icons.kinds.File), name = "Just" },
                 ["Cargo.toml"] = { color = "#d28446", icon = vim.trim(icons.ft.Rust), name = "CargoToml" }, -- doesn't work
                 ["Cargo.lock"] = { color = "#d28446", icon = vim.trim(icons.ft.Rust), name = "CargoLock" }, -- doesn't work
             },
