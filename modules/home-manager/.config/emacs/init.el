@@ -1,133 +1,114 @@
-;;; init.el -- My Emacs config
+;;; simple-init -- svitax's simple Emacs configuration
+;; Author:
+;; Version:
+;; URL:
+;; Package-Requires: ((emacs "29.1"))
+;; This file is not part of GNU Emacs.
 ;;; Commentary:
+;; My config
 ;;; Code:
-(use-package emacs
-  :defer 0
-  :custom
-  (enable-recursive-minibuffers t)
-  (ring-bell-function #'ignore) ;; Do not make unecessary sounds
-  (inhibit-startup-message t) ;; disable the default emacs startup screen
-  (inhibit-startup-screen t)
-  (inhibit-splash-screen t)
-  (gc-cons-threshold (* 50 1000 1000)) ;; The default is 800 kilobytes. Measured in bytes
-  (column-number-mode t) ;; line numbers
-  (display-line-numbers-type 'relative)
-  (visible-bell nil)
-  (hl-line-mode t)
-  ;; (completion-cycle-threshold 3) ;; TAB cycle if there are only few candidates
-  (tab-always-indent t) ;; enable indentation+completion using the TAB key
-  ;; use-package is automatically added by the nix emacs overlay
-  ;; here we just make sure we don't have to keep typing `:ensure t`
-  (use-package-always-ensure t)
-  :init
-  (setq-default tab-width 2)
-  (setq-default evil-shift-width tab-width)
-  (setq-default indent-tabs-mode nil)
-  (setq-default show-trailing-whitespace t)
-  (setq-default indicate-empty-lines t)
-  (setq-default indicate-indicate-buffer-boundaries 'left))
 
-;; don't show trailing whitespace in term buffers
-(dolist (mode '(vterm-mode-hook
-                term-mode-hook
-                shell-mode-hook
-                eshell-mode-hook))
-  (add-hook mode (lambda () (setq show-trailing-whitespace nil))))
+;; Basic configuration of built-in features
+(setq-default
+ enable-recursive-minibuffers t
+ inhibit-startup-message t
+ initial-scratch-message nil
+ native-comp-async-report-warnings-errors nil
+ ring-bell-function 'ignore
+ scroll-conservatively 1
+ use-short-answers 1
+ display-line-numbers-type 'relative
+ vc-follow-symlinks t
+ ;; reduce the clutter in the fringes; we'd like to reserve that space for more
+ ;; useful information, like git-gutter and flymake
+ indicate-buffer-boundaries t
+ indicate-empty-lines nil
+ indicate-indicate-buffer-boundaries 'left)
+;; display-line-numbers-width 3
 
-;; Profile emacs startup
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message "*** Emacs loaded in %s seconds with %d garbage collections."
-                     (emacs-init-time "%.2f")
-                     gcs-done)))
+;; (load-theme 'modus-vivendi)
 
-(scroll-bar-mode -1) ; disable visible scrollbar
-(tool-bar-mode -1) ; disable the toolbar
-(tooltip-mode -1) ; disable tooltips
-(menu-bar-mode -1) ; disable the menu bar
-(set-fringe-mode 10) ; give some breathing room
+(server-start)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(tooltip-mode -1)
+(menu-bar-mode -1)
+(set-fringe-mode 10)
+(minibuffer-depth-indicate-mode)
 
-;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
-(use-package emacs
-  :custom
-  (user-emacs-directory (expand-file-name "~/.cache/emacs/"))
-  (url-history-file (expand-file-name "url/history" user-emacs-directory)))
+(set-face-attribute 'default nil
+		    :stipple nil
+		    :family "JetBrains Mono Nerd Font"
+		    :box nil
+		    :strike-through nil
+		    :overline nil
+		    :underline nil
+		    :slant 'normal
+		    :weight 'normal
+		    :height 160
+		    :width 'normal
+		    :foundry "nil")
 
-;; If you want to move everything out of the ~/.emacs.d folder
-;; reliably, set `user-emacs-directory` before loading no-littering!
-(use-package no-littering
-  :custom
-  ;; no-littering doesn't set this by default so we must place
-  ;; auto save files in the same path as it uses for sessions
-  (auto-save-file-name-transforms `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+(defun rune/show-welcome-buffer ()
+  "Show *Welcome* buffer."
+  (with-current-buffer (get-buffer-create "*Welcome*")
+    (setq truncate-lines t)
+    (let* ((buffer-read-only)
+           (image-path "~/.emacs.d/xemacs_color.svg")
+           (image (create-image image-path))
+           (size (image-size image))
+           (height (cdr size))
+           (width (car size))
+           (top-margin (floor (/ (- (window-height) height) 2)))
+           (left-margin (floor (/ (- (window-width) width) 2)))
+           (prompt-title "Welcome to Emacs!"))
+      (erase-buffer)
+      (setq mode-line-format nil)
+      (goto-char (point-min))
+      (insert (make-string top-margin ?\n ))
+      (insert (make-string left-margin ?\ ))
+      (insert-image image)
+      (insert "\n\n\n")
+      (insert (make-string (floor (/ (- (window-width) (string-width prompt-title)) 2)) ?\ ))
+      (insert prompt-title))
+    (setq cursor-type nil)
+    (read-only-mode +1)
+    (switch-to-buffer (current-buffer))
+    (local-set-key (kbd "q") 'kill-this-buffer)))
 
-;; Keep customization settings in a temporary file
-(setq custom-file
-      (if (boundp 'server-socket-dir)
-          (expand-file-name "custom.el" server-socket-dir)
-        (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
-(load custom-file t)
+(when (< (length command-line-args) 2)
+  (add-hook 'emacs-startup-hook (lambda ()
+                                  (when (display-graphic-p)
+                                    (rune/show-welcome-buffer)))))
 
-;; enable line numbers for some modes
-(dolist (mode '(text-mode-hook
-                prog-mode-hook
-                conf-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 1))))
-;; override some modes which derive from the above
-(dolist (mode '(org-mode-hook
-                term-mode-hook
-                shell-mode-hook
-                eshell-mode-hook))
-  (add-hook mode (lambda () (display-line-numbers-mode 0))))
-
-;; fonts
-(set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 200)
-(set-face-attribute 'variable-pitch nil :font "Noto Sans" :height 200)
-(set-face-attribute 'fixed-pitch nil :font "JetBrainsMono Nerd Font" :height 200)
-
-;; (set-face-attribute 'font-lock-comment-face nil :slant 'italic)
-;; (set-face-attribute 'font-lock-keyword-face nil :slant 'italic)
-
-;; NOTE: The first time you load your configuration on a new machine, you'll
-;; need to run the following command interactively so that mode line icons
-;; display correctly:
-;;
-;; M-x all-the-icons-install-fonts
-(use-package all-the-icons)
-(use-package all-the-icons-nerd-fonts)
-
-(use-package nerd-icons-completion
-  :functions nerd-icons-completion-mode nerd-icons-completion-marginalia-setup
+(use-package whitespace
   :config
-  (nerd-icons-completion-mode)
-  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
-(use-package nerd-icons-dired
-  :hook (dired-mode . nerd-icons-dired-mode))
-;; (use-package all-the-icons-completion
-;;   :functions all-the-icons-completion-marginalia-setup
-;;   :init (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
-;; (use-package all-the-icons-dired
-;;   :init (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
-
-(use-package doom-themes
-  :init (load-theme 'doom-gruvbox t)
-  :functions doom-themes-org-config
+  (global-whitespace-mode)
+  :hook
+  (prog-mode . (lambda () (setq show-trailing-whitespace t)))
+  (text-mode . (lambda () (setq show-trailing-whitespace t)))
+  (conf-mode . (lambda () (setq show-trailing-whitespace t)))
   :custom
-  (doom-themes-enable-bold t)
-  (doom-themes-enable-italic t)
-  (doom-gruvbox-dark-variant "hard")
-  :config
-  (doom-themes-org-config)) ; corrects (and improves) org-mode's native fontification.
+  (whitespace-style '(face trailing empty big-indent))
+  (whitespace-global-modes '(not erc-mode magit-mode)))
 
-(use-package doom-nano-modeline
-  :functions doom-nano-modeline-mode
-  :custom (doom-nano-modeline-position 'bottom)
-  :config
-  (doom-nano-modeline-mode 1))
+(use-package elec-pair
+  :hook
+  ((prog-mode . electric-pair-local-mode)
+   (eval-expression-minibuffer-setup . electric-pair-local-mode)
+   (smartparens-mode . (lambda () (electric-pair-local-mode -1)))))
+
+(use-package hl-line
+  :hook ((prog-mode . hl-line-mode)
+	 (dired-mode . hl-line-mode)
+	 (org-mode . hl-line-mode)))
+
+;; (use-package display-line-numbers
+;;   :hook ((prog-mode . display-line-numbers-mode)
+;; 	 (dired-mode . display-line-numbers-mode)
+;; 	 (org-mode . display-line-numbers-mode)))
 
 (use-package evil
-  :functions evil-mode evil-set-undo-system evil-global-set-key evil-set-initial-state evil-define-key evil-normalize-keymaps
-  :defines evil-insert-state-map evil-normal-state-map
   :custom
   (evil-want-C-u-scroll t)
   (evil-want-C-i-jump t)
@@ -136,90 +117,780 @@
   (evil-vsplit-window-right t)
   (evil-split-window-below t)
   :config
-  (evil-mode 1)
-  (evil-set-undo-system 'undo-redo)
+  ;; TODO: document escape for 'keyboard-escape-quit
+  (global-set-key [escape] 'keyboard-escape-quit)
+  ;; Since I let `evil-mode' take over `C-u' for buffer scrolling, I need to rebind the
+  ;; `universal-argument' command to another key sequence.
+  (global-set-key (kbd "C-M-u") 'universal-argument)
 
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
   (evil-define-key 'normal 'global (kbd "C-s") 'save-buffer)
 
   (evil-define-key 'normal 'global (kbd "g l") 'evil-end-of-line)
   (evil-define-key 'normal 'global (kbd "g h") 'evil-first-non-blank)
-
-  ;; use visual line motions even outside of visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
 
   (evil-define-key 'normal 'global (kbd "M-h") 'evil-window-left)
   (evil-define-key 'normal 'global (kbd "M-j") 'evil-window-down)
   (evil-define-key 'normal 'global (kbd "M-k") 'evil-window-up)
   (evil-define-key 'normal 'global (kbd "M-l") 'evil-window-right)
 
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
+  (evil-set-undo-system 'undo-redo)
+  (evil-mode 1))
 
 (use-package evil-collection
   :after evil
-  :functions evil-collection-init
   :config
   (evil-collection-init))
 
-(use-package evil-escape
-  :after evil
-  :functions evil-escape-mode
-  :custom
-  (evil-escape-excluded-states '(normal visual))
-  (evil-escape-excluded-major-modes '(vterm-mode))
-  :config
-  (setq-default evil-escape-delay 0.2)
-  (setq-default evil-escape-key-sequence "jk")
-  (evil-escape-mode))
-
 (use-package evil-commentary
   :after evil
-  :functions evil-commentary-mode
-  :defines evil-commentary-mode-map
   :config
   (evil-commentary-mode)
   (define-key evil-commentary-mode-map (kbd "C-/") 'evil-commentary-line))
 
 (use-package evil-surround
-  :functions global-evil-surround-mode
   :config
   (evil-define-key 'operator evil-surround-mode-map "r" 'evil-surround-edit)
   (evil-define-key 'operator evil-surround-mode-map "s" nil)
   (global-evil-surround-mode 1))
 
-(use-package evil-multiedit
-  :functions evil-multiedit-default-keybinds
+;; save minibuffer history and other things but I only care about the minibuffer history
+(use-package savehist
+  :hook (after-init . savehist-mode)
+  :custom
+  (history-delete-duplicates t))
+
+;; save place in file you are currently in
+(use-package saveplace
+  :hook (after-init . save-place-mode))
+
+(use-package vertico
+  :init
+  (vertico-mode)
+  :bind (:map vertico-map
+              ("C-w" . vertico-directory-delete-word)))
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic)))
+
+(use-package marginalia
   :config
-  (evil-multiedit-default-keybinds))
+  (marginalia-mode))
 
-;; (use-package evil-mc
-;;              :config
-;;              (evil-define-key ('(normal visual) 'global
-;;                               "gzm" #'evil-mc-make-all-cursors
-;;                               "gzu" #'evil-mc-undo-all-cursors
-;;                               "gzz" #'+evil/mc-toggle-cursor
-;;                               "gzc" #'+evil/mc-make-cursor-here
-;;                               "gzn" #'evil-mc-make-and-goto-next-cursor
-;;                               "gzp" #'evil-mc-make-and-goto-prev-cursor
-;;                               "gzN" #'evil-mc-make-and-goto-last-cursor
-;;                               "gzP" #'evil-mc-make-and-goto-first-cursor
-;;                               (with-eval-after-load 'evil-mc
-;;                                                     (evil-define-key '(normal visual) evil-mc-key-map
-;;                                                                      (kbd "C-n") #'evil-mc-make-and-goto-next-cursor
-;;                                                                      (kbd "C-N") #'evil-mc-make-and-goto-prev-cursor
-;;                                                                      (kbd "C-p") #'evil-mc-make-and-goto-prev-cursor
-;;                                                                      (kbd "C-P") #'evil-mc-make-and-goto-first-cursor)))
-;;              (global-evil-mc-mode 1)))
+(use-package projectile
+  :custom
+  (projectile-project-search-path '("~/projects/"))
+  (projectile-switch-project-action #'projectile-dired)
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("C-c p" . projectile-command-map)))
 
-(global-set-key [escape] 'keyboard-escape-quit)
+(use-package consult
+  :custom
+  (consult-narrow-key "<")
+  :bind
+  (:map minibuffer-local-map
+	("C-r" . consult-history)
+	;; Scroll through the items with C-n and C-p instead
+	("<up>" . previous-history-element)
+	("<down>" . next-history-element))
+  :init
+  ;; TODO: document consult-project-function
+  (setq consult-project-function (lambda (_) (projectile-project-root)))
+  ;; use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref))
+
+(use-package consult-projectile)
+
+(use-package consult-dir
+  :bind (("C-x C-d" . consult-dir)
+	 :map vertico-map
+	 ("C-x C-d" . consult-dir)
+	 ("C-x C-j" . consult-dir-jump-file))
+  :custom
+  (consult-dir-project-list-function #'consult-dir-projectile-dirs)
+  (consult-dir-default-command #'consult-projectile-find-file)
+  :init
+  (defun consult-dir--zoxide-dirs ()
+    "Return list of zoxide dirs."
+    (split-string (shell-command-to-string "zoxide query -l") "\n" t))
+
+  ;; a consult source that calls the zoxide-dirs function
+  (defvar consult-dir--source-zoxide
+    `(:name "zoxide"
+            :narrow ?z
+            :category file
+            :face consult-file
+            :history file-name-history
+            :enabled ,(lambda () (executable-find "zoxide"))
+            :items ,#'consult-dir--zoxide-dirs)
+    "zoxide directory source for `consult-dir'.")
+  :config
+  ;; adding to the list of consult-dir sources
+  (add-to-list 'consult-dir-sources 'consult-dir--source-zoxide t))
+
+(use-package corfu
+  :custom
+  (corfu-auto t) ;; enable auto completion
+  (corfu-auto-prefix 1) ; complete with less prefix keys
+  (corfu-auto-delay 0.3)
+  (corfu-popupinfo-delay '0.2)
+  (eldoc-add-command #'corfu-insert)
+  :init
+  (defun corfu-enable-in-minibuffer ()
+    "Enable Corfu in the minibuffer."
+    (when (local-variable-p 'completion-at-point-functions)
+      (setq-local corfu-echo-delay nil
+                  corfu-popup-delay nil)
+      (corfu-mode 1)))
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
+
+  (global-corfu-mode 1)
+  (corfu-popupinfo-mode 1)
+  :bind
+  (:map corfu-map
+        ("C-d" . corfu-popupinfo-scroll-down)
+        ("C-u" . corfu-popupinfo-scroll-up)
+        ("C-t" . corfu-popupinfo-toggle)
+        ("M-SPC" . corfu-insert-separator)
+        ("TAB" . corfu-insert)
+        ("RET" . nil)))
+
+;; NOTE: The first time you load your configuration on a new machine, you'll
+;; need to run the following command interactively so that mode line icons
+;; display correctly:
+;; M-x all-the-icons-install-fonts
+(use-package all-the-icons)
+
+(use-package all-the-icons-completion
+  :config
+  (all-the-icons-completion-mode)
+  (add-hook 'marginalia-mode-hook #'all-the-icons-completion-marginalia-setup))
+
+(use-package kind-icon
+  :after corfu
+  ;; :custom
+  ;; Computes a blend between a nominal background color and the foreground face
+  ;; (kind-icon-blend-background t)
+  ;; (kind-icon-default-face 'corfu-default)
+  :config
+  ;; The icons appear too big in the Corfu completion childframe, you can
+  ;; adjust height like this
+  (plist-put kind-icon-default-style :height 0.6)
+
+  ;; We can use VSCode icons provided by https://github.com/microsoft/vscode-icons
+  ;; instead of the default Material icons set
+  (setq kind-icon-mapping
+	'((array          "a"   :icon "symbol-array"       :face font-lock-type-face              :collection "vscode")
+          (boolean        "b"   :icon "symbol-boolean"     :face font-lock-builtin-face           :collection "vscode")
+          (color          "#"   :icon "symbol-color"       :face success                          :collection "vscode")
+          (command        "cm"  :icon "chevron-right"      :face default                          :collection "vscode")
+          (constant       "co"  :icon "symbol-constant"    :face font-lock-constant-face          :collection "vscode")
+          (class          "c"   :icon "symbol-class"       :face font-lock-type-face              :collection "vscode")
+          (constructor    "cn"  :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
+          (enum           "e"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
+          (enummember     "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "vscode")
+          (enum-member    "em"  :icon "symbol-enum-member" :face font-lock-builtin-face           :collection "vscode")
+          (event          "ev"  :icon "symbol-event"       :face font-lock-warning-face           :collection "vscode")
+          (field          "fd"  :icon "symbol-field"       :face font-lock-variable-name-face     :collection "vscode")
+          (file           "f"   :icon "symbol-file"        :face font-lock-string-face            :collection "vscode")
+          (folder         "d"   :icon "folder"             :face font-lock-doc-face               :collection "vscode")
+          (function       "f"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
+          (interface      "if"  :icon "symbol-interface"   :face font-lock-type-face              :collection "vscode")
+          (keyword        "kw"  :icon "symbol-keyword"     :face font-lock-keyword-face           :collection "vscode")
+          (macro          "mc"  :icon "lambda"             :face font-lock-keyword-face)
+          (magic          "ma"  :icon "lightbulb-autofix"  :face font-lock-builtin-face           :collection "vscode")
+          (method         "m"   :icon "symbol-method"      :face font-lock-function-name-face     :collection "vscode")
+          (module         "{"   :icon "file-code-outline"  :face font-lock-preprocessor-face)
+          (numeric        "nu"  :icon "symbol-numeric"     :face font-lock-builtin-face           :collection "vscode")
+          (operator       "op"  :icon "symbol-operator"    :face font-lock-comment-delimiter-face :collection "vscode")
+          (param          "pa"  :icon "gear"               :face default                          :collection "vscode")
+          (property       "pr"  :icon "symbol-property"    :face font-lock-variable-name-face     :collection "vscode")
+          (reference      "rf"  :icon "library"            :face font-lock-variable-name-face     :collection "vscode")
+          (snippet        "S"   :icon "symbol-snippet"     :face font-lock-string-face            :collection "vscode")
+          (string         "s"   :icon "symbol-string"      :face font-lock-string-face            :collection "vscode")
+          (struct         "%"   :icon "symbol-structure"   :face font-lock-variable-name-face     :collection "vscode")
+          (text           "tx"  :icon "symbol-key"         :face font-lock-doc-face               :collection "vscode")
+          (typeparameter  "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "vscode")
+          (type-parameter "tp"  :icon "symbol-parameter"   :face font-lock-type-face              :collection "vscode")
+          (unit           "u"   :icon "symbol-ruler"       :face font-lock-constant-face          :collection "vscode")
+          (value          "v"   :icon "symbol-enum"        :face font-lock-builtin-face           :collection "vscode")
+          (variable       "va"  :icon "symbol-variable"    :face font-lock-variable-name-face     :collection "vscode")
+          (t              "."   :icon "question"           :face font-lock-warning-face           :collection "vscode")))
+
+  ;; Enable for completion UIs with margin-formatters capability, i.e. Corfu
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+
+(use-package all-the-icons-dired
+  :hook (dired-mode . all-the-icons-dired-mode)
+  :config (setq all-the-icons-dired-monochrome nil))
+
+(use-package dired
+  :ensure nil
+  :commands (dired dired-jump)
+  :custom
+  (dired-listing-switches "-agho --group-directories-first")
+  (delete-by-moving-to-trash t)
+  (dired-dwim-target t)
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "a" 'dired-create-empty-file))
+
+(use-package dired-single
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "h" 'dired-single-up-directory
+    "l" 'dired-single-buffer))
+
+(use-package dired-open
+  :config
+  (add-to-list 'dired-open-functions #'dired-open-xdg t))
+
+(use-package dired-hide-dotfiles
+  :hook (dired-mode . dired-hide-dotfiles-mode)
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "H" 'dired-hide-dotfiles-mode))
+
+(use-package diredfl
+  :hook (dired-mode . diredfl-mode))
+
+(use-package dired-preview
+  :hook (dired-mode . dired-preview-mode)
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "gp" 'dired-preview-mode))
+
+(use-package dired-narrow
+  :custom
+  (dired-narrow-exit-when-1-left t))
+
+(use-package dired-git-info
+  :hook (dired-after-readin . dired-git-info-auto-enable)
+  :custom
+  (dgi-auto-hide-details-p nil)
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    ")" 'dired-git-info-mode))
+
+(use-package dired-filter)
+
+(use-package dired-collapse
+  :hook (dired-mode . dired-collapse-mode)
+  :config
+  (evil-collection-define-key 'normal 'dired-mode-map
+    "gc" 'dired-collapse-mode))
+
+(use-package avy
+  :custom
+  ;; TODO: document avy-timeout-seconds
+  (avy-timeout-seconds 0.25)
+  :config
+  (evil-define-key 'normal 'global (kbd "s") 'evil-avy-goto-char-timer)
+  (evil-define-key 'operator 'global (kbd "s") 'evil-avy-goto-char-timer))
+
+(use-package flymake
+  :hook
+  (prog-mode . flymake-mode)
+  (text-mode . flymake-mode)
+  :bind (:map flymake-mode-map
+	      ("M-n" . flymake-goto-next-error)
+	      ("M-p" . flymake-goto-prev-error))
+  :config
+  (defun flymake-eldoc-function (report-doc &rest _)
+    "Document diagnostics at point.
+Intended for `eldoc-documentation-functions' (which see)."
+    (let ((diags (flymake-diagnostics (point))))
+      (when diags
+	(funcall report-doc
+		 (mapconcat (lambda (d)
+			      (let ((level (flymake-diagnostic-type d)))
+				(pcase level
+				  ;; TODO: warning, error, and note don't work in non eglot modes (elisp)
+				  ('warning (propertize (flymake-diagnostic-text d) 'face 'flymake-warning-echo))
+				  ('error (propertize (flymake-diagnostic-text d) 'face 'flymake-error-echo))
+				  ('note (propertize (flymake-diagnostic-text d) 'face 'flymake-note-echo))
+				  ('eglot-warning (propertize (flymake-diagnostic-text d) 'face 'flymake-warning-echo))
+				  ('eglot-error (propertize (flymake-diagnostic-text d) 'face 'flymake-error-echo))
+				  ('eglot-note (propertize (flymake-diagnostic-text d) 'face 'flymake-note-echo))
+				  (_ (flymake-diagnostic-text d))))) diags "\n"))))))
+
+(use-package flymake-collection
+  :after flymake
+  :hook (after-init . flymake-collection-hook-setup))
+
+(use-package package-lint-flymake
+  :init
+  (add-hook 'emacs-lisp-mode-hook #'package-lint-flymake-setup))
+
+;; (use-package flymake-flycheck
+;;   :after flymake
+;;   :hook (flymake-mode . flymake-flycheck-auto))
+
+;; TODO: these settings don't get applied to Eglot buffers
+(use-package eldoc
+  :preface
+  ;; `eldoc-documentation-compose' and `eldoc-documentation-compose-eagerly'
+  ;; help display information from multiple Eldoc sources at the same time.
+  ;; The eager option displays results as they come in; the other collates all
+  ;; the answers and displays them when they're all ready.
+  ;; I like the eager option.
+  (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly)
+
+  ;; Eldoc resizes the echo area display which is intrusive. Let's not do that.
+  (setq eldoc-echo-area-use-multiline-p nil)
+
+  ;; `eldoc-doc-buffer' opens a dedicated buffer for your documentation.
+  ;; This displays what ever is at point. The only annoying thing about it
+  ;; is that it prefers to pop open in an existing window.
+  ;; Let's tweak its display to force the buffer to appear at the bottom
+  ;; of the frame instead with a fixed window height of 4 lines.
+  (add-to-list 'display-buffer-alist
+	       ;; The buffer name changes depending on the context,
+	       ;; and this display rule reflects that.
+	       '("^\\*eldoc for" display-buffer-at-bottom
+		 (window-height . 4)))
+
+  ;; Skip showing documentation in the echo area and use an `eldoc-doc-buffer'
+  ;; window if it is already displayed.
+  (setq eldoc-echo-area-prefer-doc-buffer t)
+
+  ;; If you add a function to `eldoc-documentation-functions' (with add-hook)
+  ;; then Eldoc will query the functions in the order they're in and source
+  ;; documentation from them. Eglot and Flymake support this out of the box,
+  ;; but as it's fairly other packages do not.
+  ;; See https://masteringemacs.org/article/seamlessly-merge-multiple-documentation-sources-eldoc
+  ;; for an example function to integrate Flycheck with Eldoc.
+  ;; (add-hook 'eldoc-documentation-functions #'rune/flycheck-eldoc nil t)
+
+  :config
+  ;; Eldoc detects movement and uses its idle delay `eldoc-idle-delay' to
+  ;; determine when to ask its backend documentation functions for information.
+  ;; To improve performance, it won't trigger on every command; instead, it
+  ;; maintains a list of common interactive commands. If you use things like
+  ;; Paredit or Combobulate then it won't display if you interact with one of
+  ;; those commands. Luckily there's the `eldoc-add-command-completion' command
+  (eldoc-add-command-completions "paredit-")
+  (eldoc-add-command-completions "combobulate-"))
+
+(use-package eldoc-box
+  :preface
+  ;; Add scrolling support to the `eldoc-box' child frame.
+  (defconst rune/lsp-help-buffer-keymap
+    (let ((map (make-sparse-keymap)))
+      (suppress-keymap map t)
+      (define-key map (kbd "C-j") #'rune/lsp-help-scroll-down)
+      (define-key map (kbd "C-k") #'rune/lsp-help-scroll-up)
+      (define-key map (kbd "C-u") #'rune/lsp-help-C-u)
+      (define-key map (kbd "C-d") #'rune/lsp-help-C-d)
+      map)
+    "Keymap in `rune/lsp-help-at-point'")
+
+  (defvar-local rune/lsp-control-deactivate-fn nil
+    "non-nil if current buffer can be controlled by `rune/lsp-help-buffer-keymap'.")
+
+  (defun rune/lsp-help-scroll-up ()
+    "Scroll up in `eldoc-box--frame'"
+    (interactive)
+    (with-current-buffer eldoc-box--buffer
+      (when rune/lsp-control-deactivate-fn
+	(with-selected-frame eldoc-box--frame
+	  (scroll-down 3)))))
+  (defun rune/lsp-help-scroll-down ()
+    "Scroll down in `eldoc-box--frame'"
+    (interactive)
+    (with-current-buffer eldoc-box--buffer
+      (when rune/lsp-control-deactivate-fn
+	(with-selected-frame eldoc-box--frame
+	  (scroll-up 3)))))
+  (defun rune/lsp-help-C-u ()
+    "C-u (`evil-scroll-up') in `eldoc-box--frame'"
+    (interactive)
+    (with-current-buffer eldoc-box--buffer
+      (when rune/lsp-control-deactivate-fn
+	(with-selected-frame eldoc-box--frame
+	  (scroll-down (max 1 (/ (1- (window-height (selected-window))) 2)))))))
+  (defun rune/lsp-help-C-d ()
+    "C-u (`evil-scroll-down') in `eldoc-box--frame'"
+    (interactive)
+    (with-current-buffer eldoc-box--buffer
+      (when rune/lsp-control-deactivate-fn
+	(with-selected-frame eldoc-box--frame
+	  (scroll-up (max 1 (/ (1- (window-height (selected-window))) 2)))))))
+  (defun rune/lsp-help-at-point ()
+    "Display documentation of the symbol at point."
+    (interactive)
+    (eldoc-box-help-at-point)
+    (with-current-buffer eldoc-box--buffer
+      (setq-local rune/lsp-control-deactivate-fn
+		  (set-transient-map rune/lsp-help-buffer-keymap t))))
+  :hook
+  ;; `evil-collection' sets bindings using `with-eval-after-load'. That means if
+  ;; you define an overriding key in a config section that is defined before
+  ;; `evil-collection-init' is called, it will be called first and then
+  ;; evil-collection will overwrite it. The solution is to use the hook
+  ;; `evil-collection-setup-hook' in order for evil-collection to tell you when
+  ;; its done with the key binding setup.
+  (evil-collection-setup . (lambda (&rest a)
+			     (evil-define-key 'normal 'prog-mode-map
+			       (kbd "K") 'rune/lsp-help-at-point))))
+;; (kbd "K") 'eldoc-box-help-at-point)))
+
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
+(use-package rustic
+  :custom
+  (rustic-lsp-client 'eglot))
+
+(use-package nix-mode
+  :mode "\\.nix\\'")
+
+(use-package eglot
+  :ensure nil
+  :custom
+  (eglot-events-buffer-size 0) ;; disable eglot logging (improves performance)
+  (eglot-autoshutdown t) ;; shutdown server when last managed buffer is killed
+  :preface
+  ;; Eglot specifically alters the `eldoc-documentation-strategy', so we
+  ;; override it with a hook.
+  (defun rune/eglot-eldoc-manage ()
+    (setq eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly))
+
+  (defun rune/add-eglot-hooks (mode-list)
+    "Add `eglot-ensure' to modes in MODE-LIST.
+
+The mode must be loaded, i.e. found with `fboundp'. A mode which
+is not loaded will not have a hook added, in which case add it
+manually with something like this:
+
+`(add-hook 'some-mode-hook #'eglot-ensure)'"
+    (dolist (mode-def mode-list)
+      (let ((mode (if (listp mode-def) (car mode-def) mode-def)))
+	(cond
+	 ((listp mode) (rune/add-eglot-hooks mode))
+	 (t
+	  (when (and (fboundp mode)
+		     (not (eq 'clojure-mode mode)) ; prefer cider
+		     (not (eq 'lisp-mode mode)) ; prefer sly/slime
+		     (not (eq 'scheme-mode mode)) ; prefer geiser
+		     )
+	    (let ((hook-name (format "%s-hook" (symbol-name mode))))
+	      (message "adding eglot to %s" hook-name)
+	      (add-hook (intern hook-name) #'eglot-ensure))))))))
+
+  (defun rune/lsp-bin-exists-p (mode-def)
+    "Return non-nil if LSP binary of MODE-DEF is found via `executable-find'."
+    (let ((lsp-program (cdr mode-def)))
+      ;; `lsp-program' is either a list of strings or a function object
+      ;; calling `eglot-alternatives'.
+      (if (functionp lsp-program)
+	  (condition-case nil
+	      (car (funcall lsp-program))
+	    ;; When an error occurs it's because Eglot checked for a
+	    ;; binary and didn't find one among alternatives.
+	    (error nil))
+	(message "%s" lsp-program)
+	(executable-find (car lsp-program)))))
+
+  (defun eglot-auto-ensure-all ()
+    "Add `eglot-ensure' to major modes that offer LSP support.
+
+Major modes are only selected if the major mode's associated LSP
+binary is detected on the system."
+    (when (require 'eglot nil :noerror)
+      (rune/add-eglot-hooks
+       eglot-server-programs
+       ;; rune/lsp-bin-exists-p errors when it gets to rust but i can't figure out why
+       ;; TODO: try exec-path-from-shell to fix rune/lsp-bin-exists-p
+       ;; TODO: try inheritenv to fix rune/lsp-bin-exists-p
+       ;; (seq-filter
+       ;; #'rune/lsp-bin-exists-p
+       ;; eglot-server-programs)
+       )))
+  :hook
+  ((eglot-managed-mode . rune/eglot-eldoc-manage))
+  :init
+  (setq-default eglot-workspace-configuration
+                '((:rust-analyzer
+                   :completion (:callable (:snippets "fill_arguments"))
+                   :checkOnSave (:command "clippy" :allTargets :json-false))))
+  (eglot-auto-ensure-all))
+
+(use-package apheleia
+  :preface
+  ;; Sometimes we want to use `eglot-format-buffer' as the command to format the
+  ;; buffer on save. The benefit of going through `eglot' rather than using the
+  ;; formatter defined by Apheleia is two-fold. A language server's persistance
+  ;; means that formats of the same project are reasonably fast in languages with
+  ;; high JIT latency, like Julia. Adding a hook to `eglot-managed-mode' to call
+  ;; eglot-format-buffer locks up Emacs while the formatter runs. Aphelia's
+  ;; approach of running it in the background is much nicer.
+  (require 'cl-lib)
+  (cl-defun apheleia-indent-eglot-managed-buffer
+      (&key buffer scratch callback &allow-other-keys)
+    "Copy BUFFER to SCRATCH, then format scratch, then call CALLBACK."
+    (with-current-buffer scratch
+      (setq-local eglot--cached-server
+		  (with-current-buffer buffer
+		    (eglot-current-server)))
+      (let ((buffer-file-name (buffer-local-value 'buffer-file-name buffer)))
+	(eglot-format-buffer))
+      (funcall callback)))
+  :config
+  (apheleia-global-mode +1)
+
+  (add-to-list 'apheleia-formatters
+	       '(eglot-managed . apheleia-indent-eglot-manager-buffer))
+  (add-to-list 'apheleia-mode-alist '(julia-mode . eglot-managed))
+  (add-to-list 'apheleia-mode-alist '(rust-mode . eglot-managed)))
+
+(use-package envrc
+  :functions envrc-global-mode
+  :init (envrc-global-mode))
+
+(use-package compile
+  :hook
+  ((compilation-filter . rune--colorize-compilation-buffer))
+  :custom
+  ;; Automatically scroll build output
+  (compilation-scroll-output t)
+  ;; Skip anything less than error
+  (compilation-skip-threshold 2)
+  ;; Automatically jump to the first error unconditionally during compilation
+  (compilation-auto-jump-to-first-error t)
+  ;; Don't hide any output lines
+  (compilation-max-output-line-length nil)
+  :bind (:map
+	 prog-mode-map
+	 ("C-c C-c" . rune/compile))
+  :config
+  (defun rune/compile (prefix)
+    (interactive "p")
+    (if (and (eq prefix 1)
+             ;; Check if command invoked via binding.
+             (eq (key-binding (this-command-keys)) this-command)
+             (buffer-live-p compilation-last-buffer))
+        ;; Retry using last compile command.
+        (progn
+          (set-buffer compilation-last-buffer)
+          (revert-buffer t t))
+      ;; Compile using environment caching.
+      (let* ((command (compilation-read-command compile-command))
+             (project-root (projectile-project-root))
+             (cache (rune/compile--history-get command))
+             (cached-root (nth 0 cache))
+             (cached-directory (nth 1 cache))
+             (potential-directory (when (and cached-directory
+                                             (file-exists-p (concat project-root cached-directory)))
+                                    (concat project-root cached-directory)))
+             ;; Overriding default-directory for compile command.
+             (default-directory (or potential-directory default-directory)))
+        (setq rune/compile--command command)
+        (setq rune/compile--project-root project-root)
+        (setq rune/compile--directory (if project-root
+                                          (file-relative-name default-directory project-root)
+					default-directory))
+        (compile command))))
+
+  (defun rune/compile-forget-command ()
+    (interactive)
+    (let* ((history (rune/compile--history-read))
+           (command (completing-read "Forget compile command: " (map-keys history))))
+      (rune/compile--history-write (map-delete history command))))
+
+  (defun rune/compile--history-path ()
+    (concat user-emacs-directory ".comphist.el"))
+
+  (defun rune/compile--history-read ()
+    (if (not (file-exists-p (rune/compile--history-path)))
+        (make-hash-table :test 'equal)
+      (with-temp-buffer
+        (insert-file-contents (rune/compile--history-path))
+        (read (current-buffer)))))
+
+  (defun rune/compile--history-write (hashtable)
+    (with-temp-buffer
+      (prin1 hashtable (current-buffer))
+      (write-file (rune/compile--history-path) nil)))
+
+  (defun rune/compile--history-add (command project-root directory)
+    (let* ((history (rune/compile--history-read)))
+      (map-put history (string-trim command) (list project-root directory))
+      (rune/compile--history-write history)))
+
+  (defun rune/compile--history-get (command)
+    (let* ((history (rune/compile--history-read)))
+      (map-elt history (string-trim command))))
+
+  (defun rune/compile-cache-env (buffer string)
+    (when (and (string-match "finished" string)
+               (boundp 'rune/compile--command)
+               (boundp 'rune/compile--directory)
+               (boundp 'rune/compile--project-root))
+      (rune/compile--history-add rune/compile--command
+				 rune/compile--project-root
+				 rune/compile--directory)
+      (makunbound 'rune/compile--command)
+      (makunbound 'rune/compile--directory)
+      (makunbound 'rune/compile--project-root)))
+
+  (defun rune--colorize-compilation-buffer ()
+    (let ((was-read-only buffer-read-only))
+      (unwind-protect
+	  (progn
+	    (when was-read-only
+	      (read-only-mode -1))
+	    (ansi-color-apply-on-region (point-min) (point-max)))
+	(when was-read-only
+	  (read-only-mode +1))))))
+
+(use-package multi-compile
+  :bind (:map prog-mode-map
+	      ("C-c C-v" . multi-compile-run))
+  :init
+  (setq multi-compile-alist '((rust-ts-mode . (("cargo run" . "cargo run")
+					       ("cargo run --release" . "cargo run --release")
+					       ("cargo test" . "cargo test")))
+			      ("\\.txt\\'") . (("print-filename" . "echo %file-name")))))
+
+(use-package helpful
+  :commands (helpful-callable helpful-variable helpful-command helpful-key helpful-symbol)
+  :bind
+  ([remap describe-function] . helpful-callable)
+  ([remap describe-symbol] . helpful-symbol)
+  ([remap describe-variable] . helpful-variable)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-key] . helpful-key))
+
+(use-package which-key
+  :custom
+  (which-key-sort-uppercase-first nil)
+  :init (which-key-mode 1))
+
+(use-package modus-themes
+  :config
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-bold-constructs t
+	modus-themes-variable-pitch-ui nil
+
+	;; Control the style of command prompts (e.g. minibuffer, shell, IRC clients).
+	;; `modus-themes-prompts' are either nil (the default), or a list of
+	;; properties that may include any of those symbols: `italic',;; `WEIGHT'
+	modus-themes-prompts '(bold))
+
+  ;; Define some palette overrides using the presets
+  (setq modus-themes-common-palette-overrides
+	`(;; To hide the border around the active and inactive mode lines, we
+	  ;; set their color to that of the underlying background
+	  ;; (border-mode-line-active unspecified)
+	  ;; (border-mode-line-inactive unspecified)
+	  ;; Make the fringe invisible
+	  (fringe unspecified)))
+
+  (load-theme 'modus-vivendi t)
+
+  ;; Generally user options should never be touched by a theme. However, the
+  ;; maintainer of modus-themes believes certain cases like
+  ;; `hl-todo-keyword-faces' and the `flymake-*-bitmap' variants merit an
+  ;; exception.
+  ;; This is annoying because I don't like the face used for the Flymake
+  ;; bitmaps. I would like them to not have a background color. These variables
+  ;; need to be set after loading the theme. I couldn't get this to work with
+  ;; `modus-themes-post-load-hook', so I'm setting them here.
+  (customize-set-variable
+   'flymake-error-bitmap '(flymake-double-exclamation-mark compilation-error))
+  (customize-set-variable
+   'flymake-warning-bitmap '(exclamation-mark compilation-warning))
+  (customize-set-variable
+   'flymake-note-bitmap '(exclamation-mark compilation-info)))
+
+;; TODO replace doom-nano-modeline with something else so i don't have to build it myself with nix
+;; preferably something in ELPA/MELPA
+(use-package doom-themes)
+(use-package doom-nano-modeline
+  :custom
+  (doom-nano-modeline-position 'bottom)
+  :config
+  (doom-nano-modeline-mode 1))
+
+(use-package keycast
+  :commands keycast-mode
+  :config
+  (define-minor-mode keycast-mode-line-mode
+    "Show current command and its keybinding in the modeline. Fix for use with
+doom-modeline"
+    :global t
+    (if keycast-mode
+	(add-hook 'pre-command-hook 'keycast--update t)
+      (remove-hook 'pre-command-hook 'keycast--update)))
+  (add-to-list 'global-mode-string '("" keycast-mode-line))
+
+  (dolist (input '(self-insert-command
+                   org-self-insert-command))
+    (add-to-list 'keycast-substitute-alist `(,input "." "Typing!")))
+  (setf (alist-get 'strokes-do-stroke
+                   keycast-substitute-alist)
+        '("[mouse]" t))
+
+  (defun store-action-key+cmd (cmd)
+    (setq keycast--this-command-keys (this-single-command-keys)
+          keycast--this-command cmd)
+    cmd)
+
+  (defun store-action-key-no-cmd (cmd)
+    (setq keycast--this-command-keys (this-single-command-keys)
+          keycast--this-command cmd))
+
+  (defun keycast-capture-avy-dispatch (char)
+    (if-let ((cmd (assoc char avy-dispatch-alist)))
+        (setq keycast--this-command-keys (make-vector 1 char)
+              keycast--this-command (cdr cmd))))
+
+  (advice-add 'embark-keymap-prompter :filter-return #'store-action-key+cmd)
+  ;; (advice-add 'avy-goto-char-timer :filter-return #'store-action-key+cmd)
+  (advice-add 'avy-handler-default :before #'keycast-capture-avy-dispatch)
+
+  (defun force-keycast-update (&rest _)
+    (force-mode-line-update t))
+
+  (dolist (cmd '(embark-act embark-become))
+    (advice-add cmd :before #'force-keycast-update)))
+
+;; (use-package git-gutter
+;;   :preface
+;;   (defun modus-themes-custom-faces ()
+;;     (modus-themes-with-colors
+;;       (custom-set-faces
+;;        `(git-gutter-fr:added ((,class :foreground ,green-fringe-bg)))
+;;        `(git-gutter-fr:deleted ((,class :foreground ,red-fringe-bg)))
+;;        `(git-gutter-fr:modified ((,class :foreground ,yellow-fringe-bg))))))
+;;   :hook ((prog-mode . git-gutter-mode)
+;; 	 (text-mode . git-gutter-mode)
+;; 	 (modus-themes-after-load-theme . modus-themes-custom-faces))
+;;   :config
+;;   (setq git-gutter:update-interval 0.05))
+
+;; (use-package git-gutter-fringe
+;;   :config
+;;   (setq git-gutter-fr:side 'right-fringe)
+;;   (modus-themes-load-vivendi))
+
+(use-package magit
+  :bind (("C-x g" . magit-status))
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 (use-package general
-  :functions general-evil-setup general-create-definer leader-def local-leader-def
-  :defines leader-def local-leader-def
   :after evil
+  :init
+  (setq evil-mode-line-format '(before . mode-line-front-space))
   :config (general-evil-setup))
 
 ;; set up 'SPC' as the leader key
@@ -238,504 +909,38 @@
 
 (leader-def
   "a" '(eglot-code-actions :which-key "Code actions")
-  "b" '(consult-buffer :which-key "Open buffer picker")
-  "B" '(consult-line :which-key "Search in current buffer")
-  "d" '(consult-flymake :which-key "Open diagnostics")
-  "e" '(find-file :which-key "Open file browser")
-  "f" '(consult-projectile :which-key "Open file picker")
-  "j" '(consult-global-mark :which-key "Open mark-ring picker")
-  "k" '(eglot-format :which-key "Format document") ;; TODO: merge eglot-format with format-all-the-code
-  "m" '(magit-status :which-key "Git status")
+  "b" '(consult-buffer :which-key "Buffer switcher")
+  ;; "c" '( :which-key "")
+  ;; "d" '( :which-key "Debug")
+  "e" '(dired-jump :which-key "File explorer") ;; TODO
+  "E" '(find-file :which-key "File browser") ;; TODO
+  "f" '(consult-projectile :which-key "File picker") ;; TODO
+  "F" '(consult-dir :which-key "Directory picker") ;; TODO
+  "g" '(magit-status :which-key "Git status")
+  ;; "h" '( :which-key "")
+  ;; "i" '( :which-key "")
+  "j" '(consult-global-mark :which-key "Mark-ring") ;; TODO
+  "k" '(apheleia-format-buffer :which-key "Format buffer") ;; TODO
+  "l" '(consult-line :which-key "Search buffer lines")
+  "m" '(magit-status :which-key "Multi-compile")
+  ;; "n" '( :which-key "")
+  ;; "o" '( :which-key "")
+  ;; "p" '( :which-key "Project")
   "q" '(evil-quit :which-key "Quit")
   "r" '(eglot-rename :which-key "Rename symbol")
-  "s" '(consult-eglot-symbols :which-key "Open symbol picker")
-  "y" '(consult-yank-pop :which-key "Open kill-ring picker")
+  "s" '(consult-eglot-symbols :which-key "Symbol picker")
+  ;; "t" '( :which-key "Eshell")
+  ;; "u" '( :which-key "")
+  ;; "v" '( :which-key "")
+  ;; "w" '( :which-key "Windows")
+  "x" '(consult-flymake :which-key "Diagnostics")
+  "y" '(consult-yank-pop :which-key "Kill-ring")
+  ;; "z" '( :which-key "")
   "SPC" '(execute-extended-command :which-key "M-x")
-  "/" '(consult-grep :which-key "Global search at cwd"))
-
-(use-package which-key
-  :diminish
-  :functions which-key-mode
-  :init (which-key-mode 1)
-  :custom
-  (which-key-side-window-location 'bottom)
-  (which-key-sort-order #'which-key-key-order-alpha)
-  (which-key-sort-uppercase-first nil)
-  (which-key-add-column-padding 1)
-  (which-key-max-display-columns nil)
-  (which-key-min-display-lines 6)
-  (which-key-side-window-slot -10)
-  (which-key-side-window-max-height 0.25)
-  (which-key-idle-delay 0.8)
-  (which-key-max-description-length 25)
-  (which-key-allow-imprecise-window-fit t)
-  (which-key-separator " -> "))
-
-  (use-package consult
-    :hook (completion-list-mode . consult-preview-at-point-mode)
-    :functions consult--read consult--file-preview
-    :custom
-    (consult-project-function #'projectile-project-root)
-    (consult-narrow-key "<")
-    (consult-async-min-input 1)
-    (completion-in-region-function #'consult-completion-in-region)
-    ;; (read-file-name-function #'consult-find-file-with-preview)
-    :config
-    (defun consult-find-file-with-preview (prompt &optional dir default mustmatch initial pred)
-      (interactive)
-      (let ((default-directory (or dir default-directory))
-            (minibuffer-completing-file-name t))
-        (consult--read #'read-file-name-internal :state (consult--file-preview)
-                       :prompt prompt
-                       :initial initial
-                       :require-match mustmatch
-                       :predicate pred)))
-    :init
-    (keymap-set minibuffer-local-map "C-r" 'consult-history))
-
-(use-package consult-dir)
-
-(use-package marginalia
-  :functions marginalia-mode
-  :bind (:map minibuffer-local-map
-              ("M-A" . marginalia-cycle))
-  :init
-  (customize-set-variable 'marginalia-annotators
-                          '(marginalia-annotators-heavy
-                            marginalia-annotators-light
-                            nil))
-  (marginalia-mode 1))
-
-(use-package embark
-  ;; :bind
-  ;; (("C-." . embark-act)
-  ;;  ("C-;" . embark-dwim))
-  :init
-  ;; (setq prefix-help-command #'embark-prefix-help-command)
-  ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-  :config
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
-
-(use-package embark-consult
-  ;; :hook
-  ;; (embark-collect-mode . consult-preview-at-point-mode)
-  )
-
-(use-package prescient
-  :functions prescient-persist-mode
-  :config (prescient-persist-mode)
-  :custom
-  (prescient-filter-method '(literal initialism prefix regexp))
-  (prescient-use-char-folding t)
-  (prescient-use-case-folding 'smart)
-  (prescient-sort-full-matches-first t)
-  (prescient-sort-length-enable t))
-
-(use-package vertico
-  :functions vertico-mode
-  :custom
-  (vertico-cycle t)
-  :init (vertico-mode))
-
-(use-package vertico-prescient
-  :functions vertico-prescient-mode
-  :init (vertico-prescient-mode 1))
-
-;; save history across various prompts
-(use-package savehist
-  :defer 2
-  :hook (after-init . savehist-mode)
-  :custom
-  (savehist-file (dir-concat user-cache-directory "savehist"))
-  (history-length 1000)
-  (history-delete-duplicates t)
-  (savehist-save-minibuffer-history t)
-  :init
-  (savehist-mode))
-
-(use-package orderless
-  :demand t
-  :functions
-  orderless-define-completion-style +orderless--consult-suffix orderless-matching-styles
-  orderless-escapable-split-on-space +orderless-consult-dispatch orderless-affix-dispatch
-  orderless-style-dispatchers
-  :defines
-  +orderless-with-initialism orderless-component-separator orderless-style-dispatchers
-  orderless-fast
-  :config
-  (defun +orderless--consult-suffix ()
-    "Regexp which matches the end of string with Consult tofu support."
-    (if (and (boundp 'consult--tofu-char) (boundp 'consult--tofu-range))
-        (format "[%c-%c]*$"
-                consult--tofu-char
-                (+ consult--tofu-char consult--tofu-range -1))
-      "$"))
-  ;; Recognizes the following patterns:
-  ;; * .ext (file extension)
-  ;; * regexp$ (regexp matching at end)
-  (defun +orderless-consult-dispatch (word _index _total)
-    (cond
-     ;; Ensure that $ works with Consult commands, which add disambiguation suffixes
-     ((string-suffix-p "$" word)
-      `(orderless-regexp . ,(concat (substring word 0 -1) (+orderless--consult-suffix))))
-     ;; File extensions
-     ((and (or minibuffer-completing-file-name
-               (derived-mode-p 'eshell-mode))
-           (string-match-p "\\`\\.." word))
-      `(orderless-regexp . ,(concat "\\." (substring word 1) (+orderless--consult-suffix))))))
-
-  (defun orderless-fast-dispatch (word index total)
-    (and (= index 0) (= total 1) (length< word 4)
-         `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
-
-  (orderless-define-completion-style orderless-fast
-    (orderless-style-dispatchers '(orderless-fast-dispatch))
-    (orderless-matching-styles '(orderless-literal orderless-regexp)))
-
-  ;; Define orderless style with initialism by default
-  (orderless-define-completion-style +orderless-with-initialism
-    (orderless-matching-styles '(orderless-initialism orderless-literal orderless-regexp)))
-
-  (setq completion-styles '(orderless-fast basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion))
-                                        (command (styles +orderless-with-initialism))
-                                        (variable (styles +orderless-with-initialism))
-                                        (symbol (styles +orderless-with-initialism)))
-        orderless-component-separator #'orderless-escapable-split-on-space
-        orderless-style-dispatchers (list #'+orderless-consult-dispatch
-                                          #'orderless-affix-dispatch)))
-;; :custom
-;; (completion-styles '(orderless basic))
-;; (completion-category-overrides '((file (styles basic partial-completion)))))
-
-(use-package helpful
-  :commands (helpful-callable helpful-variable helpful-command helpful-key)
-  :bind
-  ([remap describe-function] . helpful-callable)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable] . helpful-variable)
-  ([remap describe-key] . helpful-key))
-
-(use-package projectile
-  :functions projectile-mode
-  :defines projectile-mode-map
-  :custom
-  (projectile-project-search-path '("~/projects/" "~/projects/github.com/" "~/projects/github.com/svitax/"))
-  (projectile-switch-project-action #'projectile-dired)
-  :init
-  (projectile-mode +1)
-  :bind (:map projectile-mode-map
-              ("s-p" . projectile-command-map)
-              ("C-c p" . projectile-command-map)))
-
-(use-package consult-projectile)
-
-(use-package magit
-  :bind (("C-x g" . magit-status))
-  :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
-
-(use-package eglot
-  :ensure nil
-  :functions my/eglot-manage-mode-initialize
-  :hook
-  (python-ts-mode . eglot-ensure)
-  (rust-ts-mode . eglot-ensure)
-  (nix-mode . eglot-ensure)
-  (toml-ts-mode . eglot-ensure)
-  (toml-ts-mode . (lambda ()
-                    (setq tab-width 2)
-                    (setq require-final-newline t)))
-  :custom
-  (eglot-events-buffer-size 0) ;; disable eglot logging (improves performance)
-  :init
-  (defun my/eglot-manage-mode-initialize ()
-    (setq-local
-          eldoc-documentation-functions
-          (list
-           #'eglot-signature-eldoc-function
-           ;; #'eglot-hover-eldoc-function
-           #'flymake-eldoc-function
-           )))
-  (add-hook 'eglot-managed-mode-hook #'my/eglot-manage-mode-initialize)
-  :config
-  (add-to-list 'eglot-server-programs '(toml-ts-mode . ("taplo" "lsp" "stdio")))
-  (add-to-list 'eglot-server-programs '(conf-toml-mode . ("taplo" "lsp" "stdio")))
-  (setq-default eglot-workspace-configuration
-                '((:rust-analyzer
-                   :completion (:callable (:snippets "fill_arguments"))
-                   :checkOnSave (:command "clippy"
-                                          :allTargets :json-false)))))
-;; BUG: consult-eglot pulls in different version of eglot with unfixed errors. disable until errors dissappear.
-(use-package consult-eglot :disabled t)
-
-(use-package flymake-collection
-  :hook (after-init . flymake-collection-hook-setup))
-;; (use-package flycheck :functions global-flycheck-mode :init (global-flycheck-mode))
-;; (use-package consult-flycheck)
-
-(add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
-(add-to-list 'major-mode-remap-alist '(rustic-mode . rust-ts-mode))
-(add-to-list 'major-mode-remap-alist '(conf-toml-mode . toml-ts-mode))
-
-(use-package rustic
-  :custom
-  (rustic-lsp-client 'eglot))
-(use-package nix-mode
-  :mode "\\.nix\\'")
-
-(use-package corfu
-  :functions
-  global-corfu-mode corfu-popupinfo-scroll-down corfu-popupinfo-scroll-up corfu-popupinfo-toggle
-  corfu-popupinfo-mode corfu-insert corfu-mode corfu-enable-in-minibuffer
-  :defines corfu-map corfu-insert-separator
-  :custom
-  (corfu-cycle t) ;; allows cycling through candidates
-  (corfu-auto t) ;; enable auto completion
-  (corfu-auto-prefix 2) ; complete with less prefix keys
-  (corfu-auto-delay 0)
-  (corfu-popupinfo-delay '0.5)
-  ; (corfu-separator ?\s) ;; orderless field separator
-  ; (corfu-quit-at-boundary nil) ;; never quit at completion boundary
-  ; (corfu-quit-no-match nil)
-  ; (corfu-preview-current t) ;; disable current candidate preview
-  ; (corfu-preselect 'prompt) ;; preselect the prompt
-  ; (corfu-on-exact-match nil) ;; configure handling of exact matches
-  ; (corfu-scroll-margin 5) ;; use scroll margin
-  :config
-  (defun corfu-enable-in-minibuffer ()
-    "Enable Corfu in the minibuffer."
-    (when (local-variable-p 'completion-at-point-functions)
-      (setq-local corfu-echo-delay nil
-                  corfu-popup-delay nil)
-      (corfu-mode 1)))
-  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
-  (eldoc-add-command #'corfu-insert)
-  :init
-  (global-corfu-mode 1)
-  (corfu-popupinfo-mode 1)
-  :bind
-  (:map corfu-map
-        ("M-d" . #'corfu-popupinfo-scroll-down)
-        ("M-u" . #'corfu-popupinfo-scroll-up)
-        ("M-t" . #'corfu-popupinfo-toggle)
-        ("M-SPC" . corfu-insert-separator)
-        ("TAB" . corfu-insert)
-        ("RET" . nil)))
-
-(use-package corfu-prescient
-  :functions corfu-prescient-mode
-  :init (corfu-prescient-mode 1))
-
-(use-package nerd-icons-corfu
-  :after corfu
-  :defines corfu-margin-formatters
-  :functions nerd-icons-corfu-formatter
-  :init (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
-
-(use-package cape
-  :functions
-  cape-file cape-dabbrev cape-wrap-silent cape-wrap-purify cape-elisp-symbol cape-wrap-buster
-  cape-capf-super eglot-completion-at-point my/eglot-capf my/ignore-elisp-keywords my/setup-elisp
-  cape-capf-predicate
-  ;; Setup Cape for better completion-at-point support and more
-  :config
-  (defun my/eglot-capf ()
-    (setq-local completion-at-point-functions
-                (list (cape-capf-super
-                       #'eglot-completion-at-point
-                       ;; #'tempel-expand
-                       #'cape-file))))
-  (add-hook 'eglot-managed-mode-hook #'my/eglot-capf)
-  :init
-  ;; Add useful defaults completion sources from cape
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  ;; Silence the pcomplete capf, no errors or messages!
-  ;; Important for Corfu
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
-  ;; Ensure that pcomplete does not write to the buffer
-  ;; and behaves as a pure `completion-at-point-function'.
-  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
-
-(use-package elec-pair
-  :defer
-  :custom
-  (electric-pair-inhibit-predicate
-   `(lambda (c)
-      (if (char-equal c?\<) t (,electric-pair-inhibit-predicate c))))
-  :config
-  (electric-pair-mode +1))
-
-(use-package envrc
-  :functions envrc-global-mode
-  :init (envrc-global-mode))
-
-(use-package popper
-  :functions popper-mode popper-echo-mode
-  :bind (("M-n" . popper-cycle)
-         ("C-a" . popper-toggle)
-         ("C-'" . popper-toggle-type))
-  :config
-  (evil-define-key 'normal 'global (kbd "M-n") 'popper-cycle)
-  (evil-define-key 'normal 'global (kbd "C-a") 'popper-toggle)
-  :custom
-  (popper-reference-buffers
-   '("\\*Messages\\*"
-     "Output\\*$"
-     "\\*Async Shell Command\\*"
-     "^\\*eshell.*\\*$" eshell-mode
-     "^\\*shell.*\\*$" shell-mode
-     "^\\*term.*\\*$" term-mode
-     "^\\*vterm.*\\*$" vterm-mode
-     help-mode
-     compilation-mode))
-  (popper-mode +1)
-  (popper-echo-mode +1))
-
-(use-package vterm
-  :commands vterm
-  :custom
-  (term-prompt-regexp "^[^#$%>\n]*[#$%>] *")
-  (vterm-max-scrollback 10000))
-
-(use-package eshell
-  :defines
-  eshell-history-size eshell-buffer-name eshell-hist-ignoredups eshell-scroll-to-bottom-on-input
-  eshell-output-filter-functions eshell-mode-map)
-(defun efs/configure-eshell ()
-  ;; Save command history when commands are entered
-  (add-hook 'eshell-pre-command-hook 'eshell-save-some-history)
-  ;; Truncate buffer for performance
-  (add-to-list 'eshell-output-filter-functions 'eshell-truncate-buffer)
-  ;; Bind some useful keys for evil mode
-  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "C-r") 'consult-history)
-  (evil-define-key '(normal insert visual) eshell-mode-map (kbd "<home>") 'eshell-nol)
-  (evil-normalize-keymaps)
-
-  (setq eshell-history-size 10000
-        eshell-buffer-name 10000
-        eshell-hist-ignoredups t
-        eshell-scroll-to-bottom-on-input t))
-
-(use-package eshell
-  :hook (eshell-first-mode . rune/configure-eshell))
-
-(use-package git-gutter
-  :hook (prog-mode . git-gutter-mode)
-  :custom (git-gutter:update-interval 0.02))
-
-(use-package git-gutter-fringe
-  :config
-  (define-fringe-bitmap 'git-gutter-fr:added [224] nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:modified [224] nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:deleted [128 192 224 240] nil nil 'bottom))
-
-(use-package avy
-  :init
-  ;; evil-avy
-  ;; TODO: make avy-forward-char-in-line jump to first match even when there are multiple matches.
-  ;; TODO: have avy-next `;' and avy-prev `,' available after the first jump
-  (defun avy-forward-char-in-line (char &optional back)
-    "Jump forward to the currently visible CHAR in the current line.
-If BACK is t, jump backward."
-    (interactive (list (read-char "char: " t)))
-
-    (let ((avy-all-windows nil))
-      (avy-with avy-goto-char
-        (avy-process
-         (save-restriction
-           (if (null back)
-               (narrow-to-region (point)
-                                 (line-end-position))
-             (narrow-to-region (line-beginning-position)
-                               (point)))
-           (avy--regex-candidates (regexp-quote (string char))))
-         (avy--style-fn avy-style)))))
-  (evil-define-motion evil-avy-find-char (count char)
-    "Use avy to move forward to char in line."
-    :jump t
-    :type inclusive
-    (interactive "<c><C>")
-    (if (null count) (avy-forward-char-in-line char)
-      (evil-find-char count char)))
-
-  (evil-define-motion evil-avy-find-char-to (count char)
-    "Use avy to move till char in line."
-    :jump t
-    :type inclusive
-    (interactive "<c><C>")
-    (if (null count)
-        (progn
-          (avy-forward-char-in-line char)
-          (backward-char))
-      (evil-find-char-to char)))
-
-  (evil-define-motion evil-avy-find-char-backward (count char)
-    "Use avy to move backward to char in line."
-    :jump t
-    :type exclusive
-    (interactive "<c><C>")
-    (if (null count)
-        (avy-forward-char-in-line char)
-      (evil-find-char-backward count char)))
-
-  (evil-define-motion evil-avy-find-char-to-backward (count char)
-    "Use avy to move backward till char in line."
-    :jump t
-    :type exclusive
-    (interactive "<c><C>")
-    (if (null count)
-        (progn
-          (avy-forward-char-in-line char t)
-          (forward-char))
-      (evil-find-char-to-backward count char)))
-
-  ;; Replace motions
-  (evil-define-key 'normal evil-avy-mode-map
-    "f" 'evil-avy-find-char
-    "F" 'evil-avy-find-char-backward
-    "t" 'evil-avy-find-char-to
-    "T" 'evil-avy-find-char-to-backward)
-  (evil-define-key 'operator evil-avy-mode-map
-    "f" 'evil-avy-find-char
-    "F" 'evil-avy-find-char-backward
-    "t" 'evil-avy-find-char-to
-    "T" 'evil-avy-find-char-to-backward)
-  (evil-define-key 'visual evil-avy-mode-map
-    "f" 'evil-avy-find-char
-    "F" 'evil-avy-find-char-backward
-    "t" 'evil-avy-find-char-to
-    "T" 'evil-avy-find-char-to-backward)
-  (evil-define-key 'motion evil-avy-mode-map
-    "f" 'evil-avy-find-char
-    "F" 'evil-avy-find-char-backward
-    "t" 'evil-avy-find-char-to
-    "T" 'evil-avy-find-char-to-backward)
-  (evil-define-key 'motion evil-avy-mode-map
-    ";" 'avy-next
-    "," 'avy-prev)
-
-  (define-minor-mode evil-avy-mode
-    "Toggle evil-avy-mode.
-Interactively with no argument, this command toggles the mode. A
-positive prefix argument enables the mode, any other prefix
-argument disables it. From Lisp, argument omitted or nil enables
-the mode, `toggle' toggles the state.
-
-When evil-avy-mode is active, it replaces some of the normal, visual, operator,
-and motion state keybindings to invoke avy commands."
-    :init-value nil
-    :lighter nil
-    :keymap (make-sparse-keymap)
-    :global t
-    :group 'avy)
-
-  (evil-define-key 'normal 'global (kbd "s") 'evil-avy-goto-char-timer)
-  (evil-define-key 'operator global (kbd "s") 'evil-avy-goto-char-timer)
-  :config (evil-avy-mode 1))
-;;; init.el ends here
+  "," '(compile :which-key "Compile")
+  "." '(recompile :which-key "Recompile")
+  ;; ";" '( :which-key "")
+  ;; "'" '( :which-key "")
+  ;; "-" '( :which-key "")
+  ;; "|" '( :which-key "")
+  "/" '(consult-grep :which-key "Grep"))
