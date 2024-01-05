@@ -129,6 +129,14 @@ return {
             vim.api.nvim_create_user_command("GoToFile", function()
                 require("fzf-lua").files({ cwd = vim.loop.cwd() })
             end, {})
+
+            -- override LSP handler functions
+            -- stylua: ignore start
+            vim.lsp.buf.references = function() require("fzf-lua").lsp_references({ ignore_current_line = true }) end
+            vim.lsp.buf.definition = function() require("fzf-lua").lsp_definitions({ jump_to_single_result = true }) end
+            vim.lsp.buf.type_definition = function() require("fzf-lua").lsp_typedefs() end
+            vim.lsp.buf.implementation = function() require("fzf-lua").lsp_implementations() end
+            -- stylua: ignore end
         end,
         keys = {
             {
