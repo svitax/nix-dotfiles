@@ -156,6 +156,7 @@ return {
                     DiagnosticFloatingWarn = { link = "DiagnosticWarn" },
                     DiagnosticFloatingInfo = { link = "DiagnosticInfo" },
                     DiagnosticFloatingHint = { link = "DiagnosticHint" },
+                    Lightbulb = { fg = "palette.yellow" },
 
                     -- FloatBorder = { fg = "palette.comment" },
                 },

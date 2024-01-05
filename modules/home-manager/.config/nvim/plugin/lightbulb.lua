@@ -30,7 +30,8 @@ local function update_extmark(bufnr, line)
 
     -- Swallow errors.
     pcall(vim.api.nvim_buf_set_extmark, bufnr, lb_namespace, line, -1, {
-        virt_text = { { " " .. lb_icon, "DiagnosticSignHint" } },
+        -- virt_text = { { " " .. lb_icon, "DiagnosticSignHint" } },
+        virt_text = { { " " .. lb_icon, "Lightbulb" } },
         hl_mode = "combine",
     })
 
