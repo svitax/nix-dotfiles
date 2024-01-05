@@ -89,6 +89,7 @@ return {
                 -- cmp floating window config
                 window = {
                     completion = {
+                        winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
                         scrolloff = vim.go.scrolloff,
                         border = "rounded",
                     },
