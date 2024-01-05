@@ -1,6 +1,18 @@
 return {
-    { "neovim/nvim-lspconfig", opts = { servers = { ruff_lsp = {}, pyright = {} } } },
-    { "mfussenegger/nvim-lint", opts = { linters_by_ft = { python = { "mypy" } } } },
+    {
+        "neovim/nvim-lspconfig",
+        opts = {
+            servers = {
+                ruff_lsp = {},
+                pyright = {},
+                -- pylyzer doesn't support local package resolve (e.g. doesn't recognize packages in .venv)
+                -- https://github.com/mtshiba/pylyzer/issues/22
+                -- look into using once this issue is resolved
+                -- pylyzer = {},
+            },
+        },
+    },
+    -- { "mfussenegger/nvim-lint", opts = { linters_by_ft = { python = { "mypy" } } } },
     {
         "klafyvel/vim-slime-cells",
         dependencies = { "jpalardy/vim-slime", "anuvyklack/hydra.nvim" },
