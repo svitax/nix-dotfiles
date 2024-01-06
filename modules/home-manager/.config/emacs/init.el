@@ -150,6 +150,7 @@
 (use-package evil-surround
   :config
   (evil-define-key 'operator evil-surround-mode-map "r" 'evil-surround-edit)
+  (evil-define-key 'visual evil-surround-mode-map "R" 'evil-surround-edit)
   (evil-define-key 'operator evil-surround-mode-map "s" nil)
   (global-evil-surround-mode 1))
 
