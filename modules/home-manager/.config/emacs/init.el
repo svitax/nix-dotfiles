@@ -1075,22 +1075,21 @@ doom-modeline"
 (leader-def
   "a" '(eglot-code-actions :which-key "Code actions")
   "b" '(consult-buffer :which-key "Buffer switcher")
-  ;; "c" '( :which-key "")
+  "c" '(evil-save-modified-and-close :which-key "Close window")
   ;; "d" '( :which-key "Debug")
   "e" '(dired-jump :which-key "File explorer") ;; TODO
   "E" '(find-file :which-key "File browser") ;; TODO
-  "f" '(consult-project-extra-find :which-key "File picker") ;; TODO
+  "f" '(consult-project-extra-find :which-key "File picker")
   "g" '(magit-status :which-key "Git status")
   "h" '(help-command :which-key "Help")
   ;; "i" '( :which-key "")
   "j" '(consult-dir :which-key "Jump to directory")
-  "k" '(apheleia-format-buffer :which-key "Format buffer") ;; TODO
+  "k" '(kill-buffer :which-key "Kill buffer")
   "l" '(consult-line :which-key "Search buffer lines")
   "m" '(projection-multi-compile :which-key "Multi-compile")
   ;; "n" '( :which-key "")
   ;; "o" '( :which-key "")
   "p" '(:ignore t :which-key "Project")
-  ;; "p" '(tabspaces-command-map :which-key "Projects")
   "q" '(kill-emacs :which-key "Kill Emacs")
   "r" '(eglot-rename :which-key "Rename symbol")
   "s" '(consult-eglot-symbols :which-key "Symbol picker")
@@ -1111,6 +1110,7 @@ doom-modeline"
   ;; "" '(consult-global-mark :which-key "Mark-ring") ;; TODO
   "/" '(consult-grep :which-key "Grep"))
 
+;; TODO: add some projection commands to my leader+p keymap
 (leader-def
   "pb" '(tabspaces-switch-to-buffer :which-key "tabspaces-switch-to-buffer")
   "pd" '(tabspaces-close-workspace :which-key "tabspaces-close-workspace")
