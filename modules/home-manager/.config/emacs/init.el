@@ -546,6 +546,32 @@ Intended for `eldoc-documentation-functions' (which see)."
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
+(use-package puni
+  :hook ((prog-mode . puni-mode)
+	 (eval-expression-minibuffer-setup . puni-mode))
+  :init
+  ;; TODO find good keybinds for all puni commands
+  ;; `puni-kill-line' (default C-k)
+  ;; `puni-backward-kill-line' (default C-S-k)
+  ;; `puni-forward-sexp' (default C-M-f)
+  ;; `puni-backward-sexp' (default C-M-b)
+  ;; `puni-beginning-of-sexp' (default C-M-a)
+  ;; `puni-end-of-sexp' (default C-M-e)
+  ;; `puni-syntactic-forward-punct' (default M-()
+  ;; `puni-syntactic-backward-punct' (default M-))
+  ;; `puni-squeeze'copies the list around point (which is the part inside the delimiters),
+  ;; and deletes the sexp around point (including the delimiters). it can be used to "rewrap" a sexp
+  ;; `puni-slurp-forward' and `puni-slurp-backward'
+  ;; `puni-barf-forward' and `puni-barf-backward' move delimiters of the sexp around point across sexps around it
+  ;; `puni-raise' uses the sexp at point to replace its parent sexp
+  ;; `puni-convolute' exchanges the order of application of two closest other forms
+  ;; `puni-splice' unwrap the sexp around point
+  ;; `puni-split' split the sexp around point into two
+  ;; `puni-transpose' swap the sexps before and after point
+  ;; `puni-wrap-round', `puni-wrap-square', `puni-wrap-curly',`puni-wrap-angle' wraps sexps with all kinds of brackets
+  (evil-define-key '(normal visual operator) 'puni-mode-map (kbd "<return>") 'puni-expand-region)
+  (evil-define-key '(normal visual operator) 'puni-mode-map (kbd "S-<return>") 'puni-contract-region))
+
 (use-package rustic
   :custom
   (rustic-lsp-client 'eglot))
