@@ -903,10 +903,47 @@ binary is detected on the system."
   :init (which-key-mode 1))
 
 (use-package modus-themes
-  :config
+  :demand
+  :init
+  (require 'modus-themes)
+
+  (defun rune/modus-themes-tab-bar-colors ()
+    "Override tab faces to have even less variety"
+    (modus-themes-with-colors
+      (custom-set-faces
+       `(tab-bar ((,c
+		   :height 0.8
+		   :background ,bg-main
+		   :box nil)))
+       `(tab-bar-tab ((,c
+		       :background ,bg-main
+		       :underline (:color ,blue-intense :style line)
+		       :box (:line-width 2 :style flat-button))))
+       `(tab-bar-tab-inactive ((,c
+				:background ,bg-main
+				:box (:line-width 2 :style flat-button)))))))
+  (add-hook 'modus-themes-after-load-theme-hook #'rune/modus-themes-tab-bar-colors)
+
+  ;; Generally user options should never be touched by a theme. However, according
+  ;; to the maintainer of modus-themes, certain cases like `hl-todo-keyword-faces'
+  ;; and the `flymake-*-bitmap' variants merit an exception.
+  ;; This is annoying because I don't like the face used for Flymake bitmaps.
+  ;; I would like them to not have a background color. These variables need to be
+  ;; set after loading the theme.
+  (defun rune/modus-themes-flymake-bitmaps ()
+    "Override Flymake bitmaps to blend into the fringe"
+    (customize-set-variable
+     'flymake-error-bitmap '(flymake-double-exclamation-mark compilation-error))
+    (customize-set-variable
+     'flymake-warning-bitmap '(exclamation-mark compilation-warning))
+    (customize-set-variable
+     'flymake-note-bitmap '(exclamation-mark compilation-info)))
+  (add-hook 'modus-themes-after-load-theme-hook #'rune/modus-themes-flymake-bitmaps)
+
   ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-to-toggle '(modus-vivendi))
   (setq modus-themes-bold-constructs t
-	modus-themes-variable-pitch-ui nil
+	modus-themes-mixed-fonts t
 
 	;; Control the style of command prompts (e.g. minibuffer, shell, IRC clients).
 	;; `modus-themes-prompts' are either nil (the default), or a list of
@@ -914,30 +951,25 @@ binary is detected on the system."
 	modus-themes-prompts '(bold))
 
   ;; Define some palette overrides using the presets
-  (setq modus-themes-common-palette-overrides
-	`(;; To hide the border around the active and inactive mode lines, we
-	  ;; set their color to that of the underlying background
-	  ;; (border-mode-line-active unspecified)
-	  ;; (border-mode-line-inactive unspecified)
-	  ;; Make the fringe invisible
-	  (fringe unspecified)))
+  (customize-set-variable 'modus-themes-common-palette-overrides
+			  `(;; To hide the border around the active and inactive mode lines, we
+			    ;; set their color to that of the underlying background
+			    (bg-mode-line-active bg-inactive)
+			    (fg-mode-line-active fg-main)
+			    (bg-mode-line-inactive bg-inactive)
+			    (fg-mode-line-active fg-dim)
+			    (border-mode-line-active bg-inactive)
+			    (border-mode-line-inactive bg-main)
+			    ;; Change the background of matching parenthesis to a shade of magenta
+			    (bg-paren-match bg-magenta-subtle)
+			    ;; Enable underlining matching parenthesis by applying a color to them
+			    (underline-paren-match fg-main)
+			    ;; Make the fringe invisible
+			    (fringe unspecified)))
 
-  (load-theme 'modus-vivendi t)
-
-  ;; Generally user options should never be touched by a theme. However, the
-  ;; maintainer of modus-themes believes certain cases like
-  ;; `hl-todo-keyword-faces' and the `flymake-*-bitmap' variants merit an
-  ;; exception.
-  ;; This is annoying because I don't like the face used for the Flymake
-  ;; bitmaps. I would like them to not have a background color. These variables
-  ;; need to be set after loading the theme. I couldn't get this to work with
-  ;; `modus-themes-post-load-hook', so I'm setting them here.
-  (customize-set-variable
-   'flymake-error-bitmap '(flymake-double-exclamation-mark compilation-error))
-  (customize-set-variable
-   'flymake-warning-bitmap '(exclamation-mark compilation-warning))
-  (customize-set-variable
-   'flymake-note-bitmap '(exclamation-mark compilation-info)))
+  (defun rune/modus-themes-init ()
+    (load-theme (car modus-themes-to-toggle) t))
+  :hook (after-init . rune/modus-themes-init))
 
 ;; TODO replace doom-nano-modeline with something else so i don't have to build it myself with nix
 ;; preferably something in ELPA/MELPA
