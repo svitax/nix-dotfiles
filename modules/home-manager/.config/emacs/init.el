@@ -178,15 +178,6 @@
   :config
   (marginalia-mode))
 
-(use-package projectile
-  :custom
-  (projectile-project-search-path '("~/projects/"))
-  (projectile-switch-project-action #'projectile-dired)
-  :init
-  (projectile-mode +1)
-  :bind (:map projectile-mode-map
-              ("C-c p" . projectile-command-map)))
-
 (use-package consult
   :custom
   (consult-narrow-key "<")
@@ -197,22 +188,17 @@
 	("<up>" . previous-history-element)
 	("<down>" . next-history-element))
   :init
-  ;; TODO: document consult-project-function
-  (setq consult-project-function (lambda (_) (projectile-project-root)))
   ;; use Consult to select xref locations with preview
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref))
-
-(use-package consult-projectile)
 
 (use-package consult-dir
   :bind (("C-x C-d" . consult-dir)
 	 :map vertico-map
 	 ("C-x C-d" . consult-dir)
 	 ("C-x C-j" . consult-dir-jump-file))
-  :custom
-  (consult-dir-project-list-function #'consult-dir-projectile-dirs)
-  (consult-dir-default-command #'consult-projectile-find-file)
+  ;; :custom
+  ;; (consult-dir-default-command #'consult-project-extra-find)
   :init
   (defun consult-dir--zoxide-dirs ()
     "Return list of zoxide dirs."
@@ -231,6 +217,99 @@
   :config
   ;; adding to the list of consult-dir sources
   (add-to-list 'consult-dir-sources 'consult-dir--source-zoxide t))
+
+(use-package project
+  :ensure nil
+  ;; https://andreyor.st/posts/2022-07-16-project-el-enchancements
+  ;; A great article about nice enhancements to `project.el'
+  ;; One is a custom function that searches for a project root a bit differently
+  ;; from the default. It searches for specific root-marker files which in
+  ;; practice helps to not have to call `project-try-vc', giving us very
+  ;; predictable project roots.
+  ;; Another is a custom function to only save modified file-visiting buffers
+  ;; in the current project and advices for `project-compile' and `recompile'
+  ;; to prevent them from asking to save unrelated buffers.
+  )
+
+;; TODO: add easier keybinds for most used tabspaces commands
+;; `tabspaces-switch-or-create-workspace' and `tabspaces-open-or-create-project-and-workspace'
+(use-package tabspaces
+  :hook (after-init . tabspaces-mode)
+  :custom
+  (tabspaces-session t)
+  (tabspaces-session-auto-restore t)
+  :config
+  ;; Have only workspace buffers appear in `consult-buffer' by default
+  ;; Hide full buffer list (still available with "b" prefix)
+  (consult-customize consult--source-buffer :hidden t :default nil)
+  ;; Set consult-workspace buffer list
+  (defvar consult--source-workspace
+    (list :name "Workspace Buffers"
+	  :narrow ?w
+	  :history 'buffer-name-history
+	  :category 'buffer
+	  :state #'consult--buffer-state
+	  :default t
+	  :items (lambda () (consult--buffer-query
+			     :predicate #'tabspaces--local-buffer-p
+			     :sort 'visibility
+			     :as #'buffer-name)))
+
+    "Set workspace buffer list for `consult-buffer'.")
+  (add-to-list 'consult-buffer-sources 'consult--source-workspace)
+
+  ;; Sometimes we wish to switch to some open buffer in a tabspace and switch
+  ;; to that tab as well. `tabspaces-switch-buffer-and-tab' achieves this.
+  ;; If the buffer is open in more than one workspace the user will be prompted
+  ;; to choose which tab to switch to. If there is no such buffer users will be
+  ;; prompted on whether to create it in a new workspace or the current one.
+
+  ;; BUG: `tabspaces-switch-buffer-and-tab' is unreliable if you're using
+  ;; previews in Consult, which implicitly opens the buffer in the tabspace.
+  ;; That causes it to not recognize buffers as belonging to their appropriate
+  ;; workspace, and prompts me to create a new one with "Select tab" while
+  ;; providing no completions.
+
+  ;; Embark provides an elegant way to use `tabspaces-switch-buffer-and-tab'
+  ;; while using `consult-buffer'. Narrow to the buffer you want to act on.
+  ;; Run `embark-act' and then choose "B" to switch to the buffer and tab.
+  ;; (defvar-keymap embark-tabspaces-actions
+  ;;   :doc "Keymap for actions with `tabspaces'."
+  ;;   :parent embark-general-map
+  ;;   "B" #'tab-bar-select-tab-by-name)
+  ;; (add-to-list 'embark-keymap-alist '(buffer . embark-tabspaces-actions))
+
+  ;; Add a Consult source for all buffers where the action is
+  ;;  `tabspaces-switch-buffer-and-tab'.
+  (defvar consult--source-tab-buffer
+    `(:name "Tab and Buffer"
+	    :narrow ?B
+	    :history buffer-name-history
+	    :category buffer
+	    :hidden t
+	    :face consult-buffer
+	    :items ,(lambda () (consult--buffer-query :sort 'visibility
+						      :as #'buffer-name))
+	    :action ,#'tabspaces-switch-buffer-and-tab)
+    "Buffers candidate source for `consult-buffer' using `tabspaces-switch-buffer-and-tab'.")
+  (add-to-list 'consult-buffer-sources consult--source-tab-buffer))
+
+(use-package consult-project-extra)
+
+(use-package projection
+  :hook (after-init . global-projection-hook-mode)
+  :bind-keymap
+  ("C-x P" . projection-map))
+
+(use-package projection-multi)
+
+;; (use-package projection-multi-embark
+;;   :after embark
+;;   :after projection-multi
+;;   :demand t
+;;   :config (projection-multi-embark-setup-command-map))
+
+;; (use-package projection-multi-embark)
 
 (use-package corfu
   :custom
@@ -710,7 +789,7 @@ binary is detected on the system."
           (revert-buffer t t))
       ;; Compile using environment caching.
       (let* ((command (compilation-read-command compile-command))
-             (project-root (projectile-project-root))
+             (project-root (project-root))
              (cache (rune/compile--history-get command))
              (cached-root (nth 0 cache))
              (cached-directory (nth 1 cache))
@@ -778,14 +857,36 @@ binary is detected on the system."
 	(when was-read-only
 	  (read-only-mode +1))))))
 
-(use-package multi-compile
-  :bind (:map prog-mode-map
-	      ("C-c C-v" . multi-compile-run))
+(use-package compile-multi
   :init
-  (setq multi-compile-alist '((rust-ts-mode . (("cargo run" . "cargo run")
-					       ("cargo run --release" . "cargo run --release")
-					       ("cargo test" . "cargo test")))
-			      ("\\.txt\\'") . (("print-filename" . "echo %file-name")))))
+  (setq compile-multi-config '((rust-ts-mode ("cargo run" . "cargo run")
+					     ("cargo run --release" . "cargo run --release")
+					     ("cargo test" . "cargo test")))))
+
+(use-package consult-compile-multi
+  :after compile-multi
+  :demand t
+  :config (consult-compile-multi-mode))
+
+(use-package compile-multi-all-the-icons
+  :after all-the-icons-completion
+  :after compile-multi
+  :demand t)
+
+;; (use-package compile-multi-embark
+;;   :after embark
+;;   :after compile-multi
+;;   :demand t
+;;   :config (compile-multi-embark-mode +1))
+
+;; (use-package multi-compile
+;;   :bind (:map prog-mode-map
+;; 	      ("C-c C-v" . multi-compile-run))
+;;   :init
+;;   (setq multi-compile-alist '((rust-ts-mode . (("cargo run" . "cargo run")
+;; 					       ("cargo run --release" . "cargo run --release")
+;; 					       ("cargo test" . "cargo test")))
+;; 			      ("\\.txt\\'") . (("print-filename" . "echo %file-name")))))
 
 (use-package helpful
   :commands (helpful-callable helpful-variable helpful-command helpful-key helpful-symbol)
@@ -946,22 +1047,22 @@ doom-modeline"
   ;; "d" '( :which-key "Debug")
   "e" '(dired-jump :which-key "File explorer") ;; TODO
   "E" '(find-file :which-key "File browser") ;; TODO
-  "f" '(consult-projectile :which-key "File picker") ;; TODO
-  "F" '(consult-dir :which-key "Directory picker") ;; TODO
+  "f" '(consult-project-extra-find :which-key "File picker") ;; TODO
   "g" '(magit-status :which-key "Git status")
-  ;; "h" '( :which-key "")
+  "h" '(help-command :which-key "Help")
   ;; "i" '( :which-key "")
-  "j" '(consult-global-mark :which-key "Mark-ring") ;; TODO
+  "j" '(consult-dir :which-key "Jump to directory")
   "k" '(apheleia-format-buffer :which-key "Format buffer") ;; TODO
   "l" '(consult-line :which-key "Search buffer lines")
-  "m" '(magit-status :which-key "Multi-compile")
+  "m" '(projection-multi-compile :which-key "Multi-compile")
   ;; "n" '( :which-key "")
   ;; "o" '( :which-key "")
-  ;; "p" '( :which-key "Project")
-  "q" '(evil-quit :which-key "Quit")
+  "p" '(:ignore t :which-key "Project")
+  ;; "p" '(tabspaces-command-map :which-key "Projects")
+  "q" '(kill-emacs :which-key "Kill Emacs")
   "r" '(eglot-rename :which-key "Rename symbol")
   "s" '(consult-eglot-symbols :which-key "Symbol picker")
-  ;; "t" '( :which-key "Eshell")
+  "t" '(project-eshell :which-key "Eshell")
   ;; "u" '( :which-key "")
   ;; "v" '( :which-key "")
   ;; "w" '( :which-key "Windows")
@@ -969,10 +1070,22 @@ doom-modeline"
   "y" '(consult-yank-pop :which-key "Kill-ring")
   ;; "z" '( :which-key "")
   "SPC" '(execute-extended-command :which-key "M-x")
-  "," '(compile :which-key "Compile")
+  "," '(project-compile :which-key "Compile")
   "." '(recompile :which-key "Recompile")
   ;; ";" '( :which-key "")
   ;; "'" '( :which-key "")
   ;; "-" '( :which-key "")
   ;; "|" '( :which-key "")
+  ;; "" '(consult-global-mark :which-key "Mark-ring") ;; TODO
   "/" '(consult-grep :which-key "Grep"))
+
+(leader-def
+  "pb" '(tabspaces-switch-to-buffer :which-key "tabspaces-switch-to-buffer")
+  "pd" '(tabspaces-close-workspace :which-key "tabspaces-close-workspace")
+  "pk" '(tabspaces-kill-buffers-close-workspace :which-key "tabspaces-kill-buffer-close-workspaces")
+  "po" '(tabspaces-open-or-create-project-and-workspace :which-key "tabspaces-open-or-create-project-and-workspace")
+  "pr" '(tabspaces-remove-current-buffer :which-key "tabspaces-remove-current-buffer")
+  "ps" '(tabspaces-switch-or-create-workspace :which-key "tabspaces-switch-or-create-workspace")
+  "pt" '(tabspaces-switch-buffer-and-tab :which-key "tabspaces-switch-buffer-and-tab")
+  "pC" '(tabspaces-clear-buffers :which-key "tabspaces-clear-buffers")
+  "pR" '(tabspaces-remove-selected-buffer :which-key "tabspaces-remove-selected-buffer"))
