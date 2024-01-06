@@ -914,6 +914,11 @@ doom-modeline"
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+;; TODO: better theme for delta in git decorations.
+;; copy from modus-theme magit diff faces
+;; (use-package magit-delta
+;;   :hook (magit-mode . magit-delta-mode))
+
 (use-package general
   :after evil
   :init
