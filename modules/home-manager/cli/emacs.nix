@@ -33,7 +33,7 @@ in {
   home.file.".emacs.d/init.el".source = ../.config/emacs/init.el;
   home.file.".emacs.d/early-init.el".source = ../.config/emacs/early-init.el;
 
-  home.file.".emacs.d/eshell/alias".source = ../.config/emacs/alias;
+  home.file.".emacs.d/var/eshell/alias".source = ../.config/emacs/eshell/alias;
 
   home.file.".emacs.d/xemacs_color.svg".source =
     ../.config/emacs/xemacs_color.svg;
