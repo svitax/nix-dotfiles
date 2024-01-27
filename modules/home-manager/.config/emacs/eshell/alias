@@ -1,2 +1,0 @@
-alias less 'view-file $1'
-alias sw nh os switch --nom .
