@@ -157,15 +157,15 @@
   ;; Fast and easy way to save buffers.
   (general-mmap "C-s" 'save-buffer)
 
-  (global-definer "a" '(find-file :which-key "File browser"))
-  (global-definer "c" '(delete-window :which-key "Close window"))
-  (global-definer "e" '(dired-jump :which-key "Dired"))
-  (global-definer "f" '(project-find-file :which-key "File picker"))
-  (global-definer "k" '(kill-current-buffer :which-key "Kill buffer"))
+  (global-definer "a" 'find-file)
+  (global-definer "c" 'delete-window)
+  (global-definer "e" 'dired-jump)
+  (global-definer "f" 'project-find-file)
+  (global-definer "k" 'kill-current-buffer)
   (+general-global-menu! "notes" "n")
   (+general-global-menu! "org" "o")
   (+general-global-menu! "project" "p")
-  (global-definer "q" '(evil-quit-all :which-key "Quit Emacs"))
+  (global-definer "q" 'evil-quit-all)
   (+general-global-menu! "eshell" "t"))
 
 ;; (use-package which-key
@@ -1078,10 +1078,11 @@ display names.")
    :keymaps 'consult-narrow-help
    "?" 'consult-narrow-help)
   (global-definer
-    "b" '(consult-buffer :which-key "Buffer switcher")
-    "i" '(consult-imenu :which-key "IMenu")
-    "l" '(consult-line :which-key "Search buffer lines")
-    "y" '(consult-yank-pop :which-key "Kill-ring")
+    "b" 'consult-buffer
+    "i" 'consult-imenu
+    "k" 'consult-bookmark
+    "l" 'consult-line
+    "y" 'consult-yank-pop
     "/" '(consult-grep :which-key "Ripgrep")))
 
 ;; Use Consult to select xref locations with preview
