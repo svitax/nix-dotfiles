@@ -779,6 +779,15 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
   :init (setq all-the-icons-dired-monochrome nil)
   :hook (dired-mode . all-the-icons-dired-mode))
 
+;; TODO: I have a feeling find-dired doesn't work because
+;; I need to wrap it with inheritenv-add-advice
+(use-package find-dired
+  :general
+  (major-mode-definer
+    :major-modes '(dired-mode)
+    "f" 'find-lisp-find-dired)
+  :init (setq find-ls-option '("-exec ls -ldh {} +" . "-ldh")))
+
 (use-package dired-open
   :after dired
   :config
