@@ -344,6 +344,70 @@
 (use-package smart-tab-over
   :hook (on-first-input . smart-tab-over-global-mode))
 
+;; `buffer-hop' so C-M-o/C-M-i jumps between visited buffers
+;; (use-package buffer-hop
+;;   :hook (doom-first-input . global-buffer-hop-mode)
+;;   :init (setq buffer-hop-ignored-buffers-patterns '("^\\*" "^magit" "^COMMIT_EDITMSG")
+;;               buffer-hop-disabled-modes '(minibuffer-mode dired-mode vertico-mode))
+;;   :general
+;;   (general-nmap
+;;     "C-M-i" 'buffer-hop-next
+;;     "C-M-o" 'buffer-hop-prev))
+
+;; `better-jumper' so C-i/C-o only jumps to locations inside a buffer.
+;; (use-package better-jumper
+;;   :hook (doom-first-input . better-jumper-mode)
+;;   :commands doom-set-jump-a doom-set-jump-maybe-a doom-set-jump-h
+;;   :init
+;;   ;; Maintain jump lists for each individual buffer.
+;;   (setq better-jumper-context 'buffer)
+;;   (global-set-key [remap evil-jump-forward]  #'better-jumper-jump-forward)
+;;   (global-set-key [remap evil-jump-backward] #'better-jumper-jump-backward)
+;;   (global-set-key [remap xref-pop-marker-stack] #'better-jumper-jump-backward)
+;;   (global-set-key [remap xref-go-back] #'better-jumper-jump-backward)
+;;   (global-set-key [remap xref-go-forward] #'better-jumper-jump-forward)
+;;   :config
+;;   (defun doom-set-jump-a (fn &rest args)
+;;     "Set a jump point and ensure fn doesn't set any new jump points."
+;;     (better-jumper-set-jump (if (markerp (car args)) (car args)))
+;;     (let ((evil--jumps-jumping t)
+;;           (better-jumper--jumping t))
+;;       (apply fn args)))
+
+;;   (defun doom-set-jump-maybe-a (fn &rest args)
+;;     "Set a jump point if fn actually moves the point."
+;;     (let ((origin (point-marker))
+;;           (result
+;;            (let* ((evil--jumps-jumping t)
+;;                   (better-jumper--jumping t))
+;;              (apply fn args)))
+;;           (dest (point-marker)))
+;;       (unless (equal origin dest)
+;;         (with-current-buffer (marker-buffer origin)
+;;           (better-jumper-set-jump
+;;            (if (markerp (car args))
+;;                (car args)
+;;              origin))))
+;;       (set-marker origin nil)
+;;       (set-marker dest nil)
+;;       result))
+
+;;   (defun doom-set-jump-h ()
+;;     "Run `better-jumper-set-jump' but return nil, for short-circuiting hooks."
+;;     (better-jumper-set-jump)
+;;     nil)
+
+;;   ;; Creates a jump point before killing a buffer. This allows you to undo
+;;   ;; killing a buffer easily (only works with file buffers though; it's not
+;;   ;; possible to resurrect special buffers).
+;;   ;;
+;;   ;; I'm not advising `kill-buffer' because I only want this to affect
+;;   ;; interactively killed buffers.
+;;   (advice-add #'kill-current-buffer :around #'doom-set-jump-a)
+
+;;   ;; Create a jump point before jumping with imenu.
+;;   (advice-add #'imenu :around #'doom-set-jump-a))
+
 ;;; Theme
 
 (setq sx-themes-list nil)
