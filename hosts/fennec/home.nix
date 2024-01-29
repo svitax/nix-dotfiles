@@ -48,6 +48,7 @@
       # You can also add overlays exported from other flakes:
       inputs.neovim-nightly-overlay.overlay
       inputs.emacs-overlay.overlay
+      inputs.emacs-overlay.overlays.package
       # inputs.nvim-fennec.overlays.default
     ];
     # Configure your nixpkgs instance
