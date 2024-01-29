@@ -31,7 +31,6 @@
               # Use python from path, so you can use a different version to the one bundled with poetry
               POETRY_VIRTUALENVS_PREFER_ACTIVE_PYTHON = "true";
             };
-            #
           };
           # Formatter for your nix files, available through 'nix fmt'
           # Other options beside 'alejandra' include 'nixpkgs-fmt'
