@@ -756,13 +756,13 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
     :keymaps '(dired-mode-map)
     "/" 'prot-dired-limit-regexp))
 
-(use-package dired-single :after dired)
-
 (after! dired
   (general-nmap
     :keymaps '(dired-mode-map)
     "l" 'dired-find-file
     "h" 'dired-up-directory))
+
+(use-package dired-single :after dired)
 
 (after! dired
   (defun dired-home-directory ()
