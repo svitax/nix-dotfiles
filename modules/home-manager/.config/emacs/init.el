@@ -771,6 +771,7 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 
   (add-hook! dired-mode (general-nmap
                           :keymaps '(dired-mode-map)
+                          "C-<return>" 'dired-find-file-other-window
                           "a" 'dired-create-empty-file
                           "~" 'dired-home-directory)))
 
