@@ -237,13 +237,6 @@
     ;; BUG: drag doesn't work in visual mode
     "C-M-j" (concat ":m '>+1" (kbd "RET") "gv=gv")
     "C-M-k" (concat ":m '<-2" (kbd "RET") "gv=gv"))
-  ;; (:keymaps
-  ;;  '(minibuffer-local-map
-  ;;    minibuffer-local-ns-map
-  ;;    minibuffer-local-completion-map
-  ;;    minibuffer-local-must-match-map
-  ;;    minibuffer-local-isearch-map)
-  ;;  [escape] 'keyboard-escape-quit)
   :config
   (defun sx-indent-whole-buffer ()
     "Indent buffer."
