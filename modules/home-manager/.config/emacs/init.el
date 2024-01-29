@@ -1957,6 +1957,7 @@ Intended for `eldoc-documentation-functions' (which see)."
 ;;; Eshell
 
 (use-package eshell
+  :hook (eshell-pre-command . eshell-save-some-history)
   :general
   (+general-global-eshell
     "e" 'eshell
