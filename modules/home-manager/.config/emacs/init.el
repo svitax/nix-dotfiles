@@ -1965,6 +1965,18 @@ Intended for `eldoc-documentation-functions' (which see)."
     "t" 'project-eshell)
   (general-nmap :keymaps 'eshell-mode-map
     "C-r" #'consult-history)
+  :init (setq eshell-history-size 10000
+              eshell-hist-ignoredups t
+              eshell-buffer-maximum-lines 10000
+              eshell-command-aliases-list
+              '(("q" "exit")
+                ("c" "clear")
+                ("ll" "eza --no-user --header --group-directories-first --all --binary")
+                ("lla" "eza --no-user --header --group-directories-first --all --binary --long")
+                ("llg" "eza --no-user --header --group-directories-first --all --binary --long --git-ignore")
+                ("llt" "eza --no-user --header --group-directories-first --tree --level 2")
+                ("e" "find-file")
+                ("sw" "nh os switch --nom .")))
   :config
   (defun eshell-here ()
     "Opens up a new shell in the directory associated with the current buffer's
