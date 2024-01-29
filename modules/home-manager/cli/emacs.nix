@@ -51,6 +51,12 @@ in {
             rev = "d5015e394b0a666a8c7c4d4bdf786266e773b145";
             hash = "sha256-d0d5rkuxK/zKpSCa1UTdpV7o+RDDsEeab56rI7xUJ1E=";
           }) "app-launcher";
+          bookmark-plus = elisp (pkgs.fetchFromGitHub {
+            owner = "emacsmirror";
+            repo = "bookmark-plus";
+            rev = "f371815649ccac6cb610f6a5b32463cd91302af8";
+            hash = "sha256-X6gyfWo9yuPGA2X4SFF2NKSaIxEEI1cGPCW1+iLmhNM=";
+          }) "bookmark-plus";
         };
     };
   };
