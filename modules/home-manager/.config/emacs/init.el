@@ -808,6 +808,7 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 ;;; Window
 
 (global-definer "w" '(evil-window-map :which-key "window"))
+(general-def :keymaps 'evil-window-map "C-h" 'embark-prefix-help-command)
 
 (use-package popper
   :hook
