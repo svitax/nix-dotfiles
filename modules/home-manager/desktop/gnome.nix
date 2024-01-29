@@ -1,4 +1,5 @@
 { config, pkgs, ... }: {
+  # TODO: enable these extensions and apply settings from my Fedora box
   home.packages = with pkgs; [
     gnomeExtensions.appindicator
     gnomeExtensions.arcmenu
