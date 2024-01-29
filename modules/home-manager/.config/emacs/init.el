@@ -787,7 +787,7 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 (use-package dired-hide-dotfiles
   :hook (dired-mode . dired-hide-dotfiles-mode))
 
-(after! (dired dired-hide-dotfiles)
+(after! dired-hide-dotfiles
   (add-hook! dired-mode (general-nmap
                           :keymaps '(dired-mode-map)
                           "." 'dired-hide-dotfiles-mode)))
