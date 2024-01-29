@@ -2000,6 +2000,11 @@ windows easier."
 ;; (use-package elfeed-tube)
 ;; TODO: elfeed-summary
 ;; (use-package elfeed-summary)
+;; idk if this works
+;; (after! (consult elfeed)
+;;   (add-to-list 'consult-bookmark-narrow
+;;             `(?e "Elfeed" ,#'elfeed-search-bookmark-handler)))
+
 ;;; Notmuch
 
 ;; TODO: notmuch
