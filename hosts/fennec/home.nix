@@ -79,6 +79,10 @@
     nurl # prefetch sources for nix build tool
     nix-init # generate nix packages from urls
     atool # extract and archive
+    aspellDicts.en
+    aspellDicts.pt_BR
+    hunspellDicts.en_US
+    hunspellDicts.pt_BR
   ];
 
   # Enable home-manager
