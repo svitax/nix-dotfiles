@@ -1997,40 +1997,47 @@ windows easier."
 
 (use-package esh-mode
   :preface
-  ;; Eshell prompt
-  (declare-function eshell-search-path "ext:esh-ext")
-  (defun eshell-prompt ()
-    (let* ((date (propertize (format-time-string "%a %H:%M") 'face '(:inherit shadow)))
-           (path (abbreviate-file-name default-directory))
-           (branch (when (and (eshell-search-path "git")
-                              (locate-dominating-file default-directory ".git"))
-                     (concat (propertize (propertize " on " 'face '(:inherit shadow)))
-                             (propertize (string-trim (shell-command-to-string "git branch --show-current"))
-                                         'face (if (string-empty-p (shell-command-to-string "git status --porcelain 2>/dev/null"))
-                                                   '(:inherit shadow)
-                                                 '(:inherit font-lock-builtin-face))))))
-           (container (cond
-                       ((file-exists-p "/run/.containerenv")
-                        (format " in %s"
-                                (with-temp-buffer
-                                  (save-match-data
-                                    (insert-file-contents "/run/.containerenv")
-                                    (re-search-forward "^name=\"\\([^\"]+\\)\"" nil t)
-                                    (switch-to-buffer (current-buffer))
-                                    (or (match-string-no-properties 1) "podman")))))
-                       ((file-exists-p "/.dockerenv") " in docker")))
-           (ssh (when (getenv "SSH_CONNECTION") " via ssh"))
-           (info (concat (or branch "")
-                         (propertize (concat (or container "")
-                                             (or ssh ""))
-                                     'face '(:inherit shadow))))
-           (prompt (if (= eshell-last-command-status 0)
-                       "$"
-                     (propertize "$" 'face '(:inherit error)))))
-      (concat date " " path info "\n" prompt " ")))
+  ;; I can reuse the Starship prompt. Its executable can print out the text of the
+  ;; prompt, but somehow it refuses when there's 'TERM=dumb' in the environment. I
+  ;; advise Eshell to record the execution time for the '--cmd-duration' flag.
+  (defvar-local sx/eshell-last-command-start-time nil)
+  (defun sx/get-starship-prompt ()
+    (let ((cmd (format "TERM=xterm starship prompt --status=%d --cmd-duration=%d --logical-path=%s"
+                       eshell-last-command-status
+                       (if sx/eshell-last-command-start-time
+                           (let ((delta (float-time
+                                         (time-subtract
+                                          (current-time)
+                                          sx/eshell-last-command-start-time))))
+                             (setq sx/eshell-last-command-start-time nil)
+                             (round (* delta 1000)))
+                         0)
+                       (shell-quote-argument default-directory))))
+      (with-temp-buffer
+        (call-process "bash" nil t nil "-c" cmd)
+        (thread-first "\n"
+                      (concat (string-trim (buffer-string)))
+                      (ansi-color-apply)))))
+
+  (defun sx/eshell-set-start-time (&rest _args)
+    (setq-local sx/eshell-last-command-start-time (current-time)))
+
+  (after! eshell
+    (advice-add #'eshell-send-input :before #'sx/eshell-set-start-time))
   :custom
+  ;; `sx/get-starship-prompt' can go in `eshell-prompt-function' with two more
+  ;; options. First, `eshell-highlight-prompt' has to be set to nil because it
+  ;; screws up faces applied by `ansi-color.el'.
+  ;; Second, `eshell-prompt-regexp' has to align with Starship configuration.
+  ;; The relevant part of mine looks like this:
+  ;; [character]
+  ;; success_symbol = "[❯](bold green)"
+  ;; error_symbol = "[❯](bold red)"
+  ;; So my regex matches with either of these two prompts.
+  (eshell-prompt-regexp "^[^#❯\n]* [#❯] ")
+  (eshell-prompt-function 'sx/get-starship-prompt)
+  (eshell-highlight-prompt nil)
   (eshell-scroll-show-maximum-output nil)
-  ;; (eshell-prompt-function 'eshell-prompt)
   (eshell-banner-message ""))
 
 (use-package eshell-syntax-highlighting

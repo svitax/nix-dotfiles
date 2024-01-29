@@ -31,6 +31,10 @@ in {
       # enableTransience = true; # can't find option
       # settings = pkgs.lib.importTOML ../starship.toml;
       settings = {
+        character = {
+          success_symbol = "[❯ ](bold green)";
+          error_symbol = "[❯ ](bold red)";
+        };
         add_newline = false;
         format = promptFormat;
         right_format = rightPromptFormat;
