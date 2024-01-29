@@ -512,7 +512,8 @@ believe this should be modified in the next version of Emacs; keeping this for n
   (savehist-mode)
   (recentf-mode)
   (electric-pair-mode)
-  (global-whitespace-mode))
+  (global-whitespace-mode)
+  (global-auto-revert-mode))
 
 ;; Make `tabify' and `untabify' only affect indentation. Not tabs/spaces in the
 ;; middle of a line.
