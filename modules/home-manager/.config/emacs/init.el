@@ -1992,11 +1992,6 @@ windows easier."
 ;; (after! eshell
 ;;   eshell-z (consult-dir))
 
-;;; AI
-
-;; TODO: gptel
-;; (use-package gptel)
-
 ;;; Elfeed
 
 ;; TODO: elfeed
@@ -2027,6 +2022,10 @@ windows easier."
   (add-to-list 'consult-bookmark-narrow
                `(?u "Bmkp-Url-Browse" ,#'bmkp-jump-url-browse)))
 
+;;; AI
+
+;; TODO: gptel
+;; (use-package gptel)
 
 ;;; Extra
 
