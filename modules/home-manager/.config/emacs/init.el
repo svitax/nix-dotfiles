@@ -808,12 +808,6 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
 ;;; Window
 
 (global-definer "w" '(evil-window-map :which-key "window"))
-;; (+general-global-menu! "window" "w"
-;;   "=" '(balance-windows :which-key "Balance windows")
-;;   "s" '(split-window-vertically :which-key "Split window vertically")
-;;   "v" '(split-window-horizontally :which-key "Split window horizontally")
-;;   "m" '(delete-other-windows :which-key "Delete other windows")
-;;   "c" '(delete-window :which-key "Close window"))
 
 (use-package popper
   :hook
