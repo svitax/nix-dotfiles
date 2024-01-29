@@ -1963,6 +1963,8 @@ Intended for `eldoc-documentation-functions' (which see)."
     "e" 'eshell
     "h" 'eshell-here
     "t" 'project-eshell)
+  (general-nmap :keymaps 'eshell-mode-map
+    "C-r" #'consult-history)
   :config
   (defun eshell-here ()
     "Opens up a new shell in the directory associated with the current buffer's
