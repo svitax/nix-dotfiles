@@ -723,9 +723,17 @@ believe this should be modified in the next version of Emacs; keeping this for n
   :init (setq dired-listing-switches "-lAXhv --group-directories-first"
               dired-use-ls-dired nil
               dired-kill-when-opening-new-dired-buffer t
-              delete-by-moving-to-trash t
               dired-hide-details-hide-symlink-targets nil
-              dired-dwim-target t))
+              dired-dwim-target t
+              ;; don't prompt to revert, just do it
+              dired-auto-revert-buffer #'dired-buffer-stale-p
+	      auto-revert-remote-files nil
+              ;; Always copy/delete recursively
+              dired-recursive-copies 'always
+              dired-recursive-deletes 'top
+              ;; Ask whether destination dirs should get created when copying/removing files
+              dired-create-destination-dirs 'ask
+              delete-by-moving-to-trash t))
 
 (after! dired
   (defvar prot-dired--limit-hist '()
