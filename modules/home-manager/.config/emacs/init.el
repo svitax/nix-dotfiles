@@ -1136,7 +1136,7 @@ display names.")
     "k" 'consult-bookmark
     "l" 'consult-line
     "y" 'consult-yank-pop
-    "/" '(consult-grep :which-key "Ripgrep")))
+    "/" 'consult-grep))
 
 ;; Use Consult to select xref locations with preview
 (after! (consult)
