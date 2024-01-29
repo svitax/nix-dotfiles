@@ -727,7 +727,7 @@ believe this should be modified in the next version of Emacs; keeping this for n
               dired-dwim-target t
               ;; don't prompt to revert, just do it
               dired-auto-revert-buffer #'dired-buffer-stale-p
-	      auto-revert-remote-files nil
+              auto-revert-remote-files nil
               ;; Always copy/delete recursively
               dired-recursive-copies 'always
               dired-recursive-deletes 'top
