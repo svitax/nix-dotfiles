@@ -400,12 +400,13 @@ believe this should be modified in the next version of Emacs; keeping this for n
   (sx-load-indexed-theme)
   :config (doom-themes-org-config))
 
-;; (use-package modus-themes
-;;   :hook (on-init-ui . (lambda () (load-theme 'modus-vivendi t)))
-;;   :init
-;;   (add-to-list 'sx-themes-list 'modus-vivendi)
-;;   (add-to-list 'sx-themes-list 'modus-operandi-tinted)
-;;   (sx-load-indexed-theme))
+(use-package modus-themes
+  ;;   :hook (on-init-ui . (lambda () (load-theme 'modus-vivendi t)))
+  :init
+  ;;   (add-to-list 'sx-themes-list 'modus-vivendi)
+  (add-to-list 'sx-themes-list 'modus-operandi-tinted)
+  ;;   (sx-load-indexed-theme))
+  )
 
 ;; (use-package ef-themes)
 
