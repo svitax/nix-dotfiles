@@ -928,7 +928,6 @@ display names.")
         completion-category-overrides nil))
 
 (use-package marginalia
-  :commands emacs-run-launcher
   :hook (doom-first-buffer . marginalia-mode)
   :init (setq marginalia-max-relative-age 0))
 
@@ -2036,7 +2035,7 @@ windows easier."
 ;; (I could use `app-launcher' but it doesn't load the completion candidates and
 ;; annotations unless I start typing)
 (use-package counsel
-  :commands counsel-linux-app emacs-run-launcher
+  :commands counsel-linux-app
   :init
   (setq counsel-linux-app-format-function 'counsel-linux-app-format-function-name-pretty)
   (defun emacs-run-launcher ()
@@ -2044,26 +2043,26 @@ windows easier."
     (interactive)
     (custom-set-variables
      `(ivy-fixed-height-minibuffer nil))
-    (let ((win (get-mru-window)))
-      (with-selected-frame (make-frame '((name . "emacs-run-launcher")
-                                         (minibuffer . only)
-                                         (full-screen . 0) ; no fullscreen
-                                         (undecorated . t) ; remove title bar
-                                         (visibility . t)
-                                         (left . .5)
-                                         (top . .5)
-                                         (auto-raise . t) ; focus on this frame
-                                         ;; (tool-bar-lines . 0)
-                                         ;; (menu-bar-lines . 0)
-                                         ;; (window-system . x)
-                                         (internal-border-width . 10)
-                                         (width . 80)
-                                         (height . 11)))
-        (unwind-protect
-            (counsel-linux-app)
-          (progn
-            (delete-frame)
-            (select-window win)))))))
+    (with-selected-frame
+        (make-frame '((name . "emacs-run-launcher")
+                      (window-system . x)
+                      (auto-raise . t)
+                      (minibuffer . only)
+                      (left . 0.33)
+                      (left-fringe . 0)
+                      (right-fringe . 0)
+                      (top . 0.50)
+                      (fullscreen . 0)
+                      (undecorated . t)
+                      (unsplittable . t)
+                      (vertical-scroll-bars . nil)
+                      (line-spacing . 3)
+                      (internal-border-width . 20)
+                      (width . 100)
+                      (height . 11)))
+      (unwind-protect
+          (counsel-linux-app)
+        (delete-frame)))))
 
 ;; TODO: verb
 ;; (use-package verb)
