@@ -2005,6 +2005,28 @@ windows easier."
 ;; (use-package elfeed-tube)
 ;; TODO: elfeed-summary
 ;; (use-package elfeed-summary)
+;;; Bookmarks
+
+;; TODO: bookmark+
+(use-package bookmark-plus
+  ;; :straight '(bookmark-plus :type git :host github :repo "emacsmirror/bookmark-plus")
+  :init (require 'bookmark+)
+  :general
+  ;; Add URL bookmark with leader-K
+  (global-definer "K" (lambda ()
+                        (interactive)
+                        (let ((current-prefix-arg '(4)))
+                          (call-interactively #'bmkp-url-target-set)))))
+
+(after! (consult bookmark+)
+  ;; Hide bookmark list (still available with "m" prefix)
+  (consult-customize consult--source-bookmark :hidden t)
+  (defun bookmark-url-handler (bm)
+    "Handler for web bookmarks, opens bookmark BM with default browser."
+    (browse-url (assoc-default 'filename (cdr bm))))
+  (add-to-list 'consult-bookmark-narrow
+               `(?u "Bmkp-Url-Browse" ,#'bmkp-jump-url-browse)))
+
 
 ;;; Extra
 
