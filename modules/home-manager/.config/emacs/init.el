@@ -2000,6 +2000,17 @@ windows easier."
 ;; (use-package elfeed-tube)
 ;; TODO: elfeed-summary
 ;; (use-package elfeed-summary)
+;;; Notmuch
+
+;; TODO: notmuch
+;; (use-package notmuch)
+;; TODO: notmuch-bookmarks
+;; (use-package notmuch-bookmarks)
+;; idk if this works
+;; (after! (consult notmuch)
+;;   (add-to-list 'consult-bookmark-narrow
+;;                 `((?n "Notmuch" ,#'notmuch-bookmarks-jump-handler))))
+
 ;;; Bookmarks
 
 ;; TODO: bookmark+
