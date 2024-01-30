@@ -329,11 +329,11 @@
   :commands evil-lion-left evil-lion-right
   :general
   (general-nmap
-    "gl" 'evil-lion-left
-    "gL" 'evil-lion-right)
+    "ga" 'evil-lion-left
+    "gA" 'evil-lion-right)
   (general-vmap
-    "gl" 'evil-lion-left
-    "gL" 'evil-lion-right))
+    "ga" 'evil-lion-left
+    "gA" 'evil-lion-right))
 
 (use-package avy
   :commands evil-avy-goto-char-timer
