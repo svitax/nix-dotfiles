@@ -1971,7 +1971,7 @@ Intended for `eldoc-documentation-functions' (which see)."
     "t" 'project-eshell)
   (general-nmap :keymaps 'eshell-mode-map
     "C-r" #'consult-history)
-  :init (setq eshell-history-size 10000
+  :init (setq eshell-history-size 4096
               eshell-hist-ignoredups t
               eshell-buffer-maximum-lines 10000
               eshell-command-aliases-list
