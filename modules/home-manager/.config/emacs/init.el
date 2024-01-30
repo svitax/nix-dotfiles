@@ -1000,6 +1000,7 @@ display names.")
         ;; values for project-file too.
         completion-category-overrides '((project-file (styles . (partial-completion basic orderless)))
                                         (file (styles . (partial-completion basic orderless)))))
+  (setq orderless-component-separator 'orderless-escapable-split-on-space))
 
 (use-package marginalia
   :hook (doom-first-buffer . marginalia-mode)
