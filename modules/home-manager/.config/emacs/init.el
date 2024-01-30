@@ -934,10 +934,9 @@ display names.")
   )
 
 (use-package ace-window
-  :init
-  (setq
-   aw-keys '(?h ?j ?k ?l ?a ?s ?d ?f ?g)
-   aw-background nil)
+  :init (setq aw-keys '(?h ?j ?k ?l ?a ?s ?d ?f ?g)
+              aw-background nil
+              aw-scope 'frame)
   :general ("M-o" 'ace-window))
 
 ;;; Completion
