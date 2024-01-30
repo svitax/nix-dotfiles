@@ -2003,46 +2003,99 @@ windows easier."
 
 (use-package esh-mode
   :preface
-  ;; I can reuse the Starship prompt. Its executable can print out the text of the
-  ;; prompt, but somehow it refuses when there's 'TERM=dumb' in the environment. I
-  ;; advise Eshell to record the execution time for the '--cmd-duration' flag.
-  (defvar-local sx/eshell-last-command-start-time nil)
-  (defun sx/get-starship-prompt ()
-    (let ((cmd (format "TERM=xterm starship prompt --status=%d --cmd-duration=%d --logical-path=%s"
-                       eshell-last-command-status
-                       (if sx/eshell-last-command-start-time
-                           (let ((delta (float-time
-                                         (time-subtract
-                                          (current-time)
-                                          sx/eshell-last-command-start-time))))
-                             (setq sx/eshell-last-command-start-time nil)
-                             (round (* delta 1000)))
-                         0)
-                       (shell-quote-argument default-directory))))
-      (with-temp-buffer
-        (call-process "bash" nil t nil "-c" cmd)
-        (thread-first "\n"
-                      (concat (string-trim (buffer-string)))
-                      (ansi-color-apply)))))
+  (defun shortened-path (path max-len)
+    "Return a potentially trimmed-down version of the directory PATH.
+Replacing parent directories with their initial characters to try to
+get the character length of PATH (sans directory slashes) down to
+MAX-LEN."
+    (require 'cl-lib)
+    (let* ((components (split-string (abbreviate-file-name path) "/"))
+           (len (+ (1- (length components))
+                   (cl-reduce '+ components :key 'length)))
+           (str ""))
+      (while (and (> len max-len) (cdr components))
+        (setq str (concat str (if (= 0 (length (car components)))
+                                  "/" (string (elt (car components) 0) ?/)))
+              len (- len (1- (length (car components))))
+              components (cdr components)))
+      (concat str (cl-reduce (lambda (a b) (concat a "/" b)) components))))
 
-  (defun sx/eshell-set-start-time (&rest _args)
-    (setq-local sx/eshell-last-command-start-time (current-time)))
+  ;; Tramp info
+  (defun sx/eshell-remote-p ()
+    "If you are in a remote machine."
+    (tramp-tramp-file-p default-directory))
+  (defun sx/eshell-remote-user ()
+    "Return remote user name."
+    (tramp-file-name-user (tram-dissect-file-name default-directory)))
+  (defun sx/eshell-remote-host ()
+    "Return remote host."
+    ;; `tramp-file-name-real-host' is removed and replaced by
+    ;; `tramp-file-name-host' in Emacs 26.
+    (tramp-file-name-host (tram-dissect-file-name default-directory)))
 
-  (after! eshell
-    (advice-add #'eshell-send-input :before #'sx/eshell-set-start-time))
+  (defun sx/eshell-status-formatter (timestamp duration)
+    "Return the status display for `sx/eshell-status'.
+TIMESTAMP is the value returned by `current-time' and DURATION is the floating
+time the command took to complete in seconds."
+    ;; (format "#[STATUS] End time %s, duration %.3fs\n"
+    ;;         (format-time-string "%F %T" timestamp)
+    ;;         duration)
+    (format "  %.1fs" duration))
+
+  (defcustom sx/eshell-status-min-duration 1
+    "If a command takes more time than this, display its status with `epe-status'."
+    :group 'sx
+    :type 'number)
+
+  (defvar sx/eshell-status-last-command-time nil)
+  (make-variable-buffer-local 'sx/eshell-status-last-command-time)
+
+  (defun sx/eshell-status-record ()
+    "Record the time of the current command."
+    (setq sx/eshell-status-last-command-time (current-time)))
+
+  (defun sx/eshell-status (&optional formatter min-duration)
+    "Termination timestamp and duration of command.
+Status is only returned if command duration was longer than MIN-DURATION \(defaults to `sx/eshell-status-min-duration').
+FORMATTER is a function of two arguments, TIMESTAMP and DURATION, that returns a string."
+    (if sx/eshell-status-last-command-time
+        (let ((duration (time-to-seconds
+                         (time-subtract (current-time) sx/eshell-status-last-command-time))))
+          (setq sx/eshell-status-last-command-time nil)
+          (if (> duration (or min-duration
+                              sx/eshell-status-min-duration))
+              (funcall (or formatter
+                           #'sx/eshell-status-formatter)
+                       (current-time)
+                       duration)
+            ""))
+      (progn
+        (add-hook 'eshell-pre-command-hook #'sx/eshell-status-record)
+        "")))
+
+  (defun sx/eshell-prompt ()
+    (concat
+     ;; (propertize (concat "   " (format-time-string "%H:%M" (current-time))) 'face 'font-lock-variable-name-face)
+     (when (and (package-installed-p 'tramp) (sx/eshell-remote-p))
+       (propertize (concat (sx/eshell-remote-user) "@" (sx/eshell-remote-host) " ")
+                   'face 'font-lock-comment-face))
+     (when (package-installed-p 'envrc)
+       (propertize (if (string= envrc--status 'none)
+                       "" (concat "󱄅 " (getenv "name")))
+                   'face 'font-lock-comment-face))
+     (propertize (concat " " (shortened-path (eshell/pwd) 40)) 'face 'eshell-ls-directory)
+     (propertize (if (car (vc-git-branches))
+                     (concat " #" (car (vc-git-branches)))
+                   "")
+                 'face 'font-lock-constant-face)
+     (propertize (concat (sx/eshell-status))
+                 'face 'font-lock-comment-face)
+     (propertize " \n 𝝺 " 'face (if (zerop eshell-last-command-status) 'success 'error))))
+
   :custom
-  ;; `sx/get-starship-prompt' can go in `eshell-prompt-function' with two more
-  ;; options. First, `eshell-highlight-prompt' has to be set to nil because it
-  ;; screws up faces applied by `ansi-color.el'.
-  ;; Second, `eshell-prompt-regexp' has to align with Starship configuration.
-  ;; The relevant part of mine looks like this:
-  ;; [character]
-  ;; success_symbol = "[❯](bold green)"
-  ;; error_symbol = "[❯](bold red)"
-  ;; So my regex matches with either of these two prompts.
-  (eshell-prompt-regexp "^[^#❯\n]* [#❯] ")
-  (eshell-prompt-function 'sx/get-starship-prompt)
-  (eshell-highlight-prompt nil)
+  ;; (eshell-prompt-regexp "^.* ❯")
+  (eshell-prompt-regexp "^.* 𝝺 ") ;; Match last output of prompt -> prevents ~read-only~
+  (eshell-prompt-function #'sx/eshell-prompt)
   (eshell-scroll-show-maximum-output nil)
   (eshell-banner-message ""))
 
@@ -2089,6 +2142,11 @@ windows easier."
 ;; TODO: eshell-z with consult-dir
 ;; (after! eshell
 ;;   eshell-z (consult-dir))
+
+;;; Tramp
+
+(use-package tramp
+  :commands tramp-tramp-file-p tramp-file-name-user tramp-file-name-host)
 
 ;;; Elfeed
 
