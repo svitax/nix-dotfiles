@@ -996,7 +996,10 @@ display names.")
   :init
   (setq completion-styles '(orderless partial-completion basic)
         completion-category-defaults nil
-        completion-category-overrides nil))
+        ;; basic is required for /ssh: completion to work, but keep the same
+        ;; values for project-file too.
+        completion-category-overrides '((project-file (styles . (partial-completion basic orderless)))
+                                        (file (styles . (partial-completion basic orderless)))))
 
 (use-package marginalia
   :hook (doom-first-buffer . marginalia-mode)
