@@ -658,6 +658,7 @@ believe this should be modified in the next version of Emacs; keeping this for n
   :general
   (global-definer "h" '(help-command :which-key "help"))
   (general-def :keymaps 'help-map
+    "C-h" 'embark-prefix-help-command
     "A" 'describe-face
     "M" 'describe-keymap)
   :init
