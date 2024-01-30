@@ -2066,7 +2066,7 @@ time the command took to complete in seconds."
     ;; (format "#[STATUS] End time %s, duration %.3fs\n"
     ;;         (format-time-string "%F %T" timestamp)
     ;;         duration)
-    (format "  %.1fs" duration))
+    (format " 󰁫 %.1fs" duration))
 
   (defcustom sx/eshell-status-min-duration 1
     "If a command takes more time than this, display its status with `epe-status'."
