@@ -1204,6 +1204,11 @@ display names.")
 
 (use-package rainbow-mode)
 
+
+(after! (ace-window)
+  (custom-set-faces
+   '(aw-leading-char-face ((t (:inherit avy-lead-face))))))
+
 ;; TODO: breadcrumb
 ;; (use-package breadcrumb)
 ;; TODO: indent-bars
@@ -1268,10 +1273,6 @@ display names.")
   (magit-post-refresh . diff-hl-magit-post-refresh)
   :init
   (setq-default left-fringe-width 5))
-
-(after! (ace-window)
-  (custom-set-faces
-   '(aw-leading-char-face ((t (:inherit avy-lead-face))))))
 
 ;;; Org
 
