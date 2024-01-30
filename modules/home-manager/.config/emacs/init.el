@@ -1205,6 +1205,13 @@ display names.")
 
 (use-package rainbow-mode)
 
+;; (use-package highlight-thing
+;;   :hook (prog-mode . highlight-thing-mode)
+;;   ;; Restrict the highlighting to lines surrounding points, e.g. to reduce the
+;;   ;; load of highlighting in large buffers.
+;;   :init (setq highlight-thing-limit-to-region-in-large-buffers-p nil
+;;               highlight-thing-narrow-region-lines 15
+;;               highlight-thing-large-buffer-limit 5000))
 
 (after! (ace-window)
   (custom-set-faces
