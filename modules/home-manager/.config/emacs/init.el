@@ -1213,6 +1213,25 @@ display names.")
 ;;               highlight-thing-narrow-region-lines 15
 ;;               highlight-thing-large-buffer-limit 5000))
 
+(use-package pulsar
+  :hook
+  (doom-first-input . pulsar-global-mode)
+  :config
+  (after! (consult)
+    (setq consult-after-jump-hook nil) ;reset to avoid conflicts
+    (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry))
+  (after! (ace-window)
+    (add-to-list 'pulsar-pulse-functions 'ace-window)))
+
+(after! (doom-themes pulsar)
+  (custom-set-faces
+   `(pulsar-generic ((t (:background ,(doom-color 'base4)))))
+   `(pulsar-red ((t (:background ,(doom-darken (doom-color 'red) 0.50)))))
+   `(pulsar-blue ((t (:background ,(doom-darken (doom-color 'blue) 0.50)))))
+   `(pulsar-cyan ((t (:background ,(doom-darken (doom-color 'cyan) 0.50)))))
+   `(pulsar-green ((t (:background ,(doom-darken (doom-color 'green) 0.50)))))
+   `(pulsar-magenta ((t (:background ,(doom-darken (doom-color 'violet) 0.50)))))
+   `(pulsar-yellow ((t (:background ,(doom-darken (doom-color 'yellow) 0.50)))))))
 (after! (ace-window)
   (custom-set-faces
    '(aw-leading-char-face ((t (:inherit avy-lead-face))))))
