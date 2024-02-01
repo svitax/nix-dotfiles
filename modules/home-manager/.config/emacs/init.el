@@ -1989,7 +1989,6 @@ Intended for `eldoc-documentation-functions' (which see)."
 ;;; Eshell
 
 (use-package eshell
-  :hook (eshell-pre-command . eshell-save-some-history)
   :general
   (+general-global-eshell
     "e" 'eshell
@@ -2101,19 +2100,18 @@ FORMATTER is a function of two arguments, TIMESTAMP and DURATION, that returns a
 
   (defun sx/eshell-prompt ()
     (concat
-     ;; (propertize (concat "   " (format-time-string "%H:%M" (current-time))) 'face 'font-lock-variable-name-face)
      (when (and (package-installed-p 'tramp) (sx/eshell-remote-p))
        (propertize (concat (sx/eshell-remote-user) "@" (sx/eshell-remote-host) " ")
                    'face 'font-lock-comment-face))
      (when (package-installed-p 'envrc)
        (propertize (if (string= envrc--status 'none)
-                       "" (concat "󱄅 " (getenv "name")))
+                       "" (concat "󱄅 " (replace-regexp-in-string "-env$" "" (getenv "name"))))
                    'face 'font-lock-comment-face))
-     (propertize (concat " " (shortened-path (eshell/pwd) 40)) 'face 'eshell-ls-directory)
+     (propertize (concat " " (shortened-path (eshell/pwd) 40)) 'face 'eshell-prompt)
      (propertize (if (car (vc-git-branches))
-                     (concat " #" (car (vc-git-branches)))
+                     (concat "  " (car (vc-git-branches)))
                    "")
-                 'face 'font-lock-constant-face)
+                 'face 'diff-header)
      (propertize (concat (sx/eshell-status))
                  'face 'font-lock-comment-face)
      (propertize " \n 𝝺 " 'face (if (zerop eshell-last-command-status) 'success 'error))))
