@@ -748,6 +748,11 @@ believe this should be modified in the next version of Emacs; keeping this for n
   (eldoc-add-command-completions "paredit-")
   (eldoc-add-command-completions "combobulate-"))
 
+;; Extra coloring for Emacs' Info-mode
+(use-package info-colors
+  :commands info-colors-fontify-node
+  :hook (Info-selection . info-colors-fontify-node))
+
 ;;; Dired
 
 ;; TODO: dired-atool https://github.com/HKey/dired-atool
