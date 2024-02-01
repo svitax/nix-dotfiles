@@ -2225,41 +2225,6 @@ FORMATTER is a function of two arguments, TIMESTAMP and DURATION, that returns a
 
 ;;; Extra
 
-;; Create an independent app launcher in an Emacs frame with the Emacs daemon.
-;; using `counsel-linux-app'. Invoked from outside Emacs through a WM keybinding
-;; calling emacsclient -e.
-;; (I could use `app-launcher' but it doesn't load the completion candidates and
-;; annotations unless I start typing)
-(use-package counsel
-  :commands counsel-linux-app
-  :init
-  (setq counsel-linux-app-format-function 'counsel-linux-app-format-function-name-pretty)
-  (defun emacs-run-launcher ()
-    "Create and select a frame called `emacs-run-launcher' which consists only of a minibuffer and has specific dimensions.  Runs `app-launcher-run-app' on that frame, which is an Emacs command from the `app-launcher' package that prompts you to select an app and open it in a dmenu like behavior.  Delete the frame after that command has exited."
-    (interactive)
-    (custom-set-variables
-     `(ivy-fixed-height-minibuffer nil))
-    (with-selected-frame
-        (make-frame '((name . "emacs-run-launcher")
-                      (window-system . x)
-                      (auto-raise . t)
-                      (minibuffer . only)
-                      (left . 0.33)
-                      (left-fringe . 0)
-                      (right-fringe . 0)
-                      (top . 0.50)
-                      (fullscreen . 0)
-                      (undecorated . t)
-                      (unsplittable . t)
-                      (vertical-scroll-bars . nil)
-                      (line-spacing . 3)
-                      (internal-border-width . 20)
-                      (width . 100)
-                      (height . 11)))
-      (unwind-protect
-          (counsel-linux-app)
-        (delete-frame)))))
-
 ;; TODO: verb
 ;; (use-package verb)
 ;; TODO: ement
