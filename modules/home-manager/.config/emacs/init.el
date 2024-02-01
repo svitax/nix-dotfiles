@@ -460,6 +460,47 @@ believe this should be modified in the next version of Emacs; keeping this for n
 (use-package modus-themes
   ;;   :hook (on-init-ui . (lambda () (load-theme 'modus-vivendi t)))
   :init
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-to-toggle '(modus-operandi-tinted))
+  (setq modus-themes-bold-constructs t
+        modus-themes-mixed-fonts t
+        ;; Control the style of command prompts (e.g. minibuffer, shell, IRC clients).
+        ;; `modus-themes-prompts' are either nil (the default), or a list of
+        ;; properties that may include any of those symbols: `italic',;; `WEIGHT'
+        modus-themes-prompts '(bold))
+  ;; Define some palette overrides using the presets
+  (customize-set-variable 'modus-themes-common-palette-overrides
+                          `(;; To hide the border around the active and inactive mode lines, we
+                            ;; set their color to that of the underlying background
+                            (bg-mode-line-active bg-inactive)
+                            (fg-mode-line-active fg-main)
+                            (bg-mode-line-inactive bg-inactive)
+                            (fg-mode-line-active fg-dim)
+                            (border-mode-line-active bg-inactive)
+                            (border-mode-line-inactive bg-main)
+                            ;; line-numbers
+                            (fg-line-number-active fg-main)
+                            (bg-line-number-inactive bg-main)
+                            (fg-line-number-inactive fg-dim)
+                            ;; links
+                            (underline-link unspecified)
+                            (underline-link-visited unspecified)
+                            (underline-link-symbolic unspecified)
+                            ;; To hide the border around the active and inactive mode lines, we
+                            ;; set their color to that of the underlying background
+                            (bg-mode-line-active bg-inactive)
+                            (fg-mode-line-active fg-main)
+                            (bg-mode-line-inactive bg-inactive)
+                            (fg-mode-line-active fg-dim)
+                            (border-mode-line-active bg-inactive)
+                            (border-mode-line-inactive bg-main)
+                            ;; Change the background of matching parenthesis to a shade of magenta
+                            ;; (bg-paren-match bg-magenta-subtle)
+                            ;; Enable underlining matching parenthesis by applying a color to them
+                            (underline-paren-match fg-main)
+                            ;; Make the fringe invisible
+                            (fringe unspecified)))
+
   ;;   (add-to-list 'sx-themes-list 'modus-vivendi)
   (add-to-list 'sx-themes-list 'modus-operandi-tinted)
   ;;   (sx-load-indexed-theme))
