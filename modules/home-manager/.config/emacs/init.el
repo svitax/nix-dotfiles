@@ -1215,15 +1215,9 @@ display names.")
 
 (use-package pulsar
   :hook
-  (doom-first-input . pulsar-global-mode)
-  :config
-  (after! (consult)
-    (setq consult-after-jump-hook nil) ;reset to avoid conflicts
-    (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry))
-  (after! (ace-window)
-    (add-to-list 'pulsar-pulse-functions 'ace-window)))
+  (doom-first-input . pulsar-global-mode))
 
-(after! (doom-themes pulsar)
+(after! (pulsar doom-themes)
   (custom-set-faces
    `(pulsar-generic ((t (:background ,(doom-color 'base4)))))
    `(pulsar-red ((t (:background ,(doom-darken (doom-color 'red) 0.50)))))
@@ -1232,6 +1226,32 @@ display names.")
    `(pulsar-green ((t (:background ,(doom-darken (doom-color 'green) 0.50)))))
    `(pulsar-magenta ((t (:background ,(doom-darken (doom-color 'violet) 0.50)))))
    `(pulsar-yellow ((t (:background ,(doom-darken (doom-color 'yellow) 0.50)))))))
+
+(after! (pulsar consult)
+  (setq consult-after-jump-hook nil) ;reset to avoid conflicts
+  (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry))
+
+(after! (pulsar evil)
+  (defvar highlight-functions '(evil-goto-line
+                                evil-goto-first-line
+                                evil-scroll-down
+                                evil-scroll-up
+                                evil-window-down
+                                evil-window-up
+                                evil-window-left
+                                evil-window-right
+                                evil-window-next))
+
+  (dolist (func highlight-functions)
+    (add-to-list 'pulsar-pulse-functions func)))
+
+;; Feels too slow
+(after! (pulsar evil avy)
+  (add-to-list 'pulsar-pulse-functions 'evil-avy-goto-char-timer))
+
+(after! (pulsar ace-window)
+  (add-to-list 'pulsar-pulse-functions 'ace-window))
+
 (after! (ace-window)
   (custom-set-faces
    '(aw-leading-char-face ((t (:inherit avy-lead-face))))))
