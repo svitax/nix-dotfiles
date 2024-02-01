@@ -1029,6 +1029,31 @@ display names.")
                       "M-DEL" 'vertico-directory-delete-word
                       "C-w" 'vertico-directory-delete-word))
 
+(use-package vertico-multiform
+  :after vertico
+  :hook (vertico-mode . vertico-multiform-mode)
+  :init
+  (setq vertico-multiform-categories
+        '((consult-grep buffer)
+          (imenu buffer)
+          (buffer)
+          ;; (file buffer)
+          ;; (project-file buffer)
+          (info-menu buffer)
+          (consult-org-heading buffer)
+          (consult-history buffer)
+          (consult-eglot-symbols buffer)
+          (consult-xref buffer)
+          (embark-keybinding buffer); not convinced
+          (consult-locate buffer)))
+  (setq vertico-multiform-commands
+        '((magit:--author flat)
+          (consult-notes buffer)
+          (Info-goto-node buffer)
+          (Info-lookup-symbol buffer)
+          (Info-follow-reference buffer)
+          (consult-yank-pop buffer))))
+
 (use-package all-the-icons-completion
   :hook
   (doom-first-buffer . all-the-icons-completion-mode)
