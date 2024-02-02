@@ -57,6 +57,12 @@ in {
             rev = "f371815649ccac6cb610f6a5b32463cd91302af8";
             hash = "sha256-X6gyfWo9yuPGA2X4SFF2NKSaIxEEI1cGPCW1+iLmhNM=";
           }) "bookmark-plus";
+          justify-kp = elisp (pkgs.fetchFromGitHub {
+            owner = "Fuco1";
+            repo = "justify-kp";
+            rev = "33a186e297c0359547820088669486afd7b5fddb";
+            hash = "sha256-4zT6cED3wQkLCXhi1mZd+LREISS6XFtktNN1CkItZ5I=";
+          }) "justify-kp";
         };
     };
   };
