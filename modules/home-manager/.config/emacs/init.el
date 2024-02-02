@@ -1631,9 +1631,82 @@ display names.")
 
   (after! saveplace
     (require 'saveplace-pdf-view)))
+
+;; TODO: create doom-modeline segments for nov-mode
+;; TODO: create a nov doom-modeline with doom-modeline-def-modeline and add
+;; to doom-modeline-mode-alist for nov-mode
+(use-package visual-fill-column)
 (use-package nov
-  :init
-  (add-to-list 'auto-mode-alist `("\\.epub\\'" . nov-mode)))
+  :mode ("\\.epub\\'" . nov-mode)
+  :hook (nov-mode . +nov-mode-setup)
+  :config
+  ;; (defun doom-modeline-segment--nov-info ()
+  ;;   (concat
+  ;;    " "
+  ;;    (propertize
+  ;;     (cdr (assoc 'creator nov-metadata))
+  ;;     'face 'doom-modeline-project-parent-dir)
+  ;;    " "
+  ;;    (cdr (assoc 'title nov-metadata))
+  ;;    " "
+  ;;    (propertize
+  ;;     (format "%d/%d"
+  ;;             (1+ nov-documents-index)
+  ;;             (length nov-documents))
+  ;;     'face 'doom-modeline-info)))
+
+  ;; Don't render the title
+  (advice-add 'nov-render-title :override #'ignore)
+
+  (defun +nov-mode-setup ()
+    "Tweak nov-mode to our liking."
+    ;; FIXME: this bind doesn't work in the :general keyword for some reason
+    (general-nmap :keymaps 'nov-mode-map
+      "RET" 'nov-scroll-up)
+    (face-remap-add-relative 'variable-pitch
+                             :family "Merriweather"
+                             :height 1.4
+                             :width 'semi-expanded)
+    (face-remap-add-relative 'default :height 1.3)
+    (setq-local line-spacing 0.2
+                next-screen-context-lines 4
+                shr-use-colors nil)
+    (require 'visual-fill-column nil t)
+    (setq-local visual-fill-column-center-text t
+                visual-fill-column-width 81
+                nov-text-width 80)
+    (visual-fill-column-mode 1)
+    (hl-line-mode -1)
+    ;; Re-render with new display settings
+    (nov-render-document)
+    ;; Look up words with the dictionary
+    ;; TODO: copy doom-emacs dictionary lookup functionality
+    ;; (add-to-list '+lookup-definition-functions #'+lookup/dictionary-definition)
+    ;; Customise the mode-line to make it more minimal and relevant.
+    ;; (setq-local
+    ;;  mode-line-format
+    ;;  `((:eval
+    ;;     (doom-modeline-segment--workspace-name))
+    ;;    (:eval
+    ;;     (doom-modeline-segment--window-number))
+    ;;    (:eval
+    ;;     (doom-modeline-segment--nov-info))
+    ;;    ,(propertize
+    ;;      " %P "
+    ;;      'face 'doom-modeline-buffer-minor-mode)
+    ;;    ,(propertize
+    ;;      " "
+    ;;      'face (if (doom-modeline--active) 'mode-line 'mode-line-inactive)
+    ;;      'display `((space
+    ;;                  :align-to
+    ;;                  (- (+ right right-fringe right-margin)
+    ;;                     ,(* (let ((width (doom-modeline--font-width)))
+    ;;                           (or (and (= width 1) 1)
+    ;;                               (/ width (frame-char-width) 1.0)))
+    ;;                         (string-width
+    ;;                          (format-mode-line (cons "" '(:eval (doom-modeline-segment--major-mode))))))))))
+    ;;    (:eval (doom-modeline-segment--major-mode))))
+    ))
 
 ;;; Git
 
