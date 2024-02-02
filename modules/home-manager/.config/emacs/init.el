@@ -1002,7 +1002,7 @@ display names.")
 ;; NOTE: (on-init-ui . vertico-mode) adds extra garbage collection
 (use-package vertico
   :hook (on-init-ui . vertico-mode)
-  :init (setq vertico-count 10
+  :init (setq vertico-count 11
               vertico-cycle t
               vertico-resize 'grow-only)
   :general
