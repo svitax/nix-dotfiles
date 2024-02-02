@@ -1364,7 +1364,7 @@ display names.")
   (setq doom-modeline-height 30
         doom-modeline-lsp nil
         doom-modeline-lsp-icon nil
-        doom-modeline-major-mode-icon nil
+        ;; doom-modeline-major-mode-icon nil
         doom-modeline-percent-position nil
         ;; doom-modeline-position-line-format nil
         doom-modeline-buffer-modification-icon nil
@@ -1373,15 +1373,60 @@ display names.")
         ;; doom-modeline-buffer-file-name-style 'relative-from-project
         doom-modeline-buffer-file-name-style 'truncate-with-project
         doom-modeline-time-icon nil
-        doom-modeline-mode-alist nil)
+        ;; TODO: customize doom-modeline-mode-alist for cleaner modelines in each mode
+        ;; doom-modeline-mode-alist nil
+        )
   ;; (setq-default mode-line-buffer-identification "%b")
   :config
+  ;; Default Modeline
   (defun setup-custom-doom-modeline ()
     (doom-modeline-set-modeline 'my-modeline 'default))
+
+  (doom-modeline-def-segment buffer-name
+    "Display the current buffer's name, without any other information."
+    (concat
+     (doom-modeline-spc)
+     (doom-modeline--buffer-name)))
+
+  ;; TODO: add buffer-mode-icon to major-mode segment for more seamless integration
+  (doom-modeline-def-segment buffer-mode-icon
+    "Display the current buffer's major mode icon."
+    (concat
+     (doom-modeline-spc)
+     (doom-modeline--buffer-mode-icon)))
+
   (doom-modeline-def-modeline
     'my-modeline
-    '(eldoc matches buffer-info remote-host)
-    '(compilation irc debug repl input-method buffer-position major-mode process vcs pdf-pages)))
+    '(eldoc matches buffer-name remote-host)
+    '(compilation irc debug repl input-method buffer-position buffer-mode-icon major-mode process vcs))
+
+  ;; PDF Modeline
+  (doom-modeline-def-segment buffer-name-simple
+    "Display only the current buffer's name, but with fontification."
+    (concat
+     (doom-modeline-spc)
+     (doom-modeline--buffer-simple-name)))
+
+  (defun doom-modeline-update-pdf-pages ()
+    "Update PDF pages."
+    (setq doom-modeline--pdf-pages
+          (let ((current-page-str (number-to-string (eval `(pdf-view-current-page))))
+                (total-page-str (number-to-string (pdf-cache-number-of-pages))))
+            (concat
+             (propertize
+              (concat (make-string (- (length total-page-str) (length current-page-str)) ? )
+                      " P" current-page-str)
+              'face 'mode-line)
+             (propertize (concat "/" total-page-str) 'face 'doom-modeline-buffer-minor-mode)))))
+
+  (doom-modeline-def-segment pdf-pages
+    "Display PDF pages."
+    (if (doom-modeline--active) doom-modeline--pdf-pages
+      (propertize doom-modeline--pdf-pages 'face 'mode-line-inactive)))
+
+  (doom-modeline-def-modeline 'pdf
+    '(buffer-name-simple)
+    '(misc-info matches pdf-pages buffer-mode-icon major-mode process vcs)))
 
 (use-package diff-hl
   :hook
