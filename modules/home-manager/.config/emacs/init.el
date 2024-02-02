@@ -1226,8 +1226,8 @@ display names.")
   (global-definer
     "b" 'consult-buffer
     "i" 'consult-imenu
-    "k" 'consult-bookmark
     "l" 'consult-line
+    "x" 'consult-bookmark
     "y" 'consult-yank-pop
     "/" 'consult-grep))
 
