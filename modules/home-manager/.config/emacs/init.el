@@ -1403,7 +1403,7 @@ display names.")
   (doom-modeline-def-modeline
     'my-modeline
     '(eldoc matches buffer-name remote-host)
-    '(compilation irc debug repl input-method buffer-position buffer-mode-icon major-mode process vcs))
+    '(compilation irc debug repl input-method misc-info buffer-position buffer-mode-icon major-mode process vcs))
 
   ;; PDF Modeline
   (doom-modeline-def-segment buffer-name-simple
@@ -2464,6 +2464,24 @@ FORMATTER is a function of two arguments, TIMESTAMP and DURATION, that returns a
 ;; (use-package gptel)
 
 ;;; Extra
+
+(use-package keycast
+  :commands keycast-mode
+  :hook ((keycast-mode . setup-custom-doom-modeline))
+  :config
+  (define-minor-mode keycast-mode
+    "Show current command and its key binding in the mode line."
+    :global t
+    (if keycast-mode
+        (progn
+          (add-hook 'pre-command-hook 'keycast--update t)
+          (add-to-list 'global-mode-string '("" keycast-mode-line " ")))
+      (remove-hook 'pre-command-hook 'keycast--update)
+      (setq global-mode-string (remove '("" keycast-mode-line " ") global-mode-string))))
+
+  (custom-set-faces
+   '(keycast-command ((t (:inherit doom-modeline-debug :height 0.9))))
+   '(keycast-key ((t (:inherit custom-modified :height 1.1 :weight bold))))))
 
 ;; TODO: verb
 ;; (use-package verb)
