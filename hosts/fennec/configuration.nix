@@ -3,6 +3,10 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 { inputs, outputs, pkgs, ... }: {
   imports = [
+    # Window Manager / Desktop Environment
+    # ../../system/wm/gnome.nix
+    ../../system/wm/sway.nix
+    ../../system/wm/greetd.nix
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
     # Import home-manager's NixOS module
@@ -38,12 +42,7 @@
   };
 
   boot.initrd.kernelModules = [ "amdgpu" ];
-  services.xserver.videoDrivers = [ "amdgpu" "radeon" ];
-  hardware.opengl = {
-    enable = true;
-    driSupport = true;
-    driSupport32Bit = true;
-  };
+  # services.xserver.videoDrivers = [ "amdgpu" "radeon" ];
 
   # Bootloader.
   boot.loader.grub.enable = true;
@@ -79,17 +78,17 @@
   };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  # services.xserver.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  # services.xserver.displayManager.gdm.enable = true;
+  # services.xserver.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "intl";
-  };
+  # services.xserver = {
+  #   layout = "us";
+  #   xkbVariant = "intl";
+  # };
 
   # Configure console keymap
   console.keyMap = "us-acentos";

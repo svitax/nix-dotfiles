@@ -10,6 +10,7 @@
     # inputs.neovim-flake.nixosModules."x86_64-linux".hm
 
     # You can also split up your configuration and import pieces of it here:
+    ../../home/wm/sway/sway.nix
     ../../home/style/colors.nix
     ../../home/style/fonts.nix
 
