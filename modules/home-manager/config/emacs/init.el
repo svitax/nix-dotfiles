@@ -2482,6 +2482,7 @@ FORMATTER is a function of two arguments, TIMESTAMP and DURATION, that returns a
 
 (use-package keycast
   :commands keycast-mode
+  :general (major-mode-definer "K" 'keycast-mode)
   :config
   (define-minor-mode keycast-mode
     "Show current command and its key binding in the mode line."
