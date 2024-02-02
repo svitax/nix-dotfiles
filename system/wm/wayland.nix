@@ -1,5 +1,5 @@
 { pkgs, ... }: {
-  imports = [ ../hardware/opengl.nix ];
+  imports = [ ./pipewire.nix ../hardware/opengl.nix ];
   environment.systemPackages = [ pkgs.wayland ];
   services.xserver = {
     enable = true;
