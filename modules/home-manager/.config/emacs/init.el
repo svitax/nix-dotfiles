@@ -278,9 +278,8 @@
 (use-package evil-org
   :after org
   :hook (org-mode . evil-org-mode)
-  :general
-  (general-mmap :modes 'evil-org-mode
-    "RET" 'evil-org-return))
+  :general (general-mmap :keymaps '(org-mode-map)
+             "RET" 'evil-org-return))
 
 ;; TODO: evil-exchange
 ;; (use-package evil-exchange
