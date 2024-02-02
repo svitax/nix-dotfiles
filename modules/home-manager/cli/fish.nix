@@ -161,5 +161,5 @@
   # and then removed mangled double quotes with `sed -i.bak -E "s/'([a-z]*[[:blank:]][a-z]*)''/\1'/g" ./poetry.fish
   # https://github.com/python-poetry/poetry/issues/5929
   home.file.".config/fish/completions/poetry.fish".source =
-    ../.config/fish/completions/poetry.fish;
+    ../config/fish/completions/poetry.fish;
 }

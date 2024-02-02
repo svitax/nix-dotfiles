@@ -1,6 +1,6 @@
 { pkgs, ... }: {
-  xdg.configFile."lf/icons".source = ../.config/lf/icons;
-  xdg.configFile."pistol/pistol.conf".source = ../.config/lf/pistol.conf;
+  xdg.configFile."lf/icons".source = ../config/lf/icons;
+  xdg.configFile."pistol/pistol.conf".source = ../config/lf/pistol.conf;
   programs.lf = {
     enable = true;
     settings = {

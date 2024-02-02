@@ -20,10 +20,11 @@ in {
   programs.emacs = {
     enable = true;
     package = pkgs.emacsWithPackagesFromUsePackage {
-      config = ../.config/emacs/init.el;
+      config = ../config/emacs/init.el;
       # defaultInitFile = true;
       # NOTE: emacs-pgtk doesn't build with emacs-jupyter
       package = pkgs.emacs-unstable.override { withNativeCompilation = true; };
+      # package = pkgs.emacsGit.override { withNativeCompilation = true; };
       alwaysEnsure = true;
       extraEmacsPackages = epkgs:
         with epkgs; [
@@ -68,29 +69,6 @@ in {
   };
   home.file.".config/emacs" = {
     recursive = true;
-    source = ../.config/emacs;
+    source = ../config/emacs;
   };
-  # home.file.".config/emacs/init.el".source = ../.config/emacs/init.el;
-  # home.file.".config/emacs/early-init.el".source =
-  #   ../.config/emacs/early-init.el;
-  # home.file.".config/emacs/modules/core-lib.el".source =
-  #   ../.config/emacs/modules/core-lib.el;
-  # home.file.".config/emacs/modules/elisp-cider-overlays.el".source =
-  #   ../.config/emacs/modules/elisp-cider-overlays.el;
-  # home.file.".config/emacs/modules/elisp-fontification.el".source =
-  #   ../.config/emacs/modules/elisp-fontification.el;
-  # home.file.".config/emacs/modules/elisp-indentation.el".source =
-  #   ../.config/emacs/modules/elisp-indentation.el;
-  # home.file.".config/emacs/modules/on.el".source =
-  #   ../.config/emacs/modules/on.el;
-  # home.file.".config/emacs/modules/biblio-gscholar.el".source =
-  #   ../.config/emacs/modules/biblio-gscholar.el;
-  # home.file.".config/emacs/modules/splash-screen.el".source =
-  #   ../.config/emacs/modules/splash-screen.el;
-
-  # home.file.".emacs.d/eshell/alias".source = ../.config/emacs/eshell/aliases;
-  # home.file.".emacs.d/xemacs_color.svg".source =
-  #   ../.config/emacs/xemacs_color.svg;
-  # home.file.".emacs.d/emacs_gnu_color.svg".source =
-  #   ../.config/emacs/emacs_gnu_color.svg;
 }
