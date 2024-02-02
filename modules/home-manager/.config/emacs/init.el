@@ -2021,6 +2021,16 @@ server getting expensively restarted when reverting buffers."
 ;;       :keymaps 'eglot-mode-map
 ;;       "K" 'eldoc-box-eglot-help-at-point)))
 
+;;; Xref
+
+(after! xref
+  (setq xref-auto-jump-to-first-definition 'move
+        xref-auto-jump-to-first-xref 'move
+        xref-prompt-for-identifier '(not
+                                     xref-find-references
+                                     xref-find-definitions-other-window
+                                     xref-find-definitions-other-frame)))
+
 ;;; Flymake
 
 (after! flymake
