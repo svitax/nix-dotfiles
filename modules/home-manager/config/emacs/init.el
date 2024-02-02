@@ -1720,6 +1720,9 @@ display names.")
         magit-diff-refine-ignore-whitespace t
         magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+(use-package git-modes
+  :init (add-to-list 'auto-mode-alist (cons "/.dockerignore\\'" 'gitignore-mode)))
+
 ;; TODO: ediff
 ;; (use-package ediff)
 ;; TODO: forge
