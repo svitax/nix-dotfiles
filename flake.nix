@@ -60,10 +60,7 @@
           '';
         };
 
-        devShells.default = pkgs.mkShell {
-          name = "nix-dotfiles";
-          packages = with pkgs; [ just ];
-        };
+        devShells.default = pkgs.mkShell { name = "nix-dotfiles"; };
       };
 
       flake = {

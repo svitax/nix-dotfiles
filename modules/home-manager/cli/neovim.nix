@@ -29,7 +29,6 @@
     nixfmt
     nil
     statix
-    just
     vscode-langservers-extracted # html/css/json/eslint
   ];
   xdg.configFile.nvim = {
