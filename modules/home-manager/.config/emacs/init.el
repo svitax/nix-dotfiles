@@ -563,6 +563,11 @@ believe this should be modified in the next version of Emacs; keeping this for n
 ;; easier to peruse (with `consult-yank-pop')
 (setq kill-do-not-save-duplicates t)
 
+;; By default, `custom' writes stuff to init.el, which is annoying because I'm
+;; using Nix.
+;; (setq custom-file (concat user-emacs-directory "custom.el"))
+;; (load custom-file 'noerror)
+
 (use-package no-littering
   :init
   (setq backup-directory-alist `(("." . ,(no-littering-expand-var-file-name "backups/")))
