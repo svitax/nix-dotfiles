@@ -1566,14 +1566,21 @@ display names.")
 
 ;;; PDF / EPUB
 
-(use-package pdf-tools
-  :mode ("\\.pdf\\'" . pdf-view-mode)
-  :init
-  (setq-default pdf-view-display-size 'fit-page)
-  :config
-  (add-hook 'pdf-view-mode-hook (lambda () (blink-cursor-mode -1)))
-  (pdf-tools-install :no-query))
+;; Add support for pdf-view and DocView buffers to `save-place'
+(use-package saveplace-pdf-view)
 
+(use-package pdf-tools
+  :mode ("\\.[pP][dD][fF]\\'" . pdf-view-mode)
+  :magic ("%PDF" . pdf-view-mode)
+  :hook
+  (pdf-view-mode . pdf-tools-enable-minor-modes)
+  (pdf-view-mode . (lambda () (blink-cursor-mode -1)))
+  :init (setq-default pdf-view-display-size 'fit-page)
+  :config
+  (pdf-tools-install :no-query)
+
+  (after! saveplace
+    (require 'saveplace-pdf-view)))
 (use-package nov
   :init
   (add-to-list 'auto-mode-alist `("\\.epub\\'" . nov-mode)))
