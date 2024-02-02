@@ -20,7 +20,7 @@ in {
   programs.emacs = {
     enable = true;
     package = pkgs.emacsWithPackagesFromUsePackage {
-      config = ../config/emacs/init.el;
+      config = ./init.el;
       # defaultInitFile = true;
       # NOTE: emacs-pgtk doesn't build with emacs-jupyter
       package = pkgs.emacs-unstable.override { withNativeCompilation = true; };
@@ -69,6 +69,7 @@ in {
   };
   home.file.".config/emacs" = {
     recursive = true;
-    source = ../config/emacs;
+    # does this work?
+    source = ./.;
   };
 }

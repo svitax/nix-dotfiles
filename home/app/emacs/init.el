@@ -833,6 +833,7 @@ Restore the buffer with \\<dired-mode-map>`\\[revert-buffer]'."
                           :keymaps '(dired-mode-map)
                           "C-<return>" 'dired-find-file-other-window
                           "a" 'dired-create-empty-file
+                          "A" 'dired-create-directory
                           "~" 'dired-home-directory)))
 
 (use-package all-the-icons-dired

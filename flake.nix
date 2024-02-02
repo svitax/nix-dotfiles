@@ -1,41 +1,6 @@
 {
   description = "NixOS config";
 
-  inputs = {
-    # Nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    # Home manager
-    home-manager = {
-      url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    nix-colors.url = "github:misterio77/nix-colors";
-
-    nh.url = "github:viperML/nh";
-    nh.inputs.nixpkgs.follows = "nixpkgs";
-
-    nix-index-database.url = "github:Mic92/nix-index-database";
-    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
-
-    firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-    firefox-addons.inputs.nixpkgs.follows = "nixpkgs";
-
-    firefox-gnome-theme.url = "github:rafaelmardojai/firefox-gnome-theme";
-    firefox-gnome-theme.flake = false;
-
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
-
-    # NOTE: Add any other flake you might need
-    # nix-nvim.url = "github:svitax/nvim-flake";
-    # nvim-fennec.url = "path:./modules/neovim";
-    # hardware.url = "github:nixos/nixos-hardware";
-    zjstatus.url = "github:dj95/zjstatus";
-  };
-
   outputs = { self, nixpkgs, flake-parts, ... }@inputs:
     let
       inherit (self) outputs;
@@ -69,7 +34,7 @@
         templates = import ./templates;
 
         # Your custom packages and modifications, exported as overlays
-        overlays = import ./overlays { inherit inputs outputs; };
+        # overlays = import ./overlays { inherit inputs outputs; };
 
         # NixOS configuration entrypoint
         # Available through 'nixos-rebuild --flake .#your-hostname'
@@ -83,4 +48,40 @@
         };
       };
     };
+
+  inputs = {
+    # Nixpkgs
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    # Home manager
+    home-manager = {
+      url = "github:nix-community/home-manager/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    nix-colors.url = "github:misterio77/nix-colors";
+
+    nh.url = "github:viperML/nh";
+    nh.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-index-database.url = "github:Mic92/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
+    firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+    firefox-addons.inputs.nixpkgs.follows = "nixpkgs";
+
+    firefox-gnome-theme.url = "github:rafaelmardojai/firefox-gnome-theme";
+    firefox-gnome-theme.flake = false;
+
+    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
+
+    # NOTE: Add any other flake you might need
+    # nix-nvim.url = "github:svitax/nvim-flake";
+    # nvim-fennec.url = "path:./modules/neovim";
+    # hardware.url = "github:nixos/nixos-hardware";
+    # zjstatus.url = "github:dj95/zjstatus";
+  };
+
 }

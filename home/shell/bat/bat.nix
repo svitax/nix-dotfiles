@@ -1,6 +1,6 @@
 { pkgs, ... }: {
   home.file.".config/bat/themes/gruvbox-dark-hard.tmTheme".source =
-    ../config/bat/themes/gruvbox-dark-hard.tmTheme;
+    ./themes/gruvbox-dark-hard.tmTheme;
   programs.bat = {
     enable = true;
     config = {

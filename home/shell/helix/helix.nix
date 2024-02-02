@@ -1,5 +1,5 @@
 { ... }: {
-  home.file.".config/helix".source = ../config/helix;
+  home.file.".config/helix".source = ./.;
   programs.helix = {
     enable = true;
     # extraPackages = [];

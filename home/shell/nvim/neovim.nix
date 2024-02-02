@@ -34,7 +34,7 @@
   xdg.configFile.nvim = {
     # TODO: figure out a way to not hard code a path to my nix-dotfiles directory
     source = config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/nix-dotfiles/modules/home-manager/config/nvim";
+      "${config.home.homeDirectory}/nix-dotfiles/home/shell/nvim";
     recursive = true;
   };
   # home.file.".config/nvim/" = {

@@ -10,40 +10,41 @@
     # inputs.neovim-flake.nixosModules."x86_64-linux".hm
 
     # You can also split up your configuration and import pieces of it here:
-    ../../modules/home-manager/colors.nix
-    ../../modules/home-manager/fonts.nix
+    ../../home/style/colors.nix
+    ../../home/style/fonts.nix
 
-    ../../modules/home-manager/desktop/firefox.nix
-    ../../modules/home-manager/desktop/gnome.nix
-    ../../modules/home-manager/desktop/kitty.nix
-    ../../modules/home-manager/desktop/sioyek.nix
+    ../../home/app/browser/firefox.nix
 
-    ../../modules/home-manager/cli/bat.nix
-    ../../modules/home-manager/cli/emacs.nix
-    ../../modules/home-manager/cli/direnv.nix
-    ../../modules/home-manager/cli/eza.nix
-    ../../modules/home-manager/cli/fish.nix
-    ../../modules/home-manager/cli/fzf.nix
-    ../../modules/home-manager/cli/ghq.nix
-    ../../modules/home-manager/cli/git.nix
-    ../../modules/home-manager/cli/helix.nix
-    ../../modules/home-manager/cli/lf.nix
-    ../../modules/home-manager/cli/neovim.nix
-    ../../modules/home-manager/cli/mimeapps.nix
-    ../../modules/home-manager/cli/papis.nix
-    ../../modules/home-manager/cli/starship.nix
-    ../../modules/home-manager/cli/tmux.nix
-    ../../modules/home-manager/cli/zellij.nix
-    ../../modules/home-manager/cli/zoxide.nix
+    ../../home/wm/gnome/gnome.nix
+    ../../home/app/terminal/kitty/kitty.nix
+    ../../home/app/sioyek.nix
+
+    ../../home/shell/bat/bat.nix
+    ../../home/app/emacs/emacs.nix
+    ../../home/shell/direnv.nix
+    ../../home/shell/eza.nix
+    ../../home/shell/fish/fish.nix
+    ../../home/shell/fzf.nix
+    ../../home/shell/ghq.nix
+    ../../home/shell/git.nix
+    # ../../home/shell/helix/helix.nix
+    ../../home/shell/lf/lf.nix
+    ../../home/shell/nvim/neovim.nix
+    ../../home/shell/mimeapps.nix
+    ../../home/shell/papis.nix
+    ../../home/shell/starship.nix
+    ../../home/shell/tmux.nix
+    ../../home/shell/zellij/zellij.nix
+    ../../home/shell/zoxide.nix
   ];
 
   nixpkgs = {
     # You can add overlays here
     overlays = [
       # Add overlays your own flake exports (from overlays and pkgs dir):
-      outputs.overlays.additions
-      outputs.overlays.modifications
-      outputs.overlays.zjstatus
+      # outputs.overlays.additions
+      # outputs.overlays.modifications
+      # outputs.overlays.zjstatus
 
       # You can also add overlays exported from other flakes:
       inputs.neovim-nightly-overlay.overlay
@@ -68,7 +69,7 @@
   # programs.neovim.enable = true;
   home.packages = with pkgs; [
     # nvim-fennec # nvim-flake output
-    zellij-smart-sessionizer
+    # zellij-smart-sessionizer
     # live-grep # workaround for live-grep in helix until provided by core or plugins
     # helix-live-grep # workaround for live-grep in helix until provided by core or plugins
     ripgrep
@@ -79,6 +80,8 @@
     nurl # prefetch sources for nix build tool
     nix-init # generate nix packages from urls
     atool # extract and archive
+    unzip
+    texlab
     aspellDicts.en
     aspellDicts.pt_BR
     hunspellDicts.en_US

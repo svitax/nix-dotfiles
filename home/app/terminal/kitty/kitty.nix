@@ -1,7 +1,7 @@
 { config, ... }:
 let inherit (config.colorScheme) colors;
 in {
-  home.file.".config/kitty/pager.sh".source = ../config/kitty/pager.sh;
+  home.file.".config/kitty/pager.sh".source = ./pager.sh;
   programs.kitty = {
     enable = true;
     shellIntegration.enableFishIntegration = true;
