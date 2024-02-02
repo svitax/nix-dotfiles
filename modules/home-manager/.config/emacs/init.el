@@ -1688,9 +1688,18 @@ With optional argument FRAME, return the list of buffers of FRAME."
 
 ;;; Elisp
 
-(require 'elisp-cider-overlays)
 (require 'elisp-fontification)
 (require 'elisp-indentation)
+
+(use-package eros
+  :hook (emacs-lisp-mode . eros-mode)
+  :init
+  (add-hook 'eros-inspect-hooks (lambda () (flymake-mode -1)))
+  (add-hook 'eros-inspect-hooks (lambda () (general-nmap
+                                             :keymaps 'local
+                                             "q" 'kill-buffer-and-window)))
+  :config (major-mode-definer emacs-lisp-mode-map
+            "i" 'eros-inspect-last-result))
 
 (add-hook! emacs-lisp-mode 'flymake-mode)
 
