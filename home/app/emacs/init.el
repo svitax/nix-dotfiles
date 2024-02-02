@@ -672,8 +672,10 @@ believe this should be modified in the next version of Emacs; keeping this for n
 
 ;;; Help
 
-;; TODO: transient
-;; (use-package transient)
+(use-package transient
+  :general (:keymaps '(transient-base-map)
+                     "<escape>" 'transient-quit-one))
+
 ;; TODO: devdocs https://github.com/astoff/devdocs.el
 ;; (use-package devdocs)
 ;; TODO: repeat-help https://github.com/karthink/repeat-help
