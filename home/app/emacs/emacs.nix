@@ -8,14 +8,14 @@ let
 in {
   services.emacs = {
     enable = true;
-    defaultEditor = true;
-    # client.enable = true;
-    startWithUserSession = "graphical";
+    #   defaultEditor = true;
+    #   client.enable = true;
+    #   startWithUserSession = "graphical";
   };
-  systemd.user.services.emacs.Unit = {
-    After = [ "graphical-session-pre.target" ];
-    PartOf = [ "graphical-session.target" ];
-  };
+  # systemd.user.services.emacs.Unit = {
+  #   After = [ "graphical-session-pre.target" ];
+  #   PartOf = [ "graphical-session.target" ];
+  # };
   home.packages = with pkgs; [ nixfmt nil statix ];
   programs.emacs = {
     enable = true;

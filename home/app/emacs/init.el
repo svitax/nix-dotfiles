@@ -1010,7 +1010,7 @@ display names.")
 ;; NOTE: (on-init-ui . vertico-mode) adds extra garbage collection
 (use-package vertico
   :hook (on-init-ui . vertico-mode)
-  :init (setq vertico-count 11
+  :init (setq vertico-count 15
               vertico-cycle t
               vertico-resize 'grow-only)
   :general
@@ -1721,7 +1721,8 @@ display names.")
   :init
   (setq magit-diff-hide-trailing-cr-characters t
         magit-diff-refine-ignore-whitespace t
-        magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+        ;; magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
+	))
 
 (use-package git-modes
   :init (add-to-list 'auto-mode-alist (cons "/.dockerignore\\'" 'gitignore-mode)))
@@ -1787,7 +1788,8 @@ display names.")
 ;;; Workspaces
 
 (use-package beframe
-  :hook (doom-first-input . beframe-mode))
+  :hook (doom-first-input . beframe-mode)
+  :init (setq beframe-global-buffers nil))
 
 (after! (consult beframe)
   ;; Hide recent files list (still available with "f" prefix)

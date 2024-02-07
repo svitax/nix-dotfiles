@@ -87,6 +87,7 @@
     aspellDicts.pt_BR
     hunspellDicts.en_US
     hunspellDicts.pt_BR
+    qutebrowser
   ];
 
   # Enable home-manager
