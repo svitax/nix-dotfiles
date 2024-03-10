@@ -17,6 +17,7 @@
     shotman
     ddcutil
     pamixer
+    sway-overfocus
   ];
   wayland.windowManager.sway = {
     enable = true;
@@ -58,6 +59,8 @@
         "${mod}+d" = "exec ${cfg.menu}";
         "${mod}+Shift+x" = "exec swaylock -c 000000";
         "${mod}+i" = "exec ${browser}";
+        "${mod}+Tab" = "exec sway-overfocus group-rw group-dw";
+        "${mod}+Shift+Tab" = "exec sway-overfocus group-lw group-uw";
         # "${mod}+Shift+q" = "exec ${cfg.power-menu}";
         # "${mod}+p" = "exec ${cfg.pass}";
         # TODO: set up EDITOR to use emacsclient so I can just exec that
@@ -69,6 +72,13 @@
         "${mod}+${cfg.down}" = "focus down";
         "${mod}+${cfg.up}" = "focus up";
         "${mod}+${cfg.right}" = "focus right";
+        "${mod}+${cfg.left}" =
+          "exec sway-overfocus split-lt float-lt output-ls";
+        "${mod}+${cfg.down}" =
+          "exec sway-overfocus split-dt float-dt output-ds";
+        "${mod}+${cfg.up}" = "exec sway-overfocus split-ut float-ut output-us";
+        "${mod}+${cfg.right}" =
+          "exec sway-overfocus split-rt float-rt output-rs";
 
         "${mod}+Shift+${cfg.left}" = "move left";
         "${mod}+Shift+${cfg.down}" = "move down";
