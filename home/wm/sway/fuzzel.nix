@@ -15,7 +15,7 @@ in {
         exit-immediately-if-empty = "yes";
       };
       colors = {
-        background = colors.base00 + "e6";
+        background = colors.base00 + "ff";
         text = colors.base07 + "ff";
         match = colors.base05 + "ff";
         selection = colors.base03 + "ff";

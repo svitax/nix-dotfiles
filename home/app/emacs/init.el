@@ -1235,6 +1235,7 @@ display names.")
     "b" 'consult-buffer
     "i" 'consult-imenu
     "l" 'consult-line
+    "o" 'consult-outline
     "x" 'consult-bookmark
     "y" 'consult-yank-pop
     "/" 'consult-grep))
