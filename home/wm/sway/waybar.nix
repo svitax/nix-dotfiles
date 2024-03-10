@@ -6,7 +6,7 @@ in {
     systemd = { enable = true; };
     settings = {
       mainBar = {
-        position = "bottom";
+        position = "top";
         margin-top = 0;
         margin-bottom = 0;
 
