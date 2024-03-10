@@ -15,6 +15,7 @@
     ../../home/style/fonts.nix
 
     ../../home/app/browser/firefox.nix
+    ../../home/app/browser/qutebrowser.nix
 
     ../../home/wm/gnome/gnome.nix
     ../../home/app/terminal/kitty/kitty.nix
@@ -87,7 +88,6 @@
     aspellDicts.pt_BR
     hunspellDicts.en_US
     hunspellDicts.pt_BR
-    qutebrowser
   ];
 
   # Enable home-manager

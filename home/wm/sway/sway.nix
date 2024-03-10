@@ -48,6 +48,7 @@
         mod = cfg.modifier;
         backup_terminal = "emacsclient -n -c -e '(eshell \"new\")'";
         # mod+o = # TODO: focus next
+        browser = "${pkgs.qutebrowser}/bin/qutebrowser";
         # mod+shift+n = # TODO: swaync client
       in lib.mkOptionDefault {
         # TODO: set up eshell keybind
@@ -55,8 +56,8 @@
         "${mod}+Control+Return" = "exec ${backup_terminal}";
         "${mod}+c" = "kill";
         "${mod}+d" = "exec ${cfg.menu}";
-        "${mod}+i" = "exec firefox";
         "${mod}+Shift+x" = "exec swaylock -c 000000";
+        "${mod}+i" = "exec ${browser}";
         # "${mod}+Shift+q" = "exec ${cfg.power-menu}";
         # "${mod}+p" = "exec ${cfg.pass}";
         # TODO: set up EDITOR to use emacsclient so I can just exec that
