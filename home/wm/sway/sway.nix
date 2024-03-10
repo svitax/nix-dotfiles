@@ -7,6 +7,7 @@
     ./swaylock.nix
     ./swayr.nix
     ./waybar.nix
+    ./wob.nix
   ];
   # TODO: migrate sway.nix from hm modules to home.file
   home.packages = with pkgs; [
@@ -14,7 +15,6 @@
     swayidle
     wl-clipboard
     shotman
-    wob
     ddcutil
     pamixer
   ];
@@ -36,9 +36,7 @@
       output = { "Virtual-1" = { mode = "1920x1440@60Hz"; }; };
       bars = [ ];
       startup = [
-        {
-          command = "exec mkfifo $SWAYSOCK.wob && tail -f $SWAYSOCK.wob | wob";
-        }
+        { command = "exec sleep 5; systemctl --user start wob.service"; }
         { command = "exec sleep 5; systemctl --user start swayrd.service"; }
         { command = "exec sleep 5; systemctl --user start waybar.service"; }
         { command = "exec sleep 5; systemctl --user start emacs.service"; }
@@ -49,6 +47,7 @@
         backup_terminal = "emacsclient -n -c -e '(eshell \"new\")'";
         # mod+o = # TODO: focus next
         browser = "${pkgs.qutebrowser}/bin/qutebrowser";
+        pamixer = "${pkgs.pamixer}/bin/pamixer";
         # mod+shift+n = # TODO: swaync client
       in lib.mkOptionDefault {
         # TODO: set up eshell keybind
@@ -121,26 +120,13 @@
         "${mod}+r" = "mode resize";
 
         # TODO: Make brightness and volume keys work
-        # "XF86MonBrightnessDown" = "lightctl down";
-        # "XF86MonBrightnessUp" = "lightctl up";
-
-        # "XF86AudioRaiseVolume" = "exec volumectl -u up";
-        # "XF86AudioLowerVolume" = "exec volumectl -u down";
-        # "XF86AudioMute" = "exec volumectl toggle-mute";
-        # "XF86AudioMicMute" = "exec volumectl toggle-mute";
-        # Adjust brightness of external monitor
-        "XF86Launch8" =
-          "exec 'export NEWVOL=$(ddcutil -t getvcp 10 2>/dev/null | awk {print ($4<10)?0:$4-10}) && (echo $NEWVOL > $SWAYSOCK.wob && ddcutil set 10 $NEWVOL && unset NEWVOL)'";
-        "XF86Launch9" =
-          "exec 'export NEWVOL=$(ddcutil -t getvcp 10 2>/dev/null | awk {print ($4>90)?100:$4+10}) && (echo $NEWVOL > $SWAYSOCK.wob && ddcutil set 10 $NEWVOL && unset NEWVOL)'";
-
         # Volume key bindings
         "XF86AudioRaiseVolume" =
-          "exec 'pamixer -ui 2 && pamixer --get-volume > $SWAYSOCK.wob'";
+          "exec ${pamixer} -ui 2 && ${pamixer} --get-volume > $XDG_RUNTIME_DIR/wob.sock";
         "XF86AudioLowerVolume" =
-          "exec 'pamixer -ud 2 && pamixer --get-volume > $SWAYSOCK.wob'";
+          "exec ${pamixer} -ud 2 && ${pamixer} --get-volume > $XDG_RUNTIME_DIR/wob.sock";
         "XF86AudioMute" =
-          "exec 'pamixer --toggle-mute && ( pamixer --get-mute && echo 0 > $SWAYSOCK.wob ) || pamixer --get-volume > $SWAYSOCK.wob'";
+          "exec ${pamixer} -t && ${pamixer} --get-volume > $XDG_RUNTIME_DIR/wob.sock";
 
         "${mod}+Print" = "exec shotman -c output";
         "${mod}+Shift+Print" = "exec shotman -c region";
