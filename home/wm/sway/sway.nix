@@ -33,6 +33,7 @@
       # terminal = "${pkgs.foot}/bin/foot";
       terminal = "${pkgs.kitty}/bin/kitty";
       menu = "${pkgs.fuzzel}/bin/fuzzel --width 50 --lines 11 --show-actions";
+      gaps = { inner = 10; };
       output = { "Virtual-1" = { mode = "1920x1440@60Hz"; }; };
       bars = [ ];
       startup = [
