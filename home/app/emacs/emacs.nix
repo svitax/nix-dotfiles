@@ -8,7 +8,7 @@ let
 in {
   services.emacs = {
     enable = true;
-    #   defaultEditor = true;
+    defaultEditor = true;
     #   client.enable = true;
     #   startWithUserSession = "graphical";
   };
