@@ -17,6 +17,7 @@
     shotman
     ddcutil
     pamixer
+    autotiling
     sway-overfocus
   ];
   wayland.windowManager.sway = {
@@ -24,6 +25,7 @@
     # wrapperFeatures.gtk = true;
     extraConfig = ''
       default_border pixel 2
+      exec_always autotiling
       output "*" bg /etc/wallpaper.jpg fill
     '';
     extraSessionCommands = ''
