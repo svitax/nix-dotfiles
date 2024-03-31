@@ -10,6 +10,8 @@ in {
         "gn" = "tab-clone";
         "gN" = "tab-close";
         "<Ctrl-l>" = "edit-url";
+        ",m" = "hint links spawn --detach mpv --force-window yes {hint-url}";
+        ",M" = "spawn mpv --force-window=immediate {url}";
       };
       command = {
         "<Ctrl-n>" = "completion-item-focus next";
@@ -17,16 +19,29 @@ in {
         "<Up>" = "completion-item-focus --history prev";
         "<Down>" = "completion-item-focus --history next";
       };
-    };
-    quickmarks = {
-      "nixos/options" = "https://search.nixos.org/options";
-      "nixos/packages" = "https://search.nixos.org/packages";
-      "nixos/home-manager" = "https://github.com/nix-community/home-manager";
+      insert = {
+        "<Ctrl-h>" = "fake-key <Backspace>";
+        "<Ctrl-a>" = "fake-key <Home>";
+        "<Ctrl-e>" = "fake-key <End>";
+        "<Ctrl-b>" = "fake-key <Left>";
+        "<Mod1-b>" = "fake-key <Ctrl-Left>";
+        "<Ctrl-f>" = "fake-key <Right>";
+        "<Mod1-f>" = "fake-key <Ctrl-Right>";
+        "<Ctrl-p>" = "fake-key <Up>";
+        "<Ctrl-n>" = "fake-key <Down>";
+        "<Mod1-d>" = "fake-key <Ctrl-Delete>";
+        "<Ctrl-d>" = "fake-key <Delete>";
+        "<Ctrl-w>" = "fake-key <Ctrl-Backspace>";
+        "<Ctrl-u>" = "fake-key <Shift-Home><Delete>";
+        "<Ctrl-k>" = "fake-key <Shift-End><Delete>";
+        "<Ctrl-x><Ctrl-e>" = "open-editor";
+      };
     };
     searchEngines = {
-      DEFAULT = "https://google.com/search?hl=en&q={}";
-      ddg = "https://duckduckgo.com/?q={}";
+      DEFAULT = "https://search.brave.com/search?q={}";
       g = "https://www.google.com/search?hl=en&q={}";
+      ddg = "https://duckduckgo.com/?q={}";
+      br = "https://search.brave.com/search?q={}";
       yt = "https://youtube.com/results?search_query={}";
       no =
         "https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query={}";
@@ -42,6 +57,7 @@ in {
         web = { size.default = 16; };
       };
       zoom.default = "125%";
+      window.title_format = "{perc}{current_title}{title_sep}qutebrowser";
       content = {
         autoplay = false;
         pdfjs = false;
@@ -59,6 +75,10 @@ in {
         };
         notifications = { enabled = false; };
         prefers_reduced_motion = true;
+        blocking.adblock.lists = [
+          "https://easylist.to/easylist/easylist.txt"
+          "https://easylist.to/easylist/easyprivacy.txt"
+        ];
       };
       completion.height = "33%";
       editor.command = [ "emacsclient" "-c" "{file}" ];
@@ -68,9 +88,12 @@ in {
         last_close = "close";
         show = "multiple";
       };
+      url.default_page = "https://search.brave.com";
+      url.start_pages = "https://search.brave.com";
       colors = {
         completion = {
-          fg = "#${colors.base05}";
+          # fg = "#${colors.base05}";
+          fg = [ "#${colors.base05}" "#${colors.base0E}" "#${colors.base08}" ];
           odd.bg = "#${colors.base00}";
           even.bg = "#${colors.base00}";
           category = {
@@ -78,7 +101,7 @@ in {
             bg = "#${colors.base00}";
             border = {
               top = "#${colors.base00}";
-              bottom = "#${colors.base00}";
+              bottom = "#${colors.base01}";
             };
           };
           item = {
@@ -153,10 +176,10 @@ in {
           };
         };
         hints = {
-          # bg = "#${colors.base0A}BF";
-          bg = "rgba(235,203,139,0.8)";
+          bg = "#${colors.base0A}";
+          # bg = "rgba(235,203,139,0.8)";
           fg = "#${colors.base01}";
-          match.fg = "#${colors.base0B}";
+          match.fg = "#${colors.base0D}";
         };
         keyhint = {
           fg = "#${colors.base04}";
@@ -169,8 +192,8 @@ in {
             fg = "#${colors.base0B}";
           };
           insert = {
-            bg = "#${colors.base0D}";
-            fg = "#${colors.base00}";
+            bg = "#${colors.base00}";
+            fg = "#${colors.base0D}";
           };
           passthrough = {
             bg = "#${colors.base0C}";

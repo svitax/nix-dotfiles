@@ -7,7 +7,7 @@ in {
     userEmail = "svitaxiom@gmail.com";
     extraConfig = {
       core.editor = "nvim";
-      init.defaultBranch = "master";
+      init.defaultBranch = "main";
       pull.rebase = true;
     };
 

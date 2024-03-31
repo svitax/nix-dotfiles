@@ -1,0 +1,173 @@
+* Mnemonic Maps
+M-r for query-replace-regexp or vr/replace
+
+l undecided
+
+t undecided
+
+q undecided
+** global-map
+- [X] C-a move-beginning-of-line (my/back-to-indentation-or-beginning)
+- [ ] M-a puni-beginning-of-sexp (default backward-sentence)
+- [ ] C-M-a puni-syntactic-forward-punct (default beginning-of-defun)
+
+- [X] C-b backward-char
+- [X] M-b backward-word
+- [X] C-M-b backward-sexp
+
+- [X] C-c mode-specific-map (prefix)
+- [ ] M-c capitalize-word
+- [ ] C-M-c exit-recursive-edit
+
+- [X] C-d delete-char
+- [X] M-d delete-word
+- [ ] C-M-d down-list
+
+- [X] C-e end-of-line
+- [ ] M-e puni-end-of-sexp (default forward-sentence)
+- [ ] C-M-e puni-syntactic-forward-punct (default end-of-defun)
+
+- [X] C-f forward-char
+- [X] M-f forward-word
+- [X] C-M-f forward-sexp
+
+- [X] C-g keyboard-quit
+- [X] M-g goto-map (prefix)
+- [ ] C-M-g UNDEFINED
+
+- [X] C-h help-map (prefix)
+- [X] M-h expreg-expand (default mark-paragraph)
+  :repeat-map
+  . expreg-expand
+  , expreg-contract
+- [ ] C-M-h mark-defun
+
+- [ ] C-i indent-for-tab-command
+- [ ] M-i tab-to-tab-stop
+- [ ] C-M-i complete-symbol
+
+- [ ] C-j my/avy-goto-char-timer (default electric-newline-and-maybe-indent)
+  avy in org mode too
+- [ ] M-j treesit-jump (default default-indent-new-line)
+- [ ] C-M-j crux-top-line-join (default default-indent-new-line)
+
+- [X] C-k kill-line
+- [X] M-k kill-sexp (default kill-sentence)
+- [X] C-M-k kill-sentence (default kill-sexp)
+
+- [ ] C-l recenter-top-bottom
+- [ ] M-l downcase-word
+- [ ] C-M-l reposition-window
+
+- [ ] C-m <RET>
+- [ ] M-m back-to-indentation
+- [ ] C-M-m M-<RET>
+
+- [X] C-n next-line
+- [ ] M-n UNDEFINED
+- [ ] C-M-n forward-list
+
+- [X] C-o my/open-next-line (default open-line)
+- [X] M-o my/open-previous-line (default facemenu-keymap)
+- [X] C-M-o ace-window (default split-line)
+
+- [X] C-p previous-line
+- [ ] M-p UNDEFINED
+- [ ] C-M-p backward-list
+
+- [ ] C-q quoted-insert
+- [ ] M-q fill-paragraph
+- [ ] C-M-q UNDEFINED
+    (kmacros?)
+
+- [X] C-r isearch-backward
+- [X] M-r vr/replace (default move-to-window-line-top-bottom)
+- [ ] C-M-r isearch-backward-regexp
+  replace-map?
+
+- [X] C-s isearch-forward
+- [X] M-s search-map (prefix)
+- [ ] C-M-s isearch-forward-regexp
+
+- [ ] C-t transpose-char
+- [ ] M-t transpose-words
+- [ ] C-M-t transpose-sexps
+
+- [X] C-u universal-argument
+- [ ] M-u upcase-word
+- [ ] C-M-u backward-up-list
+
+- [X] C-v scroll-up-command
+- [X] M-v scroll-down-command
+- [ ] C-M-v scroll-other-window
+
+- [X] C-w kill-region (my/backward-kill-word-or-region)
+- [X] M-w kill-ring-save (advised)
+- [ ] C-M-w append-next-kill
+
+- [X] C-x ctl-x-map (prefix)
+- [X] M-x execute-extended-command
+- [ ] C-M-x UNDEFINED
+
+- [X] C-y yank
+- [X] M-y yank-pop (consult-yank-pop)
+- [ ] C-M-y UNDEFINED
+
+- [X] C-z my/zap-up-to-char (default suspend-frame)
+- [X] M-z zap-to-char (my/zap-to-char-save)
+- [ ] C-M-z UNDEFINED
+
+- [X] C-/ undo
+- [ ] M-/ vundo? (default dabbrev-expand)
+- [X] C-M-/ indent-region (default dabbrev-completion)
+
+- [X] C-SPC set-mark-command
+- [X] M-SPC my/cycle-spacing-impatient (default mark-sexp)
+- [ ] C-M-SPC mark-sexp
+
+- [ ] C-% UNDEFINED
+- [ ] M-% query-replace
+- [ ] C-M-% query-replace-regexp
+
+- [ ] C-, UNDEFINED
+- [X] M-, xref-pop-marker-stack
+- [ ] C-M-, UNDEFINED
+
+- [X] C-. embark-act
+- [X] M-. xref-find-definitions (embark-dwim)
+  :repeat-map
+  . xref-go-forward
+  , xref-go-back
+- [ ] C-M-. xref-find-apropos
+
+- [ ] C-; my/iedit-dwim (or iedit-mode)
+- [X] M-; comment-dwim-2
+  :repeat-map
+  ; comment-dwim-2
+- [ ] C-M-; UNDEFINED
+
+- [ ] C-' UNDEFINED
+- [ ] M-' abbrev-prefix-mark
+- [ ] C-M-' UNDEFINED
+  popper?
+  :repeat-map
+  . popper next?
+  , popper prev?
+
+- [ ] C-{ UNDEFINED
+- [ ] M-{ backward-paragraph / org-backward-element
+- [ ] C-M-{ UNDEFINED
+
+- [ ] C-} UNDEFINED
+- [ ] M-} forward-paragraph / org-backward-element
+- [ ] C-M-} UNDEFINED
+
+- [ ] C-<backspace> backward-kill-word
+- [ ] M-<backspace> backward-kill-word
+
+- [ ] C-<delete> kill-word
+- [ ] M-<delete> backward-kill-word
+** ctl-x map
+** goto-map
+** search-map
+** mode-specific-map

@@ -1,5 +1,6 @@
-{ lib, ... }:
+{ lib, config, ... }:
 let
+  inherit (config.colorScheme) colors;
   promptOrder = [
     "shlvl"
     "shell"
@@ -98,7 +99,7 @@ in {
         nix_shell = {
           symbol = " ";
           format = "[$symbol($name )]($style)";
-          style = "white";
+          style = "fg:#${colors.base03}";
         };
         nodejs = {
           symbol = " ";

@@ -14,9 +14,10 @@
     ../../home/style/colors.nix
     ../../home/style/fonts.nix
 
-    ../../home/app/browser/firefox.nix
     ../../home/app/browser/qutebrowser.nix
+    ../../home/app/mpv/mpv.nix
 
+    ../../home/app/browser/firefox.nix
     ../../home/wm/gnome/gnome.nix
     ../../home/app/terminal/kitty/kitty.nix
     ../../home/app/sioyek.nix
@@ -88,6 +89,7 @@
     aspellDicts.pt_BR
     hunspellDicts.en_US
     hunspellDicts.pt_BR
+    nyxt
   ];
 
   # Enable home-manager

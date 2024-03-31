@@ -9,8 +9,8 @@
         "eza --no-user --header --group-directories-first --all --binary --long --git-ignore";
       llt = "eza --no-user --header --group-directories-first --tree --level 2";
       # sw = "sudo nixos-rebuild --flake . switch";
-      sw = "nh os switch --nom .";
-      swd = "nh os switch --nom --dry .";
+      sw = "nh os switch .";
+      swd = "nh os switch --dry .";
       cla = "nh clean all --keep 3";
       clad = "nh clean all --keep 3 --dry";
       clu = "nh clean user --keep 3";
@@ -95,8 +95,8 @@
         # Set default editor because home.sessionVariables and environment.variables doesn't get picked up by fish
         # due to this https://nix-community.github.io/home-manager/index.html#why_are_the_session_variables_not_set
         # (home-manager isn't managing my fish shell configuration)
-        set -gx EDITOR "nvim"
-        set -gx VISUAL "nvim"
+        set -gx EDITOR "emacsclient"
+        set -gx VISUAL "emacsclient"
 
         # Use vim bindings and cursors
         fish_vi_key_bindings
@@ -127,15 +127,15 @@
         src = pkgs.fishPlugins.colored-man-pages.src;
       }
       # nurl (for rev and hash)
-      {
-        name = "fish-gqh";
-        src = pkgs.fetchFromGitHub {
-          owner = "decors";
-          repo = "fish-ghq";
-          rev = "cafaaabe63c124bf0714f89ec715cfe9ece87fa2";
-          hash = "sha256-6b1zmjtemNLNPx4qsXtm27AbtjwIZWkzJAo21/aVZzM=";
-        };
-      }
+      # {
+      #   name = "fish-ghq";
+      #   src = pkgs.fetchFromGitHub {
+      #     owner = "decors";
+      #     repo = "fish-ghq";
+      #     rev = "cafaaabe63c124bf0714f89ec715cfe9ece87fa2";
+      #     hash = "sha256-6b1zmjtemNLNPx4qsXtm27AbtjwIZWkzJAo21/aVZzM=";
+      #   };
+      # }
       # {
       #   name = "fifc";
       #   src = pkgs.fetchFromGitHub {

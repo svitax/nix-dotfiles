@@ -18,7 +18,7 @@
 (push '(menu-bar-lines . 0) default-frame-alist)
 (push '(tool-bar-lines . 0) default-frame-alist)
 (push '(font . "JetBrains Mono Nerd Font") default-frame-alist)
-(push '(cursor . "#ebdbb2") default-frame-alist)
+(push '(cursor . "#000000") default-frame-alist)
 (push '(undecorated . t) default-frame-alist)
 
 ;; Faster to disable these here (before they've been initialized)
@@ -41,8 +41,12 @@
 ;; Set `load-prefer-newer' to non-nil value, to avoid Emacs using older byte-compiled files. Using newer files, we force emacs to "byte-compile" the files that it is trying to use.
 (setq load-prefer-newer noninteractive)
 
-;; Change location of the native compilation cache
-(when (fboundp 'startup-redirect-eln-cache)
-  (startup-redirect-eln-cache
-   (convert-standard-filename
-    (expand-file-name "var/eln-cache/" user-emacs-directory))))
+;; This configures the native compiler.
+;; - Move eln files to a cache dir
+;; - Don't bombark the user with warnings
+;; - Compile packages on install, not at runtime
+(when (boundp 'native-comp-eln-load-path)
+  (add-to-list 'native-comp-eln-load-path
+	       (concat "~/.cache/emacs/" "eln-cache/"))
+  (setq native-comp-async-report-warnings-errors 'slient
+	native-comp-deferred-compilation t))

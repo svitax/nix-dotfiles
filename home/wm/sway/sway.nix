@@ -17,41 +17,61 @@
     shotman
     ddcutil
     pamixer
+    mpc-cli
+    brightnessctl
     autotiling
     sway-overfocus
   ];
   wayland.windowManager.sway = {
     enable = true;
-    # wrapperFeatures.gtk = true;
+    xwayland = true;
+    wrapperFeatures.gtk = true;
     extraConfig = ''
-      default_border pixel 2
       exec_always autotiling
+      titlebar_border_thickness 3
+      titlebar_padding 4 3
+      title_align left
+      default_border pixel 4
+      hide_edge_borders smart
+
+      focus_follows_mouse no
+      mouse_warping output
+      focus_wrapping force
+
       output "*" bg /etc/wallpaper.jpg fill
     '';
     extraSessionCommands = ''
       export MOZ_ENABLE_WAYLAND=1
+      export MOZ_DBUS_REMOTE=1
+      export MOZ_WEBRENDER=1
+      export XDG_CURRENT_DESKTOP=sway
+      export XDG_SESSION_DESKTOP=sway
     '';
     config = rec {
       modifier = "Mod4"; # Super key
-      # terminal = "${pkgs.foot}/bin/foot";
-      terminal = "${pkgs.kitty}/bin/kitty";
+      terminal = "${pkgs.foot}/bin/foot";
       menu = "${pkgs.fuzzel}/bin/fuzzel --width 50 --lines 11 --show-actions";
       gaps = { inner = 10; };
       output = { "Virtual-1" = { mode = "1920x1440@60Hz"; }; };
       bars = [ ];
       startup = [
-        { command = "exec sleep 5; systemctl --user start wob.service"; }
-        { command = "exec sleep 5; systemctl --user start swayrd.service"; }
-        { command = "exec sleep 5; systemctl --user start waybar.service"; }
-        { command = "exec sleep 5; systemctl --user start emacs.service"; }
+        { command = "swaymsg workspace 1"; }
+        { command = "exec sleep 2; autotiling"; }
+        { command = "exec sleep 2; systemctl --user start wob.service"; }
+        { command = "exec sleep 2; systemctl --user start swayrd.service"; }
+        { command = "exec sleep 2; systemctl --user start waybar.service"; }
+        { command = "exec sleep 2; systemctl --user start emacs.service"; }
       ];
       keybindings = let
         cfg = config.wayland.windowManager.sway.config;
         mod = cfg.modifier;
-        backup_terminal = "emacsclient -n -c -e '(eshell \"new\")'";
-        # mod+o = # TODO: focus next
+        # backup_terminal = "emacsclient -n -c -e '(eshell \"new\")'";
+        backup_terminal = "footclient";
         browser = "${pkgs.qutebrowser}/bin/qutebrowser";
+        mpc = "${pkgs.mpc-cli}/bin/mpc";
         pamixer = "${pkgs.pamixer}/bin/pamixer";
+        sed = "${pkgs.gnused}/bin/sed";
+        brightnessctl = "${pkgs.brightnessctl}/bin/brightnessctl";
         # mod+shift+n = # TODO: swaync client
       in lib.mkOptionDefault {
         # TODO: set up eshell keybind
@@ -59,21 +79,22 @@
         "${mod}+Control+Return" = "exec ${backup_terminal}";
         "${mod}+c" = "kill";
         "${mod}+d" = "exec ${cfg.menu}";
-        "${mod}+Shift+x" = "exec swaylock -c 000000";
         "${mod}+i" = "exec ${browser}";
+        "${mod}+o" = "exec swayr next-window current-workspace";
+        # "${mod}+m" = "mail";
+        "${mod}+n" = "exec $EDITOR";
+        # "${mod}+p" = "exec $PASS";
         "${mod}+Tab" = "exec sway-overfocus group-rw group-dw";
         "${mod}+Shift+Tab" = "exec sway-overfocus group-lw group-uw";
         # "${mod}+Shift+q" = "exec ${cfg.power-menu}";
-        # "${mod}+p" = "exec ${cfg.pass}";
-        # TODO: set up EDITOR to use emacsclient so I can just exec that
-        "${mod}+n" = "exec emacsclient -cn";
+        "${mod}+Shift+x" = "exec swaylock -c 000000";
         # TODO: set up mail keybind
-        # "${mod}+m" = "mail";
 
-        "${mod}+${cfg.left}" = "focus left";
-        "${mod}+${cfg.down}" = "focus down";
-        "${mod}+${cfg.up}" = "focus up";
-        "${mod}+${cfg.right}" = "focus right";
+        # "${mod}+${cfg.left}" = "focus left";
+        # "${mod}+${cfg.down}" = "focus down";
+        # "${mod}+${cfg.up}" = "focus up";
+        # "${mod}+${cfg.right}" = "focus right";
+
         "${mod}+${cfg.left}" =
           "exec sway-overfocus split-lt float-lt output-ls";
         "${mod}+${cfg.down}" =
@@ -92,9 +113,18 @@
         "${mod}+f" = "fullscreen toggle";
         "${mod}+a" = "focus parent";
 
-        "${mod}+s" = "layout stacking";
-        "${mod}+w" = "layout tabbed";
-        "${mod}+e" = "layout toggle split";
+        # subdivides the containers, alternating between vertical and horizontal split
+        "${mod}+s" = "split toggle";
+        # subdivides the containers into tabs
+        "${mod}+w" = "split toggle; layout tabbed";
+        # change container layout (stacked, tabbed, toggle split)
+        "${mod}+t" = "layout toggle splith splitv tabbed";
+        # collapse singleton parent(s)
+        "${mod}+e" = "split none";
+
+        # "${mod}+s" = "layout stacking";
+        # "${mod}+w" = "layout tabbed";
+        # "${mod}+e" = "layout toggle split";
 
         "${mod}+Shift+space" = "floating toggle";
         # toggle between tiling/floating windows
@@ -109,9 +139,6 @@
         "${mod}+7" = "workspace number 7";
         "${mod}+8" = "workspace number 8";
         "${mod}+9" = "workspace number 9";
-        "${mod}+Tab" = "exec swayr switch-window";
-        "${mod}+Shift+Tab" = "exec swayr switch-to-urgent-or-lru-window";
-        "${mod}+o" = "exec swayr next-window current-workspace";
 
         "${mod}+Shift+1" = "move container to workspace number 1";
         "${mod}+Shift+2" = "move container to workspace number 2";
@@ -141,13 +168,32 @@
         "XF86AudioMute" =
           "exec ${pamixer} -t && ${pamixer} --get-volume > $XDG_RUNTIME_DIR/wob.sock";
 
+        "XF86AudioStop" = "exec ${mpc} stop";
+        "XF86AudioPlay" = "exec ${mpc} toggle";
+        "XF86AudioPause" = "exec ${mpc} toggle";
+        "XF86AudioNext" = "exec ${mpc} next";
+        "XF86AudioPrev" = "exec ${mpc} prev";
+
+        "${mod}+XF86AudioMute" = "exec ${pamixer} --default-source -t";
+        "${mod}+m" = "exec ${pamixer} --default-source -t";
+
+        "Shift+XF86AudioRaiseVolume" =
+          "exec ${mpc} vol +2 && ${mpc} vol | ${sed} 's|n/a|0%|g;s/[^0-9]*//g' > $XDG_RUNTIME_DIR/wob.sock";
+        "Shift+XF86AudioLowerVolume" =
+          "exec ${mpc} vol -2 && ${mpc} vol | ${sed} 's|n/a|0%|g;s/[^0-9]*//g' > $XDG_RUNTIME_DIR/wob.sock";
+
+        "XF86MonBrightnessDown" =
+          "exec ${brightnessctl} set 5%- | ${sed} -En 's/.*\\(([0-9]+)%\\).*/\\1/p' > $XDG_RUNTIME_DIR/wob.sock";
+        "XF86MonBrightnessUp" =
+          "exec ${brightnessctl} set 5%+ | ${sed} -En 's/.*\\(([0-9]+)%\\).*/\\1/p' > $XDG_RUNTIME_DIR/wob.sock";
+
         "${mod}+Print" = "exec shotman -c output";
         "${mod}+Shift+Print" = "exec shotman -c region";
         "${mod}+Alt+Print" = "exec shotman -c window";
       };
       fonts = {
         names = [ "JetBrainsMono Nerd Font" ];
-        size = 15.0;
+        size = 16.0;
       };
       colors = {
         background = "#ffffff";
@@ -161,8 +207,8 @@
         focused = {
           background = "#${config.colorScheme.colors.base02}";
           border = "#${config.colorScheme.colors.base02}";
-          childBorder = "#${config.colorScheme.colors.base02}";
-          indicator = "#${config.colorScheme.colors.base02}";
+          childBorder = "#${config.colorScheme.colors.base0D}";
+          indicator = "#${config.colorScheme.colors.base0D}";
           text = "#${config.colorScheme.colors.base07}";
         };
         focusedInactive = {

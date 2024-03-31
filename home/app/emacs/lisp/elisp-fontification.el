@@ -46,6 +46,6 @@ library/userland functions"
 (font-lock-add-keywords 'emacs-lisp-mode
 			(append (when +emacs-lisp-enable-extra-fontification
 				  `((+emacs-lisp-highlight-vars-and-faces . +emacs-lisp--face)))))
-
+  
 (provide 'elisp-fontification)
 ;;; elisp-fontification.el ends here
