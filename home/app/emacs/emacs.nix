@@ -15,7 +15,8 @@ in {
     enable = true;
     package = pkgs.emacsWithPackagesFromUsePackage {
       config = ./init.el;
-      package = pkgs.emacs-unstable.override { withNativeCompilation = true; };
+      package =
+        pkgs.emacs-unstable-pgtk.override { withNativeCompilation = true; };
       extraEmacsPackages = epkgs:
         with epkgs; [
           treesit-grammars.with-all-grammars
@@ -24,14 +25,14 @@ in {
         ];
       override = epkgs:
         epkgs // {
-	  # Mar 30 2024
+          # Mar 30 2024
           mood-line = elisp (pkgs.fetchFromGitLab {
             owner = "jessieh";
             repo = "mood-line";
-	    rev = "a15d166249f04b047a6136856e5be109357762d3";
-	    hash = "sha256-Y9n0p3jO5Ol/uUigrRNfrfxD5aeeb98NjNSDtroRffc=";
+            rev = "a15d166249f04b047a6136856e5be109357762d3";
+            hash = "sha256-Y9n0p3jO5Ol/uUigrRNfrfxD5aeeb98NjNSDtroRffc=";
           }) "mood-line";
-	};
+        };
     };
   };
   # programs.emacs = {

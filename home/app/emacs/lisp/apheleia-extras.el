@@ -34,4 +34,8 @@
 (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff))
 (setf (alist-get 'python-ts-mode apheleia-mode-alist) '(ruff))
 
+;; Add nix-ts-mode
+(when-let ((formatter (assoc 'nix-mode apheleia-mode-alist)))
+  (setcar formatter 'nix-ts-mode))
+
 (provide 'apheleia-extras)

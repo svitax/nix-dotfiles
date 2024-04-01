@@ -21,9 +21,22 @@
   (setq-local completion-at-point-functions
               (list (cape-capf-super
                      #'eglot-completion-at-point
-                     ;; #'jupyter-completion-at-point
+                     #'jupyter-completion-at-point
                      #'python-completion-at-point)
 		    #'cape-file)))
+
+(defun my/setup-python-capf ()
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster)
+  ;; Jupyter's completion-at-point function overshadows Eglot's.
+  ;; We use a Cape super capf to have them at the same time.
+  (setq-local completion-at-point-functions
+              (list (cape-capf-super
+                     #'eglot-completion-at-point
+                     #'python-completion-at-point)
+		    #'cape-file)))
+
+(defun my/setup-inferior-python-capf ()
+  (setq-local completion-at-point-functions '(t)))
 
 (defun my/add-cape-capf ()
   "Add general Cape backends to `completion-at-point-functions'"

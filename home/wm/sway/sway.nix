@@ -24,7 +24,7 @@
   ];
   wayland.windowManager.sway = {
     enable = true;
-    xwayland = true;
+    # xwayland = true;
     wrapperFeatures.gtk = true;
     extraConfig = ''
       exec_always autotiling
