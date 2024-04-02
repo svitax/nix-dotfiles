@@ -1074,7 +1074,30 @@ which rely on dynamic completion tables work correctly")
     "f" 'project-find-file
     "j" 'project-switch-project)
   :custom
+  (project-switch-commands #'project-find-file)
   (project-list-file (file-name-concat user-cache-directory "var/projects")))
+
+;; FIXME: projection map SPC p https://github.com/mohkale/projection
+(use-package projection
+  :ensure t
+  ;; :general-config
+  ;; ([remap project-compile] 'projection-build-project)
+  :init (global-projection-hook-mode))
+
+(use-package projection-multi
+  :ensure t
+  :general-config
+  ([remap compile-multi] 'projection-multi-compile))
+
+(use-package projection-multi-embark
+  :ensure t
+  :after embark
+  :after projection-multi
+  :demand t
+  :config (projection-multi-embark-setup-command-map))
+
+;; TODO: editorconfig https://github.com/editorconfig/editorconfig-emacs
+;; TODO: projel https://github.com/KarimAziev/projel
 
 (use-package envrc
   :ensure t
@@ -1102,12 +1125,7 @@ which rely on dynamic completion tables work correctly")
   :ensure t
   :custom (exec-path-from-shell-arguments '("-l"))
   :config (when (or (daemonp) (memq window-system '(mac ns x)))
-	    (exec-path-from-shell-initialize)))
-
-;; TODO: editorconfig https://github.com/editorconfig/editorconfig-emacs
-;; TODO: projection? https://github.com/mohkale/projection
-;; TODO: projection-multi? https://github.com/mohkale/projection
-;; TODO: projel https://github.com/KarimAziev/projel
+            (exec-path-from-shell-initialize)))
 
 ;;; compile
 (use-package compile
