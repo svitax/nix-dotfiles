@@ -1296,11 +1296,6 @@ which rely on dynamic completion tables work correctly")
 ;;     "'" 'jupyter-repl-pop-to-buffer)
 ;;   :custom (jupyter-repl-echo-eval-p t))
 
-(use-package flymake-ruff
-  :ensure t
-  :after flymake
-  :hook (eglot-managed-mode . flymake-ruff-load))
-
 ;; TODO: poetry
 ;; (use-package poetry)
 ;; TODO: python-mls
@@ -1401,10 +1396,18 @@ which rely on dynamic completion tables work correctly")
 
 (use-package flymake-extras :after flymake)
 
+(use-package flymake-collection
+  :ensure t
+  :config
+  (defun my/python-mode-setup-flymake-collections ()
+    (add-hook 'flymake-diagnostic-functions 'flymake-collection-ruff nil t)
+    (add-hook 'flymake-diagnostic-functions 'flymake-collection-mypy nil t)
+    (flymake-mode +1))
+  (add-hook 'python-ts-mode-hook 'my/python-mode-setup-flymake-collections))
+
 ;; TODO: flymake-quickdef https://github.comabougouffa/minemacs/modules/me-checkers.el
 ;; TODO: flymake-pyre (uses quickdef) https://github.com/juergenhoetzel/flymake-pyre
 ;; TODO: flymake-relint https://github.com/liuyinz/flymake-relint
-;; TODO: flymake-collection
 
 (use-package apheleia
   :ensure t
