@@ -171,4 +171,11 @@ pipe whole buffer."
   (interactive "*p")
   (move-text-internal (- arg)))
 
+(defun my/indent-whole-buffer ()
+  "Indent buffer."
+  (interactive)
+  (delete-trailing-whitespace)
+  (indent-region (point-min) (point-max) nil)
+  (untabify (point-min) (point-max)))
+
 (provide 'editing-extras)

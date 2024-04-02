@@ -49,8 +49,7 @@
   (+general-global-menu! "notes" "n")
   (+general-global-menu! "search" "s")
   (+general-global-menu! "vc" "v")
-  (+general-global-menu! "toggle" "x")
-  (+general-global-menu! "package" "/"))
+  (+general-global-menu! "toggle" "x"))
 
 (use-package evil
   :ensure t
@@ -358,7 +357,10 @@
   ("C-M-|" . indent-region)
   ("C-|" . my/pipe-region)
   ([M-up] . my/move-text-up)
-  ([M-down] . my/move-text-down))
+  ([M-down] . my/move-text-down)
+  :general
+  (general-nmap
+    "|" 'my/indent-whole-buffer))
 
 ;; TODO: rect (oantolin)
 
@@ -709,6 +711,9 @@ which rely on dynamic completion tables work correctly")
     "M" 'embark-bindings-in-keymap
     "C-h" 'embark-prefix-help-command)
   (general-def :keymaps 'vertico-map
+    "C-." 'embark-act
+    "C-:" 'embark-act-all
+    "M-." 'embark-dwim
     "C-c C-o" 'embark-collect
     "C-M-l" 'embark-export)
   :custom
@@ -921,23 +926,19 @@ which rely on dynamic completion tables work correctly")
   :custom (hl-line-sticky-flag nil))
 
 (use-package whitespace
-  :init (global-whitespace-mode)
+  :init
+  (indent-tabs-mode -1)
+  (global-whitespace-mode)
   :bind ("<f6>" . whitespace-mode)
   :custom
   (whitespace-display-mappings '((tab-mark ?\t [?\u21E5 ?\t])
-				 (newline-mark ?\n [?\u21A9 ?\n])
-				 (newline ?\n [?\u21A9 ?\n])
-				 (space-mark ?\  [?\u00B7] [?.])))
-  (whitespace-style '(lines-char
-		      ;; newline
-		      face tabs tab-mark trailing missing-newline-at-eof
-		      space-after-tab::tab space-after-tab::space
-		      space-before-tab::tab space-before-tab::space))
-  ;; whitespace-style '(face trailing newline newline-mark tabs tab-mark)
-  ;; whitespace-style '(face empty trailing tabs tab-mark)
-  (whitespace-action '(cleanup auto-cleanup))
+                                 (newline-mark ?\n [?\u21A9 ?\n])
+                                 (newline ?\n [?\u21A9 ?\n])
+                                 (space-mark ?\  [?\u00B7] [?.])))
+  (whitespace-style '(face empty trailing tabs tab-mark))
+  ;; (whitespace-action '(cleanup auto-cleanup))
   (whitespace-global-modes '(not shell-mode magit-mode magit-diff-mode
-			     ibuffer-mode dired-mode occur-mode erc-mode)))
+                             ibuffer-mode dired-mode occur-mode erc-mode)))
 
 (use-package display-line-numbers
   :init (global-display-line-numbers-mode)
@@ -1329,6 +1330,8 @@ which rely on dynamic completion tables work correctly")
 ;; (use-package numpydoc)
 ;; TODO: docstring-mode
 ;; (use-package docstring-mode)
+;; TODO: pyimport
+;; TODO: pip-requirements
 
 ;; nix
 (use-package nix-mode :ensure t)
@@ -1398,6 +1401,11 @@ which rely on dynamic completion tables work correctly")
   (eglot-managed-mode . my/eglot-eldoc-settings)
   (eglot-managed-mode . my/eglot-remove-mode-line-misc-info)
   (eglot-managed-mode . flymake-mode)
+  :init
+  ;; Ask Eglot to stay away from completely taking over Flymake.
+  ;; Just add it as another item.
+  (add-to-list 'eglot-stay-out-of 'flymake)
+  (add-hook 'flymake-diagnostic-functions 'eglot-flymake-backend)
   :config
   (add-to-list 'eglot-server-programs
                '(toml-ts-mode . ("taplo" "lsp" "stdio"))))
@@ -1445,7 +1453,9 @@ which rely on dynamic completion tables work correctly")
 (use-package sideline
   :ensure t
   :hook (flymake-mode . sideline-mode)
-  :custom (sideline-backends-right '(sideline-flymake)))
+  :custom
+  (sideline-backends-right '(sideline-flymake))
+  (sideline-backends-right-skip-current-line nil))
 
 (use-package sideline-flymake
   :ensure t
@@ -1453,7 +1463,7 @@ which rely on dynamic completion tables work correctly")
   (sideline-flymake-display-mode 'point)
   (sideline-flymake-show-backend-name t))
 
-;; FIXME: sideline-eglot https://github.com/emacs-sideline/sideline-eglot
+;; FIXME: sideline-eglot for code actions https://github.com/emacs-sideline/sideline-eglot
 ;; (use-package sideline-eglot :ensure t)
 ;; TODO: snap-indent https://github.com/jeffvalk/snapindent
 ;; TODO: jinx https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L2553d
