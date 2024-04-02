@@ -95,6 +95,11 @@
 
 (use-package evil-anzu :ensure t)
 
+(use-package evil-surround
+  :ensure t
+  :general (general-vmap "s" 'evil-surround-region)
+  :init (global-evil-surround-mode))
+
 ;;; theme
 
 (use-package theme)
