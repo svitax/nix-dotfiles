@@ -18,13 +18,13 @@ marks the next ARG %s after the ones already marked." things things things)
      (interactive "p\np")
      (unless arg (setq arg 1))
      (if (and allow-extend
-              (or (and (eq last-command this-command) (mark t))
-                  (and transient-mark-mode mark-active)))
-         (set-mark
-          (save-excursion
-            (goto-char (mark))
-            (,forward-thing arg)
-            (point)))
+	      (or (and (eq last-command this-command) (mark t))
+		  (and transient-mark-mode mark-active)))
+	 (set-mark
+	  (save-excursion
+	    (goto-char (mark))
+	    (,forward-thing arg)
+	    (point)))
        ,(plist-get extra :pre)
        (,forward-thing arg)
        ,(plist-get extra :post)
@@ -42,7 +42,7 @@ marks the next ARG %s after the ones already marked." things things things)
 			    (forward-word -1)))
 
 (define-thing-marker my/mark-non-whitespace "vim WORDS"
-                     forward-to-whitespace)
+		     forward-to-whitespace)
 
 (defun my/open-next-line (arg)
   "Move to the next line and then opens a line.
@@ -82,7 +82,7 @@ marks the next ARG %s after the ones already marked." things things things)
    (if mark-active (list (region-beginning) (region-end))
      (message "Copied line")
      (list (line-beginning-position)
-           (line-beginning-position 2)))))
+	   (line-beginning-position 2)))))
 
 (defun my/zap-to-char-save (arg char)
   "Zap to CHAR, (optional) ARG number of times, but save instead of kill."
@@ -90,12 +90,12 @@ marks the next ARG %s after the ones already marked." things things things)
   (if (char-table-p translation-table-for-input)
       (setq char (or (aref translation-table-for-input char) char)))
   (save-excursion (message (char-to-string char))
-                  (copy-region-as-kill (point)
-                                       (progn
-                                         (search-forward
-                                          (char-to-string char)
-                                          nil nil arg)
-                                         (point)))))
+		  (copy-region-as-kill (point)
+				       (progn
+					 (search-forward
+					  (char-to-string char)
+					  nil nil arg)
+					 (point)))))
 
 ;; Cycle spacing: just-one-space to no-space to original-spacing
 (setq cycle-spacing-actions
@@ -140,9 +140,9 @@ pipe whole buffer."
   (cond
    ((and mark-active transient-mark-mode)
     (if (> (point) (mark))
-        (exchange-point-and-mark))
+	(exchange-point-and-mark))
     (let ((column (current-column))
-          (text (delete-and-extract-region (point) (mark))))
+	  (text (delete-and-extract-region (point) (mark))))
       (forward-line arg)
       (move-to-column column t)
       (set-mark (point))
@@ -153,10 +153,10 @@ pipe whole buffer."
     (let ((column (current-column)))
       (beginning-of-line)
       (when (or (> arg 0) (not (bobp)))
-        (forward-line)
-        (when (or (< arg 0) (not (eobp)))
-          (transpose-lines arg))
-        (forward-line -1))
+	(forward-line)
+	(when (or (< arg 0) (not (eobp)))
+	  (transpose-lines arg))
+	(forward-line -1))
       (move-to-column column t)))))
 
 (defun my/move-text-down (arg)

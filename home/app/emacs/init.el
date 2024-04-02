@@ -4,7 +4,7 @@
   (eval-after-load 'advice
     `(setq ad-redefinition-action 'accept))
   (setq use-package-enable-imenu-support t
-	use-package-minimum-reported-time 0.01)
+        use-package-minimum-reported-time 0.01)
   (require 'use-package))
 
 ;; "plugins/" contains downloaded packages or plugins I've written
@@ -26,12 +26,12 @@
 (defun expand-etc-file-name (file)
   "Expand filename FILE relative to `user-etc-directory'."
   (file-name-concat user-etc-directory
-		    (convert-standard-filename file)))
+                    (convert-standard-filename file)))
 
 (defun expand-var-file-name (file)
   "Expand filename FILE relative to `user-var-directory'."
   (file-name-concat user-var-directory
-		    (convert-standard-filename file)))
+                    (convert-standard-filename file)))
 
 (defalias 'etc #'expand-etc-file-name)
 (defalias 'var #'expand-var-file-name)
@@ -125,21 +125,21 @@
   ;; properties that may include any of those symbols: `italic', `WEIGHT'
   (modus-themes-prompts '(bold))
   (modus-themes-common-palette-overrides `(;; To hide the border around the active and inactive mode lines, we
-					   ;; set their color to that of the underlying background
-					   (bg-mode-line-active bg-inactive)
-					   (fg-mode-line-active fg-main)
-					   ;; line-numbers
-					   (fg-line-number-active fg-main)
-					   (bg-line-number-inactive bg-main)
-					   (fg-line-number-inactive fg-dim)
-					   ;; links
-					   (underline-link unspecified)
-					   (underline-link-visited unspecified)
-					   (underline-link-symbolic unspecified)
-					   ;; Enable underlining matching parenthesis by applying a color to them
-					   (underline-paren-match fg-main)
-					   ;; Make the fringe invisible
-					   (fringe unspecified))))
+                                           ;; set their color to that of the underlying background
+                                           (bg-mode-line-active bg-inactive)
+                                           (fg-mode-line-active fg-main)
+                                           ;; line-numbers
+                                           (fg-line-number-active fg-main)
+                                           (bg-line-number-inactive bg-main)
+                                           (fg-line-number-inactive fg-dim)
+                                           ;; links
+                                           (underline-link unspecified)
+                                           (underline-link-visited unspecified)
+                                           (underline-link-symbolic unspecified)
+                                           ;; Enable underlining matching parenthesis by applying a color to them
+                                           (underline-paren-match fg-main)
+                                           ;; Make the fringe invisible
+                                           (fringe unspecified))))
 
 (use-package ef-themes
   :ensure t
@@ -151,8 +151,8 @@
 (use-package pulsar
   :ensure t
   :general-config (+general-global-toggle
-		    "l" 'pulsar-pulse-line
-		    "L" 'pulsar-highlight-dwim)
+                    "l" 'pulsar-pulse-line
+                    "L" 'pulsar-highlight-dwim)
   :init (pulsar-global-mode 1)
   :hook
   (next-error . pulsar-pulse-line-red)
@@ -174,15 +174,15 @@
   :config
   ;; TODO: remove unused functions from pulsar-pulse-functions
   (dolist (func '(evil-goto-definition evil-scroll-down evil-scroll-up
-		  ;; evil-yank evil-paste-after evil-paste-before evil-delete
-		  ;; evil-delete-line evil-delete-whole-line
-		  evil-goto-last-change evil-goto-last-change-reverse
-		  evil-jump-backward evil-jump-forward
-		  pop-tag-mark my/transpose-windows my/toggle-window-split
-		  my/split-window-below my/split-window-right
-		  my/delete-window-or-delete-frame my/kill-this-buffer
-		  xref-find-definitions xref-find-references xref-go-forward
-		  xref-go-back embark-dwim embark-find-definition))
+                  ;; evil-yank evil-paste-after evil-paste-before evil-delete
+                  ;; evil-delete-line evil-delete-whole-line
+                  evil-goto-last-change evil-goto-last-change-reverse
+                  evil-jump-backward evil-jump-forward
+                  pop-tag-mark my/transpose-windows my/toggle-window-split
+                  my/split-window-below my/split-window-right
+                  my/delete-window-or-delete-frame my/kill-this-buffer
+                  xref-find-definitions xref-find-references xref-go-forward
+                  xref-go-back embark-dwim embark-find-definition))
     (add-to-list 'pulsar-pulse-functions func)))
 
 (use-package goggles
@@ -204,19 +204,19 @@
   ;; :init (spacious-padding-mode)
   :custom
   (spacious-padding-subtle-mode-line '(:mode-line-active 'default
-				       :mode-line-inactive 'vertical-border))
+                                       :mode-line-inactive 'vertical-border))
   (spacious-padding-widths '( :internal-border-width 16
-			      :header-line-width 4
-			      :mode-line-width 2
-			      :tab-width 2
-			      :right-divider-width 24
-			      :scroll-bar-width 8)))
+                              :header-line-width 4
+                              :mode-line-width 2
+                              :tab-width 2
+                              :right-divider-width 24
+                              :scroll-bar-width 8)))
 
 (use-package rainbow-mode
   :ensure t
   :hook ((prog-mode text-mode) . rainbow-mode)
   :general-config (+general-global-toggle
-		    "c" 'rainbow-mode)
+                    "c" 'rainbow-mode)
   :custom
   (rainbow-ansi-colors nil)
   (rainbow-x-colors nil))
@@ -224,38 +224,38 @@
 (use-package cursory
   :ensure t
   :general-config (+general-global-toggle
-		    "p" 'cursory-set-preset)
+                    "p" 'cursory-set-preset)
   :custom
   (cursory-latest-state-file (var "cursory-latest-state.eld"))
   (cursory-presets '((box
-		      :blink-cursor-interval 0.6)
-		     (box-no-blink
-		      :blink-cursor-mode -1)
-		     (bar
-		      :cursor-type (bar . 2)
-		      :blink-cursor-interval 0.5)
-		     (bar-no-other-window
-		      :inherit bar
-		      :cursor-in-non-selected-windows nil)
-		     (underscore
-		      :cursor-type (hbar . 3)
-		      :blink-cursor-blinks 50)
-		     (underscore-thick
-		      :cursor-type (hbar . 8)
-		      :blink-cursor-interval 0.3
-		      :blink-cursor-blinks 50
-		      :cursor-in-non-selected-windows (hbar . 3))
-		     (underscore-thick-no-blink
-		      :blink-cursor-mode -1
-		      :cursor-type (hbar . 8)
-		      :cursor-in-non-selected-windows (hbar . 3))
-		     (t
-		      :cursor-type box
-		      :cursor-in-non-selected-windows hollow
-		      :blink-cursor-mode 1
-		      :blink-cursor-blinks 10
-		      :blink-cursor-interval 0.2
-		      :blink-cursor-delay 0.2)))
+                      :blink-cursor-interval 0.6)
+                     (box-no-blink
+                      :blink-cursor-mode -1)
+                     (bar
+                      :cursor-type (bar . 2)
+                      :blink-cursor-interval 0.5)
+                     (bar-no-other-window
+                      :inherit bar
+                      :cursor-in-non-selected-windows nil)
+                     (underscore
+                      :cursor-type (hbar . 3)
+                      :blink-cursor-blinks 50)
+                     (underscore-thick
+                      :cursor-type (hbar . 8)
+                      :blink-cursor-interval 0.3
+                      :blink-cursor-blinks 50
+                      :cursor-in-non-selected-windows (hbar . 3))
+                     (underscore-thick-no-blink
+                      :blink-cursor-mode -1
+                      :cursor-type (hbar . 8)
+                      :cursor-in-non-selected-windows (hbar . 3))
+                     (t
+                      :cursor-type box
+                      :cursor-in-non-selected-windows hollow
+                      :blink-cursor-mode 1
+                      :blink-cursor-blinks 10
+                      :blink-cursor-interval 0.2
+                      :blink-cursor-delay 0.2)))
   :init
   (cursory-set-preset (or (cursory-restore-latest-preset) 'box))
   (add-hook 'kill-emacs-hook #'cursory-store-latest-preset))
@@ -263,40 +263,40 @@
 (use-package fontaine
   :ensure t
   :general-config (+general-global-toggle
-		    "f" 'fontaine-set-preset)
+                    "f" 'fontaine-set-preset)
   :custom
   (x-underline-at-descent-line nil)
   (text-scale-remap-header-line t)
   (fontaine-latest-state-file (var "fontaine-latest-state.eld"))
   (fontaine-presets '((small
-		       :default-family "JetBrains Mono Nerd Font"
-		       :default-height 115
-		       :variable-pitch-family "Iosevka Comfy Duo")
-		      (regular) ; like this it uses all the fallback values and is named `regular'
-		      (medium
-		       :default-family "JetBrains Mono Nerd Font"
-		       :default-weight semilight
-		       :default-height 160
-		       :bold-weight medium)
-		      (large
-		       :inherit bold
-		       :default-height 180)
-		      (live-stream
-		       :default-family "JetBrains Mono Nerd Font"
-		       :default-height 180
-		       :default-weight medium
-		       :fixed-pitch-family "Iosevka Comfy Wide Motion"
-		       :variable-pitch-family "Iosevka Comfy Wide Dup"
-		       :bold-weight extrabold)
-		      (presentation
-		       :default-height 200)
-		      (t
-		       :default-family "JetBrains Mono Nerd Font"
-		       :default-weight regular
-		       :default-slant normal
-		       :default-height 130
-		       :fixed-pitch-family "Iosevka Comfy"
-		       :variable-pitch-family "Iosevka Comfy Motion Duo")))
+                       :default-family "JetBrains Mono Nerd Font"
+                       :default-height 115
+                       :variable-pitch-family "Iosevka Comfy Duo")
+                      (regular) ; like this it uses all the fallback values and is named `regular'
+                      (medium
+                       :default-family "JetBrains Mono Nerd Font"
+                       :default-weight semilight
+                       :default-height 160
+                       :bold-weight medium)
+                      (large
+                       :inherit bold
+                       :default-height 180)
+                      (live-stream
+                       :default-family "JetBrains Mono Nerd Font"
+                       :default-height 180
+                       :default-weight medium
+                       :fixed-pitch-family "Iosevka Comfy Wide Motion"
+                       :variable-pitch-family "Iosevka Comfy Wide Dup"
+                       :bold-weight extrabold)
+                      (presentation
+                       :default-height 200)
+                      (t
+                       :default-family "JetBrains Mono Nerd Font"
+                       :default-weight regular
+                       :default-slant normal
+                       :default-height 130
+                       :fixed-pitch-family "Iosevka Comfy"
+                       :variable-pitch-family "Iosevka Comfy Motion Duo")))
   :init
   ;; Set last preset of fall back to desired style from `fontaine-presets'.
   (fontaine-set-preset (or (fontaine-restore-latest-preset) 'medium))
@@ -315,7 +315,7 @@
 (use-package consult-todo
   :ensure t
   :general-config (+general-global-goto
-		    "t" 'consult-todo))
+                    "t" 'consult-todo))
 
 ;; TODO: variable-pitch-mode https://github.com/protesilaos/dotfiles/blob/master/emacs/.emacs.d/prot-emacs-modules/prot-emacs-theme.el
 ;; TODO: visible-mark https://git.sr.ht/~iank/visible-mark/tree/c1852e13b6b61982738b56977a452ec9026faf1b
@@ -369,12 +369,12 @@
 ;;   :bind
 ;;   ("C-;" . iedit-mode)
 ;;   (:map iedit-mode-keymap
-;;	("ESC" . iedit--quit)))
+;;      ("ESC" . iedit--quit)))
 
 ;; (use-package iedit-extras
 ;;   :general (+general-global-search
-;;	     "n" 'my/iedit-1-down
-;;	     "p" 'my/iedit-1-up))
+;;           "n" 'my/iedit-1-down
+;;           "p" 'my/iedit-1-up))
 
 ;; (use-package easy-kill
 ;;   :ensure t
@@ -435,7 +435,7 @@
   ("C-s" . avy-goto-char-timer)
   ([remap goto-line] . avy-goto-line)
   (:map isearch-mode-map
-	("M-q" . avy-isearch)))
+        ("M-q" . avy-isearch)))
 
 (use-package xref
   :custom
@@ -488,17 +488,17 @@
   :ensure t
   :custom
   (mood-line-format (mood-line-defformat
-		     :left
-		     (((mood-line-segment-modal) . "  ")
-		      ((mood-line-segment-anzu) . "  ")
-		      ((mood-line-segment-buffer-status) . "  ")
-		      ((mood-line-segment-project) . "/")
-		      ((mood-line-segment-buffer-name)   . "  ")
-		      ((mood-line-segment-cursor-position) . "  ")
-		      (mood-line-segment-misc-info))
-		     :right
-		     (((mood-line-segment-vc)             . "  ")
-		      (mood-line-segment-major-mode))))
+                     :left
+                     (((mood-line-segment-modal) . "  ")
+                      ((mood-line-segment-anzu) . "  ")
+                      ((mood-line-segment-buffer-status) . "  ")
+                      ((mood-line-segment-project) . "/")
+                      ((mood-line-segment-buffer-name)   . "  ")
+                      ((mood-line-segment-cursor-position) . "  ")
+                      (mood-line-segment-misc-info))
+                     :right
+                     (((mood-line-segment-vc)             . "  ")
+                      (mood-line-segment-major-mode))))
   :config
   (defun mood-line-segment-misc-info ()
     "Return the current value of `mode-line-misc-info'."
@@ -550,8 +550,8 @@ which rely on dynamic completion tables work correctly")
   (savehist-autosave-interval 300)
   (savehist-ignored-variables '(file-name-history))
   (savehist-additional-variables '(kill-ring register-alist
-				   mark-ring global-mark-ring
-				   search-ring regexp-search-ring))
+                                   mark-ring global-mark-ring
+                                   search-ring regexp-search-ring))
   (history-length 1000)
   (history-delete-duplicates t))
 
@@ -574,13 +574,13 @@ which rely on dynamic completion tables work correctly")
   ((prog-mode text-mode tex-mode ielm-mode) . corfu-mode)
   ((eshell-mode comint-mode) . corfu-mode)
   :bind (:map corfu-map
-	      ("M-SPC" . 'corfu-insert-separator)
-	      ("TAB" . corfu-insert)
-	      ("RET" . nil)
-	      ("M-h" . nil)
-	      ("C-h" . corfu-info-documentation)
-	      ("M-m" . 'my/corfu-move-to-minibuffer)
-	      ("M-." . corfu-info-location))
+              ("M-SPC" . 'corfu-insert-separator)
+              ("TAB" . corfu-insert)
+              ("RET" . nil)
+              ("M-h" . nil)
+              ("C-h" . corfu-info-documentation)
+              ("M-m" . 'my/corfu-move-to-minibuffer)
+              ("M-." . corfu-info-location))
   :custom
   (corfu-auto t)
   (corfu-auto-prefix 1)
@@ -603,7 +603,7 @@ which rely on dynamic completion tables work correctly")
   :after corfu
   :config (corfu-popupinfo-mode 1)
   :bind (:map corfu-map
-	      ([remap corfu-info-documentation] . corfu-popupinfo-toggle))
+              ([remap corfu-info-documentation] . corfu-popupinfo-toggle))
   :custom (corfu-popupinfo-delay '(2.0 . 0.05)))
 
 (use-package corfu-echo
@@ -619,7 +619,7 @@ which rely on dynamic completion tables work correctly")
 (use-package corfu-quick
   :after corfu
   :bind (:map corfu-map
-	      ("M-q" . corfu-quick-insert))
+              ("M-q" . corfu-quick-insert))
   :custom (corfu-quick1 "asdfghjkl;"))
 
 (use-package cape
@@ -711,14 +711,14 @@ which rely on dynamic completion tables work correctly")
   ;; Replace the key help with a completing-read interface
   (prefix-help-command #'embark-prefix-help-command "Replace the key help with a completing-read interface")
   (embark-indicators '(embark-minimal-indicator
-		       embark-highlight-indicator
-		       embark-isearch-highlight-indicator))
+                       embark-highlight-indicator
+                       embark-isearch-highlight-indicator))
   (embark-confirm-act-all nil))
 
 (use-package embark-extras
   :after embark
   :bind (:map minibuffer-local-map
-	      ("C-<tab>" . my/embark-select)))
+              ("C-<tab>" . my/embark-select)))
 
 (use-package embark-consult
   :ensure t
@@ -727,7 +727,7 @@ which rely on dynamic completion tables work correctly")
 (use-package marginalia
   :ensure t
   :bind (:map minibuffer-local-map
-	      ("M-A" . marginalia-cycle))
+              ("M-A" . marginalia-cycle))
   :custom (marginalia-max-relative-age 0)
   :init (marginalia-mode))
 
@@ -741,13 +741,13 @@ which rely on dynamic completion tables work correctly")
     "C-d" 'vertico-scroll-up)
   :bind
   (:map vertico-map
-	("C-<return>" . vertico-exit-input)
-	("M-n" . vertico-next-group)
-	("M-p" . vertico-previous-group)
-	("M-q" . vertico-quick-jump))
+        ("C-<return>" . vertico-exit-input)
+        ("M-n" . vertico-next-group)
+        ("M-p" . vertico-previous-group)
+        ("M-q" . vertico-quick-jump))
   (:map minibuffer-local-map
-	("<up>" . previous-history-element)
-	("<down>" . next-history-element))
+        ("<up>" . previous-history-element)
+        ("<down>" . next-history-element))
   :custom
   (vertico-count 15)
   (vertico-cycle t)
@@ -759,10 +759,10 @@ which rely on dynamic completion tables work correctly")
   :after vertico
   :hook (rfn-eshadow-update-overlay . vertico-directory-tidy)
   :bind (:map vertico-map
-	      ("RET" . vertico-directory-enter)
-	      ("DEL" . vertico-directory-delete-char)
-	      ("C-w" . vertico-directory-delete-word)
-	      ("M-DEL" . vertico-directory-delete-word)))
+              ("RET" . vertico-directory-enter)
+              ("DEL" . vertico-directory-delete-char)
+              ("C-w" . vertico-directory-delete-word)
+              ("M-DEL" . vertico-directory-delete-word)))
 
 (use-package vertico-multiform
   :after vertico
@@ -804,9 +804,9 @@ which rely on dynamic completion tables work correctly")
 
 (use-package dired-extras
   :hook (evil-collection-setup . (lambda (&rest a)
-				   (general-nmap :keymaps '(dired-mode-map)
-				     "a" 'find-file
-				     "~" #'my/dired-home-directory)))
+                                   (general-nmap :keymaps '(dired-mode-map)
+                                     "a" 'find-file
+                                     "~" #'my/dired-home-directory)))
   :preface
   (defun my/dired-home-directory ()
     (interactive)
@@ -860,20 +860,20 @@ which rely on dynamic completion tables work correctly")
 (use-package ibuffer-vc
   :ensure t
   :hook (ibuffer . (lambda ()
-		     (ibuffer-vc-set-filter-groups-by-vc-root)
-		     (unless (eq ibuffer-sorting-mode 'alphabetic)
-		       (ibuffer-do-sort-by-alphabetic))))
+                     (ibuffer-vc-set-filter-groups-by-vc-root)
+                     (unless (eq ibuffer-sorting-mode 'alphabetic)
+                       (ibuffer-do-sort-by-alphabetic))))
   :init
   (setq ibuffer-formats '((mark modified read-only vc-status-mini " "
-			   (name 18 18 :left :elide)
-			   " "
-			   (size 9 -1 :right)
-			   " "
-			   (mode 16 16 :left :elide)
-			   " "
-			   (vc-status 16 16 :left)
-			   " "
-			   vc-relative-file))))
+                           (name 18 18 :left :elide)
+                           " "
+                           (size 9 -1 :right)
+                           " "
+                           (mode 16 16 :left :elide)
+                           " "
+                           (vc-status 16 16 :left)
+                           " "
+                           vc-relative-file))))
 
 ;; FIXME: https://www.reddit.com/r/emacs/s/Ft0yZxEMVD
 ;; FIXME: ibuffer-git https://github.com/jrockway/ibuffer-git
@@ -1158,9 +1158,9 @@ which rely on dynamic completion tables work correctly")
 (use-package helpful
   :after (helpful embark)
   :bind (:map embark-become-help-map
-	      ("f" . helpful-callable)
-	      ("v" . helpful-variable)
-	      ("C" . helpful-command)))
+              ("f" . helpful-callable)
+              ("v" . helpful-variable)
+              ("C" . helpful-command)))
 
 (use-package eldoc
   :custom
@@ -1372,7 +1372,7 @@ which rely on dynamic completion tables work correctly")
   (eglot-extend-to-xref t)
   (eglot-workspace-configuration
    '((:rust-analyzer . (:completion (:callable (:snippets "fill_arguments"))
-			:checkOnSave (:command "clippy" :allTargets :json-false))))))
+                        :checkOnSave (:command "clippy" :allTargets :json-false))))))
 
 (use-package eglot-extras
   :hook
@@ -1382,7 +1382,7 @@ which rely on dynamic completion tables work correctly")
   (eglot-managed-mode . flymake-mode)
   :config
   (add-to-list 'eglot-server-programs
-	       '(toml-ts-mode . ("taplo" "lsp" "stdio"))))
+               '(toml-ts-mode . ("taplo" "lsp" "stdio"))))
 
 ;; TODO: emacs-lsp-booster in nix https://github.com/blahgeek/emacs-lsp-booster
 ;; TODO: eglot-booster https://github.com/jdtsmith/eglot-booster
@@ -1442,21 +1442,21 @@ which rely on dynamic completion tables work correctly")
   (global-treesit-auto-mode)
   (setq treesit-auto-langs (append treesit-auto-langs '(nix elisp)))
   (setq treesit-auto-recipe-list
-	(append treesit-auto-recipe-list
-		(list (make-treesit-auto-recipe
-		       :lang 'nix
-		       :ts-mode 'nix-ts-mode
-		       :remap 'nix-mode
-		       :url "https://github.com/nix-community/tree-sitter-nix"
-		       :revision "master"
-		       :source-dir "src"
-		       :ext "\\.nix\\'")
-		      (make-treesit-auto-recipe
-		       :lang 'elisp
-		       :ts-mode 'emacs-lisp-ts-mode
-		       :remap 'emacs-lisp-mode
-		       :url "https://github.com/Wilfred/tree-sitter-elisp"
-		       :ext "\\.el\\'"))))
+        (append treesit-auto-recipe-list
+                (list (make-treesit-auto-recipe
+                       :lang 'nix
+                       :ts-mode 'nix-ts-mode
+                       :remap 'nix-mode
+                       :url "https://github.com/nix-community/tree-sitter-nix"
+                       :revision "master"
+                       :source-dir "src"
+                       :ext "\\.nix\\'")
+                      (make-treesit-auto-recipe
+                       :lang 'elisp
+                       :ts-mode 'emacs-lisp-ts-mode
+                       :remap 'emacs-lisp-mode
+                       :url "https://github.com/Wilfred/tree-sitter-elisp"
+                       :ext "\\.el\\'"))))
   (treesit-auto-add-to-auto-mode-alist 'all))
 
 ;;; snippets
@@ -1514,8 +1514,8 @@ which rely on dynamic completion tables work correctly")
   ;; so my `sx-biblio-bibtex-lookup' function loads in citar
   :commands citar--bibliography-files
   :general (+general-global-notes
-	     "p" 'citar-open-files
-	     "o" 'citar-open)
+             "p" 'citar-open-files
+             "o" 'citar-open)
   :custom
   (citar-bibliography '("~/OneDrive/docs/lib.bib"))
   (citar-library-paths '("~/OneDrive/docs/books/"))
@@ -1595,9 +1595,9 @@ which rely on dynamic completion tables work correctly")
   :hook
   (pdf-view-mode . pdf-tools-enable-minor-modes)
   (pdf-view-mode . (lambda () (progn
-				(blink-cursor-mode -1)
-				(display-line-numbers-mode -1)
-				(hl-line-mode -1))))
+                                (blink-cursor-mode -1)
+                                (display-line-numbers-mode -1)
+                                (hl-line-mode -1))))
   :init (setq-default pdf-view-display-size 'fit-page)
   :custom (large-file-warning-threshold nil)
   :config (pdf-tools-install :no-query))
@@ -1618,7 +1618,6 @@ which rely on dynamic completion tables work correctly")
 ;; TODO: pdfgrep https://github.com/jeremy-compostella/pdfgrep/
 
 ;;; icons
-
 (use-package nerd-icons-completion
   :ensure t
   :after marginalia
