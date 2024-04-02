@@ -745,8 +745,6 @@ which rely on dynamic completion tables work correctly")
   :ensure t
   :general-config
   (general-imap :keymaps 'vertico-map
-    "C-j" 'vertico-next
-    "C-k" 'vertico-previous
     "C-u" 'vertico-scroll-down
     "C-d" 'vertico-scroll-up)
   :bind
