@@ -47,7 +47,7 @@
       export XDG_CURRENT_DESKTOP=sway
       export XDG_SESSION_DESKTOP=sway
     '';
-    config = rec {
+    config = {
       modifier = "Mod4"; # Super key
       terminal = "${pkgs.foot}/bin/foot";
       menu = "${pkgs.fuzzel}/bin/fuzzel --width 50 --lines 11 --show-actions";
@@ -197,33 +197,33 @@
       };
       colors = {
         background = "#ffffff";
-        urgent = {
-          background = "#${config.colorScheme.colors.base08}";
-          border = "#${config.colorScheme.colors.base08}";
-          childBorder = "#${config.colorScheme.colors.base08}";
-          indicator = "#${config.colorScheme.colors.base08}";
-          text = "#${config.colorScheme.colors.base07}";
-        };
         focused = {
+          border = "#${config.colorScheme.colors.base03}";
           background = "#${config.colorScheme.colors.base02}";
-          border = "#${config.colorScheme.colors.base02}";
-          childBorder = "#${config.colorScheme.colors.base0D}";
-          indicator = "#${config.colorScheme.colors.base0D}";
-          text = "#${config.colorScheme.colors.base07}";
+          text = "#${config.colorScheme.colors.base06}";
+          indicator = "#${config.colorScheme.colors.base02}";
+          childBorder = "#${config.colorScheme.colors.base04}";
         };
         focusedInactive = {
-          background = "#${config.colorScheme.colors.base01}";
-          border = "#${config.colorScheme.colors.base01}";
+          border = "#${config.colorScheme.colors.base03}";
+          background = "#${config.colorScheme.colors.base02}";
+          text = "#${config.colorScheme.colors.base06}";
+          indicator = "#${config.colorScheme.colors.base02}";
           childBorder = "#${config.colorScheme.colors.base01}";
-          indicator = "#${config.colorScheme.colors.base01}";
-          text = "#${config.colorScheme.colors.base04}";
         };
         unfocused = {
+          border = "#${config.colorScheme.colors.base03}";
           background = "#${config.colorScheme.colors.base01}";
-          border = "#${config.colorScheme.colors.base01}";
-          childBorder = "#${config.colorScheme.colors.base01}";
-          indicator = "#${config.colorScheme.colors.base01}";
           text = "#${config.colorScheme.colors.base04}";
+          indicator = "#${config.colorScheme.colors.base01}";
+          childBorder = "#${config.colorScheme.colors.base00}";
+        };
+        urgent = {
+          border = "#${config.colorScheme.colors.base08}";
+          background = "#${config.colorScheme.colors.base08}";
+          text = "#${config.colorScheme.colors.base07}";
+          indicator = "#${config.colorScheme.colors.base08}";
+          childBorder = "#${config.colorScheme.colors.base08}";
         };
       };
     };
