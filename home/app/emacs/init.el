@@ -693,6 +693,11 @@ which rely on dynamic completion tables work correctly")
   :ensure t
   :general-config
   (global-definer "z" 'consult-dir)
+  (general-def :keymaps 'vertico-map
+    "C-M-z" 'consult-dir
+    "C-M-j" 'consult-dir-jump-file)
+  (general-def :keymaps 'embark-become-file+buffer-map
+    "d" 'consult-dir)
   (general-def :keymaps 'minibuffer-local-filename-completion-map
     "C-M-z" 'consult-dir
     "C-M-j" 'consult-dir-jump-file))
