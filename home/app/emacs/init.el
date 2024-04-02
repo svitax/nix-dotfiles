@@ -1077,11 +1077,15 @@ which rely on dynamic completion tables work correctly")
   :custom
   (project-switch-commands #'project-find-file)
   (project-list-file (file-name-concat user-cache-directory "var/projects")))
+(use-package projel :ensure t)
 
-;; FIXME: projection map SPC p https://github.com/mohkale/projection
 (use-package projection
   :ensure t
-  ;; :general-config
+  :general-config
+  (global-definer "p" '(:keymap projection-map))
+  (general-def :keymaps 'projection-map
+    "a" 'projel-rescan-all-projects
+    "A" 'projel-add-project-directory)
   ;; ([remap project-compile] 'projection-build-project)
   :init (global-projection-hook-mode))
 
@@ -1098,7 +1102,6 @@ which rely on dynamic completion tables work correctly")
   :config (projection-multi-embark-setup-command-map))
 
 ;; TODO: editorconfig https://github.com/editorconfig/editorconfig-emacs
-;; TODO: projel https://github.com/KarimAziev/projel
 
 (use-package envrc
   :ensure t

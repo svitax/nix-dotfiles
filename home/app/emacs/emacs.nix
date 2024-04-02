@@ -25,6 +25,13 @@ in {
         ];
       override = epkgs:
         epkgs // {
+          # Apr 02 2024
+          projel = elisp (pkgs.fetchFromGitHub {
+            owner = "KarimAziev";
+            repo = "projel";
+            rev = "3490021d1a72f61c311f355588d2be2988c6ea39";
+            hash = "sha256-M0/hq6iMRz8S4vFBzoACDJALKUMvN2C2NWolSqN94Oc=";
+          }) "projel";
           # Mar 30 2024
           mood-line = elisp (pkgs.fetchFromGitLab {
             owner = "jessieh";
