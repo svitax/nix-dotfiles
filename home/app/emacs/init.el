@@ -1077,9 +1077,20 @@ which rely on dynamic completion tables work correctly")
   (global-definer
     "f" 'project-find-file
     "j" 'project-switch-project)
+  (general-def :keymaps 'projection-map
+    "DEL" 'my/project-remove-project)
   :custom
   (project-switch-commands #'project-find-file)
-  (project-list-file (file-name-concat user-cache-directory "var/projects")))
+  (project-list-file (file-name-concat user-cache-directory "var/projects"))
+  :config
+  (defun my/project-remove-project ()
+    "Remove project from `project--list' using completion."
+    (interactive)
+    (project--ensure-read-project-list)
+    (let* ((projects project--list)
+           (dir (completing-read "REMOVE project from list: " projects nil t)))
+      (setq project--list (delete (assoc dir projects) projects)))))
+
 (use-package projel :ensure t)
 
 (use-package projection
