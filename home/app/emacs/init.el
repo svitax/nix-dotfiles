@@ -1106,21 +1106,35 @@ which rely on dynamic completion tables work correctly")
 
 ;;; compile
 (use-package compile
+  :hook (compilation-filter . ansi-color-compilation-filter)
+  :general (global-definer
+             "," 'project-compile
+             "." 'recompile)
   :custom
   (compilation-max-output-line-length nil)
-  (compilation-scroll-output 'first-error)
+  (compilation-scroll-output t)
   (compilation-always-kill t))
 
-(use-package fancy-compilation
+(use-package compile-extras
+  :hook (python-base-mode . my/run-with-python))
+
+(use-package compile-multi
   :ensure t
-  :custom (fancy-compilation-scroll-output 'first-error)
-  :config (fancy-compilation-mode))
+  :general (global-definer "/" 'compile-multi))
+
+(use-package consult-compile-multi
+  :ensure t
+  :after compile-multi
+  :config (consult-compile-multi-mode))
+
+(use-package compile-multi-embark
+  :ensure t
+  :after embark
+  :after compile-multi
+  :demand t
+  :config (compile-multi-embark-mode +1))
 
 ;; TODO: compile-extras
-;; TODO: compile-multi
-;; TODO: consult-compile-multi
-;; TODO: compile-multi-embark
-;; TODO: compile-multi-nerd-icons???
 
 ;;; help
 
@@ -1624,6 +1638,8 @@ which rely on dynamic completion tables work correctly")
 (use-package nerd-icons-ibuffer
   :ensure t
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
+
+;; TODO: compile-multi-nerd-icons???
 
 ;;; pass
 ;; TODO: pass https://github.com/NicolasPetton/pass
