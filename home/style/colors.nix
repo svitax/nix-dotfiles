@@ -1,5 +1,5 @@
 { inputs, ... }: {
-  colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
+  # colorScheme = inputs.nix-colors.colorSchemes.gruvbox-dark-hard;
   # scheme: "Gruvbox dark, hard"
   # author: "Dawid Kurek (dawikur@gmail.com), morhetz (https://github.com/morhetz/gruvbox)"
   # base00: "#1d2021" # ----
@@ -18,6 +18,29 @@
   # base0D: "#83a598" # blue
   # base0E: "#d3869b" # purple
   # base0F: "#d65d0e" # brown
+  colorScheme = {
+    slug = "modus-vivendi";
+    name = "Modus Vivendi";
+    author = "Protesilaos Stavrou (https://protesilaos.com)";
+    palette = {
+      base00 = "#000000";
+      base01 = "#1e1e1e";
+      base02 = "#303030";
+      base03 = "#535353";
+      base04 = "#646464";
+      base05 = "#ffffff";
+      base06 = "#ffffff";
+      base07 = "#ffffff";
+      base08 = "#ff5f59";
+      base09 = "#db7b5f";
+      base0A = "#d0bc00";
+      base0B = "#44bc44";
+      base0C = "#00d3d0";
+      base0D = "#2fafff";
+      base0E = "#feacd0";
+      base0F = "#c0965b";
+    };
+  };
   # colorScheme = {
   #   slug = "arbutus";
   #   name = "Arbutus";
