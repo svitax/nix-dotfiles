@@ -48,6 +48,7 @@
   (+general-global-menu! "goto" "g")
   (+general-global-menu! "notes" "n")
   (+general-global-menu! "search" "s")
+  (+general-global-menu! "term" "t")
   (+general-global-menu! "vc" "v")
   (+general-global-menu! "toggle" "x"))
 
@@ -579,7 +580,7 @@ which rely on dynamic completion tables work correctly")
   :ensure t
   :hook
   ((prog-mode text-mode tex-mode ielm-mode) . corfu-mode)
-  ((eshell-mode comint-mode) . corfu-mode)
+  ;; ((eshell-mode comint-mode) . corfu-mode)
   :bind (:map corfu-map
               ("M-SPC" . 'corfu-insert-separator)
               ("TAB" . corfu-insert)
@@ -603,6 +604,7 @@ which rely on dynamic completion tables work correctly")
   :hook
   (minibuffer-setup . my/corfu-enable-in-minibuffer)
   ;; (minibuffer-setup . my/corfu-enable-always-in-minibuffer)
+  ((eshell-mode shell-mode comint-mode) . my/corfu-shell-settings)
   :custom
   (corfu-sort-override-function 'my/corfu-combined-sort))
 
@@ -1522,28 +1524,75 @@ which rely on dynamic completion tables work correctly")
 ;; TODO: edebug https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L2580
 
 ;;; term
-;; TODO: eshell
+
 (use-package eshell
+  :general-config
+  (+general-global-term
+    "e" 'project-eshell
+    "l" 'eshell)
+  (general-def :keymaps 'eshell-mode-map
+    "C-r" #'consult-history)
   :custom
   (eshell-aliases-file (etc "eshell/aliases"))
   (eshell-directory-name (var "eshell/"))
   (eshell-login-script (etc "eshell/login"))
   (eshell-rc-script (etc "eshell/rc")))
-;; TODO: eat
-;; TODO: comint
-;; TODO: emacs-fish-completion https://github.com/LemonBreezes/emacs-fish-completion
-;; TODO: emacs-bash-completion https://github.com/szermatt/emacs-bash-completion
-;; TODO: dwim-shell-command? https://github.com/xenodium/dwim-shell-command
-;; TODO: terminal-here
-;; TODO: eshell-syntax-highlighting
+
+(use-package eshell-extras
+  :general-config
+  (+general-global-term
+    "E" 'my/eshell-here)
+  :custom
+  ;; (eshell-prompt-regexp "^.* ❯")
+  (eshell-prompt-regexp "^.* 𝝺 ") ;; Match last output of prompt -> prevents ~read-only~
+  (eshell-prompt-function 'my/eshell-prompt)
+  (eshell-scroll-show-maximum-output nil)
+  (eshell-banner-message ""))
+
+(use-package eat
+  :ensure t
+  :hook (eshell-load . eat-eshell-mode)
+  :custom (eat-kill-buffer-on-exit t))
+
+(use-package comint
+  :custom
+  (comint-prompt-read-only t)
+  (read-process-output-max (* 1024 64))
+  :config
+  (add-hook 'comint-output-filter-functions
+            'comint-watch-for-password-prompt))
+
+(use-package fish-completion
+  :ensure t
+  :config (global-fish-completion-mode)
+  :custom (fish-completion-fallback-on-bash-p t))
+
+(use-package bash-completion
+  :ensure t
+  :config (bash-completion-setup))
+
+(use-package terminal-here
+  :ensure t
+  :general-config
+  (+general-global-term
+    "h" 'terminal-here
+    "t" 'terminal-here-project-launch)
+  :custom (terminal-here-linux-terminal-command 'foot))
+
+(use-package eshell-syntax-highlighting
+  :ensure t
+  :hook (eshell-mode . eshell-syntax-highlighting-global-mode))
+
+(use-package capf-autosuggest
+  :ensure t
+  :hook (eshell-mode . capf-autosuggest-mode)
+  :bind (:map capf-autosuggest-active-mode
+              ("<right>" . capf-autosuggest-accept)))
+
 ;; TODO: load-bash-alias
 ;; TODO: with-editor https://github.com/magit/with-editor
-;; TODO: pcmpl-args
-;; (use-package pcmpl-args :ensure t)
-;; (use-package pcmpl-args-extras
-;;   :hook ((eshell-mode . my/pcmpl-args-eshell-settings)
-;;       (eshell-mode shell-mode) . my/pcmpl-args-capf-ensure))
 ;; TODO: comint-mime https://github.com/astoff/comint-mime
+;; TODO: dwim-shell-command? https://github.com/xenodium/dwim-shell-command
 
 ;;; tramp
 ;; TODO: tramp https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L3274

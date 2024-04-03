@@ -11,15 +11,34 @@
 	(funcall corfu-sort-function candidates)
       candidates)))
 
-(defun my/corfu-send-shell (&rest _)
-  "Send completion candidate when inside comint/eshell."
+;; (defun my/corfu-send-shell (&rest _)
+;;   "Send completion candidate when inside comint/eshell."
+;;   (cond
+;;    ((and (derived-mode-p 'eshell-mode) (fboundp 'eshell-send-input))
+;;     (eshell-send-input))
+;;    ((and (derived-mode-p 'comint-mode) (fboundp 'comint-send-input))
+;;     (comint-send-input))))
+
+;; (advice-add #'corfu-insert :after #'my/corfu-send-shell)
+
+(defun my/corfu-insert-and-send ()
+  (interactive)
+  ;; 1. First insert the completed candidate
+  (corfu-insert)
+  ;; 2. Send the entire prompt input to the shell
   (cond
    ((and (derived-mode-p 'eshell-mode) (fboundp 'eshell-send-input))
     (eshell-send-input))
-   ((and (derived-mode-p 'comint-mode) (fboundp 'comint-send-input))
+   ((derived-mode-p 'comint-mode)
     (comint-send-input))))
 
-(advice-add #'corfu-insert :after #'my/corfu-send-shell)
+(defun my/corfu-shell-settings ()
+  (setq-local corfu-quit-no-match t
+              corfu-auto nil)
+  (setq-local corfu-map (copy-keymap corfu-map)
+              completion-cycle-threshold nil)
+  (define-key corfu-map "\r" #'corfu-insert-and-send)
+  (corfu-mode))
 
 (defun my/corfu-enable-in-minibuffer ()
   "Enable Corfu in the minibuffer."
