@@ -530,9 +530,7 @@
 
 (use-package minibuffer
   :custom
-  (completion-styles '(orderless basic) "The basic completion style is specified
-as fallback in addition to orderless in order to ensure that completion commands
-which rely on dynamic completion tables work correctly")
+  (completion-styles '(orderless basic))
   (completion-category-defaults nil)
   (tab-always-indent 'complete)
   (read-file-name-completion-ignore-case t)
