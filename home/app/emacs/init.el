@@ -104,16 +104,6 @@
 
 (use-package theme)
 
-;; (use-package doom-themes
-;;   :ensure t
-;;   :custom
-;;   (doom-themes-enable-bold t)
-;;   (doom-themes-enable-italic t)
-;;   (doom-gruvbox-dark-variant "hard")
-;;   :init
-;;   (add-hook 'enable-theme-functions #'doom-themes-custom-faces)
-;;   (load-theme 'doom-gruvbox t))
-
 (use-package modus-themes
   :ensure t
   :init

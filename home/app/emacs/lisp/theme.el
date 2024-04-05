@@ -1,15 +1,5 @@
 ;;; theme.el --- Emacs theme and related setup -*- lexical-binding: t; -*-
 
-(defun doom-themes-custom-faces (&rest _args)
-  (custom-set-faces
-   `(pulsar-generic ((t (:background ,(doom-color 'base4)))))
-   `(pulsar-red ((t (:background ,(doom-darken (doom-color 'red) 0.50)))))
-   `(pulsar-blue ((t (:background ,(doom-darken (doom-color 'blue) 0.50)))))
-   `(pulsar-cyan ((t (:background ,(doom-darken (doom-color 'cyan) 0.50)))))
-   `(pulsar-green ((t (:background ,(doom-darken (doom-color 'green) 0.50)))))
-   `(pulsar-magenta ((t (:background ,(doom-darken (doom-color 'violet) 0.50)))))
-   `(pulsar-yellow ((t (:background ,(doom-darken (doom-color 'yellow) 0.50)))))))
-
 (defun modus-themes-custom-faces ()
   "My customization on top of the Modus themes.
 This function is added to the `modus-themes-post-load-hook'."
