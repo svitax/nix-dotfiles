@@ -36,8 +36,8 @@ in {
       l = "seek 5";
       H = "seek 60";
       L = "seek -60";
-      j = "add volume 3";
-      k = "add volume -3";
+      j = "add volume -3";
+      k = "add volume 3";
     };
   };
 }
