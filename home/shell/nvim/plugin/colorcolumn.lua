@@ -33,11 +33,7 @@ local function cc_resolve(cc)
         if vim.startswith(cc_str, "+") or vim.startswith(cc_str, "-") then
             cc_number = vim.bo.tw > 0 and vim.bo.tw + cc_number or nil
         end
-        if
-            cc_number
-            and cc_number > 0
-            and (not cc_min or cc_number < cc_min)
-        then
+        if cc_number and cc_number > 0 and (not cc_min or cc_number < cc_min) then
             cc_min = cc_number
         end
     end
@@ -48,9 +44,10 @@ end
 ---@param winid integer window handler
 local function cc_conceal(winid)
     winid = winid or 0
-    local new_winhl = (
-        vim.wo[winid].winhl:gsub("ColorColumn:[^,]*", "") .. ",ColorColumn:"
-    ):gsub(",*$", ""):gsub("^,*", ""):gsub(",+", ",")
+    local new_winhl = (vim.wo[winid].winhl:gsub("ColorColumn:[^,]*", "") .. ",ColorColumn:")
+        :gsub(",*$", "")
+        :gsub("^,*", "")
+        :gsub(",+", ",")
     if new_winhl ~= vim.wo[winid].winhl then
         vim.wo[winid].winhl = new_winhl
     end
@@ -60,10 +57,10 @@ end
 ---@param winid integer window handler
 local function cc_show(winid)
     winid = winid or 0
-    local new_winhl = (
-        vim.wo[winid].winhl:gsub("ColorColumn:[^,]*", "")
-        .. ",ColorColumn:_ColorColumn"
-    ):gsub(",*$", ""):gsub("^,*", ""):gsub(",+", ",")
+    local new_winhl = (vim.wo[winid].winhl:gsub("ColorColumn:[^,]*", "") .. ",ColorColumn:_ColorColumn")
+        :gsub(",*$", "")
+        :gsub("^,*", "")
+        :gsub(",+", ",")
     if new_winhl ~= vim.wo[winid].winhl then
         vim.wo[winid].winhl = new_winhl
     end
@@ -110,11 +107,7 @@ local function cc_autocmd()
             local colorcolumn_bg = get_hl_hex("ColorColumn", "bg")
             if length < cc then
                 vim.api.nvim_set_hl(0, "_ColorColumn", {
-                    bg = hl.cblend(
-                        colorcolumn_bg,
-                        normal_bg,
-                        (length - thresh) / (cc - thresh)
-                    ).dec,
+                    bg = hl.cblend(colorcolumn_bg, normal_bg, (length - thresh) / (cc - thresh)).dec,
                 })
             else -- Show error color when length >= cc
                 local warning_color = get_hl_hex("Error", "fg", "#FF0000")

@@ -146,12 +146,10 @@ local function jumpin_idx(leading, closing_pattern, cursor)
     local opening_pattern = opening_pattern_lookup_tbl[closing_pattern]
 
     -- Case 1
-    local _, _, content_str, closing_pattern_str = leading:find(
-        fmt("%s(%s)(%s)$", opening_pattern, "%s*", closing_pattern)
-    )
+    local _, _, content_str, closing_pattern_str =
+        leading:find(fmt("%s(%s)(%s)$", opening_pattern, "%s*", closing_pattern))
     if content_str == nil or closing_pattern_str == nil then
-        _, _, content_str, closing_pattern_str =
-            leading:find(fmt("^(%s)(%s)$", "%s*", closing_pattern))
+        _, _, content_str, closing_pattern_str = leading:find(fmt("^(%s)(%s)$", "%s*", closing_pattern))
     end
 
     if content_str and closing_pattern_str then
@@ -164,19 +162,11 @@ local function jumpin_idx(leading, closing_pattern, cursor)
     end
 
     -- Case 2
-    _, _, _, closing_pattern_str = leading:find(
-        fmt(
-            "%s%s(%s)$",
-            opening_pattern .. "%s*",
-            ".*%S",
-            "%s*" .. closing_pattern .. "%s*"
-        )
-    )
+    _, _, _, closing_pattern_str =
+        leading:find(fmt("%s%s(%s)$", opening_pattern .. "%s*", ".*%S", "%s*" .. closing_pattern .. "%s*"))
 
     if content_str == nil or closing_pattern_str == nil then
-        _, _, closing_pattern_str = leading:find(
-            fmt("%s(%s)$", "%S", "%s*" .. closing_pattern .. "%s*")
-        )
+        _, _, closing_pattern_str = leading:find(fmt("%s(%s)$", "%S", "%s*" .. closing_pattern .. "%s*"))
     end
 
     return { cursor[1], cursor[2] - #closing_pattern_str }
@@ -214,11 +204,7 @@ local get_jump_pos = {
         for _, pattern in ipairs(patterns[vim.bo.ft or ""]) do
             local _, closing_pattern_end = leading:find(pattern .. "%s*$")
             if closing_pattern_end then
-                return jumpin_idx(
-                    leading:sub(1, closing_pattern_end),
-                    pattern,
-                    cursor
-                )
+                return jumpin_idx(leading:sub(1, closing_pattern_end), pattern, cursor)
             end
         end
     end,
