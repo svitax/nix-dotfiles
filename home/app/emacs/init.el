@@ -821,6 +821,23 @@
     "h" 'dired-up-directory
     "/" 'my/dired-limit-regexp))
 
+(use-package diredfl
+  :ensure t
+  :hook (dired-mode . diredfl-mode))
+
+(use-package dired-single
+  :ensure t
+  :bind
+  ([remap dired-find-file] . dired-single-buffer)
+  ([remap dired-up-directory] . dired-single-up-directory))
+
+(use-package dired-imenu :ensure t)
+
+(use-package dired-sort-by
+  :general-config
+  (general-nmap :keymaps 'dired-mode-map
+    "s" 'dired-sort-by))
+
 (use-package wdired
   :after dired
   :custom
@@ -835,17 +852,10 @@
   (trashed-sort-key '("Date deleted" . t))
   (trashed-date-format "%Y-%m-%d %H:%M:%S"))
 
-(use-package diredfl
-  :ensure t
-  :hook (dired-mode . diredfl-mode))
-
-(use-package dired-single
-  :ensure t
-  :bind
-  ([remap dired-find-file] . dired-single-buffer)
-  ([remap dired-up-directory] . dired-single-up-directory))
-
-;; TODO: dirvish???
+;; TODO: dired-ranger
+;; `dired-ranger-copy' and `dired-ranger-paste' and `dired-ranger-move'
+;; TODO: dired-narrow? to replace my/dired-limit-regexp?
+;; `dired-narrow-regexp'
 ;; TODO: dired-subtree
 ;; TODO: dired-preview
 ;; TODO: dired-open vs dired-launch
@@ -855,6 +865,7 @@
 ;; TODO: dired-gitignore?
 ;; TODO: sudo-edit?
 ;; TODO: dired-hide-dotfiles
+;; TODO: dired-filter? what filters would i use?
 
 ;;; ibuffer
 (use-package ibuffer
