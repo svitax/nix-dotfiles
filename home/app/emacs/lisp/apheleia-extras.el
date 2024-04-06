@@ -18,17 +18,21 @@
                 (with-current-buffer buffer
                   (eglot-current-server)))
     (let ((buffer-file-name (buffer-local-value 'buffer-file-name buffer)))
-      (eglot-format-buffer))
+      ;; (eglot-format-buffer)
+	  ;; There are no custom vars to make `eglot-format-buffer' silent, but the
+	  ;; third argument of `eglot-format' (which eglot-format-buffer calls) gets
+	  ;; passed to `eglot--apply-text-edits' as the SILENT argument.
+	  (eglot-format nil nil t))
     (funcall callback)))
 
 (add-to-list 'apheleia-formatters
-             '(eglot-managed . apheleia-indent-eglot-manager-buffer))
+             '(eglot-managed . apheleia-indent-eglot-managed-buffer))
 
-(defvar apheleia-eglot-managed-modes
-  '(julia-mode julia-ts-mode rust-mode rust-ts-mode))
+(defcustom apheleia-eglot-managed-modes '(julia-mode julia-ts-mode rust-mode rust-ts-mode rustic-mode)
+  "Modes to use the `eglot-format-buffer' command to format the buffer on save with Apheleia.")
 
 (dolist (mode apheleia-eglot-managed-modes)
-  (add-to-list 'apheleia-mode-alist '(mode . eglot-managed)))
+  (setf (alist-get mode apheleia-mode-alist) 'eglot-managed))
 
 ;; Replace black with ruff in Python
 (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff))

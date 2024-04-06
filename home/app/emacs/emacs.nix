@@ -7,6 +7,15 @@ let
     '';
 in {
   programs.info = { enable = true; };
+  home.packages = with pkgs; [
+    # Globally install language servers
+    nixfmt
+    nil
+    # statix
+    vscode-langservers-extracted # html/css/json/eslint
+    taplo
+    cargo
+  ];
   services.emacs = {
     enable = true;
     defaultEditor = true;

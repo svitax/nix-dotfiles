@@ -90,6 +90,7 @@
     hunspellDicts.en_US
     hunspellDicts.pt_BR
     nyxt
+    leetcode-cli
   ];
 
   # Enable home-manager

@@ -8,7 +8,7 @@
     iosevka-comfy.comfy-motion
     # Nerd Fonts
     (nerdfonts.override {
-      fonts = [ "JetBrainsMono" "NerdFontsSymbolsOnly" "IosevkaTermSlab"];
+      fonts = [ "JetBrainsMono" "NerdFontsSymbolsOnly" "IosevkaTermSlab" ];
     })
   ];
 }

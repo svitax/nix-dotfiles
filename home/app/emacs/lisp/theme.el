@@ -5,6 +5,7 @@
 This function is added to the `modus-themes-post-load-hook'."
   (modus-themes-with-colors
     (custom-set-faces
+     `(eshell-prompt ((,c :foreground ,blue)))
      `(git-gutter-fr:added ((,c :foreground ,green :background ,green)))
      `(git-gutter-fr:modified ((,c :foreground ,yellow :background ,yellow)))
      `(diff-hl-insert ((,c :foreground ,green :background ,green)))
@@ -33,6 +34,26 @@ This function is added to the `ef-themes-post-load-hook'."
      `(avy-lead-face ((,c :background ,yellow)))
      `(highlight-quoted-symbol ((,c :foreground ,blue))))))
 
+;; I want to use circles as my flymake fringe bitmap
+(define-fringe-bitmap 'dot-fringe-bitmap
+  (vector #b00000000
+		  #b00000000
+		  #b00000000
+		  #b00000000
+		  #b00000000
+		  #b00000000
+		  #b00000000
+		  #b00011100
+		  #b00111110
+		  #b00111110
+		  #b00111110
+		  #b00011100
+		  #b00000000
+		  #b00000000
+		  #b00000000
+		  #b00000000
+		  #b00000000))
+
 ;; Generally user options should never be touched by a theme. However, according
 ;; to the maintainer of modus-themes, certain cases like `hl-todo-keyword-faces'
 ;; and the `flymake-*-bitmap' variants merit an exception.
@@ -42,10 +63,10 @@ This function is added to the `ef-themes-post-load-hook'."
 (defun my/modus-themes-flymake-bitmaps ()
   "Override Flymake bitmaps to blend into the fringe"
   (customize-set-variable
-   'flymake-error-bitmap '(flymake-double-exclamation-mark compilation-error))
+   'flymake-error-bitmap '(dot-fringe-bitmap compilation-error))
   (customize-set-variable
-   'flymake-warning-bitmap '(exclamation-mark compilation-warning))
+   'flymake-warning-bitmap '(dot-fringe-bitmap compilation-warning))
   (customize-set-variable
-   'flymake-note-bitmap '(exclamation-mark compilation-info)))
+   'flymake-note-bitmap '(dot-fringe-bitmap compilation-info)))
 
 (provide 'theme)

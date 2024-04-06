@@ -62,7 +62,8 @@
     ;; some reason?
     ;; "gd" 'embark-dwim
     "gd" 'xref-find-definitions
-    "C-S-t" 'xref-go-forward
+    "C-S-t" 'xref-go-forward)
+  (general-nvmap
     "L" 'evil-end-of-line
     "H" 'my/back-to-indentation-or-beginning)
   (general-omap
@@ -91,9 +92,12 @@
 
 (use-package anzu
   :ensure t
+  :custom (anzu-search-threshold 10000)
   :init (global-anzu-mode))
 
-(use-package evil-anzu :ensure t)
+(use-package evil-anzu
+  :after (evil anzu)
+  :ensure t)
 
 (use-package evil-surround
   :ensure t
@@ -113,6 +117,7 @@
   (add-hook 'modus-themes-post-load-hook #'my/modus-themes-flymake-bitmaps)
   (modus-themes-select 'modus-vivendi)
   :custom
+  (modus-themes-headings '((t . (rainbow))))
   (modus-themes-bold-constructs t)
   (modus-themes-mixed-fonts t)
   ;; Control the style of command prompts (e.g. minibuffer, shell, IRC clients).
@@ -425,7 +430,7 @@
   :ensure t
   :general
   (general-nvmap "C-s" 'avy-goto-char-timer)
-  (+general-global-search "j" 'avy-goto-line)
+  (+general-global-goto "g" 'avy-goto-line)
   :custom
   (avy-timeout-seconds 0.35)
   (avy-single-candidate-jump nil)
@@ -482,6 +487,7 @@
 ;; TODO: treesit-jump? https://github.com/dmille56/treesit-jump
 
 ;;; modeline
+
 (use-package mood-line
   :ensure t
   :custom
@@ -580,7 +586,7 @@
   :custom
   (corfu-auto t)
   (corfu-auto-prefix 1)
-  (corfu-auto-delay 0.05)
+  (corfu-auto-delay 0.15)
   (corfu-count 10)
   (corfu-cycle t)
   (corfu-preview-current nil)
@@ -601,12 +607,12 @@
   :config (corfu-popupinfo-mode 1)
   :bind (:map corfu-map
               ([remap corfu-info-documentation] . corfu-popupinfo-toggle))
-  :custom (corfu-popupinfo-delay '(2.0 . 0.05)))
+  :custom (corfu-popupinfo-delay '(1.0 . 0.05)))
 
 (use-package corfu-echo
   :after corfu
   :config (corfu-echo-mode)
-  :custom (corfu-echo-delay '(0.05 . 0.05)))
+  :custom (corfu-echo-delay '(0.15 . 0.05)))
 
 (use-package corfu-history
   :after corfu
@@ -634,6 +640,8 @@
 ;; TODO: org-block-capf https://github.com/xenodium/org-block-capf
 ;; TODO: org-src-context https://github.com/karthink/org-src-context
 
+;; FIXME consult-buffer remove recent-file source
+
 (use-package consult
   :ensure t
   :hook ((embark-collect-mode completion-list-mode) . consult-preview-at-point-mode)
@@ -651,14 +659,15 @@
     "i" 'consult-info
     "k" 'consult-keep-lines
     "m" 'consult-man
-    "r" 'consult-ripgrep
+	"r" 'consult-recent-file
     "u" 'consult-focus-lines
     "x" 'consult-mode-command
+    "/" 'consult-ripgrep
     ";" 'consult-complex-command)
   (+general-global-goto
     "e" 'consult-compile-error
     "f" 'consult-flymake
-    "g" 'consult-goto-line
+    "G" 'consult-goto-line
     "i" 'consult-imenu
     "I" 'consult-imenu-multi
     "k" 'consult-bookmark
@@ -676,21 +685,28 @@
   (xref-show-xrefs-function #'consult-xref)
   (xref-show-definitions-function #'consult-xref)
   :config
+  ;; Hide recent files list (still available with "f" prefix)
+  (consult-customize consult--source-recent-file :hidden t)
   ;; Replace functions (consult-multi-occur is a drop-in replacement)
   (fset 'multi-occur #'consult-multi-occur))
 
+;; TODO: can I save consult-dir history with savehist?
 (use-package consult-dir
   :ensure t
   :general-config
-  (global-definer "z" 'consult-dir)
+  (global-definer "j" 'consult-dir)
   (general-def :keymaps 'vertico-map
-    "C-M-z" 'consult-dir
-    "C-M-j" 'consult-dir-jump-file)
+    "C-M-j" 'consult-dir
+    "C-M-z" 'consult-dir-jump-file)
   (general-def :keymaps 'embark-become-file+buffer-map
     "d" 'consult-dir)
   (general-def :keymaps 'minibuffer-local-filename-completion-map
-    "C-M-z" 'consult-dir
-    "C-M-j" 'consult-dir-jump-file))
+    "C-M-j" 'consult-dir
+    "C-M-z" 'consult-dir-jump-file)
+  :custom (consult-dir-default-command #'project-find-file))
+
+;; TODO: consult-ripgrep-all https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/lisp/setup-consult.el#L188-L198
+;; TODO: consult-recoll https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/lisp/setup-consult.el#L336-L345
 
 ;; FIXME: embark alist?
 (use-package embark
@@ -738,12 +754,10 @@
 
 (use-package vertico
   :ensure t
-  :general-config
-  (general-imap :keymaps 'vertico-map
-    "C-u" 'vertico-scroll-down
-    "C-d" 'vertico-scroll-up)
   :bind
   (:map vertico-map
+        ("C-d" . vertico-scroll-up)
+        ("C-u" . vertico-scroll-down)
         ("C-<return>" . vertico-exit-input)
         ("M-n" . vertico-next-group)
         ("M-p" . vertico-previous-group)
@@ -889,13 +903,13 @@
                            " "
                            vc-relative-file))))
 
-;; FIXME: https://www.reddit.com/r/emacs/s/Ft0yZxEMVD
-;; FIXME: ibuffer-git https://github.com/jrockway/ibuffer-git
+;; TODO: ibuffer https://www.reddit.com/r/emacs/s/Ft0yZxEMVD
+;; TODO: ibuffer-git https://github.com/jrockway/ibuffer-git
 ;; TODO: projection-ibuffer?
 ;; TODO: bufler?
 
 ;;; bookmark
-;; FIXME: dogears (vs better-jumper)
+;; TODO: dogears (vs better-jumper)
 ;; TODO: bookmark https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L3320
 ;; TODO: blist? https://github.com/emacsmirror/blist
 
@@ -942,7 +956,8 @@
   (whitespace-style '(face empty trailing tabs tab-mark))
   ;; (whitespace-action '(cleanup auto-cleanup))
   (whitespace-global-modes '(not shell-mode magit-mode magit-diff-mode
-                             ibuffer-mode dired-mode occur-mode erc-mode)))
+                             ibuffer-mode dired-mode occur-mode erc-mode))
+  (tab-width 4))
 
 (use-package display-line-numbers
   :init (global-display-line-numbers-mode)
@@ -1075,9 +1090,7 @@
 ;; TODO: project https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/lisp/setup-project.el#L12
 (use-package project
   :general
-  (global-definer
-    "f" 'project-find-file
-    "j" 'project-switch-project)
+  (global-definer "f" 'project-find-file)
   (general-def :keymaps 'projection-map
     "DEL" 'my/project-remove-project)
   :custom
@@ -1153,6 +1166,7 @@
              "," 'project-compile
              "." 'recompile)
   :custom
+  (compilation-message-face nil)
   (compilation-max-output-line-length nil)
   (compilation-scroll-output t)
   (compilation-always-kill t))
@@ -1396,9 +1410,10 @@
   (minor-mode-definer
     :keymaps 'eglot--managed-mode
     "a" 'eglot-code-actions
+    "F" 'eglot-format
     "r" 'eglot-rename)
   ;; TODO: evil-lookup for eglot
-  (general-def :keymaps 'eglot-mode-map
+  (general-nmap :keymaps 'eglot-mode-map
     "K" 'eldoc-doc-buffer)
   :custom
   (eglot-events-buffer-size 0)    ; disable eglot logging (improves performance)
@@ -1431,19 +1446,18 @@
 ;; TODO: emacs-lsp-booster in nix https://github.com/blahgeek/emacs-lsp-booster
 ;; TODO: eglot-booster https://github.com/jdtsmith/eglot-booster
 
+;; FIXME consult-eglot
+;; doesn't show
 (use-package consult-eglot
   :ensure t
-  :general
-  (minor-mode-definer
-    :keymaps 'eglot--managed-mode
+  :general-config
+  (+general-global-goto :keymaps 'eglot--managed-mode
     "s" 'consult-eglot-symbols))
 
 ;; TODO: consult-eglot-embark
 
 ;;; checkers
 (use-package flymake :custom (flymake-fringe-indicator-position 'right-fringe))
-
-(use-package flymake-extras :after flymake)
 
 (use-package flymake-collection
   :ensure t
@@ -1463,7 +1477,7 @@
   :general
   (minor-mode-definer
     :keymaps 'apheleia-mode
-    "F" 'apheleia-format-buffer)
+    "f" 'apheleia-format-buffer)
   :init (apheleia-global-mode))
 
 (use-package apheleia-extras :after apheleia)
@@ -1550,8 +1564,11 @@
 
 (use-package eat
   :ensure t
-  :hook (eshell-load . eat-eshell-mode)
-  :custom (eat-kill-buffer-on-exit t))
+  :hook (eshell-mode . eat-eshell-mode)
+  :custom
+  (eat-kill-buffer-on-exit t)
+  (eat-minimum-latency 0.016)
+  (eat-maximum-latency 0.66))
 
 (use-package comint
   :custom
@@ -1599,6 +1616,7 @@
   :custom
   (tramp-auto-save-directory (var "tramp/auto-save"))
   (tramp-persistency-file-name (var "tramp/persistency.el")))
+;; TODO: consult-dir tramp source
 
 ;;; docker
 ;; TODO: docker https://github.com/Silex/docker.el
@@ -1719,6 +1737,7 @@
 ;; TODO: pdfgrep https://github.com/jeremy-compostella/pdfgrep/
 
 ;;; icons
+
 (use-package nerd-icons-completion
   :ensure t
   :after marginalia
@@ -1731,10 +1750,12 @@
   :after corfu
   :config (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
+;; TODO: hl-line mode doesn't highlight nerd-icons in dired
 (use-package nerd-icons-dired
   :ensure t
   :hook (dired-mode . nerd-icons-dired-mode))
 
+;; TODO: hl-line mode doesn't highlight nerd-icons in ibuffer
 (use-package nerd-icons-ibuffer
   :ensure t
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
@@ -1857,7 +1878,8 @@
   :custom (custom-file (file-name-concat user-cache-directory "etc/custom.el")))
 
 (use-package autorevert
-  :init (global-auto-revert-mode))
+  :init (global-auto-revert-mode)
+  :custom (global-auto-revert-non-file-buffers t))
 
 ;; TODO: rename-file-and-buffer https://github.com/karthink/.emacs.d/blob/master/lisp/better-buffers.el#L217-L231
 ;; TODO: move-buffer-file https://github.com/karthink/.emacs.d/blob/master/lisp/better-buffers.el#L234-L248
@@ -1871,17 +1893,15 @@
 ;; TODO: gptel
 
 ;;; extras
-;; TODO: leetcode https://github.com/kaiwk/leetcode.el
-;; TODO: code-compass https://github.com/ag91/code-compass
 ;; TODO: verb https://github.com/federicotdn/verb
 ;; TODO: restclient.el https://github.com/pashky/restclient.el
+;; TODO: code-compass https://github.com/ag91/code-compass
 ;; TODO: prodigy
 ;; TODO: reverso
 ;; TODO: pomm/tmr
 ;; TODO: turbolog
 ;; TODO: persistent-kmacro
 ;; TODO: macrursors?
-;; TODO: daemons?
 ;; TODO: casual https://github.com/kickingvegas/Casual
 
 ;;; guix

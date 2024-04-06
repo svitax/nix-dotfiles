@@ -99,14 +99,19 @@ FORMATTER is a function of two arguments, TIMESTAMP and DURATION, that returns a
    (when (package-installed-p 'envrc)
      (propertize (if (string= envrc--status 'none)
                      "" (concat
-                         "󱄅 "
+			 (nerd-icons-mdicon "nf-md-nix")
+			 " "
                          (replace-regexp-in-string "-env$" "" (getenv "name"))))
                  'face 'font-lock-comment-face))
    (propertize (concat " " (shortened-path (eshell/pwd) 40)) 'face 'eshell-prompt)
    (propertize (if (car (vc-git-branches))
-                   (concat "  " (car (vc-git-branches)))
+                   (concat
+		    " "
+		    (nerd-icons-octicon "nf-oct-git_branch")
+		    " "
+		    (car (vc-git-branches)))
                  "")
-               'face 'diff-header)
+               'face 'vc-dir-status-up-to-date)
    (propertize (concat (my/eshell-status))
                'face 'font-lock-comment-face)
    (propertize " \n 𝝺 " 'face (if (zerop eshell-last-command-status) 'success 'error))))

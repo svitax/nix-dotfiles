@@ -28,7 +28,7 @@
 
 (setq citar-indicators
       (list citar-indicator-files-icons ; citar-indicator-links-icons
-	    citar-indicator-notes-icons ; citar-indicator-cited-icons
-	    ))
+			citar-indicator-notes-icons ; citar-indicator-cited-icons
+			))
 
 (provide 'citar-extras)
