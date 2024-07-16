@@ -1,5 +1,0 @@
-* System-level Nix Modules
-** - Necessary system-level configuration to get various apps working
-** - System-level security
-** - Stylix setup (system-wide base16 theme generation)
-** [[file:wm/][wm]] - Necessary system-level configuration to get various window managers, wayland compositors, and/or desktop environments working

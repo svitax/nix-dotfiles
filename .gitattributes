@@ -1,2 +1,0 @@
-# TODO: ignore only the lua files for my neovim config
-*.lua linguist-generated
