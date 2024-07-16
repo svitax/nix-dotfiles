@@ -120,6 +120,7 @@ in {
       xdg.enable = true;
       xdg.configFile."emacs/init.el".source = ./init.el;
       xdg.configFile."emacs/early-init.el".source = ./early-init.el;
+      xdg.configFile."emacs/emacs.png".source = ./emacs.png;
       xdg.configFile."emacs/plugins" = {
         source = ./plugins;
         recursive = true;
