@@ -128,6 +128,23 @@ and the entire buffer (in the absense of a region)."
   (interactive "*p")
   (my--move-text (- arg)))
 
+;; Based on http://oremacs.com/2014/12/25/ode-to-toggle
+(defun +capitalize-word-toggle ()
+	"Capitalize word toggle."
+	(interactive)
+	(let ((start
+					(car
+						(bounds-of-thing-at-point 'symbol))))
+		(if start
+			(save-excursion
+				(goto-char start)
+				(funcall
+					(if (eq (char-after) (upcase (char-after)))
+						'downcase-region
+						'upcase-region)
+					start (1+ start)))
+			(capitalize-word -1))))
+
 ;; TODO: isearch-extras
 (defun my/isearch-next ()
   "Go to next isearch match."
