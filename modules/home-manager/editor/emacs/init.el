@@ -311,6 +311,7 @@
 ;; buffer-env https://github.com/astoff/buffer-env
 
 (use-package with-editor
+  :disabled t
   :ensure t
   :hook ((eshell-mode . with-editor-export-editor)
 	 (term-exec . with-editor-export-editor)
