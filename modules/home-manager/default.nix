@@ -1,4 +1,8 @@
 rec {
+  commands = {
+    direnv = ./commands/direnv;
+  };
+
   desktop = {
     firefox = ./desktop/firefox;
     foot = ./desktop/foot;
@@ -24,6 +28,8 @@ rec {
 
   allModules = {
     imports = [
+      commands.direnv
+
       desktop.firefox
       desktop.foot
       desktop.rofi

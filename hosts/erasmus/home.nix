@@ -11,6 +11,8 @@
     inputs.stylix.homeManagerModules.stylix
   ];
 
+  commands.direnv.enable = true;
+
   desktop = {
     firefox.enable = true;
     foot.enable = true;

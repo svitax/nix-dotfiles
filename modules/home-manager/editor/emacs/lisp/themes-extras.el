@@ -13,13 +13,17 @@ This function is added to `ef-themes-post-load-hook'."
 ;; `modus-themes-toggle', `modus-themes-select', and `modus-themes-load-random'.
 
 (defun my/modus-themes-custom-faces (&rest _)
-	"My customization on top of `modus-themes'.
+  "My customization on top of `modus-themes'.
 This function is added to `modus-themes-post-load-hook'."
-	(modus-themes-with-colors
-		(custom-set-faces
-			`(diff-hl-change ((,c :foreground ,bg-changed-fringe :background ,fringe)))
-			`(diff-hl-delete ((,c :foreground ,bg-removed-fringe :background ,fringe)))
-			`(diff-hl-insert ((,c :foreground ,bg-added-fringe :background ,fringe))))))
+  (modus-themes-with-colors
+    (custom-set-faces
+     `(easy-kill-selection ((,c :inherit modus-themes-mark-sel)))
+     `(git-gutter-fr:added ((,c :foreground ,bg-added-fringe :background ,fringe)))
+     `(git-gutter-fr:deleted ((,c :foreground ,bg-removed-fringe :background ,fringe)))
+     `(git-gutter-fr:modified ((,c :foreground ,bg-changed-fringe :background ,fringe)))
+     `(diff-hl-change ((,c :foreground ,bg-changed-fringe :background ,fringe)))
+     `(diff-hl-delete ((,c :foreground ,bg-removed-fringe :background ,fringe)))
+     `(diff-hl-insert ((,c :foreground ,bg-added-fringe :background ,fringe))))))
 
 ;; Using the hook lets our changes persist when we use the command
 ;; `ef-themes-toggle', `ef-themes-select', and `ef-themes-load-random'.

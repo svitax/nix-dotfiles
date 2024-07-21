@@ -75,3 +75,7 @@
   (add-hook 'server-after-make-frame-hook (lambda ()
 					    (when (display-graphic-p)
 					      (my/show-welcome-buffer)))))
+
+(push '(internal-border-width . 16) default-frame-alist)
+(push '(right-divider-width . 1) default-frame-alist)
+(push '(scroll-bar-width . 8) default-frame-alist)

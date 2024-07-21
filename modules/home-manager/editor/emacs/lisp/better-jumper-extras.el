@@ -1,5 +1,11 @@
 ;;; better-jumper-extras.el -*- lexical-binding: t -*-
 
+(defun my/set-jump-a (fn &rest args)
+  "Set a jump point and ensure fn doesn't set any new jump points."
+  (better-jumper-set-jump (if (markerp (car args)) (car args)))
+  (let ((better-jumper--jumping t))
+    (apply fn args)))
+
 (defun my/set-jump-maybe-a (fn &rest args)
   "Set a jump point if fn actually moves the point."
   (let ((origin (point-marker))

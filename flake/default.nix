@@ -1,4 +1,6 @@
-{
+{inputs, ...}: let
+  inherit (inputs.self) outputs;
+in {
   imports = [
     ../hosts
     #   ../modules
@@ -9,6 +11,7 @@
   flake = {
     nixosModules = import ../modules/nixos;
     homeManagerModules = import ../modules/home-manager;
+    overlays = import ../overlays {inherit inputs outputs;};
   };
 
   systems = ["x86_64-linux"];
