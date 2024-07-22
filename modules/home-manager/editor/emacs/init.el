@@ -311,7 +311,6 @@
 ;; buffer-env https://github.com/astoff/buffer-env
 
 (use-package with-editor
-  :disabled t
   :ensure t
   :hook ((eshell-mode . with-editor-export-editor)
 	 (term-exec . with-editor-export-editor)
@@ -437,7 +436,8 @@
   :bind ( :map minibuffer-local-completion-map
 	       ("<backtab>" . minibuffer-force-complete))
   :hook
-  (completion-list-mode . force-truncate-lines)
+  ;; TODO: where does force-truncate-lines come from? oantolin?
+  ;; (completion-list-mode . force-truncate-lines)
   (minibuffer-setup . cursor-intangible-mode)
   :custom
   (completion-styles '(orderless basic))
@@ -687,7 +687,8 @@
   :config (add-to-list 'savehist-additional-variables 'corfu-history))
 
 (use-package corfu-extras
-  :hook ((minibuffer-setup . +corfu-enable-always-in-minibuffer)))
+  :hook ((minibuffer-setup . +corfu-enable-always-in-minibuffer)
+	 ((eshell-mode shell-mode comint-mode) . +corfu-shell-settings)))
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;;; completions ;;;;
@@ -721,8 +722,10 @@
 
 (use-package project
   :bind (:map goto-map
-	      ("f" . project-find-file)
-	      ("p" . project-switch-project))
+	 ("f" . project-find-file)
+	 ("p" . project-switch-project)
+	 :map project-prefix-map
+	 ("C-g" . keyboard-quit))
   :custom
   (project-list-file (file-name-concat user-cache-directory "var/projects"))
   (project-switch-commands '((?f "Find file" project-find-file)
@@ -1210,7 +1213,8 @@
   :hook ((prog-mode . subword-mode)))
 
 (use-package subword-extras
-  :bind ("C-<backspace>" . +backward-delete-subword))
+  :bind (:map prog-mode-map
+	      ("C-<backspace>" . +backward-delete-subword)))
 
 (use-package smart-hungry-delete
   :ensure t
@@ -1547,13 +1551,19 @@
   (compilation-mode . hack-dir-local-variables-non-file-buffer)
   :hide-whitespace compilation-mode
   :bind (:map ctl-x-map
-	      ("," . project-compile)
-	      ("." . recompile))
+	 ("," . project-compile)
+	 ("." . recompile)
+	 :map compilation-mode-map
+	 ("n" . next-error-no-select)
+	 ("p" . previous-error-no-select)
+	 ("{" . compilation-previous-file)
+	 ("}" . compilation-next-file))
   :custom
   (compilation-always-kill t)
   (compilation-scroll-output 'firt-error)
   (compilation-max-output-line-length nil)
   (compilation-message-face nil)
+  (compilation-skip-threshold 2)
   :config
   (add-hook 'next-error-hook #'pulsar-pulse-line-red)
   (add-hook 'next-error-hook #'pulsar-recenter-top)
@@ -1685,19 +1695,157 @@
 ;;;;;;;;;;;;;;;;;;
 ;;;; terminal ;;;;
 
+(use-package term
+  :bind (:map term-mode-map
+	      ("C-c C-j" . +term-toggle-mode)
+	      ("C-c C-k" . +term-toggle-mode))
+  :config
+  ;; https://joelmccracken.github.io/entries/switching-between-term-mode-and-line-mode-in-emacs-term
+  (defun +term-toggle-mode ()
+    "Toggle term between line mode and char mode."
+    (interactive)
+    (if (term-in-line-mode)
+	(term-char-mode)
+      (term-line-mode))))
+
 ;; vterm or eat
-;; comint
 ;; terminal-here?
 ;; isend-mode https://github.com/ffevotte/isend-mode.el
 ;; eshell-visual-vterm https://github.com/accelbread/eshell-visual-vterm
+
+;;;;;;;;;;;;;;;;
+;;;; comint ;;;;
+
+;; comint
+(use-package comint
+  :bind (:map comint-mode-map
+	      ("C-l" . comint-clear-buffer)
+	      ("M-<up>" . comint-previous-prompt)
+	      ("M-<down>" . comint-next-prompt))
+  :custom
+  (comint-scroll-to-bottom-on-input t)
+  (comint-scroll-to-bottom-on-output nil)
+  (comint-input-autoexpand 'input)
+  (comint-buffer-maximum-size 9999)
+  (comint-completion-autolist t)
+  (comint-input-ignoredups t)
+  (comint-prompt-read-only t))
+
 ;; comint-fold https://github.com/jdtsmith/comint-fold
 
-;;;;;;;;;;;;;;;
-;;;; shell ;;;;
+;; TODO: make pcmpl-args parse new commands on the fly
+(use-package pcmpl-args :ensure t)
 
-;; eshell
-;; eshell-syntax-highlighting
-;; eshell-bookmark
+;;;;;;;;;;;;;;;
+;;;; eshell ;;;;
+
+;; TODO: karthink eshell buffer redirection
+;; TODO: karthink eshell atuin
+
+(use-package eshell-extras)
+
+(use-package ffap-eshell
+  :after (eshell ffap))
+
+(use-package eshell
+  :hook
+  ((eshell-mode . +eshell-line-numbers-setup)
+   (eshell-mode . +eshell-imenu-setup)
+   (eshell-mode . +eshell-outline-setup)
+   (eshell-mode . +eshell-expand-region-setup))
+  :bind-keymap ("C-x t" . terminal-map)
+  :bind (:map ctl-x-map
+	 ("<return>" . project-eshell)
+	 :map terminal-map
+	 ("<return>" . project-eshell)
+	 ("e" . +eshell-here)
+	 ("E" . eshell)
+	 :map eshell-mode-map
+	 ("M-k" . eshell-kill-input)
+	 ("C-l" . (lambda () (interactive)
+		    (eshell/clear-scrollback)
+		    (eshell-emit-prompt)))
+	 ("C-c f" . +eshell-ffap-find-file)
+	 ("C-c C-f" . +eshell-ffap-find-file)
+	 ("C-c i" . +eshell-ffap-insert)
+	 ("C-c o" . +eshell-export-last-output)
+	 ("C-c M-w" . +eshell-kill-ring-save-output)
+	 ("C-c >" . +eshell-redirect-to-buffer)
+	 ("C-<return>" . +eshell-send-detached-input)
+	 ("M-." . +eshell-insert-args) ;; only works if arg isn't a number
+	 ("M-<up>" . eshell-previous-prompt)
+	 ("M-<down>" . eshell-next-prompt))
+  :custom
+  (eshell-aliases-file (etc "eshell/aliases"))
+  (eshell-directory-name (etc "eshell/"))
+  (eshell-login-script (etc "eshell/login"))
+  (eshell-rc-script (etc "eshell/rc"))
+  :init
+  (define-prefix-command 'terminal-map)
+  :config
+  (setenv "PAGER" "cat")
+  (setenv "EDITOR" "emacsclient")
+
+  (advice-add 'eshell-life-is-too-much :after #'+delete-window-if-not-single)
+  (advice-add 'eshell-mark-output :after #'activate-mark)
+
+  (defalias 'eshell/b '+eshell/b)
+  (defalias 'eshell/e '+eshell/emacs)
+  (defalias 'eshell/ec '+eshell/emacs)
+  (defalias 'eshell/emacs '+eshell/emacs)
+  (defalias 'eshell/hat '+eshell/hat)
+  (defalias 'eshell/v 'eshell-exec-visual)
+  (defalias 'eshell/view '+eshell/view)
+  (defalias 'eshell/x #'eshell/exit)
+  (defalias 'eshell/z '+eshell/z)
+  ;; It's nicer to type (range 0 3) in eshell.
+  (defalias 'eshell/range #'number-sequence)
+  (defalias 'range #'number-sequence))
+
+(use-package esh-mode
+  :custom
+  (eshell-scroll-to-bottom-on-input 'all)
+  (eshell-scroll-to-bottom-on-output 'all))
+
+(use-package em-hist
+  :custom
+  (eshell-history-size 20000)
+  (eshell-hist-ignoredups t)
+  :config
+  (advice-add #'eshell-add-input-to-history :around #'+eshell-add-input-to-history-a)
+  (advice-add #'eshell-exec-visual :around #'+eshell-exec-visual-a))
+
+(use-package em-glob
+  :custom
+  (eshell-glob-case-insensitive t)
+  (eshell-error-if-no-glob t))
+
+(use-package em-banner
+  :custom (eshell-banner-message ""))
+
+;; xenodium xterm-color?
+(use-package em-term
+  :custom (eshell-term-name "xterm-256color"))
+
+;; pcmpl-git
+;; pcmpl-args
+;; pcomplete-extension
+;; shrink-path
+
+(use-package eshell-up
+  :ensure t
+  :config (defalias 'eshell/up #'eshell-up))
+
+;; TODO: the esh-help setup function doesn't work, set it up myself
+;; or write my own package
+(use-package esh-help
+  :ensure t
+  :config (setup-esh-help-eldoc))
+
+(use-package eshell-syntax-highlighting
+  :ensure t
+  :hook (eshell-mode . eshell-syntax-highlighting-global-mode))
+
 ;; fish-completion?
 ;; bash-completion?
 ;; capf-autosuggest?

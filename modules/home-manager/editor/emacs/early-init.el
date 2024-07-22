@@ -72,6 +72,7 @@
 
 (when (< (length command-line-args) 2)
   ;; TODO: maybe i should add to `emacs-startup-hook' as well in case i'm not using emacsclient
+  ;; FIXME: this gets called after i finish commiting in magit
   (add-hook 'server-after-make-frame-hook (lambda ()
 					    (when (display-graphic-p)
 					      (my/show-welcome-buffer)))))
