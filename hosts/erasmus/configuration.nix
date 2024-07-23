@@ -15,6 +15,8 @@
     inputs.stylix.nixosModules.stylix
   ];
 
+  storage.onedrive.enable = true;
+
   style.stylix.enable = true;
 
   # window-manager.gnome.enable = true;

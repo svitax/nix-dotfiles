@@ -17,6 +17,7 @@ This function is added to `ef-themes-post-load-hook'."
 This function is added to `modus-themes-post-load-hook'."
   (modus-themes-with-colors
     (custom-set-faces
+     `(org-ellipsis ((,c :inherit 'default :box nil)))
      `(easy-kill-selection ((,c :inherit modus-themes-mark-sel)))
      `(git-gutter-fr:added ((,c :foreground ,bg-added-fringe :background ,fringe)))
      `(git-gutter-fr:deleted ((,c :foreground ,bg-removed-fringe :background ,fringe)))

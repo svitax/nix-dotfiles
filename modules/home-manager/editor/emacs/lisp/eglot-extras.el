@@ -7,7 +7,7 @@ The mode must be loaded, i.e. found with `fboundp'. A mode which is not loaded
 will not have a hook added, in which case add it manually with something like
 this:
 
-`(add-hook 'some-mode-hook) #'eglot-ensure"
+`(add-hook 'some-mode-hook #'eglot-ensure)"
   (dolist (mode-def mode-list)
     (let ((mode (if (listp mode-def) (car mode-def) mode-def)))
       (cond

@@ -244,8 +244,9 @@
   :ensure t
   :custom (editorconfig-lisp-use-default-indent t))
 
+;; TODO: indents are kinda wonky with this
 ;; (use-package indent
-;; 	:hook (after-change-major-mode . +set-indent-offset))
+;;   :hook (after-change-major-mode . +set-indent-offset))
 
 (use-package hide-whitespace
   :hook (change-major-mode-after-body . +set-trailing-whitespace))
@@ -255,9 +256,9 @@
 
 (use-package dot-fringe)
 
-;; TODO: better variable pitch mode for org
+;; TODO: better variable pitch mode for org-mode/text-mode
 (use-package face-remap
-  :hook ((text-mode notmuch-show-mode elfeed-show-mode) . my/enable-variable-pitch)
+  :hook ((notmuch-show-mode elfeed-show-mode) . my/enable-variable-pitch)
   :init (defun my/enable-variable-pitch ()
 	  (unless (derived-mode-p 'mhtml-mode 'nxml-mode 'yaml-mode)
 	    (variable-pitch-mode 1))))
@@ -305,6 +306,8 @@
 
 (use-package envrc
   :ensure t
+  :custom
+  (envrc-show-summary-in-minibuffer nil)
   :init (envrc-global-mode))
 
 ;; inheritenv
@@ -513,8 +516,8 @@
   :after vertico
   :bind ( :map vertico-map
 	       ("M-<tab>" . vertico-quick-insert)
-	       ("'" . vertico-quick-jump)
-	       ("C-t" . vertico-quick-exit)
+	       ("C-t" . vertico-quick-jump)
+	       ;; ("C-t" . vertico-quick-exit)
 	       ("M-t" . vertico-quick-embark)))
 
 (use-package vertico-quick-extras
@@ -610,6 +613,7 @@
   ;; Use Consult to select xref locations with preview
   (xref-show-xrefs-function #'consult-xref)
   (xref-show-definitions-function #'consult-xref)
+  (consult-narrow-key "?")
   (consult-async-input-throttle 0.1)
   (consult-async-refresh-delay 0.1)
   (consult-buffer-sources
@@ -669,8 +673,8 @@
 (use-package corfu-quick
   :after corfu
   :bind ( :map corfu-map
-	       ("C-t" . corfu-quick-complete)
-	       ("'" . corfu-quick-jump)))
+	       ;; ("C-t" . corfu-quick-complete)
+	       ("C-t" . corfu-quick-jump)))
 
 (use-package corfu-popupinfo
   :after corfu
@@ -1004,7 +1008,7 @@
 	 ("M-SPC" . my/cycle-spacing-impatient)
 	 ("M-;" . comment-or-uncomment-region)
 	 ("C-/" . undo-only)
-	 ("M-/" . undo-redo)
+	 ("C-?" . undo-redo)
 	 ;; ("C-'" . nil) ; TODO: popper-toggle
 	 ;; ("M-'" . abbrev-prefix-mark) ; TODO: popper-cycle
 	 ;; ("C-\"" . nil) ; TODO: popper-toggle-type
@@ -1417,9 +1421,7 @@
   :custom (helpful-max-buffers 1))
 
 ;; transient
-;; casual-avy https://github.com/kickingvegas/casual-avy
-;; casual-isearch https://github.com/kickingvegas/casual-isearch
-;; casual-suite? or embark help?
+;; embark help for isearch and avy
 
 ;; TODO: remove all the default repeat-mode maps
 (use-package repeat
@@ -1452,13 +1454,64 @@
 
 (use-package flymake
   :ensure t
-  :hook (emacs-lisp-mode . flymake-mode)
+  :config
+  ;; Turn on flymake for all files which have a flymake mode
+  (add-hook 'find-file-hook 'flymake-find-file-hook)
   :custom
+  (flymake-no-changes-timeout 0.2)
+  (flymake-timer 0.2)
+  (flymake-fringe-indicator-position 'right-fringe)
+  (flymake-suppress-zero-counters t)
   (flymake-note-bitmap '(+dot-fringe-bitmap compilation-info))
   (flymake-error-bitmap '(+dot-fringe-bitmap compilation-error))
   (flymake-warning-bitmap '(+dot-fringe-bitmap compilation-warning)))
 
-;; flymake-collection
+;; flymake-collection https://github.com/mohkale/flymake-collection
+;; how do i replace the flymake-quickdefs with flymake-collection?
+
+(use-package flymake-quickdef
+  :ensure t
+  :after flymake
+  :config
+  (flymake-quickdef-backend
+    flymake-golangci
+    :pre-let ((golangci-exec (executable-find "golangci-lint")))
+    :pre-check (unless golangci-exec (error "Cannot find golangci-lint executable"))
+    :write-type 'file ; don't really use this
+    :proc-form (list golangci-exec "run"
+		     "--print-issued-lines=false" "--out-format=line-number"
+		     "--enable-all" "--fast" fmqd-temp-file) ; --fast ones can run on single file
+    :search-regexp "[^:]*:\\([[:digit:]]+\\):\\([[:digit:]]+\\): \\(.*\\)$"
+    :prep-diagnostic (let* ((lnum (string-to-number (match-string 1)))
+			    (col (string-to-number (match-string 2)))
+			    (text (match-string 3))
+			    (pos (flymake-diag-region fmqd-source lnum col))
+			    (beg (car pos))
+			    (end (cdr pos))
+			    (msg (format "golangci> %s" text)))
+		       (list fmqd-source beg end :warning msg)))
+  (add-hook 'go-ts-mode-hook
+	    (lambda ()
+	      (add-hook 'flymake-diagnostic-functions 'flymake-golangci)))
+
+  (flymake-quickdef-backend
+    flymake-statix
+    :pre-let ((statix-exec (executable-find "statix")))
+    :pre-check (unless statix-exec (error "Cannot find statix executable"))
+    :write-type 'file
+    :proc-form (list statix-exec "check" "--format" "errfmt" fmqd-temp-file)
+    :search-regexp "^\\([^>]+\\)>\\([[:digit:]]+\\):\\([[:digit:]]+\\):\\(.*\\)$"
+    :prep-diagnostic (let* ((lnum (string-to-number (match-string 2)))
+			    (col (string-to-number (match-string 3)))
+			    (text (match-string 4))
+			    (pos (flymake-diag-region fmqd-source lnum col))
+			    (beg (car pos))
+			    (end (cdr pos))
+			    (msg (format "statix> %s" text)))
+		       (list fmqd-source beg end :warning msg)))
+  (add-hook 'nix-ts-mode-hook
+	    (lambda ()
+	      (add-hook 'flymake-diagnostic-functions 'flymake-statix))))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; formatting ;;;;
@@ -1467,7 +1520,7 @@
   :ensure t
   :init (apheleia-global-mode))
 
-;; adds :formatter keyword for use-package forms
+;; Adds :formatter keyword for use-package forms
 (use-package apheleia-use-package)
 
 ;;;;;;;;;;;;;
@@ -1477,17 +1530,17 @@
 
 (use-package eglot
   :ensure t ;; i want a more recent version of eglot for eglot--apply-text-edits with the silent arg
-  :hook (eglot-managed-mode . flymake-mode)
   :custom
   (eglot-extend-to-xref t)
   (eglot-autoreconnect nil)
   (eglot-confirm-server-initiated-edits nil)
   :init
   ;; Ask Eglot to stay away from completely taking over Flymake.
-  (setq eglot-stay-out-of '(flymake eldoc eldoc-documentation-strategy company))
-  ;; Just add Eglot as another item in Flymake.
-  (add-hook 'flymake-diagnostic-functions 'eglot-flymake-backend)
+  (setq eglot-stay-out-of '(flymake eldoc-documentation-functions eldoc-documentation-strategy company))
   :config
+  ;; Just add Eglot as another item in Flymake since we asked Eglot to stay
+  ;; away from taking over Flymake.
+  (add-hook 'flymake-diagnostic-functions 'eglot-flymake-backend 90)
   ;; disable eglot log
   (fset #'jsonrpc--log-event #'ignore))
 
@@ -1500,30 +1553,27 @@
 
 (use-package apheleia-eglot)
 
-;; consult-eglot
 (use-package consult-eglot
   :ensure t
   :bind (:map eglot-mode-map
 	      ([remap xref-find-apropos] . consult-eglot-symbols)
 	      ("M-s e" . consult-eglot-symbols)))
 
-;; ctags
-;; citre https://github.com/universal-ctags/citre
+;; ctags with citre https://github.com/universal-ctags/citre
 
 ;;;;;;;;;;;;;
 ;;;; dap ;;;;
 
 ;; TODO: (:dap keyword)
-;; dape
+;; dape https://github.com/svaante/dape
 ;; edebug
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; snippets ;;;;
 
-;; tempel
-;; eglot-tempel
-;; tempel-collection
-;; auto-activating-snippets
+;; tempel https://github.com/minad/tempel
+;; eglot-tempel https://github.com/fejfighter/eglot-tempel
+;; tempel-collection https://github.com/Crandel/tempel-collection
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; treesitter ;;;;
@@ -1622,8 +1672,6 @@
   ;; external packages' minor-mode should NOT automatically set keys in my global map (C-x c in this case). blow it all up so it stops conflicting with my choices
   (setcdr colorful-mode-map nil))
 
-;; ct.el https://github.com/neeasade/ct.el
-
 (use-package hl-todo
   :ensure t
   :hook (prog-mode . hl-todo-mode)
@@ -1636,11 +1684,13 @@
 			      'comment-auto-fill-only-comments)
 			     t)))))
 
-;; TODO: evil-matchit https://github.com/redguardtoo/evil-matchit
-
+;; evil-matchit https://github.com/redguardtoo/evil-matchit
 ;; symbols-outline https://github.com/liushihao456/symbols-outline.el
 ;; imenu-list https://github.com/bmag/imenu-list (alternative to symbols-outline)
 ;; treesitter-context https://github.com/zbelial/treesitter-context.el
+;; outli https://github.com/jdtsmith/outli
+;; nbarrientos outline config
+;; ct.el https://github.com/neeasade/ct.el
 
 ;;;;;;;;;;;;
 ;;;; vc ;;;;
@@ -1666,31 +1716,13 @@
 
 (use-package git-gutter-fringe
   :ensure t
-  :custom (git-gutter-fr:side 'right-fringe)
+  :custom (git-gutter-fr:side 'left-fringe)
   :config
   (define-fringe-bitmap 'git-gutter-fr:added [#b00000111] nil nil '(center repeated))
   (define-fringe-bitmap 'git-gutter-fr:modified [#b00000111] nil nil '(center repeated))
   (define-fringe-bitmap 'git-gutter-fr:deleted [#b00000001
 						#b00000011
 						#b00001111] nil nil 'bottom))
-
-;; diff-hl-margin-mode doesn't play nice with selections and show-paren
-;; diff-hl-flydiff-mode is also too inconsistent
-(use-package diff-hl
-  :disabled t
-  :ensure t
-  :hook ((diff-hl-mode . diff-hl-margin-mode)
-	 (diff-hl-mode . diff-hl-flydiff-mode))
-  :custom
-  (diff-hl-side 'left)
-  (diff-hl-flydiff-delay 0.8)
-  (diff-hl-margin-symbols-alist
-   '((insert . "┃")
-     (delete . "┃")
-     (change . "┃")
-     (unknown . "┃")
-     (ignored . "┃")))
-  :init (global-diff-hl-mode))
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; terminal ;;;;
@@ -1776,10 +1808,7 @@
 	 ("M-<up>" . eshell-previous-prompt)
 	 ("M-<down>" . eshell-next-prompt))
   :custom
-  (eshell-aliases-file (etc "eshell/aliases"))
   (eshell-directory-name (etc "eshell/"))
-  (eshell-login-script (etc "eshell/login"))
-  (eshell-rc-script (etc "eshell/rc"))
   :init
   (define-prefix-command 'terminal-map)
   :config
@@ -1804,9 +1833,13 @@
 
 (use-package esh-mode
   :custom
+  (eshell-aliases-file (etc "eshell/aliases"))
+  (eshell-login-script (etc "eshell/login"))
+  (eshell-rc-script (etc "eshell/rc"))
   (eshell-scroll-to-bottom-on-input 'all)
   (eshell-scroll-to-bottom-on-output 'all))
 
+;; TODO: systemctl --user restart emacs.service doesn't save eshell history
 (use-package em-hist
   :custom
   (eshell-history-size 20000)
@@ -1839,6 +1872,7 @@
 ;; TODO: the esh-help setup function doesn't work, set it up myself
 ;; or write my own package
 (use-package esh-help
+  :disabled t
   :ensure t
   :config (setup-esh-help-eldoc))
 
@@ -1852,6 +1886,8 @@
 
 ;;;;;;;;;;;;;;;
 ;;;; elisp ;;;;
+
+;; package-lint-flymake
 
 (use-package elisp-fontification)
 
@@ -1879,6 +1915,20 @@
 
 ;;;;;;;;;;;;
 ;;;; go ;;;;
+
+;; golangci-lint-langserver?
+
+;; formatting via `goimports', `gofumpt'
+;; linting via `revive', `golangci'
+;; testing (compile?)
+;; import packages (GoGet, GoImport)
+;; modify struct tags with `gomodifytags' https://github.com/brantou/emacs-go-tag
+;; generate method stubs for implementing an interface via `impl' https://github.com/emacsorphanage/go-impl
+;; generate json models via `quicktype' https://github.com/Artawower/quicktype.el
+;; generate if err based on function return values via `iferr'
+;; generate test boilerplate via `gotests'
+
+;; go-fill-struct https://github.com/s-kostyaev/go-fill-struct
 
 ;;;;;;;;;;;;;;
 ;;;; rust ;;;;
@@ -1923,7 +1973,9 @@
 
 (use-package markdown-mode
   :ensure t
-  :custom (markdown-command "pandoc -t html5"))
+  :custom
+  (markdown-command "pandoc -t html5")
+  (markdown-fontify-code-block-natively t))
 
 ;; grip-mode https://github.com/seagle0128/grip-mode
 
@@ -1931,6 +1983,45 @@
 ;;;; org ;;;;
 
 ;; org
+(use-package org
+  :custom
+  (org-ellipsis "…")
+  (org-auto-align-tags nil)
+  (org-tags-column 0)
+  (org-catch-invisible-edits 'show-and-error)
+  (org-special-ctrl-a/e t)
+  (org-insert-heading-respect-content t)
+  ;; Org styling, hide markup etc.
+  (org-hide-emphasis-markers t)
+  (org-pretty-entities t))
+
+(use-package org-agenda
+  :custom
+  ;; Agenda styling
+  (org-agenda-tags-column 0)
+  ;; (org-agenda-block-separator ?─)
+  (org-agenda-time-grid)
+  '((daily today require-timed)
+    (800 1000 1200 1400 1600 1800 2000)
+    " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+  (org-agenda-current-time-string
+   "◀── now ─────────────────────────────────────────────────"))
+
+(use-package org-modern
+  :ensure t
+  :hook
+  ((org-mode . org-modern-mode)
+   (org-agenda-finalize . org-modern-agenda)))
+
+(use-package org-block-capf
+  :after org
+  :completions (org-mode (org-block-capf)))
+
+(use-package org-src-context
+  :config
+  (add-hook 'org-src-mode-hook #'eglot-ensure))
+
+;; org-pdftools https://github.com/fuxialexander/org-pdftools
 ;; book-mode https://github.com/rougier/book-mode
 ;; org-inline-tags
 ;; org-timeblock https://github.com/ichernyshovv/org-timeblock
@@ -1938,25 +2029,108 @@
 ;;;;;;;;;;;;;;;;
 ;;;; biblio ;;;;
 
-;; citar
-;; citar-embark
-;; citar-denote
+(use-package citar
+  :ensure t
+  :commands citar--bibliography-files
+  ;; TODO: make notes-map prefix
+  :bind (:map mode-specific-map
+	      ("n o" . citar-open)
+	      ("n p" . citar-open-files))
+  :custom
+  (citar-select-multiple nil)
+  (citar-bibliography '("~/OneDrive/docs/lib.bib"))
+  (citar-library-paths '("~/OneDrive/docs/books"))
+  (citar-templates
+   '((main . "${title:55} ${author editor:55} ${date year issued:4}")
+     (suffix . "  ${tags keywords keywords:40}")
+     (preview . "${author editor} ${title}, ${journal publisher container-title collection-title booktitle} ${volume} (${year issued date}).\n")
+     (note . "#+title: Notes on ${author editor}, ${title}")))
+  :completions (org-mode (citar-capf)))
+
+(use-package citar-extras)
+
+(use-package citar-embark
+  :ensure t
+  :init (citar-embark-mode))
+
+(use-package citar-denote
+  :ensure t
+  :bind (:map mode-specific-map
+	      ("n a" . citar-denote-add-citekey)
+	      ("n C-a" . citar-denote-remove-citekey))
+  :init (citar-denote-mode))
 
 ;;;;;;;;;;;;;;;
 ;;;; notes ;;;;
 
-;; denote
-;; consult-denote
-;; denote-explore
-;; org-noter https://github.com/weirdNox/org-noter
+(use-package denote
+  :ensure t
+  ;; BUG: incompatible with diredfl-mode
+  ;; TODO: turn off diredfl-mode only in denote directories?
+  ;; :hook (dired-mode . denote-dired-mode-in-directories)
+  :bind (:map mode-specific-map
+	      ("n b" . denote-find-backlink)
+	      ("n i" . denote-link-or-create)
+	      ("n k" . denote-keywords-add)
+	      ("n K" . denote-keywords-remove)
+	      ("n l" . denote-find-link)
+	      ("n r" . denote-rename-file)
+	      ("n s" . denote-rename-file-using-front-matter))
+  :custom
+  (denote-directory (expand-file-name "~/OneDrive/notes/"))
+  (denote-known-keywords '("emacs" "denote" "testing")))
+
+(use-package consult-denote
+  :ensure t
+  :bind (:map mode-specific-map
+	      ("n f" . consult-denote-find)
+	      ("n g" . consult-denote-grep))
+  :init (consult-denote-mode))
+
+;; TODO: org-noter and denote integration. look at org-roam integration
+;; creating a denote file and then linking to a document with org-noter doesn't
+;; work because the document has a different time tag.
+;; creating an org-noter file from inside a document doesn't give the file the
+;; right name for denote, and doesn't add the correct metadata.
+(use-package org-noter
+  :ensure t
+  :init
+  (setq org-noter--show-arrow-hook '()) ;; default always gives an error, can't be bothered to fix
+  (setq org-noter-always-create-frame nil)
+  (setq org-noter-kill-frame-at-session-end nil)
+  (setq org-noter-notes-search-path (list denote-directory)))
+
+;; denote-explore https://github.com/pprevos/denote-explore
 ;; annotate https://github.com/bastibe/annotate.el
+;; anki-editor https://github.com/louietan/anki-editor
 
 ;;;;;;;;;;;;;;;;;
 ;;;; reading ;;;;
 
-;; pdf-tools
-;; saveplace-pdf-view
-;; nov
+(use-package pdf-tools
+  :ensure t
+  :mode ("\\.[Pp][Dd][Ff]\\'" . pdf-view-mode)
+  :magic ("%PDF" . pdf-view-mode)
+  :hook
+  (pdf-view-mode . pdf-tools-enable-minor-modes)
+  (pdf-view-mode . (lambda () (progn
+				(blink-cursor-mode -1)
+				(display-line-numbers-mode -1)
+				(hl-line-mode -1))))
+  :custom (large-file-warning-threshold nil)
+  :init (setq-default pdf-view-dispay-size 'fit-page)
+  :config (pdf-tools-install :no-query))
+
+;; Add support for pdf-view and DocView buffers to `save-place'.
+(use-package saveplace-pdf-view :ensure t)
+
+(use-package nov
+  :ensure t
+  :mode ("\\.[Ee][Pp][Uu][Bb]\\'" . nov-mode)
+  :custom (nov-save-place-file (var "nov-save-place.el")))
+
+(use-package djvu :ensure t)
+
 ;; wombag
 ;; elfeed
 ;; phundrak config elfeed
@@ -2002,8 +2176,7 @@
   :after magit
   :init (magit-file-icons-mode 1))
 
-(use-package compile-multi-all-the-icons
-  :ensure t)
+;; TODO create compile-multi-nerd-icons
 
 ;;;;;;;;;;;;;;;;;
 ;;;; secrets ;;;;

@@ -46,13 +46,15 @@ in {
       # TODO: extract git, ripgrep, and fd config
       # TODO: extract go and gopls config?
       home.packages = with pkgs; [
+        emacs-lsp-booster
         git
         ripgrep
         fd
         #
         go
         gopls
-        emacs-lsp-booster
+        golangci-lint
+        pyright
       ];
 
       nixpkgs.overlays = [
@@ -70,6 +72,7 @@ in {
         extraEmacsPackages = epkgs:
           with epkgs; [
             treesit-grammars.with-all-grammars
+            pdf-tools
             emacsql-sqlite
             all-the-icons
             #
@@ -77,6 +80,8 @@ in {
             visual-replace
             projel
             eglot-booster
+            org-block-capf
+            org-src-context
           ];
         override = epkgs:
           epkgs
@@ -104,6 +109,18 @@ in {
               repo = "eglot-booster";
               rev = "e19dd7ea81bada84c66e8bdd121408d9c0761fe6";
               hash = "sha256-vF34ZoUUj8RENyH9OeKGSPk34G6KXZhEZozQKEcRNhs=";
+            });
+            org-block-capf = elPackage "org-block-capf" (pkgs.fetchFromGitHub {
+              owner = "xenodium";
+              repo = "org-block-capf";
+              rev = "080cfd2ed630a6739633b07a8ab6b896a1b5ef4a";
+              hash = "sha256-iQPuKkIrAfpFf6G9E1kCOOCoB2riSuuRrtpfeBe20uc=";
+            });
+            org-src-context = elPackage "org-src-context" (pkgs.fetchFromGitHub {
+              owner = "karthink";
+              repo = "org-src-context";
+              rev = "625fc800950ed16dbf77c666e5129087b2315e2a";
+              hash = "sha256-znfBXCWpooZTOMuP4ap2wjUsSpaz41NS2h9YSdgZacQ=";
             });
           };
       };
