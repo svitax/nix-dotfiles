@@ -1353,6 +1353,7 @@
 	 :map isearch-mode-map
 	 ("C-t" . avy-isearch))
   :custom
+  (avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o)) ;; Colemak-DH keyboard
   (avy-timeout-seconds 0.35)
   (avy-single-candidate-jump nil))
 
@@ -1985,6 +1986,7 @@
 ;; org
 (use-package org
   :custom
+  (org-return-follows-link t)
   (org-ellipsis "…")
   (org-auto-align-tags nil)
   (org-tags-column 0)
@@ -2069,6 +2071,7 @@
   ;; TODO: turn off diredfl-mode only in denote directories?
   ;; :hook (dired-mode . denote-dired-mode-in-directories)
   :bind (:map mode-specific-map
+	      ("n n" . denote)
 	      ("n b" . denote-find-backlink)
 	      ("n i" . denote-link-or-create)
 	      ("n k" . denote-keywords-add)

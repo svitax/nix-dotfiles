@@ -73,7 +73,7 @@ in {
           with epkgs; [
             treesit-grammars.with-all-grammars
             pdf-tools
-            emacsql-sqlite
+            # emacsql-sqlite
             all-the-icons
             #
             macrursors
