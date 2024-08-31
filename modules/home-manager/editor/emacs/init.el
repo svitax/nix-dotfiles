@@ -87,41 +87,41 @@
 (setq-default fringe-indicator-alist (delq (assq 'continuation fringe-indicator-alist) fringe-indicator-alist))
 
 ;; TODO: replace doom-modeline with mood-line? or a custom builtin one? moody? minions?
-(use-package doom-modeline
-  :ensure t
-  :config
-  (setq-default mode-line-buffer-identification "%b")
-  (setq doom-modeline-mode-alist nil)
-  (doom-modeline-def-modeline 'my-modeline
-    '(matches buffer-info remote-host buffer-position)
-    ;; TODO: checker segment was renamed to check in #62890ef
-    '(misc-info time irc debug input-method major-mode process check))
-  (add-hook 'doom-modeline-mode-hook
-	    (lambda nil
-	      (doom-modeline-set-modeline 'my-modeline 'default)))
-  (doom-modeline-mode 1)
-  (column-number-mode 1)
-  :custom
-  (doom-modeline-height 30)
-  (doom-modeline-buffer-modification-icon nil)
-  (doom-modeline-highlight-modified-buffer-name nil)
-  (doom-modeline-irc-buffers t)
-  (doom-modeline-buffer-file-name-style 'relative-from-project)
-  (doom-modeline-time-icon nil))
+;; (use-package doom-modeline
+;;   :ensure t
+;;   :config
+;;   (setq-default mode-line-buffer-identification "%b")
+;;   (setq doom-modeline-mode-alist nil)
+;;   (doom-modeline-def-modeline 'my-modeline
+;;     '(matches buffer-info remote-host buffer-position)
+;;     ;; TODO: checker segment was renamed to check in #62890ef
+;;     '(misc-info time irc debug input-method major-mode process check))
+;;   (add-hook 'doom-modeline-mode-hook
+;; 	    (lambda nil
+;; 	      (doom-modeline-set-modeline 'my-modeline 'default)))
+;;   (doom-modeline-mode 1)
+;;   (column-number-mode 1)
+;;   :custom
+;;   (doom-modeline-height 30)
+;;   (doom-modeline-buffer-modification-icon nil)
+;;   (doom-modeline-highlight-modified-buffer-name nil)
+;;   (doom-modeline-irc-buffers t)
+;;   (doom-modeline-buffer-file-name-style 'relative-from-project)
+;;   (doom-modeline-time-icon nil))
 
-(use-package spacious-padding
-  :ensure t
-  :disabled t
-  :init (spacious-padding-mode)
-  :custom
-  (spacious-padding-subtle-mode-line '( :mode-line-active 'default
-					:mode-line-inactive 'vertical-border))
-  (spacious-padding-widths '( :internal-border-width 16
-			      :header-line-width 4
-			      :mode-line-width 2
-			      :tab-width 2
-			      :right-divider-width 24
-			      :scroll-bar-width 8)))
+;; (use-package spacious-padding
+;;   :ensure t
+;;   :disabled t
+;;   :init (spacious-padding-mode)
+;;   :custom
+;;   (spacious-padding-subtle-mode-line '( :mode-line-active 'default
+;; 					:mode-line-inactive 'vertical-border))
+;;   (spacious-padding-widths '( :internal-border-width 16
+;; 			      :header-line-width 4
+;; 			      :mode-line-width 2
+;; 			      :tab-width 2
+;; 			      :right-divider-width 24
+;; 			      :scroll-bar-width 8)))
 
 (use-package frame
   :custom
@@ -346,17 +346,17 @@
   :config (add-to-list 'find-file-not-found-functions
 		       #'+files-create-non-existent-directory))
 
-(use-package autorevert
-  :init (global-auto-revert-mode)
-  :custom
-  ;; Be quiet about reverts
-  (global-auto-revert-non-file-buffers t)
-  (auto-revert-verbose nil))
+;; (use-package autorevert
+;;   :init (global-auto-revert-mode)
+;;   :custom
+;;   ;; Be quiet about reverts
+;;   (global-auto-revert-non-file-buffers t)
+;;   (auto-revert-verbose nil))
 
-(use-package autorevert-extras
-  :config
-  ;; global-auto-revert-mode can slow things down. try to enable it per active window.
-  (add-to-list 'window-state-change-functions #'+window-state-state-change))
+;; (use-package autorevert-extras
+;;   :config
+;;   ;; global-auto-revert-mode can slow things down. try to enable it per active window.
+;;   (add-to-list 'window-state-change-functions #'+window-state-state-change))
 
 ;; Avoid creating lock files (ie. .#some-file.el)
 (setq create-lockfiles nil)
@@ -366,44 +366,44 @@
 ;; TODO: maybe don't include /nix/store/ items from recentf in recentf-extras
 ;; Keep track of recently opened files. Also feeds into the list of recent
 ;; directories used by consult-dir.
-(use-package recentf
-  :custom
-  (recentf-max-saved-items 200)
-  (recentf-auto-cleanup 300)
-  (recentf-save-file (var "recentf-save.el"))
-  :config
-  ;; Exclude anything in runtime folders
-  (add-to-list 'recentf-exclude
-	       (concat "^" (regexp-quote (or (getenv "XDG_RUNTIME_DIR")
-					     "/run"))))
-  ;; Exclude anything in nix store
-  (add-to-list 'recentf-exclude (concat "^" (regexp-quote "/nix/store")))
-  ;; Text properties inflate the size of recentf's files, and there is no
-  ;; purpose in persisting them (Must be first in the list!)
-  (add-to-list 'recentf-filename-handlers #'substring-no-properties)
-  ;; The most sensible time to clean up your recent files list is when you quit
-  ;; Emacs (unless this is a long-running daemon session).
-  (setq recent-auto-cleanup (if (daemonp) 300))
-  (add-hook 'kill-emacs-hook #'recentf-cleanup)
+;; (use-package recentf
+;;   :custom
+;;   (recentf-max-saved-items 200)
+;;   (recentf-auto-cleanup 300)
+;;   (recentf-save-file (var "recentf-save.el"))
+;;   :config
+;;   ;; Exclude anything in runtime folders
+;;   (add-to-list 'recentf-exclude
+;; 	       (concat "^" (regexp-quote (or (getenv "XDG_RUNTIME_DIR")
+;; 					     "/run"))))
+;;   ;; Exclude anything in nix store
+;;   (add-to-list 'recentf-exclude (concat "^" (regexp-quote "/nix/store")))
+;;   ;; Text properties inflate the size of recentf's files, and there is no
+;;   ;; purpose in persisting them (Must be first in the list!)
+;;   (add-to-list 'recentf-filename-handlers #'substring-no-properties)
+;;   ;; The most sensible time to clean up your recent files list is when you quit
+;;   ;; Emacs (unless this is a long-running daemon session).
+;;   (setq recent-auto-cleanup (if (daemonp) 300))
+;;   (add-hook 'kill-emacs-hook #'recentf-cleanup)
 
-  (recentf-mode +1))
+;;   (recentf-mode +1))
 
-(use-package recentf-extras
-  :config
-  ;; Make filenames more portable and readable
-  (add-to-list 'recentf-filename-handlers #'+recentf--file-truename-fn)
-  ;; Bump file in recentf file list when it is switched or written to.
-  (add-hook 'on-switch-window-hook #'+recentf--touch-buffer-h)
-  (add-hook 'write-file-functions #'+recentf--touch-buffer-h)
-  ;; TODO: Update recentf list when renaming files in dired https://emacswiki.org/emacs/RecentFiles
-  (add-hook 'dired-mode-hook #'+recentf--add-dired-directory-h))
+;; (use-package recentf-extras
+;;   :config
+;;   ;; Make filenames more portable and readable
+;;   (add-to-list 'recentf-filename-handlers #'+recentf--file-truename-fn)
+;;   ;; Bump file in recentf file list when it is switched or written to.
+;;   (add-hook 'on-switch-window-hook #'+recentf--touch-buffer-h)
+;;   (add-hook 'write-file-functions #'+recentf--touch-buffer-h)
+;;   ;; TODO: Update recentf list when renaming files in dired https://emacswiki.org/emacs/RecentFiles
+;;   (add-hook 'dired-mode-hook #'+recentf--add-dired-directory-h))
 
-(use-package saveplace
-  :custom (save-place-file (var "save-place.el"))
-  :init (save-place-mode))
+;; (use-package saveplace
+;;   :custom (save-place-file (var "save-place.el"))
+;;   :init (save-place-mode))
 
-(use-package cus-edit
-  :custom (custom-file (file-name-concat user-cache-directory "etc/custom.el")))
+;; (use-package cus-edit
+;;   :custom (custom-file (file-name-concat user-cache-directory "etc/custom.el")))
 
 ;;  TODO: find a place to put these variables
 ;; 	(echo-keystrokes 0.01)
@@ -413,24 +413,258 @@
 ;; 	(vc-follow-symlinks t)
 ;; 	(word-wrap t)
 
-(use-package savehist
-  :init (savehist-mode)
-  :custom
-  (savehist-file (var "savehist.el"))
-  (savehist-save-minibuffer-history t)
-  (savehist-autosave-interval 300)
-  (savehist-ignored-variables '(file-name-history))
-  (savehist-additional-variables '(kill-ring register-alist
-				   mark-ring global-mark-ring
-				   search-ring regexp-search-ring
-				   vertico-repeat-history))
-  (history-length 1000)
-  (history-delete-duplicates t))
+;; (use-package savehist
+;;   :init (savehist-mode)
+;;   :custom
+;;   (savehist-file (var "savehist.el"))
+;;   (savehist-save-minibuffer-history t)
+;;   (savehist-autosave-interval 300)
+;;   (savehist-ignored-variables '(file-name-history))
+;;   (savehist-additional-variables '(kill-ring register-alist
+;; 				   mark-ring global-mark-ring
+;; 				   search-ring regexp-search-ring
+;; 				   vertico-repeat-history))
+;;   (history-length 1000)
+;;   (history-delete-duplicates t))
 
-(use-package savehist-extras
+;; (use-package savehist-extras
+;;   :config
+;;   (add-hook 'savehist-save-hook '+savehist-unpropertize-variables-h)
+;;   (add-hook 'savehist-save-hook '+savehist-remove-unprintable-registers-h))
+
+
+;;;;;;;;;;;;;;
+;;;; meow ;;;;
+
+;; TODO: rectangle state https://github.com/Ziqi-Yang/.emacs.d/blob/
+;; TODO: smartparen/puni state https://github.com/eshrh/nyaatouch/blob/master/nyaatouch.el
+;; TODO: multicursor.el support for meow's beacon state
+(use-package meow
+  :ensure t
+  :custom
+  (meow-use-clipboard t)
+  (meow-expand-hint-remove-delay 0)
+  :init
+  (defun my/meow-append-line-end ()
+    (interactive)
+    (meow-line 1)
+    (meow-append))
+  (defun my/meow-insert-line-start ()
+    (interactive)
+    (meow-join t)
+    (meow-append))
+  (defun my/meow-join-line ()
+    (interactive)
+    (meow-next t)
+    (meow-kill))
+
+  (defun meow-setup ()
+    "Setup meow bindings."
+    (setq meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh)
+    ;; Forward C-d to H-d so we can rebind C-d to page-down
+    (global-set-key (kbd "H-d") 'delete-char)
+    (setq meow--kbd-delete-char "H-d")
+    (meow-motion-overwrite-define-key
+     ;; Use e to move up, n to move down.
+     ;; Since special modes usually use n to move down, we only overwrite e here.
+     '("e" . meow-prev)
+     '("<escape>" . ignore))
+    (meow-leader-define-key
+     '(";" . vertico-repeat)
+     ;; TODO: '("," . my/compile-map)
+     ;; ,, . project-compile ;; TODO: compile-dwim (emacswiki)
+     ;; ,. . recompile
+     ;; ,m . compile-multi
+     ;; ,k . kill-compilation
+     ;; ,n . my/compile-next-makefile (lambda emacs)
+     ;; TODO: '("b" . my/buffer-map)
+     '("b" . consult-buffer)
+     ;; bb . consult-buffer
+     ;; bk . kill-this-buffer
+     ;; bK . crux-kill-other-buffers
+     ;; br . crux-rename-buffer-and-file
+     '("d" . dired-jump)
+     ;; TODO: '("e" . my/eval-map)
+     ;; eb . eval-buffer
+     ;; ee . eval-last-sexp
+     ;; ec . lem-eval-current-form
+     ;; ef . eval-defun
+     ;; er . eval-last-region
+     ;; TODO: '("f" . my/file-map)
+     '("f" . project-find-file)
+     ;; fd . consult-fd
+     ;; ff . find-file
+     ;; fp . project-find-file ;; can i replace this with consult-dir-jump-file?
+     ;; fr . consult-recent-file
+     ;; fl . consult-locate
+     ;; fy . my/copy-buffer-filename
+     ;; TODO: '("n" . my/notes-map)
+     ;; nd . denote
+     ;; nn . consult-denote-find
+     ;; ng . consult-denote-grep
+     ;; TODO: nb . my/bibligraphy-map
+     ;; nba . citar-denote-add-citekey
+     ;; nbr . citar-denote-remove-citekey
+     ;; nbd . citar-denote-dwim
+     ;; nbc . citar-create-note
+     ;; nbb . citar-open
+     ;; nbn . citar-open-notes
+     ;; nbf . citar-open-files
+     ;; TODO: '("p" . project-prefix-map)
+     ;; TODO: '("q" . my/quit-map)
+     '("q" . save-buffers-kill-terminal)
+     ;; qq . save-buffers-kill-terminal
+     ;; qr . restart-emacs
+     ;; qk . my/kill-all-emacsen (lambda emacs)
+     ;; TODO: '("s" . my/search-map)
+     ;; sg . consult-ripgrep
+     ;; si . consult-imenu
+     ;; ss . consult-line
+     ;; sd . consult-dir
+     ;; sh . consult-org-heading
+     ;; sl . consult-outline
+     ;; so . consult-multi-occur (lambda emacs)
+     ;; sr . vr/query-replace
+     ;; s. . consult-line-symbol-at-point (lambda emacs)
+     ;; s; . repeat search?
+     ;; TODO: '("t" . my/toggle-map)
+     ;; tg . git-gutter-mode
+     ;; tG . global-git-gutter-mode
+     ;; th . hl-line-mode
+     ;; tH . global-hl-line-mode
+     ;; tf . flymake-mode
+     ;; tn . display-line-numbers-mode
+     ;; tN . global-display-line-numbers-mode
+     ;; ti . imenu-list-smart-toggle
+     ;; tc . colorful-mode
+     ;; tC . global-colorful-mode
+     ;; tj . jinx-mode
+     ;; tJ . global-jinx-mode
+     ;; tt . consult-theme
+     ;; TODO: '("v" . my/version-control-map)
+     ;; vb . magit-blame
+     ;; vc . magit-commit
+     ;; vd . magit-diff
+     ;; vl . magit-log
+     ;; vL . magit-log-buffer-file
+     ;; vn . git-gutter:next-hunk
+     ;; ve . git-gutter:previous-hunk
+     ;; vq . vc-next-action
+     ;; vr . magit-reflog
+     ;; vs . magit-status
+     ;; TODO: '("w" . my/window-map)
+     ;; wa . ace-window
+     ;; ww . ace-window
+     ;; wf . my/toggle-window-split (lambda emacs)
+     ;; ws . my/split-window-below-and-focus (lambda emacs)
+     ;; wv . my/split-window-right-and-focus (lambda emacs)
+     ;; wo . other-window
+     ;; wk . delete-window
+     ;; wt . tear-off-window
+     ;; wr . my/rotate-windows (lambda emacs)
+     ;; wR . my/rotate-windows-backward (lambda emacs)
+     ;; wx . my/exchange-window-buffer (lambda emacs)
+     ;; TODO: '("" . my/spelling-map)
+     ;;  c . jinx-correct
+     ;;  l . jinx-languages
+     )
+    (meow-normal-define-key
+     '("a" . meow-append)
+     '("A" . my/meow-append-line-end)
+     '("b" . meow-back-word)
+     '("B" . meow-back-symbol)
+     '("c" . meow-change)
+     ;; TODO: '("C" . my/meow-cursor-below)
+     '("C-c" . comment-line)
+     '("d" . meow-delete)
+     ;; TODO: '("d" . my/meow-delete)
+     '("D" . meow-kill)
+     ;; TODO: '("C-d" . my/meow-half-page-down)
+     '("C-d" . meow-page-down)
+     '("e" . meow-prev)
+     '("E" . meow-lookup)
+     '("f" . meow-till)
+     ;; TODO: '("F" . my/meow-till-backwards)
+     ;; TODO: '("g" . my/goto-map)
+     ;; gg => goto file start
+     ;; ge => goto file end
+     ;; gf => goto file
+     ;; gm => goto line start
+     ;; gi => goto line end
+     ;; gs => goto first non whitespace
+     ;; gd => goto definition
+     ;; gD => goto declaration
+     ;; gy => goto type definition
+     ;; gr => goto reference
+     ;; gu => goto implementation
+     ;; gc => goto window center
+     ;; gb => goto window bottom
+     ;; gt => goto window top
+     ;; gj => avy timer
+     ;; gw => avy word
+     ;; TODO: '("h" . my/match-map)
+     ;; ha => meow-bounds-of-thing
+     ;; hi => meow-inner-of-thing
+     ;; hm => matching bracket / matchit
+     ;; hs => surround add
+     ;; hr => surround replace
+     ;; hd => surround delete
+     '("i" . meow-right)
+     ;; TODO: '("C-i" . my/meow-jump-backwards)
+     '("C-i" . xref-go-back)
+     ;; TODO: '("j" . my/meow-keep) ;; keep selections matching regex (multicursor)
+     ;; TODO: '("J" . my/meow-remove) ;; remove selections matching regex (multicursor)
+     '("k" . meow-search)
+     ;; TODO: '("k" . my/meow-next)
+     '("l" . meow-undo)
+     '("L" . undo-redo)
+     '("m" . meow-left)
+     '("n" . meow-next)
+     '("N" . my/meow-join-line)
+     ;; TODO: N => join lines inside selection
+     '("o" . meow-open-below)
+     '("O" . meow-open-above)
+     ;; TODO: '("C-o" . my/meow-jump-forward)
+     '("C-o" . xref-go-forward)
+     '("p" . meow-yank)
+     ;; TODO: '("P" . my/meow-yank-before)
+     '("q" . meow-quit)
+     '("r" . meow-replace-char)
+     '("R" . meow-replace)
+     ;; TODO: '("s" . my/meow-select)
+     '("t" . meow-find)
+     ;; TODO: '("T" . my/meow-find-backwards)
+     '("u" . meow-insert)
+     ;; TODO: '("U" . my/meow-insert-line-start)
+     ;; TODO: '("C-u" . my/meow-half-page-up)
+     '("C-u" . meow-page-up)
+     ;; TODO: '("v" . my/meow-extend-state)
+     '("w" . meow-next-word)
+     '("W" . meow-next-symbol)
+     '("x" . meow-line)
+     '("y" . meow-save)
+     '("z" . meow-pop-selection)
+     '("<escape>" . meow-cancel-selection)
+     '("-" . negative-argument)
+     '("`" . meow-universal-argument)
+     ;; TODO: expand-region and contract-region does mark-word/symbol (push content into `regexp-search-ring')
+     '("," . er/expand-region)
+     '("." . er/contract-region)
+     ;; TODO: '(">" . my/meow-next-thing)
+     ;; >x . goto next diagnostic
+     ;; >X . goto last diagnostic
+     ;; TODO: '("<" . my/meow-previous-thing)
+     ;; <x . goto prev diagnostic
+     ;; <X . goto first diagnostic
+     '("=" . apheleia-format-buffer)
+     '(";" . meow-repeat)
+     '(":" . execute-extended-command)
+     '("'" . meow-reverse)))
   :config
-  (add-hook 'savehist-save-hook '+savehist-unpropertize-variables-h)
-  (add-hook 'savehist-save-hook '+savehist-remove-unprintable-registers-h))
+  (meow-thing-register 'angle '(regexp "<" ">") '(regexp "<" ">"))
+  (add-to-list 'meow-char-thing-table '(?a . angle))
+  (meow-global-mode 1)
+  (meow-setup))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; minibuffer ;;;;
@@ -528,7 +762,9 @@
   :after vertico
   :hook (minibuffer-setup . vertico-repeat-save)
   :bind (("C-x '" . vertico-repeat))
-  :init (add-to-list 'savehist-additional-variables 'vertico-repeat-history))
+  ;; :init
+  ;; (add-to-list 'savehist-additional-variables 'vertico-repeat-history)
+  )
 
 (use-package vertico-suspend
   :after vertico
@@ -663,12 +899,14 @@
   :custom
   (corfu-auto t)
   (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.25)
+  (corfu-auto-delay 0)
   (corfu-count 10)
   (corfu-cycle t)
   (corfu-preview-current nil)
   (corfu-preselect 'first)
-  (corfu-scroll-margin 5))
+  (corfu-scroll-margin 5)
+  :config
+  (add-hook 'meow-insert-exit-hook 'corfu-quit))
 
 (use-package corfu-quick
   :after corfu
@@ -688,7 +926,9 @@
 (use-package corfu-history
   :after corfu
   :init (corfu-history-mode 1)
-  :config (add-to-list 'savehist-additional-variables 'corfu-history))
+  ;; :config
+  ;; (add-to-list 'savehist-additional-variables 'corfu-history)
+  )
 
 (use-package corfu-extras
   :hook ((minibuffer-setup . +corfu-enable-always-in-minibuffer)
@@ -1055,6 +1295,9 @@
   :custom
   (expand-region-fast-keys-enabled nil)
   :init
+  (meow-normal-define-key
+   '("<" . er/expand-region)
+   '(">" . er/contract-region))
   (define-repeat-map expand-region
     (:continue
      "," er/expand-region
@@ -1074,89 +1317,89 @@
   :init
   (define-prefix-command 'mc/mark-map))
 
-(use-package macrursors
-  :disabled t
-  :bind-keymap ("M-r" . macrursors-mark-map)
-  :bind (("M-n" . macrursors-mark-next-instance-of)
-	 ("M-p" . macrursors-mark-previous-instance-of)
-	 :map macrursors-mode-map
-	 ("M-r" . nil)
-	 ("M-r M-r" . macrursors-end)
-	 :map macrursors-mark-map
-	 ("." . macrursors-mark-all-instances-of)
-	 ("l" . macrursors-mark-all-lines)
-	 ("C-n" . macrursors-mark-next-line)
-	 ("C-p" . macrursors-mark-previous-line)
-	 :map isearch-mode-map
-	 ("M-r" . macrursors-mark-from-isearch)
-	 ("M-s n" . macrursors-mark-next-from-isearch)
-	 ("M-s p" . macrursors-mark-previous-from-isearch))
-  :init
-  (define-prefix-command 'macrursors-mark-map)
-  (define-repeat-map macrursors-mode
-    ("n" macrursors-mark-next-instance-of)
-    ("p" macrursors-mark-previous-instance-of)
-    ("C-n" macrursors-mark-next-line)
-    ("C-p" macrursors-mark-previous-line)
-    (:enter macrursors-mark-next-line
-	    macrursors-mark-previous-line
-	    macrursors-mark-next-from-isearch
-	    macrursors-mark-previous-from-isearch)))
+;; (use-package macrursors
+;;   :disabled t
+;;   :bind-keymap ("M-r" . macrursors-mark-map)
+;;   :bind (("M-n" . macrursors-mark-next-instance-of)
+;; 	 ("M-p" . macrursors-mark-previous-instance-of)
+;; 	 :map macrursors-mode-map
+;; 	 ("M-r" . nil)
+;; 	 ("M-r M-r" . macrursors-end)
+;; 	 :map macrursors-mark-map
+;; 	 ("." . macrursors-mark-all-instances-of)
+;; 	 ("l" . macrursors-mark-all-lines)
+;; 	 ("C-n" . macrursors-mark-next-line)
+;; 	 ("C-p" . macrursors-mark-previous-line)
+;; 	 :map isearch-mode-map
+;; 	 ("M-r" . macrursors-mark-from-isearch)
+;; 	 ("M-s n" . macrursors-mark-next-from-isearch)
+;; 	 ("M-s p" . macrursors-mark-previous-from-isearch))
+;;   :init
+;;   (define-prefix-command 'macrursors-mark-map)
+;;   (define-repeat-map macrursors-mode
+;;     ("n" macrursors-mark-next-instance-of)
+;;     ("p" macrursors-mark-previous-instance-of)
+;;     ("C-n" macrursors-mark-next-line)
+;;     ("C-p" macrursors-mark-previous-line)
+;;     (:enter macrursors-mark-next-line
+;; 	    macrursors-mark-previous-line
+;; 	    macrursors-mark-next-from-isearch
+;; 	    macrursors-mark-previous-from-isearch)))
 
-(use-package macrursors-select
-  :bind ( :map macrursors-mark-map
-	       ("SPC" . macrursors-select)
-	       ("C-g" . macrursors-select-clear)))
+;; (use-package macrursors-select
+;;   :bind ( :map macrursors-mark-map
+;; 	       ("SPC" . macrursors-select)
+;; 	       ("C-g" . macrursors-select-clear)))
 
-(use-package rect
-  :bind
-  (:map rectangle-mark-mode-map
-	("t" . string-rectangle)
-	("o" . open-rectangle)
-	("c" . clear-rectangle)
-	("n" . rectangle-number-lines)
-	("x" . rectangle-exchange-point-and-mark)
-	("*" . calc-grab-rectangle)
-	(":" . calc-grab-sum-down)
-	("_" . calc-grab-sum-across)
-	(" " . delete-whitespace-retangle)))
+;; (use-package rect
+;;   :bind
+;;   (:map rectangle-mark-mode-map
+;; 	("t" . string-rectangle)
+;; 	("o" . open-rectangle)
+;; 	("c" . clear-rectangle)
+;; 	("n" . rectangle-number-lines)
+;; 	("x" . rectangle-exchange-point-and-mark)
+;; 	("*" . calc-grab-rectangle)
+;; 	(":" . calc-grab-sum-down)
+;; 	("_" . calc-grab-sum-across)
+;; 	(" " . delete-whitespace-retangle)))
 
-(use-package easy-kill
-  :ensure t
-  :bind (([remap kill-ring-save] . #'easy-kill)
-	 ([remap mark-paragraph] . #'easy-mark)
-	 :map easy-kill-base-map
-	 ("M-w" . easy-kill-cycle)
-	 ("M-h" . easy-kill-cycle))
-  :custom
-  (easy-kill-try-things '(line symbol forward-line-edge sexp))
-  (easy-mark-try-things '(line symbol forward-line-edge sexp))
-  (easy-kill-cycle-ignored '(string-to-char-forward string-up-to-char-forward)))
+;; (use-package easy-kill
+;;   :ensure t
+;;   :bind (([remap kill-ring-save] . #'easy-kill)
+;; 	 ([remap mark-paragraph] . #'easy-mark)
+;; 	 :map easy-kill-base-map
+;; 	 ("M-w" . easy-kill-cycle)
+;; 	 ("M-h" . easy-kill-cycle))
+;;   :custom
+;;   (easy-kill-try-things '(line symbol forward-line-edge sexp))
+;;   (easy-mark-try-things '(line symbol forward-line-edge sexp))
+;;   (easy-kill-cycle-ignored '(string-to-char-forward string-up-to-char-forward)))
 
-(use-package easy-kill-extras
-  :bind (:map easy-kill-base-map
-	      ("," . +easy-kill-expand-region)
-	      ("." . +easy-kill-contract-region))
-  :init
-  (setq easy-kill-alist '((?l line "\n")
-			  (?w word " ")
-			  ;; TODO: the targets from expand-region don't work very well
-			  ;; should i just use knu's package?
-			  (?s symbol " ") ;; from expand-region
-			  (?< inside-pairs "") ;; from expand-region
-			  (?> outside-pairs "") ;; from expand-region
-			  (?\' inside-quotes "") ;; from expand-region
-			  (?\" outside-quotes "") ;; from expand-region
-			  (?$ forward-line-edge "")
-			  (?^ backward-line-edge "")
-			  (?d defun "\n\n")
-			  (?b buffer "")
-			  (?x sexp "\n")
-			  (?L list "\n")
-			  (?f string-to-char-forward "") ;; TODO: do i have string-to-char-forward?
-			  (?F string-up-to-char-forward "") ;; TODO: do i have string-up-to-char-forward?
-			  (?D defun-name " ")
-			  (?B buffer-file-name))))
+;; (use-package easy-kill-extras
+;;   :bind (:map easy-kill-base-map
+;; 	      ("," . +easy-kill-expand-region)
+;; 	      ("." . +easy-kill-contract-region))
+;;   :init
+;;   (setq easy-kill-alist '((?l line "\n")
+;; 			  (?w word " ")
+;; 			  ;; TODO: the targets from expand-region don't work very well
+;; 			  ;; should i just use knu's package?
+;; 			  (?s symbol " ") ;; from expand-region
+;; 			  (?< inside-pairs "") ;; from expand-region
+;; 			  (?> outside-pairs "") ;; from expand-region
+;; 			  (?\' inside-quotes "") ;; from expand-region
+;; 			  (?\" outside-quotes "") ;; from expand-region
+;; 			  (?$ forward-line-edge "")
+;; 			  (?^ backward-line-edge "")
+;; 			  (?d defun "\n\n")
+;; 			  (?b buffer "")
+;; 			  (?x sexp "\n")
+;; 			  (?L list "\n")
+;; 			  (?f string-to-char-forward "") ;; TODO: do i have string-to-char-forward?
+;; 			  (?F string-up-to-char-forward "") ;; TODO: do i have string-up-to-char-forward?
+;; 			  (?D defun-name " ")
+;; 			  (?B buffer-file-name))))
 
 ;; TODO: eventually extend `visual-replace' with query-replace-parallel and visual-regexp-steroids functionality
 ;; TODO: better keys to change the scope?
@@ -1189,24 +1432,25 @@
 	       ("c" . surround-change)
 	       ("d" . surround-delete)))
 
-(use-package embrace
-  :ensure t
-  :disabled t
-  :hook (org-mode . embrace-org-mode-hook)
-  :bind-keymap ("M-c" . embrace-inner-map)
-  :bind ( :map embrace-inner-map
-	       ("a" . embrace-add)
-	       ("c" . embrace-change)
-	       ("d" . embrace-delete))
-  :custom (embrace-show-help-p nil)
-  :init (defvar-keymap embrace-inner-map))
+;; (use-package embrace
+;;   :ensure t
+;;   :disabled t
+;;   :hook (org-mode . embrace-org-mode-hook)
+;;   :bind-keymap ("M-c" . embrace-inner-map)
+;;   :bind ( :map embrace-inner-map
+;; 	       ("a" . embrace-add)
+;; 	       ("c" . embrace-change)
+;; 	       ("d" . embrace-delete))
+;;   :custom (embrace-show-help-p nil)
+;;   :init (defvar-keymap embrace-inner-map))
 
-(use-package change-inner
-  :ensure t
-  :bind ( :map surround-keymap
-	       ("i" . change-inner)
-	       ("o" . change-outer)))
+;; (use-package change-inner
+;;   :ensure t
+;;   :bind ( :map surround-keymap
+;; 	       ("i" . change-inner)
+;; 	       ("o" . change-outer)))
 
+;; TODO: don't auto pair < in org-mode
 (use-package elec-pair
   :init (electric-pair-mode))
 
@@ -1311,6 +1555,7 @@
 ;; https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L4039
 ;; cc-isearch-menu
 
+;; TODO: better jumper alternatives?
 (use-package better-jumper
   :ensure t
   :bind (("H-i" . better-jumper-jump-forward)
@@ -1360,6 +1605,7 @@
 ;; TODO: lasgun https://github.com/aatmunbaxi/lasgun.el
 ;; ("M-t" . lasgun-map)
 
+;; TODO: mosey alternative?
 ;; TODO: mosey with smartparens?
 ;; TODO: shift-selection support for mosey commands?
 (use-package mosey
@@ -1379,6 +1625,7 @@
 
 (use-package tab-jump-out
   :ensure t
+  :disabled t
   :config
   ;; TODO: indent-for-tab-command-dwim from xenodium (uses folds)
   (tab-jump-out-global-mode 1)
@@ -2229,3 +2476,10 @@
 
 ;; fcitx.el https://github.com/cute-jumper/fcitx.el
 ;; add-all-to-list
+
+;;;;;;;;;;;;;;
+;;;; meow ;;;;
+
+;; TODO: m -> match-map
+;; mi -> meow-inner-of-thing
+;; ma -> meow-bounds-of-thing

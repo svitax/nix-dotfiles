@@ -11,10 +11,12 @@ rec {
 
   editor = {
     emacs = ./editor/emacs;
+    neovim = ./editor/neovim;
   };
 
   shell = {
     bash = ./shell/bash;
+    fzf = ./shell/fzf;
   };
 
   style = {
@@ -35,8 +37,10 @@ rec {
       desktop.rofi
 
       editor.emacs
+      editor.neovim
 
       shell.bash
+      shell.fzf
 
       style.fonts
       style.stylix

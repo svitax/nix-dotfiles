@@ -20,8 +20,11 @@
   };
 
   editor.emacs.enable = true;
+  editor.emacs.defaultEditor = false;
+  editor.neovim.enable = true;
 
   shell.bash.enable = true;
+  shell.fzf.enable = true;
 
   style.stylix.enable = true;
 

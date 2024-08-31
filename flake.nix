@@ -1,7 +1,10 @@
 {
   description = "evrmnd configuration";
 
-  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} {imports = [./flake];};
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [ ./flake ];
+    };
 
   inputs = {
     emacs-overlay.url = "github:nix-community/emacs-overlay";
