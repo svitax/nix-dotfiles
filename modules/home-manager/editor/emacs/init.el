@@ -81,20 +81,18 @@
 ;; https://github.com/xenodium/dotsies/blob/main/emacs/features/fe-package-extensions.el#L56
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; TODO: :modify-syntax ;;;
+;;; NOTE: :modify-syntax ;;;
 
 ;; use-package keyword to easily add characters like -, _, !, :, & as word
 ;; constituents, $ as paired delimiter, etc
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; TODO: :pretty-symbols ;;;
+;;; NOTE: :pretty-symbols ;;;
 
 ;;;;;;;;;;;;;;
 ;;;; meow ;;;;
 
-;; TODO: rectangle state https://github.com/Ziqi-Yang/.emacs.d/blob/
-;; TODO: smartparen/puni state https://github.com/eshrh/nyaatouch/blob/master/nyaatouch.el
-;; TODO: multicursor.el support for meow's beacon state
+;; NOTE: rectangle state https://github.com/Ziqi-Yang/.emacs.d/blob/
 (use-package meow
   :ensure t
   :init
@@ -106,6 +104,8 @@
   (setopt meow-use-clipboard t
 	  meow-expand-hint-remove-delay 0
 	  meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh
+	  meow-cursor-type-region-cursor 'box
+	  meow-use-cursor-position-hack t
 	  ;; Disable keypad describe until we can use Embark prefix help
 	  meow-keypad-describe-keymap-function nil)
   (use-package meow-extras)
@@ -134,92 +134,106 @@
 	 ;; tj . jinx-mode
 	 ;; tJ . global-jinx-mode
 	 ;; tt . consult-theme
-	 ;; TODO: "" +spelling-prefix-map
+	 ;; NOTE: "" +spelling-prefix-map
 	 ;;  c . jinx-correct
 	 ;;  l . jinx-languages
 	 "u" #'meow-universal-argument
 	 "v" +vc-prefix-map
 	 "w" +window-prefix-map)
-	;; TODO: find a better block to put meow-window commands
-	('+goto-prefix-map
-	 "b" #'+meow-window-bottom
-	 "c" #'+meow-window-middle
-	 "t" #'+meow-window-top)
 	('+match-prefix-map
 	 "a" #'meow-bounds-of-thing
 	 "i" #'meow-inner-of-thing))
   (meow-motion-overwrite-define-key
+   ;; '("<escape>" . ignore)
    ;; Use e to move up, n to move down.
    ;; Since special modes usually use n to move down, we only overwrite e here.
    '("e" . meow-prev)
-   '("<escape>" . ignore))
+   '("<escape>" . meow-simple-motion-mode))
   (meow-normal-define-key
    '("a" . meow-append)
    '("A" . +meow-append-line-end)
    '("b" . meow-back-word)
    '("B" . meow-back-symbol)
    '("c" . meow-change)
-   ;; TODO: '("C" . my/meow-cursor-below)
+   ;; NOTE: '("C" . +meow-change-to-line-end)
    '("d" . meow-delete)
    '("D" . meow-kill)
    '("C-d" . meow-page-down)
    '("e" . meow-prev)
    '("E" . +meow-lookup)
-   '("f" . meow-till)
-   '("F" . +meow-till-backwards)
+   '("f" . meow-find)
+   '("F" . +meow-find-backwards)
    '("g" . +goto-prefix-map)
-   '("G" . meow-grab)
+   ;; '("G" . meow-grab)
    '("h" . +match-prefix-map)
    ;; hm => matching bracket / matchit
    '("i" . meow-right)
-   ;; TODO: '("j" . my/meow-keep) ;; keep selections matching regex (multicursor)
-   ;; TODO: '("J" . my/meow-remove) ;; remove selections matching regex (multicursor)
+   ;; NOTE: '("j" . my/meow-keep) ;; keep cursors matching regex (macrursors)
+   ;; NOTE: '("J" . my/meow-remove) ;; remove cursors matching regex (macrursors)
    '("k" . meow-search)
-   ;; TODO: '("k" . my/meow-next)
+   ;; NOTE: '("k" . my/meow-next)
    '("l" . meow-insert)
    '("L" . +meow-insert-line-start)
    '("m" . meow-left)
    '("n" . meow-next)
    '("N" . +meow-join-line)
-   ;; TODO: N => join lines inside selection
+   ;; NOTE: N => join lines inside active region
    '("o" . meow-open-below)
    '("O" . meow-open-above)
    '("p" . meow-yank)
-   ;; TODO: '("P" . my/meow-yank-before)
+   ;; NOTE: '("P" . my/meow-yank-before)
    '("q" . meow-quit)
-   '("r" . meow-replace)
-   ;; TODO: '("s" . my/meow-select)
-   '("t" . meow-find)
-   '("T" . +meow-find-backwards)
-   '("u" . undo-only)
+   '("r" . +meow-replace)
+   '("R" . +meow-duplicate)
+   ;; NOTE: '("s" . my/meow-select)
+   '("S" . meow-structural-mode) ;; TODO: finish meow-structural-mode
+   '("t" . meow-till)
+   '("T" . +meow-till-backwards)
+   '("u" . meow-undo)
    '("U" . undo-redo)
    '("C-u" . meow-page-up)
-   ;; TODO: '("v" . my/meow-extend-state)
+   '("v" . meow-expand-mode) ;; TODO: finish meow-expand-mode
    '("w" . meow-next-word)
    '("W" . meow-next-symbol)
    '("x" . meow-line)
+   ;; '("X" . +meow-extend-to-line-end) ;; NOTE: extend selection to line end
    '("y" . meow-save)
    '("z" . meow-pop-selection)
    '("<escape>" . meow-cancel-selection)
-   '("-" . negative-argument) ;; TODO: do i need negative argument? deos find/till backwards + line-backwards cover my use-cases?
-   ;; TODO: '(">" . my/meow-next-thing)
+   '("-" . negative-argument) ;; NOTE: do i need negative argument? deos find/till backwards + line-backwards cover my use-cases?
+   ;; NOTE: '(">" . my/meow-next-thing)
    ;; >x . goto next diagnostic
    ;; >X . goto last diagnostic
-   ;; TODO: '("<" . my/meow-previous-thing)
+   ;; NOTE: '("<" . my/meow-previous-thing)
    ;; <x . goto prev diagnostic
    ;; <X . goto first diagnostic
+   ;; '("*" . +toggle-case-dwiam) ;; NOTE: nt-toggle-case-dwiam from nyaatouch
+   ;; '("+" . +add-number) ;; NOTE: nt-add-number from nyaatouch
+   ;; '("_" . +subtract-number) ;; NOTE: nt-subtract-one from nyaatouch
+   '("?" . meow-cheatsheet)
    '(";" . repeat)
-   '("'" . meow-reverse))
+   '("'" . meow-reverse)
+   ;; NOTE: find how to integrate the following commands
+   ;; '(";" . collapse-selection) ;; NOTE: (helix) cancel selection
+   ;; '("M-;" . flip-selections) ;; NOTE: (helix) nav to beginning or end of selection (basically meow-reverse)
+   ;; '("." . repeat-last-change) NOTE: (helix)
+   ;; '("M-." . repeat) ;; NOTE: (helix) repeat last motion
+   )
   (meow-thing-register 'angle '(regexp "<" ">") '(regexp "<" ">"))
-  (add-to-list 'meow-char-thing-table '(?a . angle))
+  (add-to-list 'meow-char-thing-table '(?A . angle))
   ;; start in insert
   (add-to-list 'meow-mode-state-list '(vterm-mode . insert))
   (add-to-list 'meow-mode-state-list '(eshell-mode . insert))
+  (add-to-list 'meow-mode-state-list '(git-commit-mode . insert))
+  ;; simple motion
+  (add-to-list 'meow-mode-state-list '(magit-status-mode . simple-motion))
   (meow-global-mode 1))
 
-;; meow-tree-sitter https://github.com/skissue/meow-tree-sitter
-;; meow-vterm https://github.com/45mg/meow-vterm
-;; nyaatouch https://github.com/eshrh/nyaatouch
+(use-package meow-tree-sitter
+  :ensure t
+  :config (meow-tree-sitter-register-defaults))
+
+;; NOTE: meow-vterm https://github.com/45mg/meow-vterm
 
 ;;;;;;;;;;;;;;;
 ;;;; faces ;;;;
@@ -288,13 +302,13 @@
 
 (use-package whitespace
   :init
-  ;; TODO: whitespace-mode: show tabs and maybe newlines
+  ;; NOTE: whitespace-mode: show tabs and maybe newlines
   ;; `whitespace-mode' highlights each space/tab/newline with a face. In a small file, that may not matter but in larger files it is crippling.
   ;; Change it to use the display table where it substitutes other characters for spaces instead of using faces.
   (setopt whitespace-style '(space-mark tab-mark)))
 
-;; TODO: :hide-whitespace
-;; TODO: paren-face https://github.com/tarsius/paren-face
+;; NOTE: :hide-whitespace
+;; NOTE: paren-face https://github.com/tarsius/paren-face
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; modeline ;;;;
@@ -326,14 +340,18 @@
   :bind (+quit-prefix-map
 	 "q" #'save-buffers-kill-terminal
 	 "r" #'restart-emacs
-	 ;; TODO: "k" +kill-all-emacsen (lambda emacs)
+	 ;; NOTE: "k" +kill-all-emacsen (lambda emacs)
 	 ))
 
 (use-package display-line-numbers
   :init (global-display-line-numbers-mode))
 
-;; visual-fill-column https://github.com/joostkremers/visual-fill-column or virtual-auto-fill https://github.com/luisgerhorst/virtual-auto-fill
-;; aggressive-fill-paragraph-mode https://github.com/davidshepherd7/aggressive-fill-paragraph-mode
+(use-package virtual-auto-fill
+  :ensure t
+  :hook ((org-mode markdown-mode) . virtual-auto-fill-mode)
+  :init (setopt fill-column 80))
+
+;; NOTE: aggressive-fill-paragraph-mode https://github.com/davidshepherd7/aggressive-fill-paragraph-mode
 
 ;;;;;;;;;;;;;;;;
 ;;;; server ;;;;
@@ -353,12 +371,12 @@
 ;;;;;;;;;;;;;;;;;;
 ;;;; external ;;;;
 
-;; TODO: daemons https://github.com/cbowdon/daemons.el
+;; NOTE: daemons https://github.com/cbowdon/daemons.el
 
 ;;;;;;;;;;;;;;;
 ;;;; files ;;;;
 
-;; TODO: find-file creates non-existent directories
+;; NOTE: find-file creates non-existent directories
 (use-package files
   :init
   (setopt y-or-n-p-use-read-key t
@@ -392,7 +410,7 @@
   ;; Avoid creating lock files (ie. .#some-file.el)
   (setopt create-lockfiles nil))
 
-;; TODO: autorevert
+;; NOTE: autorevert
 ;; (use-package autorevert
 ;;   :init
 ;;   (use-package auto-revert-extras)
@@ -403,14 +421,13 @@
 ;;   (add-to-list 'window-state-change-functions #'+window-state-state-change)
 ;;   :config (global-auto-revert-mode))
 
-;; TODO: recentf
+;; NOTE: recentf
 ;; (use-package recentf
 ;;   :xdg-state (recentf-save-file "recentf-save.el"))
 
-;; TODO: saveplace
-;; (use-package saveplace
-;;   :xdg-state (save-place-file "save-place.el")
-;;   :config (save-place-mode))
+(use-package saveplace
+  :xdg-state (save-place-file "save-place.el")
+  :config (save-place-mode))
 
 (use-package savehist
   :xdg-state (savehist-file "savehist.el")
@@ -418,8 +435,8 @@
 		history-delete-duplicates t)
   :config (savehist-mode))
 
-;; TODO: ffap
-;; sudo-edit https://github.com/nflath/sudo-edit
+;; NOTE: ffap
+;; NOTE: sudo-edit https://github.com/nflath/sudo-edit
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; minibuffer ;;;;
@@ -473,12 +490,12 @@
 	 ";" #'vertico-repeat)
   :config (add-to-list 'savehist-additional-variables 'vertico-repeat-history))
 
-;; TODO: vertico-quick using C-s
+;; NOTE: vertico-quick using C-s
 
 ;;;;;;;;;;;;;;;;
 ;;;; embark ;;;;
 
-;; TODO: embark
+;; NOTE: embark
 
 ;;;;;;;;;;;;;;;;;
 ;;;; consult ;;;;
@@ -545,20 +562,20 @@
 		corfu-global-mode '((not eshell-mode)))
   :config (corfu-popupinfo-mode 1))
 
-;; TODO: corfu-quick
-;; TODO: corfu-history
-;; TODO: corfu for eshell
-;; TODO: corfu for vterm
+;; NOTE: corfu-quick
+;; NOTE: corfu-history
+;; NOTE: corfu for eshell
+;; NOTE: corfu for vterm
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;;; :completions ;;;;
 
-;; TODO: :completions keyword for use-package forms
+;; NOTE: :completions keyword for use-package forms
 
 ;;;;;;;;;;;;;;
 ;;;; cape ;;;;
 
-;; TODO: cape
+;; NOTE: cape
 
 ;;;;;;;;;;;;;;;;;
 ;;;; project ;;;;
@@ -588,9 +605,9 @@
 	  "r" #'project-query-replace-regexp
 	  "!" #'project-shell-command)))
 
-;; TODO: projection
+;; NOTE: projection
 
-;; TODO: keep projects list always in sync with certain directories
+;; NOTE: keep projects list always in sync with certain directories
 ;; snatch projel's rescan-directory and rescan-all-projects, put in project extras
 ;; projel-add-project-directory, projel--add-project, projecl-rescan-directory, projel-find-projects-in-dir, etc.
 
@@ -606,30 +623,31 @@
 		 "g" #'beginning-of-buffer)
 		(+buffer-prefix-map
 		 "k" #'kill-current-buffer
-		 ;; "K" #'crux-kill-other-buffers ;; TODO: crux-kill-other-buffers
-		 ;; "m" #'+move-buffer-file ;; TODO: move buffer and file to DIR
+		 ;; "K" #'crux-kill-other-buffers ;; NOTE: crux-kill-other-buffers
+		 ;; "m" #'+move-buffer-file ;; NOTE: move buffer and file to DIR
 		 ;; https://github.com/karthink/.emacs.d/blob/b0ae76c813b133619b2f29b179a7f1ab5193f534/lisp/better-buffers.el#L243-L257
-		 "r" #'+rename-file-and-buffer ;; TODO: rename current buffer and file to NEW NAME
+		 ;; "r" #'+rename-file-and-buffer ;; NOTE: rename current buffer and file to NEW NAME
 		 ;; https://github.com/karthink/.emacs.d/blob/b0ae76c813b133619b2f29b179a7f1ab5193f534/lisp/better-buffers.el#L225-L240
-		 "s" #'save-buffer)))
+		 "s" #'save-buffer
+		 )))
 
-;; TODO: epithet https://github.com/oantolin/epithet
-;; uniquify
-;; adviced:kill-buffer--possibly-save https://christiantietze.de/posts/2023/09/kill-unsaved-buffer-ux-action-labels and xenodium
+;; NOTE: epithet https://github.com/oantolin/epithet
+;; NOTE: uniquify
+;; NOTE: adviced:kill-buffer--possibly-save https://christiantietze.de/posts/2023/09/kill-unsaved-buffer-ux-action-labels and xenodium
 
 ;;;;;;;;;;;;;;;;;
 ;;;; ibuffer ;;;;
 
-;; ibuffer https://www.reddit.com/r/emacs/s/Ft0yZxEMVD
-;; ibuffer-git https://github.com/jrockway/ibuffer-git
-;; ibuffer-project? or ibuffer-git?
-;; projection-ibuffer?
-;; bufler?
+;; NOTE: ibuffer https://www.reddit.com/r/emacs/s/Ft0yZxEMVD
+;; NOTE: ibuffer-git https://github.com/jrockway/ibuffer-git
+;; NOTE: ibuffer-project? or ibuffer-git?
+;; NOTE: projection-ibuffer?
+;; NOTE: bufler?
 
 ;;;;;;;;;;;;;;;;;
 ;;;; windows ;;;;
 
-;; TODO: repeat map for enlarge and shrink window commands
+;; NOTE: repeat map for enlarge and shrink window commands
 (use-package window
   :no-require
   :ensure nil
@@ -639,20 +657,24 @@
 	 "M-o" #'other-window
 	 "C-v" #'+scroll-down-half-page
 	 "M-v" #'+scroll-up-half-page)
+	('+goto-prefix-map
+	 "b" #'+meow-window-bottom
+	 "c" #'+meow-window-middle
+	 "t" #'+meow-window-top)
 	(+window-prefix-map
-	 ;; TODO: "a" #'ace-window
-	 ;; TODO: "f" #'+toggle-window-split ;; toggle windows between horizontal and vertical (lambda emacs)
+	 ;; NOTE: "a" #'ace-window
+	 ;; NOTE: "f" #'+toggle-window-split ;; toggle windows between horizontal and vertical (lambda emacs)
 	 "k" #'delete-window
 	 "o" #'other-window
-	 ;; TODO: "r" #'+rotate-windows ;; (lambda emacs)
-	 ;; TODO: "R" #'+rotate-windows-backward ;; (lambda emacs)
+	 ;; NOTE: "r" #'+rotate-windows ;; (lambda emacs)
+	 ;; NOTE: "R" #'+rotate-windows-backward ;; (lambda emacs)
 	 "s" #'split-window-below
-	 ;; TODO: "s" #'+split-window-below-and-focus ;; (lambda emacs)
+	 ;; NOTE: "s" #'+split-window-below-and-focus ;; (lambda emacs)
 	 "T" #'tear-off-window
 	 "v" #'split-window-right
-	 ;; TODO: "v" #'+split-window-right-and-focus ;; (lambda emacs)
-	 ;; TODO: "w" #'ace-window
-	 ;; TODO: "x" #'+rotate-windows-backward ;; (lambda emacs)
+	 ;; NOTE: "v" #'+split-window-right-and-focus ;; (lambda emacs)
+	 ;; NOTE: "w" #'ace-window
+	 ;; NOTE: "x" #'+rotate-windows-backward ;; (lambda emacs)
 	 "=" #'enlarge-window-horizontally
 	 "-" #'shrink-window-horizontally
 	 "}" #'enlarge-window
@@ -674,8 +696,8 @@
 	  popper-reference-buffers (append +popper-reference-buffers '()))
   :config (popper-mode))
 
-;; switchy-window https://github.com/emacsmirror/switchy-window
-;; ace-window https://github.com/abo-abo/ace-window
+;; NOTE: switchy-window https://github.com/emacsmirror/switchy-window
+;; NOTE: ace-window https://github.com/abo-abo/ace-window
 
 ;;;;;;;;;;;;;;
 ;;;; fold ;;;;
@@ -683,19 +705,21 @@
 ;;;;;;;;;;;;;;;;
 ;;;; narrow ;;;;
 
-;; logos https://github.com/protesilaos/logos
+;; NOTE: "bn" #'narrow-to-region
+;; NOTE: "bw" #'widen
+;; NOTE: logos https://github.com/protesilaos/logos
 
 ;;;;;;;;;;;;;;;;;
 ;;;; outline ;;;;
 
-;; outli https://github.com/jdtsmith/outli
-;; nbarrientos outline config
-;; outline-indent https://github.com/jamescherti/outline-indent.el
+;; NOTE: outli https://github.com/jdtsmith/outli
+;; NOTE: nbarrientos outline config
+;; NOTE: outline-indent https://github.com/jamescherti/outline-indent.el
 
 ;;;;;;;;;;;;;;;
 ;;;; dired ;;;;
 
-;; TODO: dired-extras in dired use-package block
+;; NOTE: dired-extras in dired use-package block
 (use-package dired
   :config
   (bind (mode-specific-map
@@ -704,19 +728,73 @@
 	 "b" #'dired-up-directory
 	 "f" #'dired-find-file)))
 
-;; dired-narrow
-;; diredfl
-;; dired-single
-;; hide dotfiles and hide gitignored files (should i use dired-filter for this or copy from old-init.el)
-;; wdired
-;; TODO: dired-ranger (dired-ranger-copy and dired-ranger-paste and dired-ranger-move)
-;; dired-filter (what filters would i use? filter-by-videos from xenodium)
-;; dired-subtree
-;; TODO: dired-preview
-;; TODO: dired-git-info https://github.com/clemera/dired-git-info
-;; dired-open-with https://github.com/FrostyX/dired-open-with
-;; dired-rsync?
-;; dired-dy https://github.com/emacsmirror/dired-du
+;; TODO: dired-narrow
+;; TODO: diredfl
+;; TODO: dired-single
+;; TODO: hide dotfiles and hide gitignored files (should i use dired-filter for this or copy from old-init.el)
+;; NOTE: wdired
+;; NOTE: dired-ranger (dired-ranger-copy and dired-ranger-paste and dired-ranger-move)
+;; NOTE: dired-filter (what filters would i use? filter-by-videos from xenodium)
+;; NOTE: dired-subtree
+;; NOTE: dired-preview
+;; NOTE: dired-git-info https://github.com/clemera/dired-git-info
+;; NOTE: dired-open-with https://github.com/FrostyX/dired-open-with
+;; NOTE: dired-rsync?
+;; NOTE: dired-dy https://github.com/emacsmirror/dired-du
+
+;;;;;;;;;;;;;;;;;;;;
+;;;; navigation ;;;;
+
+;; NOTE: avy
+;; https://github.com/karthink/.emacs.d/blob/master/plugins/demo.el
+;; https://github.com/karthink/.emacs.d/blob/master/lisp/setup-avy.el
+;; https://karthinks.com/software/avy-can-do-anything
+(use-package avy
+  :ensure t
+  :init
+  (setopt avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o) ;; Colemak-DH keyboard
+	  avy-timeout-seconds 0.27
+	  avy-single-candidate-jump nil)
+  :config
+  (meow-normal-define-key '("s" . avy-goto-char-timer)))
+
+;; NOTE: lasgun https://github.com/aatmunbaxi/lasgun.el
+;; "S" . lasgun
+;; NOTE: forward and backward paragraph from xenodium
+;; NOTE: beginend https://github.com/DamienCassou/beginend
+;; NOTE: link-hint (can avy + embark replace link-hint?)
+;; NOTE: tab-jump-out
+
+;;;;;;;;;;;;;;;;
+;;;; search ;;;;
+
+;; NOTE: occur
+;; NOTE: grep
+;; NOTE: wgrep https://github.com/mhayashi1120/Emacs-wgrep
+;; https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L4039
+;; NOTE: consult-omni https://github.com/armindarvish/consult-omni
+
+;;;;;;;;;;;;;;;;;
+;;;; isearch ;;;;
+
+;;;;;;;;;;;;;;;
+;;;; imenu ;;;;
+
+;; NOTE: imenu https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L1593
+;; NOTE: imenu-list https://github.com/bmag/imenu-list (alternative to symbols-outline) or eglot-hierarchy https://github.com/dolmens/eglot-hierarchy
+
+;;;;;;;;;;;;;;;;;;;
+;;;; bookmarks ;;;;
+
+;; NOTE: bookmark https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L3320
+(use-package bookmark
+  :xdg-state
+  (bookmark-default-file "bookmarks.eld"))
+
+;; TODO: gumshoe
+;; TODO: harpoon https://github.com/otavioschwanck/harpoon.el or https://github.com/kofm/harpoon.el
+;; TODO: fix C-m and C-i so they're separate from RET and TAB
+;; NOTE: diverted https://github.com/xenodium/dotsies/blob/main/emacs/ar/diverted.el
 
 ;;;;;;;;;;;;;;;;;
 ;;;; editing ;;;;
@@ -726,21 +804,55 @@
   :ensure nil
   :config
   (bind '+goto-prefix-map
-	"i" #'end-of-line
-	"m" #'beginning-of-line))
+	"i" #'move-end-of-line
+	"m" #'move-beginning-of-line))
 
-;; TODO: mowie
+(use-package mowie
+  :ensure t
+  :bind ((:global-map)
+	 [remap move-beginning-of-line] #'+beginning-of-line
+	 [remap move-end-of-line] #'+end-of-line)
+  :config
+  (defun +beginning-of-line ()
+    (interactive "^")
+    (mowie
+     #'beginning-of-line
+     #'beginning-of-visual-line
+     #'mowie-beginning-of-code
+     #'mowie-beginning-of-comment
+     #'mowie-beginning-of-comment-text))
+  (defun +end-of-line ()
+    (interactive "^")
+    (mowie
+     #'end-of-line
+     #'end-of-visual-line
+     #'mowie-end-of-code)))
 
-;; TODO: move text up and down
+(use-package move-text
+  :ensure t
+  :bind ((:global-map)
+	 "M-<up>" #'move-text-up
+	 "M-<down>" #'move-text-down)
+  :config
+  ;; NOTE: add +indent-region-advice to move-text-extras?
+  (defun +indent-region-advice (&rest ignored)
+    "Re-indent the text in-and-around a text move."
+    (let ((deactivate deactivate-mark))
+      (if (region-active-p)
+	  (indent-region (region-beginning) (region-end))
+	(indent-region (line-beginning-position) (line-end-position)))
+      (setq deactivate-mark deactivate)))
+  (advice-add 'move-text-up :after '+indent-region-advice)
+  (advice-add 'move-text-down :after '+indent-region-advice))
 
-;; TODO: don't auto pair < in org-mode
+;; NOTE: don't auto pair < in org-mode
 (use-package elec-pair
   :init (electric-pair-mode))
 
 (use-package delsel
   :config (delete-selection-mode +1))
 
-;; TODO: https://github.com/Kungsgeten/selected.el
+;; NOTE: https://github.com/Kungsgeten/selected.el
 
 (use-package smart-hungry-delete
   :ensure t
@@ -751,9 +863,9 @@
 	 [remap delete-forward-char] #'smart-hungry-delete-forward-char)
   :config (smart-hungry-delete-add-default-hooks))
 
-;; TODO: ws-butler
-;; TODO: subword
-;; interactive-align https://github.com/mkcms/interactive-align
+;; NOTE: ws-butler
+;; NOTE: subword
+;; NOTE: interactive-align https://github.com/mkcms/interactive-align
 
 (use-package expand-region
   :ensure t
@@ -762,9 +874,9 @@
 	 "," #'er/expand-region
 	 "." #'er/contract-region))
 
-;; TODO: highlight surround.el semantic units
-;; TODO: surround.el treesitter-backed semantic units
-;; TODO: surround.el which-key or embark help popups
+;; NOTE: highlight surround.el semantic units
+;; NOTE: surround.el treesitter-backed semantic units
+;; NOTE: surround.el which-key or embark help popups
 (use-package surround
   :ensure t
   :config
@@ -774,6 +886,56 @@
 	"d" #'surround-delete))
 
 ;; TODO: macrursors
+;; TODO: macrursors + avy
+(use-package macrursors
+  :bind (((:global-map)
+	  "C-;" #'macrursors-mark-map
+	  "M-n" #'macrursors-mark-next-instance-of
+	  "M-e" #'macrursors-mark-previous-instance-of)
+	 (meow-normal-state-keymap
+	  "G" #'+macrursors-select)
+	 (macrursors-mode-map
+	  "C-'" #'macrursors-hideshow)
+	 (macrursors-mark-map
+	  "C-;" #'macrursors-end
+	  "C-g" #'macrursors-early-quit
+	  "n" #'macrursors-mark-next-line
+	  "e" #'macrursors-mark-previous-line
+	  "C-SPC" nil
+	  "SPC" nil
+	  "." #'macrursors-mark-all-instances-of
+	  "w" #'macrursors-mark-all-words
+	  "W" #'macrursors-mark-all-symbols
+	  "x" #'macrursors-mark-all-lines)
+	 (isearch-mode-map
+	  "C-;" #'macrursors-mark-from-isearch
+	  "M-n" #'macrursors-mark-next-from-isearch
+	  "M-e" #'macrursors-mark-previous-from-isearch))
+  :init (define-prefix-command 'macrursors-mark-map)
+  :config
+  (use-package macrursors-extras)
+  (use-package macrursors-select)
+  ;; (use-package macrursors-select-expand) ;; NOTE: currently in one of karthink's branches
+  (dolist (mode '(corfu-mode +toggle-meow-during-macro))
+    (add-hook 'macrursors-pre-finish-hook mode)
+    (add-hook 'macrursors-post-finish-hook mode))
+  (when (featurep 'meow)
+    ;; (add-hook 'macrursors-mode-hook #'meow-insert)
+    ;; Disable meow's beacon state because it conflict with macrursors
+    (defun meow--maybe-toggle-beacon-state ())
+    ;; (add-hook 'macrursors-mode-hook #'+toggle-meow-during-macro)
+    ))
+
+;;;;;;;;;;;;;;;;;;;
+;;;; kill-ring ;;;;
+
+;; NOTE: kill-ring
+;; NOTE: clean-kill-ring https://github.com/NicholasBHubbard/clean-kill-ring.el
+
+;;;;;;;;;;;;;;
+;;;; undo ;;;;
+
+;; NOTE: undo-fu-session
 
 ;;;;;;;;;;;;;;;;;
 ;;;; replace ;;;;
@@ -781,67 +943,6 @@
 ;; TODO: visual-replace
 ;; eventually replace visual-replace with query-replace-parallel and visual-regexp-steroids functionality
 ;; query-replace-parallel https://github.com/hokomo/query-replace-parallel
-
-;;;;;;;;;;;;;;;;;;;
-;;;; kill-ring ;;;;
-
-;; TODO: kill-ring
-;; clean-kill-ring https://github.com/NicholasBHubbard/clean-kill-ring.el
-
-;;;;;;;;;;;;;;
-;;;; undo ;;;;
-
-;; TODOO undo-fu-session
-
-;;;;;;;;;;;;;;;;;;;;
-;;;; navigation ;;;;
-
-;; TODO: avy
-;; https://github.com/karthink/.emacs.d/blob/master/plugins/demo.el
-;; https://github.com/karthink/.emacs.d/blob/master/lisp/setup-avy.el
-;; https://karthinks.com/software/avy-can-do-anything
-(use-package avy
-  :ensure t
-  :init
-  (setopt avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o) ;; Colemak-DH keyboard
-	  avy-timeout-seconds 0.35
-	  avy-single-candidate-jump nil)
-  :config
-  (meow-normal-define-key '("s" . avy-goto-char-timer)))
-
-;; TODO: lasgun https://github.com/aatmunbaxi/lasgun.el
-;; "S" . lasgun
-
-;; TODO: forward and backward paragraph from xenodium
-;; TODO: beginend https://github.com/DamienCassou/beginend
-;; TODO: link-hint (can avy + embark replace link-hint?)
-;; TODO: tab-jump-out
-
-;;;;;;;;;;;;;;;;
-;;;; search ;;;;
-
-;; TODO: occur
-;; TODO: grep
-;; TODO: wgrep https://github.com/mhayashi1120/Emacs-wgrep
-;; https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L4039
-;; consult-omni https://github.com/armindarvish/consult-omni
-
-;;;;;;;;;;;;;;;;;
-;;;; isearch ;;;;
-
-;;;;;;;;;;;;;;;
-;;;; imenu ;;;;
-
-;; imenu https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L1593
-;; https://github.com/dolmens/eglot-hierarchy
-
-;;;;;;;;;;;;;;;;;;;
-;;;; bookmarks ;;;;
-
-;; TODO: bookmark https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L3320
-;; TODO: harpoon https://github.com/otavioschwanck/harpoon.el or https://github.com/kofm/harpoon.el
-;; TODO: gumshoe
-;; TODO: diverted https://github.com/xenodium/dotsies/blob/main/emacs/ar/diverted.el
 
 ;;;;;;;;;;;;;;
 ;;;; help ;;;;
@@ -857,15 +958,14 @@
 ;;;;;;;;;;;;;;
 ;;;; info ;;;;
 
-;; info https://github.com/oantolin/emacs-config/blob/696641a592691737ba5a019c67f2af7a6cc09183/init.el#L235-L239
-;; info-colors
-;; info-variable-pitch https://github.com/kisaragi-hiu/info-variable-pitch
+;; NOTE: info https://github.com/oantolin/emacs-config/blob/696641a592691737ba5a019c67f2af7a6cc09183/init.el#L235-L239
+;; NOTE: info-colors
+;; NOTE: info-variable-pitch https://github.com/kisaragi-hiu/info-variable-pitch
 
 ;;;;;;;;;;;;;;;;;
 ;;;; linting ;;;;
 
 ;; TODO: (:lint keyword) flymake-hook from flymake-collection  https://github.com/mohkale/flymake-collection
-
 ;; TODO: flymake
 ;; TODO: flymake-collection
 ;; TODO: flymake-margin https://github.com/LionyxML/flymake-margin
@@ -886,64 +986,74 @@
 ;;;;;;;;;;;;;
 ;;;; lsp ;;;;
 
-;; TODO: (:lsp keyword) eglot-server-programs and eglot-server-configuration?
+;; NOTE: (:lsp keyword) eglot-server-programs and eglot-server-configuration?
 ;; TODO: eglot
 ;; TODO: eglot-booster
 ;; TODO: apheleia-eglot
-;; TODO: consult-eglot
-;; citre https://github.com/universal-ctags/citre
+;; NOTE: consult-eglot
+;; NOTE: citre https://github.com/universal-ctags/citre
 
 ;;;;;;;;;;;;;
 ;;;; dap ;;;;
 
-;; TODO: (:dap keyword)
-;; TODO: dape
+;; NOTE: (:dap keyword)
+;; NOTE: dape
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; snippets ;;;;
 
-;; TODO: tempel https://github.com/minad/tempel
-;; TODO: eglot-tempel https://github.com/fejfighter/eglot-tempel
-;; TODO: tempel-collection https://github.com/Crandel/tempel-collection
+;; NOTE: tempel https://github.com/minad/tempel
+;; NOTE: eglot-tempel https://github.com/fejfighter/eglot-tempel
+;; NOTE: tempel-collection https://github.com/Crandel/tempel-collection
 
-;; yasnippet-capf (if i decide to use yasnippet) https://github.com/elken/yasnippet-capf
+;; NOTE: yasnippet-capf (if i decide to use yasnippet) https://github.com/elken/yasnippet-capf
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; treesitter ;;;;
 
 ;; TODO: treesit
 ;; TODO: treesit-auto
-;; TODO: ts-docstr https://github.com/emacs-vs/ts-docstr
+;; NOTE: ts-docstr https://github.com/emacs-vs/ts-docstr
 
 ;;;;;;;;;;;;;;;;;
 ;;;; compile ;;;;
 
-;; TODO: :compile keyword (compile-multi)
+;; NOTE: :compile keyword (compile-multi)
 ;; TODO: compile
-;; TODO: compile-multi
+;; NOTE: compile-multi
 
 ;;;;;;;;;;;;;;
 ;;;; prog ;;;;
 
 ;; TODO: xref
+(use-package xref
+  :config
+  (bind ((:global-map)
+	 "C-t" #'xref-go-back)
+	('+goto-prefix-map
+	 "d" #'xref-find-definitions
+	 "r" #'xref-find-references)))
+
 ;; TODO: eldoc
 ;; TODO: colorful-mode
-;; TODO: ct.el https://github.com/neeasade/ct.el
+;; NOTE: ct.el https://github.com/neeasade/ct.el
 
 (use-package hl-todo
   :ensure t
   :hook (prog-mode . hl-todo-mode)
   :config (setopt hl-todo-wrap-movement t))
 
+(use-package consult-todo
+  :ensure t
+  :bind (+search-prefix-map
+	 "T" #'consult-todo))
+
 (use-package newcomment
-  :hook ((prog-mode . (lambda ()
-			(set (make-local-variable
-			      'comment-auto-fill-only-comments)
-			     t)))))
+  :bind ((:global-map)
+	 "M-;" #'comment-line))
 
 ;; TODO: evil-matchit https://github.com/redguardtoo/evil-matchit
-;; TODO: imenu-list https://github.com/bmag/imenu-list (alternative to symbols-outline) or eglot-hierarchy https://github.com/dolmens/eglot-hierarchy
-;; TODO: treesitter-context https://github.com/zbelial/treesitter-context.el
+;; NOTE: treesitter-context https://github.com/zbelial/treesitter-context.el
 
 ;;;;;;;;;;;;
 ;;;; vc ;;;;
@@ -958,40 +1068,40 @@
 
 (use-package git-modes :ensure t)
 
-;; consult-git-log-grep https://github.com/ghosty141/consult-git-log-grep
-;; consult-ls-git https://github.com/rcj/consult-ls-git
-;; TODO: git-commit-ts-mode https://github.com/danilshvalov/git-commit-ts-mode
-;; TODO: emsg-blame https://github.com/ISouthRain/emsg-blame
-;; consult-gh https://github.com/armindarvish/consult-gh
+;; NOTE: consult-git-log-grep https://github.com/ghosty141/consult-git-log-grep
+;; NOTE: consult-ls-git https://github.com/rcj/consult-ls-git
+;; NOTE: git-commit-ts-mode https://github.com/danilshvalov/git-commit-ts-mode
+;; NOTE: emsg-blame https://github.com/ISouthRain/emsg-blame
+;; NOTE: consult-gh https://github.com/armindarvish/consult-gh
 
 ;;;;;;;;;;;;;;
 ;;;; diff ;;;;
 
 ;; TODO: git-gutter
-;; TODO: ediff
+;; NOTE: ediff
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; terminal ;;;;
 
-;; mistty https://github.com/szermatt/mistty or vterm
-;; eshell-visual-vterm https://github.com/accelbread/eshell-visual-vterm
-;; isend-mode https://github.com/ffevotte/isend-mode.el
-;; awscli-capf https://github.com/sebasmonia/awscli-capf
-;; vterm-capf https://github.com/twlz0ne/vterm-capf
+;; TODO: mistty https://github.com/szermatt/mistty or vterm
+;; NOTE: eshell-visual-vterm https://github.com/accelbread/eshell-visual-vterm
+;; NOTE: isend-mode https://github.com/ffevotte/isend-mode.el
+;; NOTE: awscli-capf https://github.com/sebasmonia/awscli-capf
+;; NOTE: vterm-capf https://github.com/twlz0ne/vterm-capf
 
 ;;;;;;;;;;;;;;;;
 ;;;; comint ;;;;
 
-;; TODO: comint
-;; TODO: comint-fold https://github.com/jdtsmith/comint-fold
+;; NOTE: comint
+;; NOTE: comint-fold https://github.com/jdtsmith/comint-fold
 
 ;;;;;;;;;;;;;;;;
 ;;;; eshell ;;;;
 
-;; TODO: if mistty or vterm doesn't suit my needs, look into setting up eshell with all the bells and whistles (pcmpl, aliases, syntax highlighting, prompt, etc.)
-;; TODO: eshell
-;; TODO: karthink eshell buffer redirection
-;; TODO: karthink eshell atuin
+;; NOTE: if mistty or vterm doesn't suit my needs, look into setting up eshell with all the bells and whistles (pcmpl, aliases, syntax highlighting, prompt, etc.)
+;; NOTE: eshell
+;; NOTE: karthink eshell buffer redirection
+;; NOTE: karthink eshell atuin
 (use-package eshell
   :xdg-state
   (eshell-aliases-file "aliases")
@@ -1002,7 +1112,7 @@
 ;;;;;;;;;;;;;;;
 ;;;; shell ;;;;
 
-;; dwim-shell-commad https://github.com/xenodium/dwim-shell-command
+;; NOTE: dwim-shell-commad https://github.com/xenodium/dwim-shell-command
 
 ;;;;;;;;;;;;;;;
 ;;;; elisp ;;;;
@@ -1037,8 +1147,8 @@
   :hook ((prog-mode conf-mode) . highlight-numbers-mode)
   :custom (highlight-numbers-generic-regexp "\\_<[[:digit]]+\\(?:\\.[0-9]*\\)?\\_>"))
 
-;; TODO: package-lint-flymake
-;; relint https://github.com/mattiase/relint
+;; NOTE: package-lint-flymake
+;; NOTE: relint https://github.com/mattiase/relint
 
 ;;;;;;;;;;;;
 ;;;; go ;;;;
@@ -1058,7 +1168,7 @@
   :ensure t
   :formatter (alejandra) nix-ts-mode)
 
-;; nix3.el https://github.com/emacs-twist/nix3.el
+;; NOTE: nix3.el https://github.com/emacs-twist/nix3.el
 
 ;;;;;;;;;;;;;;;;
 ;;;; python ;;;;
@@ -1066,29 +1176,29 @@
 ;;;;;;;;;;;;;;;;
 ;;;; scheme ;;;;
 
-;; https://github.com/port19x/geiser-overlay
+;; NOTE: https://github.com/port19x/geiser-overlay
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;;; common lisp ;;;;
 
-;; https://github.com/fosskers/sly-overlay
+;; NOTE: https://github.com/fosskers/sly-overlay
 
 ;;;;;;;;;;;;;;
 ;;;; json ;;;;
 
-;; counsel-jq (but with consult) https://github.com/200ok-ch/counsel-jq
+;; NOTE: counsel-jq (but with consult) https://github.com/200ok-ch/counsel-jq
 
 ;;;;;;;;;;;;;;
 ;;;; http ;;;;
 
-;; TODO: verb https://github.com/federicotdn/verb
-;; swagg https://github.com/isamert/swagg.el
+;; NOTE: verb https://github.com/federicotdn/verb
+;; NOTE: swagg https://github.com/isamert/swagg.el
 
 ;;;;;;;;;;;;;;;
 ;;;; tramp ;;;;
 
-;; TODO: tramp
-;; TODO: docker-tramp
+;; NOTE: tramp
+;; NOTE: docker-tramp
 (use-package tramp
   :xdg-state
   (tramp-auto-save-directory "auto-save/")
@@ -1097,34 +1207,34 @@
 ;;;;;;;;;;;;;;;;
 ;;;; docker ;;;;
 
-;; TODO: docker
-;; TODO: dockerfile-mode
-;; TODO: flymake-hadolint
-;; TODO: docker-compose-mode
+;; NOTE: docker
+;; NOTE: dockerfile-mode
+;; NOTE: flymake-hadolint
+;; NOTE: docker-compose-mode
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; kubernetes ;;;;
 
-;; TODO: kele https://github.com/jinnovation/kele.el
-;; TODO: kubed https://github.com/eshelyaron/kubed
+;; NOTE: kele https://github.com/jinnovation/kele.el
+;; NOTE: kubed https://github.com/eshelyaron/kubed
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;;;; devcontainer ;;;;
 
-;; TODO: devcontainer https://github.com/bradschartz/devcontainer.el
-;; TODO: emacs-dev-containers https://github.com/alexispurlane/emacs-dev-containers
+;; NOTE: devcontainer https://github.com/bradschartz/devcontainer.el
+;; NOTE: emacs-dev-containers https://github.com/alexispurlane/emacs-dev-containers
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; assembly ;;;;
 
-;; beardbolt https://github.com/joaotavora/beardbolt
-;; rmsbolt https://github.com/emacsmirror/rmsbolt
+;; NOTE: beardbolt https://github.com/joaotavora/beardbolt
+;; NOTE: rmsbolt https://github.com/emacsmirror/rmsbolt
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; markdown ;;;;
 
 ;; TODO: markdown mode
-;; TODO: grip-mode https://github.com/seagle0128/grip-mode
+;; NOTE: grip-mode https://github.com/seagle0128/grip-mode
 
 ;;;;;;;;;;;;;
 ;;;; org ;;;;
@@ -1134,21 +1244,21 @@
 	 "C-'" #'popper-toggle))
 
 ;; TODO: book-mode https://github.com/rougier/book-mode or org-modern
-;; org-modern-indent https://github.com/jdtsmith/org-modern-indent
+;; NOTE: org-modern-indent https://github.com/jdtsmith/org-modern-indent
 ;; TODO: corg https://github.com/isamert/corg.el
-;; org-transclusion-http https://github.com/alphapapa/org-transclusion-http
-;; org-inline-tags https://github.com/incandescentman/org-inline-tags
-;; org-super-links https://github.com/toshism/org-super-links
-;; org-recur https://github.com/mrcnski/org-recur
-;; org-tidy https://github.com/jxq0/org-tidy
-;; org-mind-map https://github.com/the-ted/org-mind-map
+;; NOTE: org-transclusion-http https://github.com/alphapapa/org-transclusion-http
+;; NOTE: org-inline-tags https://github.com/incandescentman/org-inline-tags
+;; NOTE: org-super-links https://github.com/toshism/org-super-links
+;; NOTE: org-recur https://github.com/mrcnski/org-recur
+;; NOTE: org-tidy https://github.com/jxq0/org-tidy
+;; NOTE: org-mind-map https://github.com/the-ted/org-mind-map
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; org-agenda ;;;;
 
-;; org-caldav https://github.com/dengste/org-caldav
-;; org-gcal https://github.com/myuhe/org-gcal.el
-;; org-timeblock https://github.com/ichernyshovvv/org-timeblock
+;; NOTE: org-caldav https://github.com/dengste/org-caldav
+;; NOTE: org-gcal https://github.com/myuhe/org-gcal.el
+;; NOTE: org-timeblock https://github.com/ichernyshovvv/org-timeblock
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; spelling ;;;;
@@ -1158,7 +1268,7 @@
 ;;;;;;;;;;;;;;;;
 ;;;; biblio ;;;;
 
-;; TODO: citar
+;; NOTE: citar
 
 ;;;;;;;;;;;;;;;
 ;;;; notes ;;;;
@@ -1176,7 +1286,7 @@
 	 "s" #'denote-rename-file-using-front-matter)
   :init (setopt denote-directory (expand-file-name "~/OneDrive/notes/")))
 
-;; TODO: remove denote buffers from consult Buffers group, leave only in Denote buffers group
+;; NOTE: remove denote buffers from consult Buffers group, leave only in Denote buffers group
 (use-package consult-denote
   :ensure t
   :bind (+notes-prefix-map
@@ -1184,67 +1294,67 @@
 	 "g" #'consult-denote-grep)
   :config (consult-denote-mode))
 
-;; TODO: blk https://github.com/mahmoodsh36/blk
-;; TODO: denote-explore https://github.com/pprevos/denote-explore
-;; TODO: org-zettel-ref-mode https://github.com/yibie/org-zettel-ref-mode
-;; org-remark (is this better than org-zettel-ref-mode?) https://github.com/nobiot/org-remark
-;; annotate https://github.com/bastibe/annotate.el
+;; NOTE: blk https://github.com/mahmoodsh36/blk
+;; NOTE: denote-explore https://github.com/pprevos/denote-explore
+;; NOTE: org-zettel-ref-mode https://github.com/yibie/org-zettel-ref-mode
+;; NOTE: org-remark (is this better than org-zettel-ref-mode?) https://github.com/nobiot/org-remark
+;; NOTE: annotate https://github.com/bastibe/annotate.el
 
 ;;;;;;;;;;;;;
 ;;;; pdf ;;;;
 
-;; TODO: pdf-tools https://github.com/fuxialexander/org-pdftools
-;; TODO: saveplace-pdf-view
+;; NOTE: pdf-tools https://github.com/fuxialexander/org-pdftools
+;; NOTE: saveplace-pdf-view
 
 ;;;;;;;;;;;;;;
 ;;;; epub ;;;;
 
-;; TODO: nov
-;; TODO: djvu
+;; NOTE: nov
+;; NOTE: djvu
 
 ;;;;;;;;;;;;;;;;;
 ;;;; secrets ;;;;
 
-;; TODO: age.el https://github.com/anticomputer/age.el
-;; TODO: pass.el https://github.com/NicolasPetton/pass or passage.el https://github.com/anticomputer/passage.el
-;; TODO: sops https://github.com/djgoku/sops
-;; TODO: pinentry
-;; password-store-menu https://github.com/rjekker/password-store-menu
+;; NOTE: age.el https://github.com/anticomputer/age.el
+;; NOTE: pass.el https://github.com/NicolasPetton/pass or passage.el https://github.com/anticomputer/passage.el
+;; NOTE: sops https://github.com/djgoku/sops
+;; NOTE: pinentry
+;; NOTE: password-store-menu https://github.com/rjekker/password-store-menu
 
 ;;;;;;;;;;;;;
 ;;;; rss ;;;;
 
-;; TODO: elfeed 
-;; TODO: phundrak config elfeed
-;; elfeed-webkit https://github.com/fritzgrabo/elfeed-webkit
+;; NOTE: elfeed 
+;; NOTE: phundrak config elfeed
+;; NOTE: elfeed-webkit https://github.com/fritzgrabo/elfeed-webkit
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; wallabag ;;;;
 
-;; TODO: wombag
+;; NOTE: wombag
 
 ;;;;;;;;;;;;;;;
 ;;;; email ;;;;
 
-;; TODO: notmuch
+;; NOTE: notmuch
 
 ;;;;;;;;;;;;;;;;;
 ;;;; browser ;;;;
 
-;; nyxt https://github.com/migalmoreno/nyxt.el
+;; NOTE: nyxt https://github.com/migalmoreno/nyxt.el
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; web-search ;;;;
 
-;; TODO: consult-omni https://github.com/armindarvish/consult-omni
-;; TODO: engine-mode https://github.com/hrs/engine-mode
-;; TODO: bookmark-web https://github.com/AuPath/bookmark-web
+;; NOTE: consult-omni https://github.com/armindarvish/consult-omni
+;; NOTE: engine-mode https://github.com/hrs/engine-mode
+;; NOTE: bookmark-web https://github.com/AuPath/bookmark-web
 
 ;;;;;;;;;;;;;
 ;;;; mpv ;;;;
 
-;; TODO: org-mpv-notes https://github.com/bpanthi977/org-mpv-notes
-;; TODO: ready-player https://github.com/xenodium/ready-player
+;; NOTE: org-mpv-notes https://github.com/bpanthi977/org-mpv-notes
+;; NOTE: ready-player https://github.com/xenodium/ready-player
 
 ;;;;;;;;;;;;;;;
 ;;;; music ;;;;
@@ -1252,33 +1362,33 @@
 ;;;;;;;;;;;;;;;;;
 ;;;; youtube ;;;;
 
-;; yeetube https://github.com/Boruch-Baum/emacs-yeetube.el
+;; NOTE: yeetube https://github.com/Boruch-Baum/emacs-yeetube.el
 
 ;;;;;;;;;;;;;;;;;
 ;;;; storage ;;;;
 
-;; dropbox https://github.com/lorniu/emacs-dropbox
+;; NOTE: dropbox https://github.com/lorniu/emacs-dropbox
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; workspaces ;;;;
 
-;; TODO: project-tab-groups https://github.com/fritzgrabo/project-tab-groups
-;; TODO: tab-bar-echo-area https://github.com/fritzgrabo/tab-bar-echo-area
-;; activities.el if project-tab-groups isn't to my liking
+;; NOTE: project-tab-groups https://github.com/fritzgrabo/project-tab-groups
+;; NOTE: tab-bar-echo-area https://github.com/fritzgrabo/tab-bar-echo-area
+;; NOTE: activities.el if project-tab-groups isn't to my liking
 
 ;;;;;;;;;;;;
 ;;;; ai ;;;;
 
-;; gptel
-;; gptel-quick https://github.com/karthink/gptel-quick
-;; magit-gptcommit https://github.com/douo/magit-gptcommit
-;; elysium https://github.com/lanceberge/elysium
-;; evedel https://github.com/daedsidog/evedel
+;; NOTE: gptel
+;; NOTE: gptel-quick https://github.com/karthink/gptel-quick
+;; NOTE: magit-gptcommit https://github.com/douo/magit-gptcommit
+;; NOTE: elysium https://github.com/lanceberge/elysium
+;; NOTE: evedel https://github.com/daedsidog/evedel
 
 ;;;;;;;;;;;;;;;
 ;;;; input ;;;;
 
-;; fcitx.el https://github.com/cute-jumper/fcitx.el
+;; NOTE: fcitx.el https://github.com/cute-jumper/fcitx.el
 
 ;;;;;;;;;;;;;;;
 ;;;; icons ;;;;
@@ -1306,12 +1416,12 @@
   :after corfu
   :config (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
-;; TODO: hl-line mode doesn't highlight nerd-icons in dired
+;; NOTE: hl-line mode doesn't highlight nerd-icons in dired
 (use-package nerd-icons-dired
   :ensure t
   :hook (dired-mode . nerd-icons-dired-mode))
 
-;; TODO: hl-line mode doesn't highlight nerd-icons in ibuffer
+;; NOTE: hl-line mode doesn't highlight nerd-icons in ibuffer
 (use-package nerd-icons-ibuffer
   :ensure t
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
@@ -1319,17 +1429,17 @@
 (use-package magit-file-icons
   :ensure t
   :after magit
-  :init (magit-file-icons-mode 1))
+  :config (magit-file-icons-mode 1))
 
-;; nerd-icons-multimodal https://github.com/abougouffa/nerd-icons-multimodal
-;; TODO: create compile-multi-nerd-icons
+;; NOTE: nerd-icons-multimodal https://github.com/abougouffa/nerd-icons-multimodal
+;; NOTE: create compile-multi-nerd-icons
 
 ;;;;;;;;;;;;;;;;
 ;;;; extras ;;;;
 
 (use-package dash :ensure t)
 
-;; paw (language learning) https://github.com/chenyanming/paw
-;; anki-editor (learning) https://github.com/anki-editor/anki-editor
-;; emacs-everywhere https://github.com/tecosaur/emacs-everywhere
-;; ros (screenshots) https://github.com/LionyxML/ros
+;; NOTE: paw (language learning) https://github.com/chenyanming/paw
+;; NOTE: anki-editor (learning) https://github.com/anki-editor/anki-editor
+;; NOTE: emacs-everywhere https://github.com/tecosaur/emacs-everywhere
+;; NOTE: ros (screenshots) https://github.com/LionyxML/ros

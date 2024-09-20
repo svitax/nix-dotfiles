@@ -29,22 +29,6 @@
   (interactive)
   (+meow--call-negative 'meow-till))
 
-(defun +meow-window-top ()
-  "Move the cursor to the top line in the window."
-  (interactive)
-  (move-to-window-line
-   (max 0 (if (= (point-min) (window-start)) 0 scroll-margin))))
-
-(defun +meow-window-middle ()
-  "Move the cursor to the middle line in the window."
-  (interactive)
-  (move-to-window-line nil))
-
-(defun +meow-window-bottom ()
-  "Move the cursor to the bottom line in the window."
-  (interactive)
-  (move-to-window-line (- (max 1 (1+ scroll-margin)))))
-
 (defun +meow-append-line-end ()
   "Move to the end of the current line, switch to INSERT mode."
   (interactive)
@@ -66,6 +50,94 @@
   "grab from lambda emacs or something"
   (interactive)
   (eldoc-doc-buffer))
+
+(defun +replace-char (arg char)
+  "Replace current char."
+  (interactive (list (prefix-numeric-value current-prefix-arg)
+		     (read-char-from-minibuffer "char: "
+						nil 'read-char-history)))
+  (progn
+    (call-interactively 'delete-char)
+    (insert-char char)))
+
+(defun +meow-replace ()
+  "Replace region with yank if active. Otherwise replace char at point."
+  (interactive)
+  (if (region-active-p)
+      (call-interactively 'meow-replace)
+    (call-interactively '+replace-char)))
+
+(defun +meow-duplicate ()
+  "Duplicate region if active. Otherwise duplicate char at point."
+  (interactive)
+  (if (region-active-p)
+      (progn
+	(meow-save)
+	(meow-yank))
+    (progn
+      (meow-save-char)
+      (meow-yank))))
+
+;; TODO: +meow-kill
+(defun +meow-kill ()
+  (interactive)
+  (if (region-active-p)
+      (meow-kill)
+    (meow-delete)))
+
+;; TODO: change meow-simple-motion-keymap to meow-simple-motion-state-keymap
+(setq meow-simple-motion-keymap (make-keymap))
+(meow-define-state simple-motion
+  "Meow state for motion without meow commands."
+  :lighter " [m]"
+  :keymap meow-simple-motion-keymap)
+(meow-define-keys 'simple-motion
+  '("<escape>" . meow-motion-mode)
+  ;; '("n" . "n")
+  '("e" . "p")
+  '("SPC" . meow-keypad))
+
+;; TODO: finish meow-expand-mode
+;; TODO: change meow-expand-keymap to meow-expand-state-keymap
+;; TODO: make meow-expand-mode inherit from meow-normal-mode
+(setq meow-expand-keymap (make-keymap))
+(set-keymap-parent meow-expand-keymap meow-normal-state-keymap)
+(meow-define-state expand
+  "Meow state for expanding selections."
+  :lighter " [E]"
+  :keymap meow-expand-keymap)
+(meow-define-keys 'expand
+  '("<escape>" . meow-normal-mode)
+  '("l" . meow-insert)
+  '("a" . meow-append)
+  '("y" . meow-save)
+  '("m" . meow-left-expand)
+  '("n" . meow-next-expand)
+  '("e" . meow-prev-expand)
+  '("i" . meow-right-expand))
+
+;; TODO: finish meow-structural-mode
+(setq meow-structural-keymap (make-keymap))
+(meow-define-state structural
+  "Meow state for structured editing and navigation."
+  :lighter " [S]"
+  :keymap meow-structural-keymap)
+(setq meow-cursor-type-structural 'hollow)
+(meow-define-keys 'structural
+  '("<escape>" . meow-normal-mode)
+  '("u" . meow-undo)
+  ;; slurp
+  ;; barf
+  ;; raise
+  ;; absorb
+  ;; split
+  ;; transpose
+  '("f" . sp-forward-sexp)
+  '("b" . sp-backward-sexp)
+  '("m" . sp-beginning-of-sexp)
+  '("i" . sp-end-of-sexp)
+  '("n" . sp-down-sexp)
+  '("e" . sp-up-sexp))
 
 (provide 'meow-extras)
 ;;; meow-extras.el ends here
