@@ -93,8 +93,8 @@
   :keymap meow-simple-motion-keymap)
 (meow-define-keys 'simple-motion
   '("<escape>" . meow-motion-mode)
-  ;; '("n" . "n")
-  '("e" . "p")
+  '("h" . "n")
+  '("a" . "p")
   '("SPC" . meow-keypad))
 
 ;; TODO: finish meow-expand-mode

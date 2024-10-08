@@ -46,6 +46,7 @@ in {
       # TODO: extract git, ripgrep, and fd config
       # TODO: extract go and gopls config?
       home.packages = with pkgs; [
+        nurl
         emacs-lsp-booster
         git
         ripgrep
@@ -65,7 +66,7 @@ in {
 
       editor.emacs.package = pkgs.emacsWithPackagesFromUsePackage {
         config = ./init.el;
-        package = pkgs.emacs-unstable-pgtk.override {
+        package = pkgs.emacs-unstable.override {
           withTreeSitter = true;
           withNativeCompilation = true;
         };
@@ -76,6 +77,7 @@ in {
             # emacsql-sqlite
             all-the-icons
             #
+            persid
             macrursors
             visual-replace
             projel
@@ -86,6 +88,12 @@ in {
         override = epkgs:
           epkgs
           // {
+            persid = elPackage "persid" (pkgs.fetchFromGitHub {
+              owner = "rougier";
+              repo = "persid";
+              rev = "6980ce24a63d9c3a6b25c7ac5db6621d9daa2c4c";
+              hash = "sha256-GPzvfTnMjltq2ljj3/0HTE37J/piO90TLbMTGti3x1U=";
+            });
             macrursors = elPackage "macrursors" (pkgs.fetchFromGitHub {
               owner = "corytertel";
               repo = "macrursors";

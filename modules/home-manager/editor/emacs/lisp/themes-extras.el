@@ -21,7 +21,7 @@ This function is added to `modus-themes-post-load-hook'."
      `(git-gutter-fr:added ((,c :foreground ,bg-added-fringe :background ,fringe)))
      `(git-gutter-fr:deleted ((,c :foreground ,bg-removed-fringe :background ,fringe)))
      `(git-gutter-fr:modified ((,c :foreground ,bg-changed-fringe :background ,fringe)))
-     `(avy-lead-face ((,c :foreground ,fg-main :background ,bg-magenta-subtle :weight bold)))
+     `(avy-lead-face ((,c :foreground ,fg-main :background ,bg-magenta-intense :weight bold)))
      `(avy-lead-face-0 ((,c :background ,bg-cyan-subtle)))
      `(avy-lead-face-1 ((,c :background ,bg-green-subtle)))
      `(avy-lead-face-2 ((,c :background ,bg-red-subtle)))

@@ -107,7 +107,9 @@
 	  meow-cursor-type-region-cursor 'box
 	  meow-use-cursor-position-hack t
 	  ;; Disable keypad describe until we can use Embark prefix help
-	  meow-keypad-describe-keymap-function nil)
+	  meow-keypad-describe-keymap-function nil
+	  ;; delete-active-region t
+	  )
   (use-package meow-extras)
   (bind (mode-specific-map
 	 "," +compile-prefix-map
@@ -147,77 +149,66 @@
    ;; '("<escape>" . ignore)
    ;; Use e to move up, n to move down.
    ;; Since special modes usually use n to move down, we only overwrite e here.
-   '("e" . meow-prev)
+   '("a" . meow-prev)
+   '("h" . meow-next)
    '("<escape>" . meow-simple-motion-mode))
   (meow-normal-define-key
-   '("a" . meow-append)
-   '("A" . +meow-append-line-end)
+   '("a" . meow-prev)
    '("b" . meow-back-word)
    '("B" . meow-back-symbol)
    '("c" . meow-change)
-   ;; NOTE: '("C" . +meow-change-to-line-end)
    '("d" . meow-delete)
-   '("D" . meow-kill)
    '("C-d" . meow-page-down)
-   '("e" . meow-prev)
-   '("E" . +meow-lookup)
+   '("e" . meow-right)
    '("f" . meow-find)
-   '("F" . +meow-find-backwards)
    '("g" . +goto-prefix-map)
-   ;; '("G" . meow-grab)
-   '("h" . +match-prefix-map)
-   ;; hm => matching bracket / matchit
-   '("i" . meow-right)
-   ;; NOTE: '("j" . my/meow-keep) ;; keep cursors matching regex (macrursors)
-   ;; NOTE: '("J" . my/meow-remove) ;; remove cursors matching regex (macrursors)
+   '("h" . meow-next)
+   '("H" . +meow-join-line)
+   '("i" . meow-insert)
+   '("I" . meow-open-above)
+   ;; '("j" . meow-join)
    '("k" . meow-search)
-   ;; NOTE: '("k" . my/meow-next)
-   '("l" . meow-insert)
-   '("L" . +meow-insert-line-start)
-   '("m" . meow-left)
-   '("n" . meow-next)
-   '("N" . +meow-join-line)
-   ;; NOTE: N => join lines inside active region
-   '("o" . meow-open-below)
-   '("O" . meow-open-above)
-   '("p" . meow-yank)
-   ;; NOTE: '("P" . my/meow-yank-before)
+   ;; '("k" . +meow-keep-selection)
+   ;; '("K" . +meow-remove-selection)
+   '("l" . meow-save)
+   '("m" . +match-prefix-map)
+   '("n" . meow-append)
+   '("N" . meow-open-below)
+   '("o" . meow-reverse)
+   '("O" . meow-pop-selection)
+   '("p" . yank)
+   '("P" . yank-pop)
    '("q" . meow-quit)
    '("r" . +meow-replace)
-   '("R" . +meow-duplicate)
-   ;; NOTE: '("s" . my/meow-select)
-   '("S" . meow-structural-mode) ;; TODO: finish meow-structural-mode
    '("t" . meow-till)
-   '("T" . +meow-till-backwards)
    '("u" . meow-undo)
    '("U" . undo-redo)
    '("C-u" . meow-page-up)
-   '("v" . meow-expand-mode) ;; TODO: finish meow-expand-mode
+   '("v" . meow-expand-mode)
    '("w" . meow-next-word)
    '("W" . meow-next-symbol)
    '("x" . meow-line)
    ;; '("X" . +meow-extend-to-line-end) ;; NOTE: extend selection to line end
-   '("y" . meow-save)
-   '("z" . meow-pop-selection)
+   '("y" . meow-left)
+   ;; '("z" . +view-prefix-map)
+   ;; '("Z" . +sticky-view-prefix-map)
    '("<escape>" . meow-cancel-selection)
-   '("-" . negative-argument) ;; NOTE: do i need negative argument? deos find/till backwards + line-backwards cover my use-cases?
+   '("<" . indent-rigidly-left) ;; TODO: if no selection, indent line
+   '(">" . indent-rigidly-right)
+   ;; '("'" . +register-prefix-map)
+   '("-" . negative-argument)
+   '(";" . repeat)
+   ;; '("`" . +toggle-case-dwiam) ;; NOTE: nt-toggle-case-dwiam from nyaatouch
+   ;; '("+" . +add-number) ;; NOTE: nt-add-number from nyaatouch
+   ;; '("_" . +subtract-number) ;; NOTE: nt-subtract-one from nyaatouch
+   ;; NOTE: find how to integrate the following commands
+   ;; '("." . repeat-last-change) NOTE: (helix)
    ;; NOTE: '(">" . my/meow-next-thing)
    ;; >x . goto next diagnostic
    ;; >X . goto last diagnostic
    ;; NOTE: '("<" . my/meow-previous-thing)
    ;; <x . goto prev diagnostic
    ;; <X . goto first diagnostic
-   ;; '("*" . +toggle-case-dwiam) ;; NOTE: nt-toggle-case-dwiam from nyaatouch
-   ;; '("+" . +add-number) ;; NOTE: nt-add-number from nyaatouch
-   ;; '("_" . +subtract-number) ;; NOTE: nt-subtract-one from nyaatouch
-   '("?" . meow-cheatsheet)
-   '(";" . repeat)
-   '("'" . meow-reverse)
-   ;; NOTE: find how to integrate the following commands
-   ;; '(";" . collapse-selection) ;; NOTE: (helix) cancel selection
-   ;; '("M-;" . flip-selections) ;; NOTE: (helix) nav to beginning or end of selection (basically meow-reverse)
-   ;; '("." . repeat-last-change) NOTE: (helix)
-   ;; '("M-." . repeat) ;; NOTE: (helix) repeat last motion
    )
   (meow-thing-register 'angle '(regexp "<" ">") '(regexp "<" ">"))
   (add-to-list 'meow-char-thing-table '(?A . angle))
@@ -227,11 +218,15 @@
   (add-to-list 'meow-mode-state-list '(git-commit-mode . insert))
   ;; simple motion
   (add-to-list 'meow-mode-state-list '(magit-status-mode . simple-motion))
+  (add-to-list 'meow-mode-state-list '(dired-mode . simple-motion))
+  (add-to-list 'meow-mode-state-list '(ediff-mode . simple-motion))
   (meow-global-mode 1))
 
 (use-package meow-tree-sitter
   :ensure t
   :config (meow-tree-sitter-register-defaults))
+
+;; NOTE: meow-paren-mode (integrate into special state) https://github.com/lilactown/kitten/blob/main/modules/kitten-lisp.el
 
 ;; NOTE: meow-vterm https://github.com/45mg/meow-vterm
 
@@ -293,12 +288,17 @@
   :ensure t
   :config
   (pulsar-global-mode 1)
-  (dolist (func '(meow-page-up
+  (dolist (func '(xref-find-definitions
+		  xref-go-back
+		  xref-go-forward
+		  meow-page-up
 		  meow-page-down
 		  beginning-of-buffer
 		  end-of-buffer
 		  recenter))
     (add-to-list 'pulsar-pulse-functions func)))
+
+;; NOTE: pulsic https://github.com/ichernyshovvv/pulsic.el
 
 (use-package whitespace
   :init
@@ -429,6 +429,8 @@
   :xdg-state (save-place-file "save-place.el")
   :config (save-place-mode))
 
+;; NOTE: (setq savehist-additional-variables '(register-alist kill-ring))
+;; NOTE: (make-variable-buffer-local 'register-alist) makes registers buffer-local, kind of like vim marks
 (use-package savehist
   :xdg-state (savehist-file "savehist.el")
   :init (setopt history-length 1000
@@ -447,7 +449,14 @@
   (minibuffer-depth-indicate-mode)
   :config
   (use-package minibuffer-extras)
-  (advice-add #'completing-read-multiple :filter-args #'+crm-indicator))
+  (advice-add #'completing-read-multiple :filter-args #'+crm-indicator)
+  ;; Don't ignore cursor shape changes in minibuffer
+  (delete (cons 'minibufferp 'meow--update-cursor-default)
+	  meow-update-cursor-functions-alist)
+  ;; Remove default minibuffer setup
+  (remove-hook 'minibuffer-setup-hook 'meow--minibuffer-setup)
+  ;; Use INSERT state in minibuffer by default
+  (add-hook 'minibuffer-setup-hook 'meow-insert-mode))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; marginalia ;;;;
@@ -469,9 +478,6 @@
 
 (use-package vertico
   :ensure t
-  :bind (vertico-map
-	 "C-n" #'vertico-next
-	 "C-e" #'vertico-previous)
   :init (setopt vertico-cycle t)
   :config (vertico-mode))
 
@@ -500,6 +506,7 @@
 ;;;;;;;;;;;;;;;;;
 ;;;; consult ;;;;
 
+;; NOTE: consult-ripgrep-command "rg --null --ignore-case --type org -- line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"
 (use-package consult
   :ensure t
   :config
@@ -540,14 +547,16 @@
 	 "C-h" #'corfu-info-documentation
 	 "M-." #'corfu-info-location)
   :init
-  (setopt corfu-auto t
+  (setopt corfu-auto nil
 	  corfu-auto-prefix 2
 	  corfu-auto-delay 0.0
 	  corfu-count 10
 	  corfu-cycle t
 	  corfu-preview-current nil
 	  corfu-preselect 'first
-	  corfu-scroll-margin 5)
+	  corfu-scroll-margin 5
+	  ;; Enable indentation+completion using the TAB key.
+	  tab-always-indent 'complete)
   :config
   (global-corfu-mode)
   (add-hook 'meow-insert-exit-hook 'corfu-quit))
@@ -555,6 +564,8 @@
 (use-package corfu-popupinfo
   :after corfu
   :bind (corfu-map
+	 "C-v" #'corfu-popupinfo-scroll-up
+	 "M-v" #'corfu-popupinfo-scroll-down
 	 "C-d" #'corfu-popupinfo-scroll-up
 	 "C-u" #'corfu-popupinfo-scroll-down
 	 [remap corfu-info-documentation] #'corfu-popupinfo-toggle)
@@ -580,6 +591,7 @@
 ;;;;;;;;;;;;;;;;;
 ;;;; project ;;;;
 
+;; NOTE: what can i do with `project-extra-root-markers'
 (use-package project
   :xdg-state (project-list-file "project-list.el")
   ;; :init
@@ -618,7 +630,7 @@
   :no-require
   :ensure nil
   :config (bind ('+goto-prefix-map
-		 "e" #'end-of-buffer
+		 "h" #'end-of-buffer
 		 ;; "f" goto file
 		 "g" #'beginning-of-buffer)
 		(+buffer-prefix-map
@@ -707,7 +719,7 @@
 
 ;; NOTE: "bn" #'narrow-to-region
 ;; NOTE: "bw" #'widen
-;; NOTE: logos https://github.com/protesilaos/logos
+;; TODO: logos https://github.com/protesilaos/logos
 
 ;;;;;;;;;;;;;;;;;
 ;;;; outline ;;;;
@@ -752,7 +764,7 @@
 (use-package avy
   :ensure t
   :init
-  (setopt avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o) ;; Colemak-DH keyboard
+  (setopt avy-keys '(?n ?r ?t ?s ?h ?a ?e ?i) ;; Colemak-DH keyboard
 	  avy-timeout-seconds 0.27
 	  avy-single-candidate-jump nil)
   :config
@@ -773,9 +785,49 @@
 ;; NOTE: wgrep https://github.com/mhayashi1120/Emacs-wgrep
 ;; https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L4039
 ;; NOTE: consult-omni https://github.com/armindarvish/consult-omni
+;; NOTE: docsim https://github.com/hrs/docsim.el
 
 ;;;;;;;;;;;;;;;;;
 ;;;; isearch ;;;;
+
+(use-package isearch
+  :bind (isearch-mode-map
+	 "M-s s" #'consult-line
+	 "C-SPC" #'+isearch-mark-and-exit
+	 "DEL" #'+isearch-delete
+	 "M->" #'isearch-end-of-buffer
+	 "M-<" #'isearch-beginning-of-buffer)
+  :init (setopt isearch-wrap-pause 'no-ding
+		isearch-allow-scroll 'unlimited
+		isearch-lazy-count t
+		lazy-count-prefix-format "(%s/%s) "
+		;; interpret space char as a wildcard
+		search-whitespace-regexp ".*?"
+		isearch-lax-whitespace t)
+  :config
+  (defun +isearch-delete ()
+    "Delete the failed portion or last char if succesful search.
+
+See also: https://emacs.stackexchange.com/a/10360/9198"
+    (interactive)
+    (if (= 0 (length isearch-string))
+	(ding)
+      (setq isearch-string (substring
+			    isearch-string 0 (or (isearch-fail-pos) (1- (length isearch-string))))
+	    isearch-message (mapconcat 'isearch-text-char-description isearch-string ""))
+      (funcall (or isearch-message-function #'isearch-message) nil t)
+      (if isearch-other-end (goto-char isearch-other-end))
+      (isearch-search)
+      (isearch-push-state)
+      (isearch-update)))
+  (defun +isearch-mark-and-exit ()
+    "Mark the current search string and exit the search."
+    (interactive)
+    (push-mark isearch-other-end t 'activate)
+    (setq deactivate-mark nil)
+    (activate-mark)
+    (isearch-done))
+  (meow-normal-define-key '("*" . isearch-forward-thing-at-point)))
 
 ;;;;;;;;;;;;;;;
 ;;;; imenu ;;;;
@@ -787,6 +839,7 @@
 ;;;; bookmarks ;;;;
 
 ;; NOTE: bookmark https://github.com/karthink/.emacs.d/blob/4ab4829fde086cb665cba00ee5c6a42d167e14eb/init.el#L3320
+;; NOTE: prot/bookmark-save-no-prompt
 (use-package bookmark
   :xdg-state
   (bookmark-default-file "bookmarks.eld"))
@@ -795,6 +848,8 @@
 ;; TODO: harpoon https://github.com/otavioschwanck/harpoon.el or https://github.com/kofm/harpoon.el
 ;; TODO: fix C-m and C-i so they're separate from RET and TAB
 ;; NOTE: diverted https://github.com/xenodium/dotsies/blob/main/emacs/ar/diverted.el
+;; NOTE: org-bookmark-heading https://github.com/alphapapa/org-bookmark-heading
+;; NOTE: bookmark-frecency https://github.com/akirak/bookmark-frecency.el
 
 ;;;;;;;;;;;;;;;;;
 ;;;; editing ;;;;
@@ -804,8 +859,8 @@
   :ensure nil
   :config
   (bind '+goto-prefix-map
-	"i" #'move-end-of-line
-	"m" #'move-beginning-of-line))
+	"e" #'move-end-of-line
+	"y" #'move-beginning-of-line))
 
 (use-package mowie
   :ensure t
@@ -871,8 +926,8 @@
   :ensure t
   :init (setopt expand-region-fast-keys-enabled nil)
   :bind (meow-normal-state-keymap
-	 "," #'er/expand-region
-	 "." #'er/contract-region))
+	 "Y" #'er/expand-region
+	 "E" #'er/contract-region))
 
 ;; NOTE: highlight surround.el semantic units
 ;; NOTE: surround.el treesitter-backed semantic units
@@ -1002,7 +1057,7 @@
 ;;;;;;;;;;;;;;;;;;
 ;;;; snippets ;;;;
 
-;; NOTE: tempel https://github.com/minad/tempel
+;; TODO: tempel https://github.com/minad/tempel
 ;; NOTE: eglot-tempel https://github.com/fejfighter/eglot-tempel
 ;; NOTE: tempel-collection https://github.com/Crandel/tempel-collection
 
@@ -1029,10 +1084,27 @@
 (use-package xref
   :config
   (bind ((:global-map)
-	 "C-t" #'xref-go-back)
+	 "C-t" #'xref-go-back
+	 "M-t" #'xref-go-forward)
 	('+goto-prefix-map
 	 "d" #'xref-find-definitions
-	 "r" #'xref-find-references)))
+	 "r" #'xref-find-references))
+
+  ;; TODO: this basically makes xref into a jumplist. do i want to keep xref jumps from regular jumps with gumshoe?
+  (customize-set-variable 'xref-history-storage 'xref-window-local-history)
+  (defun +xref-push-point-to-marker-stack (&rest r)
+    (xref-push-marker-stack (point-marker)))
+  (defun +xref-stack-current-position ()
+    (interactive)
+    (+xref-push-point-to-marker-stack))
+  (dolist (func '(isearch-forward isearch-forward-regexp
+		  isearch-backward isearch-backward-regexp))
+    (advice-add func :before '+xref-push-point-to-marker-stack)))
+
+(use-package consult-xref
+  :init
+  (setq xref-show-xrefs-function #'consult-xref
+	xref-show-definitions-function #'consult-xref))
 
 ;; TODO: eldoc
 ;; TODO: colorful-mode
@@ -1055,6 +1127,11 @@
 ;; TODO: evil-matchit https://github.com/redguardtoo/evil-matchit
 ;; NOTE: treesitter-context https://github.com/zbelial/treesitter-context.el
 
+;;;;;;;;;;;;;;;;;;;;;
+;;;; scaffolding ;;;;
+
+;; NOTE: prefab (for cookiecutter) https://github.com/LaurenceWarne/prefab.el
+
 ;;;;;;;;;;;;
 ;;;; vc ;;;;
 
@@ -1073,6 +1150,7 @@
 ;; NOTE: git-commit-ts-mode https://github.com/danilshvalov/git-commit-ts-mode
 ;; NOTE: emsg-blame https://github.com/ISouthRain/emsg-blame
 ;; NOTE: consult-gh https://github.com/armindarvish/consult-gh
+;; NOTE: conventional-commit https://github.com/akirak/conventional-commit.el
 
 ;;;;;;;;;;;;;;
 ;;;; diff ;;;;
@@ -1132,6 +1210,9 @@
 	 "r" #'eval-last-region)
   :init (add-hook 'eros-inspect-hooks (lambda () (flymake-mode -1))))
 
+;; NOTE: emacs-inspector https://github.com/mmontone/emacs-inspector
+;; NOTE: eros-inspector https://github.com/port19x/eros-inspector
+
 (use-package elisp-demos
   :ensure t
   :init
@@ -1155,6 +1236,8 @@
 
 ;;;;;;;;;;;;;;
 ;;;; rust ;;;;
+
+;; NOTE: cargo-jump-xref https://github.com/eval-exec/cargo-jump-xref.el
 
 ;;;;;;;;;;;;;
 ;;;; nix ;;;;
@@ -1230,6 +1313,12 @@
 ;; NOTE: beardbolt https://github.com/joaotavora/beardbolt
 ;; NOTE: rmsbolt https://github.com/emacsmirror/rmsbolt
 
+;;;;;;;;;;;;;;;
+;;;; sxhkd ;;;;
+
+;; NOTE: sxhkd-mode https://github.com/xFA25E/sxhkd-mode
+;; NOTE: make sxhkd-mode work in swhkd
+
 ;;;;;;;;;;;;;;;;;;
 ;;;; markdown ;;;;
 
@@ -1241,11 +1330,15 @@
 
 (use-package org
   :bind (org-mode-map
-	 "C-'" #'popper-toggle))
+	 "C-'" #'popper-toggle)
+  :init
+  (setopt org-startup-folded 'content))
 
 ;; TODO: book-mode https://github.com/rougier/book-mode or org-modern
+;; TODO: org-appear https://github.com/awth13/org-appear (needed after org-modern??)
 ;; NOTE: org-modern-indent https://github.com/jdtsmith/org-modern-indent
 ;; TODO: corg https://github.com/isamert/corg.el
+;; TODO: org-gtd (tasks) https://github.com/Trevoke/org-gtd.el
 ;; NOTE: org-transclusion-http https://github.com/alphapapa/org-transclusion-http
 ;; NOTE: org-inline-tags https://github.com/incandescentman/org-inline-tags
 ;; NOTE: org-super-links https://github.com/toshism/org-super-links
@@ -1256,6 +1349,7 @@
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; org-agenda ;;;;
 
+;; TODO: org-super-agenda https://github.com/alphapapa/org-super-agenda
 ;; NOTE: org-caldav https://github.com/dengste/org-caldav
 ;; NOTE: org-gcal https://github.com/myuhe/org-gcal.el
 ;; NOTE: org-timeblock https://github.com/ichernyshovvv/org-timeblock
@@ -1264,11 +1358,39 @@
 ;;;; spelling ;;;;
 
 ;; TODO: jinx
+;; NOTE: flymake-vale https://github.com/tpeacock19/flymake-vale
 
 ;;;;;;;;;;;;;;;;
 ;;;; biblio ;;;;
 
 ;; NOTE: citar
+
+(use-package citar
+  :ensure t
+  ;; :commands citar--bibliography-files
+  :bind ((+notes-prefix-map
+	  "b" +bibliography-prefix-map)
+	 (+bibliography-prefix-map
+	  "b" #'citar-open))
+  :init
+  (setopt
+   citar-select-multiple nil
+   citar-bibliography '("~/OneDrive/docs/lib.bib")
+   citar-library-paths '("~/OneDrive/docs/books")
+   citar-templates
+   '((main . "${title:55} ${author editor:55} ${date year issued:4}")
+     (suffix . "  ${tags keywords keywords:40}")
+     (preview . "${author editor} ${title}, ${journal publisher container-title collection-title booktitle} ${volume} (${year issued date}).\n")
+     (note . "#+title: Notes on ${author editor}, ${title}"))))
+
+(use-package persid)
+
+;; NOTE: biblio
+;; NOTE: create biblio-persid if sufficient
+;; NOTE: biblio-openlibrary https://github.com/fabcontigiani/biblio-openlibrary
+;; NOTE: biblio-zotero https://github.com/gkowzan/biblio-zotero
+;; NOTE: biblio-bibsonomy https://github.com/andreasjansson/biblio-bibsonomy.el
+;; NOTE: biblio-gscholar https://github.com/seanfarley/biblio-gscholar.el
 
 ;;;;;;;;;;;;;;;
 ;;;; notes ;;;;
@@ -1294,9 +1416,12 @@
 	 "g" #'consult-denote-grep)
   :config (consult-denote-mode))
 
+;; TODO: org-zettel-ref-mode https://github.com/yibie/org-zettel-ref-mode
+;; TODO: write convert-to-org.py in .go
+;; TODO: dwim-shell-command to call convert-to-org.go
+;; NOTE: use markdownload to download webpages for org-zettel-ref-mode
 ;; NOTE: blk https://github.com/mahmoodsh36/blk
 ;; NOTE: denote-explore https://github.com/pprevos/denote-explore
-;; NOTE: org-zettel-ref-mode https://github.com/yibie/org-zettel-ref-mode
 ;; NOTE: org-remark (is this better than org-zettel-ref-mode?) https://github.com/nobiot/org-remark
 ;; NOTE: annotate https://github.com/bastibe/annotate.el
 
@@ -1337,6 +1462,9 @@
 ;;;; email ;;;;
 
 ;; NOTE: notmuch
+;; NOTE: ol-notmuch https://github.com/tarsius/ol-notmuch
+;; NOTE: notmuch-addr https://github.com/tarsius/notmuch-addr
+;; NOTE: notmuch-bookmarks https://github.com/publicimageltd/notmuch-bookmarks
 
 ;;;;;;;;;;;;;;;;;
 ;;;; browser ;;;;
@@ -1434,6 +1562,13 @@
 ;; NOTE: nerd-icons-multimodal https://github.com/abougouffa/nerd-icons-multimodal
 ;; NOTE: create compile-multi-nerd-icons
 
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; window-manager ;;;;
+
+;; idk if i want this
+;; NOTE: shackle https://depp.brause.cc/shackle/
+;; NOTE: sway https://github.com/thblt/sway.el
+
 ;;;;;;;;;;;;;;;;
 ;;;; extras ;;;;
 
@@ -1443,3 +1578,5 @@
 ;; NOTE: anki-editor (learning) https://github.com/anki-editor/anki-editor
 ;; NOTE: emacs-everywhere https://github.com/tecosaur/emacs-everywhere
 ;; NOTE: ros (screenshots) https://github.com/LionyxML/ros
+;; NOTE: work-timer https://github.com/krisbalintona/work-timer
+;; NOTE: exercism-modern https://github.com/elken/exercism-modern
