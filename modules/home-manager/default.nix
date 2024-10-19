@@ -8,9 +8,15 @@ rec {
     # NOTE: wl-clipboard (copy/paste utils) https://github.com/bugaevc/wl-clipboard
   };
 
-  # NOTE: rename commands to command-line
-  commands = {
-    direnv = ./commands/direnv;
+  command-line = {
+    direnv = ./command-line/direnv;
+    fd = ./command-line/fd;
+    git = ./command-line/git;
+    nh = ./command-line/nh;
+    nurl = ./command-line/nurl;
+    pandoc = ./command-line/pandoc;
+    poppler = ./command-line/poppler;
+    ripgrep = ./command-line/ripgrep;
   };
 
   compositor = {
@@ -99,7 +105,14 @@ rec {
 
   allModules = {
     imports = [
-      commands.direnv
+      command-line.direnv
+      command-line.fd
+      command-line.git
+      command-line.nh
+      command-line.nurl
+      command-line.pandoc
+      command-line.poppler
+      command-line.ripgrep
 
       desktop.firefox
       desktop.foot

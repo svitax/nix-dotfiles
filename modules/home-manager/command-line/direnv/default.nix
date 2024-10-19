@@ -7,9 +7,9 @@
 }: let
   inherit (lib) mkEnableOption mkOption types;
 
-  cfg = config.commands.direnv;
+  cfg = config.command-line.direnv;
 in {
-  options.commands.direnv = {
+  options.command-line.direnv = {
     enable = mkEnableOption "Direnv";
   };
 

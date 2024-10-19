@@ -3,32 +3,27 @@
 (require 'citar)
 (require 'nerd-icons)
 
-(defvar citar-indicator-files-icons
+(defvar +citar-indicator-files-icons
   (citar-indicator-create
-   :symbol (nerd-icons-faicon "nf-fa-file" :face 'nerd-icons-green)
+   :symbol (nerd-icons-codicon "nf-cod-file_pdf" :face 'nerd-icons-red)
    :function #'citar-has-files
    ;; :padding "  " ; need this because the default padding is too low for these icons
    :tag "has:files"))
 
-(defvar citar-indicator-links-icons
+(defvar +citar-indicator-links-icons
   (citar-indicator-create
-   :symbol (nerd-icons-faicon "nf-fa-link" :face 'nerd-icons-orange)
+   :symbol (nerd-icons-octicon "nf-oct-link_external" :face 'nerd-icons-orange)
    :function #'citar-has-links :padding "  " :tag "has:links"))
 
-(defvar citar-indicator-notes-icons
+(defvar +citar-indicator-notes-icons
   (citar-indicator-create
    :symbol (nerd-icons-octicon "nf-oct-note" :face 'nerd-icons-blue)
    :function #'citar-has-notes :padding "  " :tag "has:notes"))
 
-(defvar citar-indicator-cited-icons
+(defvar +citar-indicator-cited-icons
   (citar-indicator-create
-   :symbol (nerd-icons-faicon "nf-fa-circle" :face 'nerd-icons-green)
+   :symbol (nerd-icons-octicon "nf-oct-cross_reference" :face 'nerd-icons-green)
    :function #'citar-is-cited
    :padding "  " :tag "is:cited"))
-
-(setq citar-indicators
-      (list citar-indicator-files-icons ; citar-indicator-links-icons
-	    citar-indicator-notes-icons ; citar-indicator-cited-icons
-	    ))
 
 (provide 'citar-extras)

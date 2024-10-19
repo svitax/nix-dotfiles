@@ -2,6 +2,7 @@
 
 ;; Setup prefix maps
 
+(setq +agenda-prefix-map (make-sparse-keymap))
 (setq +bibliography-prefix-map (make-sparse-keymap))
 (setq +buffer-prefix-map (make-sparse-keymap))
 (setq +compile-prefix-map (make-sparse-keymap))
@@ -10,6 +11,7 @@
 (define-prefix-command '+goto-prefix-map)
 (define-prefix-command '+match-prefix-map)
 (setq +notes-prefix-map (make-sparse-keymap))
+(setq +org-prefix-map (make-sparse-keymap))
 (setq +project-prefix-map (make-sparse-keymap))
 (setq +quit-prefix-map (make-sparse-keymap))
 (setq +search-prefix-map (make-sparse-keymap))
@@ -85,6 +87,13 @@
       (meow-kill)
     (meow-delete)))
 
+(defun +meow-eldoc ()
+  "Toggle the display of the ElDoc window."
+  (interactive)
+  (if (get-buffer-window eldoc--doc-buffer)
+      (delete-window (get-buffer-window eldoc--doc-buffer))
+    (eldoc-doc-buffer t)))
+
 ;; TODO: change meow-simple-motion-keymap to meow-simple-motion-state-keymap
 (setq meow-simple-motion-keymap (make-keymap))
 (meow-define-state simple-motion
@@ -93,8 +102,10 @@
   :keymap meow-simple-motion-keymap)
 (meow-define-keys 'simple-motion
   '("<escape>" . meow-motion-mode)
-  '("h" . "n")
-  '("a" . "p")
+  ;; '("h" . "n")
+  ;; '("a" . "p")
+  '("a" . meow-prev)
+  '("h" . meow-next)
   '("SPC" . meow-keypad))
 
 ;; TODO: finish meow-expand-mode
@@ -108,13 +119,10 @@
   :keymap meow-expand-keymap)
 (meow-define-keys 'expand
   '("<escape>" . meow-normal-mode)
-  '("l" . meow-insert)
-  '("a" . meow-append)
-  '("y" . meow-save)
-  '("m" . meow-left-expand)
-  '("n" . meow-next-expand)
-  '("e" . meow-prev-expand)
-  '("i" . meow-right-expand))
+  '("y" . meow-left-expand)
+  '("h" . meow-next-expand)
+  '("a" . meow-prev-expand)
+  '("e" . meow-right-expand))
 
 ;; TODO: finish meow-structural-mode
 (setq meow-structural-keymap (make-keymap))

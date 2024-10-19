@@ -1,4 +1,32 @@
-;;; isearch-extras.el -*- lexical-binding: t; -*-
+;;; isearch-extras.el --- . -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;;; Code:
+
+(defun +isearch-delete ()
+  "Delete the failed portion or last char if succesful search.
+
+See also: https://emacs.stackexchange.com/a/10360/9198"
+  (interactive)
+  (if (= 0 (length isearch-string))
+      (ding)
+    (setq isearch-string (substring
+			  isearch-string 0 (or (isearch-fail-pos) (1- (length isearch-string))))
+	  isearch-message (mapconcat 'isearch-text-char-description isearch-string ""))
+    (funcall (or isearch-message-function #'isearch-message) nil t)
+    (if isearch-other-end (goto-char isearch-other-end))
+    (isearch-search)
+    (isearch-push-state)
+    (isearch-update)))
+
+(defun +isearch-mark-and-exit ()
+  "Mark the current search string and exit the search."
+  (interactive)
+  (push-mark isearch-other-end t 'activate)
+  (setq deactivate-mark nil)
+  (activate-mark)
+  (isearch-done))
 
 (defun my/isearch-repeat-forward (&optional arg)
   "Move forward, keeping point at the beginning of the match.
@@ -67,7 +95,7 @@ region, or place multiple cursors."
   "Invoke `consult-line' from isearch."
   (interactive)
   (let ((query (if isearch-regexp
-		 isearch-string
+		   isearch-string
 		 (regexp-quote isearch-string))))
     (isearch-update-ring isearch-string isearch-regexp)
     (let (search-nonincremental-instead)
@@ -78,7 +106,7 @@ region, or place multiple cursors."
   "Invoke `consult-line' from isearch."
   (interactive)
   (let ((query (if isearch-regexp
-		 isearch-string
+		   isearch-string
 		 (regexp-quote isearch-string))))
     (isearch-update-ring isearch-string isearch-regexp)
     (let (search-nonincremental-instead)

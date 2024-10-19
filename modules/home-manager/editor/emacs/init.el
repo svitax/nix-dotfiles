@@ -101,6 +101,7 @@
   ;; (setq meow--kbd-delete-char "H-d")
   (setq meow--kbd-delete-char "<deletechar>")
   :config
+  (use-package meow-extras)
   (setopt meow-use-clipboard t
 	  meow-expand-hint-remove-delay 0
 	  meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh
@@ -110,17 +111,28 @@
 	  meow-keypad-describe-keymap-function nil
 	  ;; delete-active-region t
 	  )
-  (use-package meow-extras)
   (bind (mode-specific-map
 	 "," +compile-prefix-map
-	 "b" +buffer-prefix-map
+	 "a" +agenda-prefix-map
+	 ;; b bookmark
+	 ;; c (C-c)
+	 ;; d dired
 	 "e" +eval-prefix-map
 	 "f" +file-prefix-map
+	 ;; g (C-M-)
+	 ;; h help
+	 ;; i
+	 ;; j
+	 ;; k
+	 ;; l
+	 "l" +bibliography-prefix-map
+	 ;; m (M-)
 	 "n" +notes-prefix-map
+	 "o" +org-prefix-map
 	 "p" +project-prefix-map
 	 "q" +quit-prefix-map
+	 "r" +buffer-prefix-map
 	 "s" +search-prefix-map
-	 ;; s; . repeat search?
 	 ;; sr . vr/query-replace
 	 "t" +toggle-prefix-map
 	 ;; tg . git-gutter-mode
@@ -141,19 +153,26 @@
 	 ;;  l . jinx-languages
 	 "u" #'meow-universal-argument
 	 "v" +vc-prefix-map
-	 "w" +window-prefix-map)
+	 "w" +window-prefix-map
+	 ;; x
+	 ;; y
+	 ;; z
+	 )
 	('+match-prefix-map
 	 "a" #'meow-bounds-of-thing
 	 "i" #'meow-inner-of-thing))
   (meow-motion-overwrite-define-key
+   '("<escape>" . meow-simple-motion-mode)
    ;; '("<escape>" . ignore)
-   ;; Use e to move up, n to move down.
-   ;; Since special modes usually use n to move down, we only overwrite e here.
-   '("a" . meow-prev)
-   '("h" . meow-next)
-   '("<escape>" . meow-simple-motion-mode))
+   ;; Use a to move up, h to move down.
+   ;; '("a" . meow-prev)
+   ;; '("h" . meow-next)
+   '("a" . "p")
+   '("A" . +meow-eldoc)
+   '("h" . "n"))
   (meow-normal-define-key
    '("a" . meow-prev)
+   '("A" . +meow-eldoc)
    '("b" . meow-back-word)
    '("B" . meow-back-symbol)
    '("c" . meow-change)
@@ -170,7 +189,7 @@
    '("k" . meow-search)
    ;; '("k" . +meow-keep-selection)
    ;; '("K" . +meow-remove-selection)
-   '("l" . meow-save)
+   ;; '("l" . +register-prefix-map) 
    '("m" . +match-prefix-map)
    '("n" . meow-append)
    '("N" . meow-open-below)
@@ -192,10 +211,10 @@
    '("y" . meow-left)
    ;; '("z" . +view-prefix-map)
    ;; '("Z" . +sticky-view-prefix-map)
+   '("'" . meow-save)
    '("<escape>" . meow-cancel-selection)
-   '("<" . indent-rigidly-left) ;; TODO: if no selection, indent line
+   '("<" . indent-rigidly-left) ;; NOTE: if no selection, indent line
    '(">" . indent-rigidly-right)
-   ;; '("'" . +register-prefix-map)
    '("-" . negative-argument)
    '(";" . repeat)
    ;; '("`" . +toggle-case-dwiam) ;; NOTE: nt-toggle-case-dwiam from nyaatouch
@@ -217,9 +236,10 @@
   (add-to-list 'meow-mode-state-list '(eshell-mode . insert))
   (add-to-list 'meow-mode-state-list '(git-commit-mode . insert))
   ;; simple motion
-  (add-to-list 'meow-mode-state-list '(magit-status-mode . simple-motion))
-  (add-to-list 'meow-mode-state-list '(dired-mode . simple-motion))
-  (add-to-list 'meow-mode-state-list '(ediff-mode . simple-motion))
+  (add-to-list 'meow-mode-state-list '(pdf-view-mode . simple-motion))
+  ;; (add-to-list 'meow-mode-state-list '(magit-status-mode . simple-motion))
+  ;; (add-to-list 'meow-mode-state-list '(dired-mode . simple-motion))
+  ;; (add-to-list 'meow-mode-state-list '(ediff-mode . simple-motion))
   (meow-global-mode 1))
 
 (use-package meow-tree-sitter
@@ -257,6 +277,8 @@
 						  (bg-line-number-active unspecified)
 						  (bg-region bg-sage)
 						  (fg-region unspecified)
+						  (border-mode-line-active unspecified)
+						  (border-mode-line-inactive unspecified)
 						  (date-common cyan)
 						  (date-deadline red-warmer)
 						  (date-event magenta-warmer)
@@ -264,19 +286,25 @@
 						  (date-scheduled magenta-cooler)
 						  (date-weekday cyan-cooler)
 						  (date-weekend blue-faint)
-						  (mail-recipient fg-main)))
+						  (mail-recipient fg-main)
+						  (bg-prose-block-contents unspecified)
+						  (bg-prose-block-delimiter unspecified)
+						  (fg-prose-block-delimiter fg-dim)))
   (setopt modus-operandi-palette-overrides `((bg-mode-line-active bg-blue-intense)
 					     (fg-mode-line-active fg-main)
 					     (fg-heading-1 "#a01f64")
 					     (fg-heading-2 "#2f5f9f")
 					     (fg-heading-3 "#1a8388")))
-  (setopt modus-vivendi-palette-overrides `((fg-main "#d6d6d4")
-					    (bg-region bg-lavender)
+  (setopt modus-vivendi-palette-overrides `(;; Lower contrast
+					    (fg-main "#d6d6d4")
 					    (bg-main "#090909")
+					    (bg-region bg-lavender)
 					    (fg-heading-1 magenta-faint)
 					    (bg-mode-line-active bg-lavender)
 					    (fg-mode-line-active "#ffffff")))
   (setopt modus-themes-bold-constructs t
+	  ;; modus-themes-completions '((t . (bold)))
+	  ;; modus-themes-prompts '(bold)
 	  modus-themes-variable-pitch-ui nil)
   :config
   (use-package themes-extras)
@@ -317,6 +345,8 @@
 ;; moody? minions? prots modeline? karthink? diminish?
 ;; blackout https://github.com/radian-software/blackout
 
+(use-package diminish :ensure t)
+
 (use-package simple
   :config
   (column-number-mode))
@@ -343,8 +373,10 @@
 	 ;; NOTE: "k" +kill-all-emacsen (lambda emacs)
 	 ))
 
+;; NOTE: don't turn on line-numbers by default, but put it in the toggle prefix map
 (use-package display-line-numbers
-  :init (global-display-line-numbers-mode))
+  :bind (+toggle-prefix-map
+	 "l" #'global-display-line-numbers-mode))
 
 (use-package virtual-auto-fill
   :ensure t
@@ -365,6 +397,7 @@
 
 (use-package envrc
   :ensure t
+  :diminish envrc-mode
   :init (setopt envrc-show-summary-in-minibuffer nil)
   :config (envrc-global-mode))
 
@@ -383,10 +416,11 @@
 	  use-short-answers t
 	  confirm-kill-processes nil
 	  confirm-kill-emacs 'yes-or-no-p)
-  :config (bind +file-prefix-map "a" #'find-file))
+  :config (bind +file-prefix-map "f" #'find-file))
 
 (use-package persist-state
   :ensure t
+  :diminish persist-state-mode
   :config (persist-state-mode))
 
 (use-package backup
@@ -411,15 +445,17 @@
   (setopt create-lockfiles nil))
 
 ;; NOTE: autorevert
-;; (use-package autorevert
-;;   :init
-;;   (use-package auto-revert-extras)
-;;   ;; Be quiet about reverts
-;;   (setopt global-auto-revert-non-file-buffers t
-;; 	  auto-revert-verbose nil)
-;;   ;; global-auto-revert-mode can slow things down. try to enable it per active window.
-;;   (add-to-list 'window-state-change-functions #'+window-state-state-change)
-;;   :config (global-auto-revert-mode))
+(use-package autorevert
+  :diminish auto-revert-mode
+  ;;   :init
+  ;;   (use-package auto-revert-extras)
+  ;;   ;; Be quiet about reverts
+  ;;   (setopt global-auto-revert-non-file-buffers t
+  ;; 	  auto-revert-verbose nil)
+  ;;   ;; global-auto-revert-mode can slow things down. try to enable it per active window.
+  ;;   (add-to-list 'window-state-change-functions #'+window-state-state-change)
+  ;;   :config (global-auto-revert-mode)
+  )
 
 ;; NOTE: recentf
 ;; (use-package recentf
@@ -427,7 +463,14 @@
 
 (use-package saveplace
   :xdg-state (save-place-file "save-place.el")
-  :config (save-place-mode))
+  :config
+  (defun +save-place-suppress-message (fun &rest args)
+    "Suppress minibuffer messages from `save-place-mode'."
+    (let ((inhibit-message t))
+      (apply fun args)))
+  (advice-add 'save-place-mode :around #'+save-place-suppress-message)
+  
+  (save-place-mode))
 
 ;; NOTE: (setq savehist-additional-variables '(register-alist kill-ring))
 ;; NOTE: (make-variable-buffer-local 'register-alist) makes registers buffer-local, kind of like vim marks
@@ -445,16 +488,24 @@
 
 (use-package minibuffer
   :init
-  (setopt enable-recursive-minibuffers t)
+  (setopt
+   ;; NOTE: prot explanation
+   enable-recursive-minibuffers t
+   ;; NOTE: prot explanation
+   echo-keystrokes 0.25)
   (minibuffer-depth-indicate-mode)
   :config
   (use-package minibuffer-extras)
+
   (advice-add #'completing-read-multiple :filter-args #'+crm-indicator)
+  
   ;; Don't ignore cursor shape changes in minibuffer
   (delete (cons 'minibufferp 'meow--update-cursor-default)
 	  meow-update-cursor-functions-alist)
+  
   ;; Remove default minibuffer setup
   (remove-hook 'minibuffer-setup-hook 'meow--minibuffer-setup)
+  
   ;; Use INSERT state in minibuffer by default
   (add-hook 'minibuffer-setup-hook 'meow-insert-mode))
 
@@ -478,8 +529,18 @@
 
 (use-package vertico
   :ensure t
-  :init (setopt vertico-cycle t)
-  :config (vertico-mode))
+  :bind ((vertico-map
+	  "M-a" #'vertico-previous-group
+	  "C-d" #'vertico-scroll-up
+	  "M-h" #'vertico-next-group
+	  "C-u" #'vertico-scroll-down))
+  :init (setopt vertico-scroll-margin 0
+		vertico-count 5
+		vertico-cycle t
+		vertico-resize 'grow-only)
+  :config
+  (use-package vertico-extras)
+  (vertico-mode))
 
 (use-package vertico-directory
   :after vertico
@@ -487,7 +548,31 @@
 	 "DEL" #'vertico-directory-delete-char
 	 "M-DEL" #'vertico-directory-delete-word
 	 "RET" #'vertico-directory-enter)
-  :config (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
+  :config
+  ;; This works with `file-name-shadow-mode' enabled. When you are in a
+  ;; sub-directory and use, say, `find-file' to go to your home '~/' or
+  ;; root '/' directory, Vertico will clear the old path to keep only your
+  ;; current input.
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
+
+(use-package vertico-multiform
+  :after vertico
+  :bind ((vertico-map
+	  "TAB" #'+vertico-minimal-complete)
+	 (vertico-multiform-map
+	  "<down>" #'+vertico-minimal-next
+	  "<up>" #'+vertico-minimal-previous
+	  "C-l" #'vertico-multiform-vertical))
+  :config
+  (setq vertico-multiform-categories
+	`(;; Maximal
+	  (imenu ,@+vertico-multiform-maximal)
+	  ;; Minimal
+	  (file ,@+vertico-multiform-minimal
+		(vertico-preselect . prompt)
+		(vertico-sort-function . +vertico-sort-directories-first))
+	  (t ,@+vertico-multiform-minimal)))
+  (vertico-multiform-mode))
 
 (use-package vertico-repeat
   :after vertico
@@ -507,24 +592,38 @@
 ;;;; consult ;;;;
 
 ;; NOTE: consult-ripgrep-command "rg --null --ignore-case --type org -- line-buffered --color=always --max-columns=500 --no-heading --line-number . -e ARG OPTS"
+;; NOTE: consult-find-args (concat "find . -not ( " "-path */.git* -prune " "-or -path */.cache* -prune )")
 (use-package consult
   :ensure t
+  :init (setopt consult-project-function nil) ;; always work from the current directory (use `project-*' commands or `cd' to switch directory)
   :config
   (bind (+buffer-prefix-map
-	 "b" #'consult-buffer)
+	 "r" #'consult-buffer)
 	(+search-prefix-map
 	 "g" #'consult-ripgrep
 	 "l" #'consult-outline
 	 "s" #'consult-line)
 	(+file-prefix-map
-	 "i" #'consult-fd
+	 "i" #'consult-find
 	 "r" #'consult-recent-file))
+  
   (with-eval-after-load 'pulsar
-    (add-hook 'consult-after-jump-hook #'pulsar-recenter-top)
-    (add-hook 'consult-after-jump-hook #'pulsar-reveal-entry)))
+    (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
+    (dolist (fn '(pulsar-recenter-top pulsar-reveal-entry))
+      (add-hook 'consult-after-jump-hook fn)))
+
+  (consult-customize
+   consult-bookmark consult--source-buffer consult-recent-file
+   consult--source-recent-file consult--source-project-recent-file
+   consult--source-bookmark consult--source-project-buffer
+   ;; consult-info
+   :preview-key "M-."
+   consult-theme
+   :preview-key (list :debounce 0.3 "M-.")))
 
 (use-package consult-imenu
-  :bind (+search-prefix-map "i" #'consult-imenu))
+  :bind (+search-prefix-map "C-i" #'consult-imenu
+			    "i" #'consult-imenu-multi))
 
 (use-package consult-dir
   :ensure t
@@ -537,24 +636,19 @@
 ;;;;;;;;;;;;;;;
 ;;;; corfu ;;;;
 
-;; TODO: get rid of initial freeze when opening corfu for the first time
 (use-package corfu
   :ensure t
-  :bind (corfu-map
-	 "M-SPC" #'corfu-insert-separator
-	 "TAB" #'corfu-insert
-	 "RET" nil
-	 "C-h" #'corfu-info-documentation
-	 "M-." #'corfu-info-location)
+  :bind (corfu-map "SPC" #'corfu-insert-separator
+		   "TAB" #'corfu-complete
+		   "RET" nil
+		   "C-h" #'corfu-info-documentation
+		   "M-." #'corfu-info-location)
   :init
-  (setopt corfu-auto nil
-	  corfu-auto-prefix 2
-	  corfu-auto-delay 0.0
-	  corfu-count 10
-	  corfu-cycle t
+  (setopt corfu-cycle t
 	  corfu-preview-current nil
-	  corfu-preselect 'first
-	  corfu-scroll-margin 5
+	  corfu-min-width 20
+	  ;; corfu-preselect 'first
+	  ;; corfu-scroll-margin 5
 	  ;; Enable indentation+completion using the TAB key.
 	  tab-always-indent 'complete)
   :config
@@ -569,12 +663,19 @@
 	 "C-d" #'corfu-popupinfo-scroll-up
 	 "C-u" #'corfu-popupinfo-scroll-down
 	 [remap corfu-info-documentation] #'corfu-popupinfo-toggle)
-  :init (setopt corfu-popupinfo-delay '(0.5 . 0.5)
+  :init (setopt corfu-popupinfo-delay '(0.25 . 0.25)
 		corfu-global-mode '((not eshell-mode)))
   :config (corfu-popupinfo-mode 1))
 
 ;; NOTE: corfu-quick
-;; NOTE: corfu-history
+
+(use-package corfu-history
+  :after corfu
+  :config
+  (with-eval-after-load 'savehist
+    (corfu-history-mode 1)
+    (add-to-list 'savehist-additional-variables 'corfu-history)))
+
 ;; NOTE: corfu for eshell
 ;; NOTE: corfu for vterm
 
@@ -594,7 +695,7 @@
 ;; NOTE: what can i do with `project-extra-root-markers'
 (use-package project
   :xdg-state (project-list-file "project-list.el")
-  ;; :init
+  :init
   ;; (setopt project-switch-commands '((?b "Buffer" project-switch-to-buffer)
   ;; 				    (?d "Dired" project-dired)
   ;; 				    (?e "Eshell" project-eshell)
@@ -604,14 +705,13 @@
   ;; 				    (?r "Query replace" project-query-replace-regexp)
   ;; 				    (?v "Magit" magit-project-status)
   ;; 				    (?! "Shell command" project-shell-command)))
-  :bind ((+file-prefix-map
-	  "f" #'project-find-file)
-	 (+project-prefix-map
+  :bind ((+project-prefix-map
 	  "b" #'project-switch-to-buffer
 	  "d" #'project-dired
 	  "e" #'project-eshell
 	  "f" #'project-find-file
 	  "g" #'project-find-regexp
+	  ;; "g" #'+project-grep ;; NOTE: do consult-grep but with (let ((consult-project-function 'consult--default-project-function)))
 	  "k" #'project-kill-buffers
 	  "p" #'project-switch-project
 	  "r" #'project-query-replace-regexp
@@ -677,6 +777,7 @@
 	 ;; NOTE: "a" #'ace-window
 	 ;; NOTE: "f" #'+toggle-window-split ;; toggle windows between horizontal and vertical (lambda emacs)
 	 "k" #'delete-window
+	 "K" #'delete-other-windows
 	 "o" #'other-window
 	 ;; NOTE: "r" #'+rotate-windows ;; (lambda emacs)
 	 ;; NOTE: "R" #'+rotate-windows-backward ;; (lambda emacs)
@@ -717,9 +818,34 @@
 ;;;;;;;;;;;;;;;;
 ;;;; narrow ;;;;
 
-;; NOTE: "bn" #'narrow-to-region
-;; NOTE: "bw" #'widen
-;; TODO: logos https://github.com/protesilaos/logos
+(use-package narrow
+  :no-require
+  :bind ((meow-normal-state-keymap
+	  "{" #'backward-page
+	  "}" #'forward-page)
+	 (+buffer-prefix-map
+	  "n" #'narrow-to-region
+	  "w" #'widen)))
+
+(use-package olivetti
+  :ensure t
+  :init (setq olivetti-body-width 0.7
+	      olivetti-minimum-body-width 80))
+
+(use-package logos
+  :ensure t
+  :bind (((:global-map)
+	  [remap narrow-to-region] #'logos-narrow-dwim
+	  [remap forward-page] #'logos-forward-page-dwim
+	  [remap backward-page] #'logos-backward-page-dwim)
+	 (+toggle-prefix-map
+	  "f" #'logos-focus-mode))
+  :init (setopt logos-outlines-are-pages t)
+  :config
+  (use-package logos-extras)
+  (add-hook 'logos-focus-mode-hook #'+logos-olivetti)
+  (add-hook 'logos-page-motion-hook #'+logos-recenter-top)
+  (add-hook 'logos-page-motion-hook #'+logos-reveal-entry))
 
 ;;;;;;;;;;;;;;;;;
 ;;;; outline ;;;;
@@ -731,18 +857,47 @@
 ;;;;;;;;;;;;;;;
 ;;;; dired ;;;;
 
-;; NOTE: dired-extras in dired use-package block
 (use-package dired
+  :init (setopt dired-switches-in-mode-line nil
+		dired-do-revert-buffer t
+		dired-vc-rename-file t
+		dired-clean-confirm-killing-deleted-buffers nil
+		dired-kill-when-opening-new-dired-buffer t
+		dired-create-destination-dirs 'ask
+		dired-recursive-copies 'always
+		dired-recursive-deletes 'always
+		delete-by-moving-to-trash t
+		;; Adding human readable units and sorted by date
+		dired-listing-switches "-AGhlv --group-directories-first"
+		;; Try to guess the target directory for operations.
+		dired-dwim-target t
+		;; Automatically refresh dired buffers when contents changes.
+		dired-auto-revert-buffer t)
   :config
+  (use-package dired-extras)
   (bind (mode-specific-map
 	 "d" #'dired-jump)
 	(dired-mode-map
+	 ;; "TAB" #'dired-subtree-toggle
+	 "~" #'+dired-home-directory
 	 "b" #'dired-up-directory
 	 "f" #'dired-find-file)))
 
-;; TODO: dired-narrow
-;; TODO: diredfl
-;; TODO: dired-single
+(use-package dired-single
+  :ensure t
+  :bind ((:global-map)
+	 [remap dired-find-file] #'dired-single-buffer
+	 [remap dired-up-directory] #'dired-single-up-directory))
+
+(use-package dired-narrow
+  :ensure t
+  :bind (dired-mode-map
+	 "/" #'dired-narrow-regexp))
+
+(use-package diredfl
+  :ensure t
+  :hook (dired-mode . diredfl-mode))
+
 ;; TODO: hide dotfiles and hide gitignored files (should i use dired-filter for this or copy from old-init.el)
 ;; NOTE: wdired
 ;; NOTE: dired-ranger (dired-ranger-copy and dired-ranger-paste and dired-ranger-move)
@@ -790,6 +945,7 @@
 ;;;;;;;;;;;;;;;;;
 ;;;; isearch ;;;;
 
+;; NOTE: go through stuff in `isearch-extras.el' to see which funcs i can delete
 (use-package isearch
   :bind (isearch-mode-map
 	 "M-s s" #'consult-line
@@ -805,28 +961,7 @@
 		search-whitespace-regexp ".*?"
 		isearch-lax-whitespace t)
   :config
-  (defun +isearch-delete ()
-    "Delete the failed portion or last char if succesful search.
-
-See also: https://emacs.stackexchange.com/a/10360/9198"
-    (interactive)
-    (if (= 0 (length isearch-string))
-	(ding)
-      (setq isearch-string (substring
-			    isearch-string 0 (or (isearch-fail-pos) (1- (length isearch-string))))
-	    isearch-message (mapconcat 'isearch-text-char-description isearch-string ""))
-      (funcall (or isearch-message-function #'isearch-message) nil t)
-      (if isearch-other-end (goto-char isearch-other-end))
-      (isearch-search)
-      (isearch-push-state)
-      (isearch-update)))
-  (defun +isearch-mark-and-exit ()
-    "Mark the current search string and exit the search."
-    (interactive)
-    (push-mark isearch-other-end t 'activate)
-    (setq deactivate-mark nil)
-    (activate-mark)
-    (isearch-done))
+  (use-package isearch-extras)
   (meow-normal-define-key '("*" . isearch-forward-thing-at-point)))
 
 ;;;;;;;;;;;;;;;
@@ -867,21 +1002,7 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
   :bind ((:global-map)
 	 [remap move-beginning-of-line] #'+beginning-of-line
 	 [remap move-end-of-line] #'+end-of-line)
-  :config
-  (defun +beginning-of-line ()
-    (interactive "^")
-    (mowie
-     #'beginning-of-line
-     #'beginning-of-visual-line
-     #'mowie-beginning-of-code
-     #'mowie-beginning-of-comment
-     #'mowie-beginning-of-comment-text))
-  (defun +end-of-line ()
-    (interactive "^")
-    (mowie
-     #'end-of-line
-     #'end-of-visual-line
-     #'mowie-end-of-code)))
+  :config (use-package mowie-extras))
 
 (use-package move-text
   :ensure t
@@ -889,14 +1010,7 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
 	 "M-<up>" #'move-text-up
 	 "M-<down>" #'move-text-down)
   :config
-  ;; NOTE: add +indent-region-advice to move-text-extras?
-  (defun +indent-region-advice (&rest ignored)
-    "Re-indent the text in-and-around a text move."
-    (let ((deactivate deactivate-mark))
-      (if (region-active-p)
-	  (indent-region (region-beginning) (region-end))
-	(indent-region (line-beginning-position) (line-end-position)))
-      (setq deactivate-mark deactivate)))
+  (use-package move-text-extras)
   (advice-add 'move-text-up :after '+indent-region-advice)
   (advice-add 'move-text-down :after '+indent-region-advice))
 
@@ -1002,7 +1116,25 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
 ;;;;;;;;;;;;;;
 ;;;; help ;;;;
 
-;; TODO: helpful
+(use-package help
+  :bind (help-map "M-." #'find-function-on-key
+		  "C-f" #'describe-function
+		  "f" #'describe-face
+		  "C-k" #'describe-key
+		  "k" #'describe-keymap
+		  "C-o" #'describe-symbol
+		  "o" #'describe-distribution))
+
+(use-package helpful
+  :ensure t
+  :bind (((:global-map)
+	  [remap describe-function] #'helpful-callable
+	  [remap describe-symbol] #'helpful-symbol
+	  [remap describe-variable] #'helpful-variable
+	  [remap describe-command] #'helpful-command
+	  [remap describe-key] #'helpful-key)
+	 (help-map "." #'helpful-at-point))
+  :custom (helpful-max-buffers 1))
 
 (use-package transient
   :xdg-state
@@ -1013,6 +1145,7 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
 ;;;;;;;;;;;;;;
 ;;;; info ;;;;
 
+;; NOTE: packages' info files never get picked up for me. is it because of emacsWithPackagesFromUsePackage? is it services.emacs?
 ;; NOTE: info https://github.com/oantolin/emacs-config/blob/696641a592691737ba5a019c67f2af7a6cc09183/init.el#L235-L239
 ;; NOTE: info-colors
 ;; NOTE: info-variable-pitch https://github.com/kisaragi-hiu/info-variable-pitch
@@ -1030,6 +1163,7 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
 
 (use-package apheleia
   :ensure t
+  :diminish apheleia-mode
   :config
   (meow-normal-define-key
    '("=" . apheleia-format-buffer))
@@ -1043,6 +1177,10 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
 
 ;; NOTE: (:lsp keyword) eglot-server-programs and eglot-server-configuration?
 ;; TODO: eglot
+(use-package eglot
+  :ensure t ;; i want a more recent version of eglot for eglot--apply-text-edits with the silent arg
+
+  )
 ;; TODO: eglot-booster
 ;; TODO: apheleia-eglot
 ;; NOTE: consult-eglot
@@ -1057,9 +1195,21 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
 ;;;;;;;;;;;;;;;;;;
 ;;;; snippets ;;;;
 
-;; TODO: tempel https://github.com/minad/tempel
+(use-package tempel
+  :ensure t
+  :init
+  ;; NOTE: set up this capf using :completions
+  (defun +templ-setup-capf ()
+    (setq-local completion-at-point-functions
+		(cons #'tempel-complete
+		      completion-at-point-functions)))
+  (add-hook 'conf-mode-hook '+templ-setup-capf)
+  (add-hook 'text-mode-hook '+templ-setup-capf)
+  (add-hook 'prog-mode-hook '+templ-setup-capf))
+
 ;; NOTE: eglot-tempel https://github.com/fejfighter/eglot-tempel
-;; NOTE: tempel-collection https://github.com/Crandel/tempel-collection
+
+(use-package tempel-collection :ensure t :after tempel)
 
 ;; NOTE: yasnippet-capf (if i decide to use yasnippet) https://github.com/elken/yasnippet-capf
 
@@ -1067,7 +1217,15 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
 ;;;; treesitter ;;;;
 
 ;; TODO: treesit
-;; TODO: treesit-auto
+
+;; NOTE: treesit before eglot so i can use the build major mode alist
+;; NOTE: (:treesit keyword) add recipe to treesit-auto list
+(use-package treesit-auto
+  :ensure t
+  :config
+  (global-treesit-auto-mode)
+  (treesit-auto-add-to-auto-mode-alist 'all))
+
 ;; NOTE: ts-docstr https://github.com/emacs-vs/ts-docstr
 
 ;;;;;;;;;;;;;;;;;
@@ -1080,7 +1238,7 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
 ;;;;;;;;;;;;;;
 ;;;; prog ;;;;
 
-;; TODO: xref
+;; TODO: xref and xref-extras
 (use-package xref
   :config
   (bind ((:global-map)
@@ -1102,12 +1260,39 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
     (advice-add func :before '+xref-push-point-to-marker-stack)))
 
 (use-package consult-xref
-  :init
-  (setq xref-show-xrefs-function #'consult-xref
-	xref-show-definitions-function #'consult-xref))
+  :init (setq xref-show-xrefs-function #'consult-xref
+	      xref-show-definitions-function #'consult-xref))
 
-;; TODO: eldoc
-;; TODO: colorful-mode
+(use-package eldoc
+  :diminish eldoc-mode
+  :bind (help-map "C-." #'eldoc-print-current-symbol-info)
+  :init
+  (setopt eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
+	  ;; Eldoc resizes the echo area display which is intrusive. Let's not do that.
+	  eldoc-echo-area-use-multiline-p nil
+	  ;; Skip showing documentation in the echo area and use an `eldoc-doc-buffer'
+	  ;; window if it is already displayed.
+	  eldoc-echo-area-prefer-doc-buffer t)
+  :config
+  (use-package eldoc-extras)
+  (add-hook 'emacs-lisp-mode-hook #'+eldoc-setup-elisp)
+  (add-hook 'eglot-managed-mode-hook #'+eldoc-setup-eglot))
+
+;; NOTE: colorful-extra-color-keyword-functions warning
+(use-package colorful-mode
+  :ensure t
+  :hook (prog-mode text-mode)
+  :init
+  (setopt colorful-use-prefix t
+	  colorful-extra-color-keyword-functions '(colorful-add-rgb-colors
+						   colorful-add-hsl-colors
+						   colorful-add-hex-colors))
+  :config
+  ;; external packages' minor-modes should NOT automatically set keys
+  ;; in my global map (C-x c in this case).
+  ;; blow it all up so it stops conflicting with my choices
+  (setcdr colorful-mode-map nil))
+
 ;; NOTE: ct.el https://github.com/neeasade/ct.el
 
 (use-package hl-todo
@@ -1155,7 +1340,24 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
 ;;;;;;;;;;;;;;
 ;;;; diff ;;;;
 
-;; TODO: git-gutter
+;; NOTE: git-gutter:update-interval warning
+(use-package git-gutter
+  :ensure t
+  :diminish git-gutter-mode
+  :hook (prog-mode . git-gutter-mode)
+  :init (setopt fringes-outside-margins t
+		git-gutter:update-interval 0.05))
+
+(use-package git-gutter-fringe
+  :ensure t
+  :bind (+vc-prefix-map "h" #'git-gutter:next-hunk
+			"a" #'git-gutter:previous-hunk)
+  :init (setopt git-gutter-fr:side 'left-fringe)
+  :config
+  (define-fringe-bitmap 'git-gutter-fr:added [#b11110000] nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:modified [#b11110000] nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:deleted [#b11110000] nil nil '(center repeated)))
+
 ;; NOTE: ediff
 
 ;;;;;;;;;;;;;;;;;;
@@ -1329,16 +1531,61 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
 ;;;; org ;;;;
 
 (use-package org
-  :bind (org-mode-map
-	 "C-'" #'popper-toggle)
+  :xdg-state (org-id-locations-file ".org-id-locations")
+  :bind (org-mode-map "C-'" 'nil)
   :init
-  (setopt org-startup-folded 'content))
+  (setopt org-return-follows-link t
+	  org-startup-folded 'content
+	  org-ellipsis " ▾"
+	  org-imenu-depth 7
+	  org-cycle-separator-lines 0
+	  org-structure-template-alist '(("s" . "src")
+					 ("e" . "src emacs-lisp")
+					 ("x" . "example")
+					 ("X" . "export")
+					 ("q" . "quote"))
+	  org-fontify-quote-and-verse-blocks t
+	  org-fontify-whole-heading-line t
+	  org-bookmark-names-plist nil)
+  :config
+  ;; Open Org links in current window. Default is find-file-other-window.
+  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
+  
+  (with-eval-after-load 'pulsar
+    (dolist (hook '(org-follow-link-hook))
+      (add-hook hook #'pulsar-recenter-middle)
+      (add-hook hook #'pulsar-reveal-entry))))
 
-;; TODO: book-mode https://github.com/rougier/book-mode or org-modern
-;; TODO: org-appear https://github.com/awth13/org-appear (needed after org-modern??)
+(use-package org-modern
+  :ensure t
+  :hook ((org-mode . org-modern-mode)
+	 (org-agenda-finalize . org-modern-agenda))
+  :init (setopt org-modern-star 'replace))
+
 ;; NOTE: org-modern-indent https://github.com/jdtsmith/org-modern-indent
-;; TODO: corg https://github.com/isamert/corg.el
+
 ;; TODO: org-gtd (tasks) https://github.com/Trevoke/org-gtd.el
+(use-package org-gtd
+  :ensure t
+  :diminish org-edna-mode
+  :after org
+  :bind ((+org-prefix-map
+	  "c" #'org-gtd-capture
+	  "e" #'org-gtd-engage
+	  "p" #'org-gtd-process-inbox)
+	 (org-gtd-clarify-map
+	  "C-c c" #'org-gtd-organize))
+  :init (setopt org-gtd-directory "~/OneDrive/zettelkasten/"
+		org-gtd-inbox "gtd-inbox"
+		org-edna-use-inheritance t
+		org-gtd-organize-hooks nil
+		org-gtd-update-ack "3.0.0")
+  :config (org-edna-mode))
+
+;; NOTE: doesn't work very well or well without corfu-auto
+(use-package corg
+  :init (add-hook 'org-mode-hook 'corg-setup))
+
 ;; NOTE: org-transclusion-http https://github.com/alphapapa/org-transclusion-http
 ;; NOTE: org-inline-tags https://github.com/incandescentman/org-inline-tags
 ;; NOTE: org-super-links https://github.com/toshism/org-super-links
@@ -1363,79 +1610,153 @@ See also: https://emacs.stackexchange.com/a/10360/9198"
 ;;;;;;;;;;;;;;;;
 ;;;; biblio ;;;;
 
-;; NOTE: citar
+(use-package parsebib)
 
+;; NOTE: citar
 (use-package citar
-  :ensure t
+  ;; :ensure t
   ;; :commands citar--bibliography-files
-  :bind ((+notes-prefix-map
-	  "b" +bibliography-prefix-map)
+  :bind ((mode-specific-map
+	  "l" +bibliography-prefix-map)
 	 (+bibliography-prefix-map
-	  "b" #'citar-open))
+	  "l" #'citar-open))
   :init
-  (setopt
-   citar-select-multiple nil
-   citar-bibliography '("~/OneDrive/docs/lib.bib")
-   citar-library-paths '("~/OneDrive/docs/books")
-   citar-templates
-   '((main . "${title:55} ${author editor:55} ${date year issued:4}")
-     (suffix . "  ${tags keywords keywords:40}")
-     (preview . "${author editor} ${title}, ${journal publisher container-title collection-title booktitle} ${volume} (${year issued date}).\n")
-     (note . "#+title: Notes on ${author editor}, ${title}"))))
+  (setopt citar-select-multiple nil
+	  citar-bibliography '("~/OneDrive/zettelkasten/reference/bibliography.bib")
+	  citar-library-paths '("~/OneDrive/zettelkasten/reference/")
+	  citar-notes-paths '("~/OneDrive/zettelkasten/")
+	  citar-templates
+	  '((main . "${title:55} ${author editor:55} ${date year issued:4}")
+	    (suffix . "  ${tags keywords keywords:40}")
+	    (preview . "${author editor} ${title}, ${journal publisher container-title collection-title booktitle} ${volume} (${year issued date}).\n")
+	    (note . "#+title: Notes on ${author editor}, ${title}")))
+  :config
+  (use-package citar-extras)
+  (setq citar-indicators
+	(list
+	 ;; +citar-indicator-cited-icons ;; +citar-indicator-links-icons
+	 +citar-indicator-files-icons +citar-indicator-notes-icons)))
 
 (use-package persid)
 
-;; NOTE: biblio
+(use-package biblio
+  :ensure t
+  :bind (+bibliography-prefix-map
+	 "a" #'+biblio-lookup)
+  :config (use-package biblio-extras))
+
 ;; NOTE: create biblio-persid if sufficient
+
 ;; NOTE: biblio-openlibrary https://github.com/fabcontigiani/biblio-openlibrary
+(use-package biblio-openlibrary)
+
 ;; NOTE: biblio-zotero https://github.com/gkowzan/biblio-zotero
 ;; NOTE: biblio-bibsonomy https://github.com/andreasjansson/biblio-bibsonomy.el
 ;; NOTE: biblio-gscholar https://github.com/seanfarley/biblio-gscholar.el
 
+(use-package biblio-gbooks :ensure t)
+
 ;;;;;;;;;;;;;;;
 ;;;; notes ;;;;
 
+;; NOTE: denote-dired-mode in specific directories
+;; NOTE: appendfilename (utility to append string to title/file name of marked files)
+;; NOTE: date2name? (utility to rename file with current timestamp)
+;; NOTE: filetags? (utility to append keywords to marked files, or remove keywords with -KEYWORD)
+;; NOTE: controlled vocabulary (known keywords) should be limited, the fewer the better (never more than 100)
+;; NOTE: keywords should always be in plural and general
 (use-package denote
   :ensure t
   :bind (+notes-prefix-map
-	 "d" #'denote
 	 "i" #'denote-link-or-create
+	 "d" #'+denote-dired-jump
 	 "k" #'denote-keywords-add
 	 "K" #'denote-keywords-remove
 	 "l" #'denote-find-link
 	 "L" #'denote-find-backlink
+	 "n" #'denote
 	 "r" #'denote-rename-file
 	 "s" #'denote-rename-file-using-front-matter)
-  :init (setopt denote-directory (expand-file-name "~/OneDrive/notes/")))
+  :init
+  (setopt denote-directory (expand-file-name "~/OneDrive/zettelkasten/"))
+  (defun +denote-dired-jump ()
+    (interactive)
+    (dired denote-directory)
+    (diredfl-mode -1)
+    (denote-dired-mode 1)))
 
-;; NOTE: remove denote buffers from consult Buffers group, leave only in Denote buffers group
+;; NOTE: remove denote buffers from consult Buffers group, leave only in Denote buffers group (use consult-customize?)
 (use-package consult-denote
   :ensure t
-  :bind (+notes-prefix-map
-	 "n" #'consult-denote-find
-	 "g" #'consult-denote-grep)
+  :bind ((+file-prefix-map
+	  "n" #'consult-denote-find)
+	 (+search-prefix-map
+	  "n" #'consult-denote-grep))
+  :init (setopt consult-denote-find-command #'consult-find)
   :config (consult-denote-mode))
 
-;; TODO: org-zettel-ref-mode https://github.com/yibie/org-zettel-ref-mode
-;; TODO: write convert-to-org.py in .go
-;; TODO: dwim-shell-command to call convert-to-org.go
-;; NOTE: use markdownload to download webpages for org-zettel-ref-mode
 ;; NOTE: blk https://github.com/mahmoodsh36/blk
 ;; NOTE: denote-explore https://github.com/pprevos/denote-explore
 ;; NOTE: org-remark (is this better than org-zettel-ref-mode?) https://github.com/nobiot/org-remark
 ;; NOTE: annotate https://github.com/bastibe/annotate.el
 
+(use-package org-noter
+  :ensure t
+  :bind (org-noter-doc-mode-map
+	 "M-h" #'org-noter-sync-next-note
+	 "M-a" #'org-noter-sync-prev-note
+	 "C-M-h" #'org-noter-sync-next-page-or-chapter
+	 "C-M-a" #'org-noter-sync-prev-page-or-chapter)
+  :init (setopt org-noter-always-create-frame nil
+		org-noter-use-indirect-buffer nil
+		org-noter-kill-frame-at-session-end nil
+		org-noter-notes-search-path (list denote-directory))
+  :config
+  (use-package org-noter-extras)
+  (setq org-noter--show-arrow-hook '()) ;; default always gives an error, can't be bothered to fix
+  (setq org-noter-create-session-from-document-hook '(+org-noter-denote--create-session-from-document-file)))
+
 ;;;;;;;;;;;;;
 ;;;; pdf ;;;;
 
-;; NOTE: pdf-tools https://github.com/fuxialexander/org-pdftools
-;; NOTE: saveplace-pdf-view
+(use-package pdf-tools
+  :ensure t
+  :hook
+  (pdf-view-mode . (lambda () (progn
+				(blink-cursor-mode -1)
+				(display-line-numbers-mode -1)
+				(hl-line-mode -1))))
+  :bind (pdf-view-mode-map
+	 "h" #'pdf-view-next-line-or-next-page ;; NOTE: gets overriden by meow-next
+	 "a" #'pdf-view-previous-line-or-previous-page ;; NOTE: gets overriden by meow-prev
+	 "y" #'image-backward-hscroll
+	 "e" #'image-forward-hscroll
+	 "H" #'pdf-view-next-page-command
+	 "A" #'pdf-view-previous-page-command)
+  :init
+  (setopt large-file-warning-threshold nil)
+  (setq-default pdf-view-display-size 'fit-page)
+  :config
+  (require 'pdf-occur)
+  (require 'pdf-history)
+  (require 'pdf-links)
+  (require 'pdf-outline)
+  (require 'pdf-annot)
+  (require 'pdf-sync)
+  (pdf-tools-install :no-query))
+
+;; Add support for pdf-view and DocView buffers to `save-place'.
+(use-package saveplace-pdf-view :ensure t)
 
 ;;;;;;;;;;;;;;
 ;;;; epub ;;;;
 
-;; NOTE: nov
-;; NOTE: djvu
+(use-package nov
+  :ensure t
+  :xdg-state (nov-save-place-file "nov-save-place.el")
+  :mode ("\\.[Ee][Pp][Uu][Bb]\\'" . nov-mode))
+
+(use-package djvu :ensure t)
 
 ;;;;;;;;;;;;;;;;;
 ;;;; secrets ;;;;

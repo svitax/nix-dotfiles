@@ -11,7 +11,16 @@
     inputs.stylix.homeManagerModules.stylix
   ];
 
-  commands.direnv.enable = true;
+  command-line = {
+    direnv.enable = true;
+    fd.enable = true;
+    git.enable = true;
+    nh.enable = true;
+    nurl.enable = true;
+    pandoc.enable = true;
+    poppler.enable = true;
+    ripgrep.enable = true;
+  };
 
   desktop = {
     firefox.enable = true;

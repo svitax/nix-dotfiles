@@ -46,11 +46,8 @@ in {
       # TODO: extract git, ripgrep, and fd config
       # TODO: extract go and gopls config?
       home.packages = with pkgs; [
-        nurl
+        unzip # for nov.el
         emacs-lsp-booster
-        git
-        ripgrep
-        fd
         #
         go
         gopls
@@ -78,6 +75,9 @@ in {
             all-the-icons
             #
             persid
+            corg
+            parsebib
+            citar
             macrursors
             visual-replace
             projel
@@ -93,6 +93,25 @@ in {
               repo = "persid";
               rev = "6980ce24a63d9c3a6b25c7ac5db6621d9daa2c4c";
               hash = "sha256-GPzvfTnMjltq2ljj3/0HTE37J/piO90TLbMTGti3x1U=";
+            });
+            corg = elPackage "corg" (pkgs.fetchFromGitHub {
+              owner = "isamert";
+              repo = "corg.el";
+              rev = "16d2b80fb2ff4daf0ab9bf89e5c9f649431337fc";
+              hash = "sha256-BX78yKSOj4TOPoXkLdyhrjges42h0+Wb8PUYR4XANR4=";
+            });
+            # BUG: because someone decided to break parsebib (and citar) after 2 years for no good fucking reason and emacs-overlay hasn't picked up the fix yet
+            parsebib = elPackage "parsebib" (pkgs.fetchFromGitHub {
+              owner = "joostkremers";
+              repo = "parsebib";
+              rev = "73fe6204a3f204b45316fc25f17ad035a00acc16";
+              hash = "sha256-FTCyZ+EmXy1nIDsGrrOQcRcJig+pDA2S/+U/76cp/Wc=";
+            });
+            citar = elPackage "citar" (pkgs.fetchFromGitHub {
+              owner = "emacs-citar";
+              repo = "citar";
+              rev = "0f1786b7fee58452a3225e4b9b7c94176fff9b5a";
+              hash = "sha256-saOtIu44FAKOfAo59eG5LG6G6ORqYePcco/1iSI3Uww=";
             });
             macrursors = elPackage "macrursors" (pkgs.fetchFromGitHub {
               owner = "corytertel";
@@ -135,6 +154,8 @@ in {
 
       # Install our Emacs package
       # home.packages = [ cfg.package ];
+
+      programs.info.enable = true;
 
       services.emacs = {
         enable = true;

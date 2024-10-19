@@ -1050,16 +1050,16 @@
 	 ("{" . shrink-window))
   :init
   (define-repeat-map +window-manage
-    (:enter
-     "=" enlarge-window-horizontally
-     "-" shrink-window-horizontally
-     "}" enlarge-window
-     "{" shrink-window)
-    (:continue
-     "=" enlarge-window-horizontally
-     "-" shrink-window-horizontally
-     "}" enlarge-window
-     "{" shrink-window)))
+		     (:enter
+		      "=" enlarge-window-horizontally
+		      "-" shrink-window-horizontally
+		      "}" enlarge-window
+		      "{" shrink-window)
+		     (:continue
+		      "=" enlarge-window-horizontally
+		      "-" shrink-window-horizontally
+		      "}" enlarge-window
+		      "{" shrink-window)))
 
 (use-package popper-extras)
 
@@ -1310,11 +1310,11 @@
    '("," . er/expand-region)
    '("." . er/contract-region))
   (define-repeat-map expand-region
-    (:continue
-     "," er/expand-region
-     "." er/contract-region)
-    (:enter er/expand-region
-	    er/contract-region)))
+		     (:continue
+		      "," er/expand-region
+		      "." er/contract-region)
+		     (:enter er/expand-region
+			     er/contract-region)))
 
 (use-package multiple-cursors
   :ensure t
@@ -1742,41 +1742,41 @@
   :after flymake
   :config
   (flymake-quickdef-backend
-    flymake-golangci
-    :pre-let ((golangci-exec (executable-find "golangci-lint")))
-    :pre-check (unless golangci-exec (error "Cannot find golangci-lint executable"))
-    :write-type 'file ; don't really use this
-    :proc-form (list golangci-exec "run"
-		     "--print-issued-lines=false" "--out-format=line-number"
-		     "--enable-all" "--fast" fmqd-temp-file) ; --fast ones can run on single file
-    :search-regexp "[^:]*:\\([[:digit:]]+\\):\\([[:digit:]]+\\): \\(.*\\)$"
-    :prep-diagnostic (let* ((lnum (string-to-number (match-string 1)))
-			    (col (string-to-number (match-string 2)))
-			    (text (match-string 3))
-			    (pos (flymake-diag-region fmqd-source lnum col))
-			    (beg (car pos))
-			    (end (cdr pos))
-			    (msg (format "golangci> %s" text)))
-		       (list fmqd-source beg end :warning msg)))
+   flymake-golangci
+   :pre-let ((golangci-exec (executable-find "golangci-lint")))
+   :pre-check (unless golangci-exec (error "Cannot find golangci-lint executable"))
+   :write-type 'file ; don't really use this
+   :proc-form (list golangci-exec "run"
+		    "--print-issued-lines=false" "--out-format=line-number"
+		    "--enable-all" "--fast" fmqd-temp-file) ; --fast ones can run on single file
+   :search-regexp "[^:]*:\\([[:digit:]]+\\):\\([[:digit:]]+\\): \\(.*\\)$"
+   :prep-diagnostic (let* ((lnum (string-to-number (match-string 1)))
+			   (col (string-to-number (match-string 2)))
+			   (text (match-string 3))
+			   (pos (flymake-diag-region fmqd-source lnum col))
+			   (beg (car pos))
+			   (end (cdr pos))
+			   (msg (format "golangci> %s" text)))
+		      (list fmqd-source beg end :warning msg)))
   (add-hook 'go-ts-mode-hook
 	    (lambda ()
 	      (add-hook 'flymake-diagnostic-functions 'flymake-golangci)))
 
   (flymake-quickdef-backend
-    flymake-statix
-    :pre-let ((statix-exec (executable-find "statix")))
-    :pre-check (unless statix-exec (error "Cannot find statix executable"))
-    :write-type 'file
-    :proc-form (list statix-exec "check" "--format" "errfmt" fmqd-temp-file)
-    :search-regexp "^\\([^>]+\\)>\\([[:digit:]]+\\):\\([[:digit:]]+\\):\\(.*\\)$"
-    :prep-diagnostic (let* ((lnum (string-to-number (match-string 2)))
-			    (col (string-to-number (match-string 3)))
-			    (text (match-string 4))
-			    (pos (flymake-diag-region fmqd-source lnum col))
-			    (beg (car pos))
-			    (end (cdr pos))
-			    (msg (format "statix> %s" text)))
-		       (list fmqd-source beg end :warning msg)))
+   flymake-statix
+   :pre-let ((statix-exec (executable-find "statix")))
+   :pre-check (unless statix-exec (error "Cannot find statix executable"))
+   :write-type 'file
+   :proc-form (list statix-exec "check" "--format" "errfmt" fmqd-temp-file)
+   :search-regexp "^\\([^>]+\\)>\\([[:digit:]]+\\):\\([[:digit:]]+\\):\\(.*\\)$"
+   :prep-diagnostic (let* ((lnum (string-to-number (match-string 2)))
+			   (col (string-to-number (match-string 3)))
+			   (text (match-string 4))
+			   (pos (flymake-diag-region fmqd-source lnum col))
+			   (beg (car pos))
+			   (end (cdr pos))
+			   (msg (format "statix> %s" text)))
+		      (list fmqd-source beg end :warning msg)))
   (add-hook 'nix-ts-mode-hook
 	    (lambda ()
 	      (add-hook 'flymake-diagnostic-functions 'flymake-statix))))
@@ -1851,8 +1851,8 @@
 (use-package treesit
   :custom (treesit-font-lock-level 4))
 
-;; TODO: treesit before eglot so i can use the build major mode alist
-;; TODO: (:treesit keyword) add recipe to treesit-auto list
+;; NOTE: treesit before eglot so i can use the build major mode alist
+;; NOTE: (:treesit keyword) add recipe to treesit-auto list
 (use-package treesit-auto
   :ensure t
   :config
@@ -2290,7 +2290,9 @@
   (org-insert-heading-respect-content t)
   ;; Org styling, hide markup etc.
   (org-hide-emphasis-markers t)
-  (org-pretty-entities t))
+  (org-pretty-entities t)
+  (org-link-frame-setup (append (assq-delete-all 'file org-link-frame-setup)
+				'((file . find-file)))))
 
 (use-package org-agenda
   :custom
