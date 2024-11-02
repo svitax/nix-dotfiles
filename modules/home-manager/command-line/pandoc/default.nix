@@ -2,13 +2,14 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
-}: let
-  inherit (lib) mkEnableOption mkOption types;
+}:
+let
+  inherit (lib) mkEnableOption;
 
   cfg = config.command-line.pandoc;
-in {
+in
+{
   options.command-line.pandoc = {
     enable = mkEnableOption "";
   };

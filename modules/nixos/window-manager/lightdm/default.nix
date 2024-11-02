@@ -1,12 +1,13 @@
 {
-  pkgs,
   lib,
   config,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.window-manager.lightdm;
-in {
+in
+{
   options.window-manager.lightdm = {
     enable = mkEnableOption "Enables the Emacs X Window Manager";
   };

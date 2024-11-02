@@ -6,6 +6,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'editorconfig)
 
 (defvar +indent-configuration '((t . 2))

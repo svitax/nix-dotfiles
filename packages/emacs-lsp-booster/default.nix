@@ -4,6 +4,7 @@
   rustPlatform,
   emacs,
 }:
+# NOTE emacs-lsp-booster is in nixpkgs but this is a good example of a package derivation
 rustPlatform.buildRustPackage rec {
   pname = "emacs-lsp-booster";
   version = "0.2.1";
@@ -15,7 +16,7 @@ rustPlatform.buildRustPackage rec {
   };
 
   cargoHash = "sha256-CvIJ56QrIzQULFeXYQXTpX9PoGx1/DWtgwzfJ+mljEI=";
-  nativeCheckInputs = [emacs];
+  nativeCheckInputs = [ emacs ];
 
   meta = with lib; {
     description = "Emacs LSP performance booster";

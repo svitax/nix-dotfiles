@@ -1,14 +1,14 @@
 {
   config,
   lib,
-  pkgs,
-  inputs,
   ...
-}: let
-  inherit (lib) mkEnableOption mkOption types;
+}:
+let
+  inherit (lib) mkEnableOption;
 
   cfg = config.storage.onedrive;
-in {
+in
+{
   options.storage.onedrive = {
     enable = mkEnableOption "OneDrive";
   };

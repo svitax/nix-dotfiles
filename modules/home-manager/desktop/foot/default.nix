@@ -1,14 +1,14 @@
 {
   config,
   lib,
-  pkgs,
-  inputs,
   ...
-}: let
-  inherit (lib) mkEnableOption mkOption types;
+}:
+let
+  inherit (lib) mkEnableOption;
 
   cfg = config.desktop.foot;
-in {
+in
+{
   options.desktop.foot = {
     enable = mkEnableOption "Foot terminal emulator";
   };
@@ -19,10 +19,12 @@ in {
       server.enable = true;
       settings = {
         main = {
-          font = "Iosevka Comfy:size=18";
+          font = "Iosevka Comfy:size=16";
           pad = "10x10";
         };
-        mouse = { hide-when-typing = "yes"; };
+        mouse = {
+          hide-when-typing = "yes";
+        };
         colors = {
           foreground = "${config.lib.stylix.colors.base05}";
           background = "${config.lib.stylix.colors.base00}";

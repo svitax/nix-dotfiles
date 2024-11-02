@@ -1,21 +1,25 @@
 {
   config,
   lib,
-  pkgs,
-  inputs,
   ...
-}: let
-  inherit (lib) mkEnableOption mkOption types;
+}:
+let
+  inherit (lib) mkEnableOption;
 
   cfg = config.command-line.git;
-in {
+in
+{
   options.command-line.git = {
-    enable = mkEnableOption "";
+    enable = mkEnableOption "Git";
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [
-      git
-    ];
+    programs.git = {
+      enable = true;
+      ignores = [
+        ".direnv/"
+        "result"
+      ];
+    };
   };
 }

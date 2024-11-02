@@ -53,7 +53,22 @@
   (interactive)
   (eldoc-doc-buffer))
 
-(defun +replace-char (arg char)
+(defun +meow-expand-line-end (n)
+  "Expand to end of line."
+  (interactive "p")
+  (unless (meow--selection-type)
+    (meow--cancel-selection))
+  (let* ((orig (mark t))
+	 (n (if (meow--direction-backward-p)
+		(- n)
+	      n))
+	 (_ (message (format "%s" n)))
+	 (forward (> n 0)))
+    (if forward
+	(meow-till n ?\C-j)
+      (meow-till -1 ?\C-j))))
+
+(defun +meow--replace-char (arg char)
   "Replace current char."
   (interactive (list (prefix-numeric-value current-prefix-arg)
 		     (read-char-from-minibuffer "char: "
@@ -67,7 +82,7 @@
   (interactive)
   (if (region-active-p)
       (call-interactively 'meow-replace)
-    (call-interactively '+replace-char)))
+    (call-interactively '+meow--replace-char)))
 
 (defun +meow-duplicate ()
   "Duplicate region if active. Otherwise duplicate char at point."
@@ -82,6 +97,7 @@
 
 ;; TODO: +meow-kill
 (defun +meow-kill ()
+  "Kill region if active. Otherwise delete char at point."
   (interactive)
   (if (region-active-p)
       (meow-kill)

@@ -2,13 +2,14 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
-}: let
-  inherit (lib) mkEnableOption mkOption types;
+}:
+let
+  inherit (lib) mkEnableOption;
 
   cfg = config.desktop.rofi;
-in {
+in
+{
   options.desktop.rofi = {
     enable = mkEnableOption "Rofi";
   };
@@ -18,7 +19,7 @@ in {
       enable = true;
       font = "Iosevka Comfy 16";
       package = pkgs.rofi-wayland;
-      terminal = config.window-manager.sway.terminal;
+      inherit (config.window-manager.sway) terminal;
       theme = "launcher";
       extraConfig = {
         modi = "drun,run,filebrowser,window";

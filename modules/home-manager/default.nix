@@ -9,8 +9,10 @@ rec {
   };
 
   command-line = {
+    atuin = ./command-line/atuin;
     direnv = ./command-line/direnv;
     fd = ./command-line/fd;
+    fzf = ./command-line/fzf;
     git = ./command-line/git;
     nh = ./command-line/nh;
     nurl = ./command-line/nurl;
@@ -73,8 +75,9 @@ rec {
 
   shell = {
     bash = ./shell/bash;
-    # NOTE: move fzf to command-line
-    fzf = ./shell/fzf;
+    fish = ./shell/fish;
+    starship = ./shell/starship;
+    zsh = ./shell/zsh;
   };
 
   style = {
@@ -105,8 +108,10 @@ rec {
 
   allModules = {
     imports = [
+      command-line.atuin
       command-line.direnv
       command-line.fd
+      command-line.fzf
       command-line.git
       command-line.nh
       command-line.nurl
@@ -122,7 +127,9 @@ rec {
       editor.neovim
 
       shell.bash
-      shell.fzf
+      shell.fish
+      shell.starship
+      shell.zsh
 
       style.fonts
       style.stylix

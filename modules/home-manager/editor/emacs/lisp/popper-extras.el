@@ -34,6 +34,7 @@
 			   "\\*Inferior .*\\*$"
 			   "^\\*julia.*\\*$"
 			   "^\\*cider-repl.*\\*$"
+			   "^\\*vterm.*\\*$"
 			   "\\*ielm\\*"
 			   "\\*edebug\\*")
   "List of buffer names used in REPL buffers.")
@@ -49,8 +50,7 @@
 
 (defvar +message-modes-list '(compilation-mode
 			      messages-buffer-mode
-			      edebug-eval-mode
-			      )
+			      edebug-eval-mode)
   "List of major modes used in message buffers.")
 
 (defvar +shell-command-names-list '("\\*Shell Command Output\\*"

@@ -26,6 +26,7 @@ This function is added to `modus-themes-post-load-hook'."
      `(avy-lead-face-1 ((,c :background ,bg-green-subtle)))
      `(avy-lead-face-2 ((,c :background ,bg-red-subtle)))
      `(avy-goto-char-timer-face ((,c :foreground ,fg-main :background ,bg-yellow-intense)))
+     `(keycast-command ((,c :inherit 'druid-modeline-faded)))
      `(easy-kill-selection ((,c :inherit modus-themes-mark-sel)))
      `(diff-hl-change ((,c :foreground ,bg-changed-fringe :background ,fringe)))
      `(diff-hl-delete ((,c :foreground ,bg-removed-fringe :background ,fringe)))

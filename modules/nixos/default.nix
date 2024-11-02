@@ -77,6 +77,12 @@ rec {
     # NOTE: systemd
   };
 
+  shell = {
+    bash = ./shell/bash;
+    fish = ./shell/fish;
+    zsh = ./shell/zsh;
+  };
+
   storage = {
     onedrive = ./storage/onedrive;
   };
@@ -106,6 +112,10 @@ rec {
 
   allModules = {
     imports = [
+      shell.bash
+      shell.fish
+      shell.zsh
+
       storage.onedrive
 
       style.stylix

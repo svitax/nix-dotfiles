@@ -1,11 +1,12 @@
 {
-  pkgs,
   lib,
   config,
   ...
-}: let
+}:
+let
   cfg = config.window-manager.gnome;
-in {
+in
+{
   options.window-manager.gnome = {
     enable = lib.mkEnableOption "Enables the GNOME desktop environment";
   };
@@ -23,7 +24,10 @@ in {
     services.xserver = {
       enable = true;
       layout = "us";
-      videoDrivers = ["amdgpu" "radeon"];
+      videoDrivers = [
+        "amdgpu"
+        "radeon"
+      ];
       # TODO: extract display manager config
       displayManager.gdm = {
         enable = true;

@@ -1,8 +1,6 @@
-{self, ...}: let
-  flakeModules = "${self}/modules";
-in {
+_: {
   flake = {
-    nixosModules = {};
+    nixosModules = { };
 
     # homeManagerModules = rec {
     # 			 wm = {

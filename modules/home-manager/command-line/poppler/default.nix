@@ -2,13 +2,14 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
-}: let
-  inherit (lib) mkEnableOption mkOption types;
+}:
+let
+  inherit (lib) mkEnableOption;
 
   cfg = config.command-line.poppler;
-in {
+in
+{
   options.command-line.poppler = {
     enable = mkEnableOption "";
   };

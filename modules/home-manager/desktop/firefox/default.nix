@@ -1,14 +1,14 @@
 {
   config,
   lib,
-  pkgs,
-  inputs,
   ...
-}: let
-  inherit (lib) mkEnableOption mkOption types;
+}:
+let
+  inherit (lib) mkEnableOption;
 
   cfg = config.desktop.firefox;
-in {
+in
+{
   options.desktop.firefox = {
     enable = mkEnableOption "Firefox web browser";
   };

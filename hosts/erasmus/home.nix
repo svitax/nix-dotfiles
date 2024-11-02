@@ -1,10 +1,10 @@
 {
-  config,
   pkgs,
   inputs,
   outputs,
   ...
-}: {
+}:
+{
   imports = [
     outputs.homeManagerModules.allModules
     # TODO: add stylix home-manager module to above output (might not need this if the nixos module already includes the home-manager one)
@@ -12,28 +12,33 @@
   ];
 
   command-line = {
-    direnv.enable = true;
-    fd.enable = true;
-    git.enable = true;
-    nh.enable = true;
-    nurl.enable = true;
-    pandoc.enable = true;
-    poppler.enable = true;
-    ripgrep.enable = true;
+    # atuin.enable = true;
+    # direnv.enable = true;
+    # fd.enable = true;
+    # git.enable = true;
+    # nh.enable = true;
+    # nurl.enable = true;
+    # pandoc.enable = true;
+    # poppler.enable = true;
+    # ripgrep.enable = true;
   };
 
   desktop = {
-    firefox.enable = true;
-    foot.enable = true;
-    rofi.enable = true;
+    # firefox.enable = true;
+    # foot.enable = true;
+    # rofi.enable = true;
   };
 
-  editor.emacs.enable = true;
-  editor.emacs.defaultEditor = false;
-  editor.neovim.enable = true;
+  # editor.emacs.enable = true;
+  # editor.emacs.defaultEditor = true;
+  # editor.neovim.enable = true;
 
-  shell.bash.enable = true;
-  shell.fzf.enable = true;
+  shell = {
+    # bash.enable = true;
+    # fish.enable = true;
+    # starship.enable = true;
+    # zsh.enable = true;
+  };
 
   style.stylix.enable = true;
 

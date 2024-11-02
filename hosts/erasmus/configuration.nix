@@ -7,13 +7,24 @@
   inputs,
   outputs,
   ...
-}: {
+}:
+{
   imports = [
     ./hardware-configuration.nix
     outputs.nixosModules.allModules
     # TODO: add stylix nixos module to above output
     inputs.stylix.nixosModules.stylix
   ];
+
+  # TODO extract to a nix nixos module
+  # need for nixd
+  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+
+  shell = {
+    bash.enable = true;
+    fish.enable = true;
+    zsh.enable = true;
+  };
 
   storage.onedrive.enable = true;
 
@@ -68,8 +79,11 @@
   users.users.evermind = {
     isNormalUser = true;
     description = "evermind";
-    extraGroups = ["networkmanager" "wheel"];
-    packages = with pkgs; [];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
+    packages = with pkgs; [ ];
   };
 
   # Allow unfree packages

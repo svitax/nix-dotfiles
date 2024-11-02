@@ -2,13 +2,14 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
-}: let
-  inherit (lib) mkEnableOption mkOption types;
+}:
+let
+  inherit (lib) mkEnableOption;
 
   cfg = config.command-line.nurl;
-in {
+in
+{
   options.command-line.nurl = {
     enable = mkEnableOption "";
   };

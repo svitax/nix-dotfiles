@@ -2,13 +2,14 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
-}: let
-  inherit (lib) mkEnableOption mkOption types;
+}:
+let
+  inherit (lib) mkEnableOption;
 
   cfg = config.style.stylix;
-in {
+in
+{
   options.style.stylix = {
     enable = mkEnableOption "Stylix";
   };

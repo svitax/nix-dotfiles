@@ -1,13 +1,14 @@
 {
-  inputs,
   pkgs,
   lib,
   config,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.window-manager.wayland;
-in {
+in
+{
   options.window-manager.wayland = {
     enable = mkEnableOption "Wayland";
   };

@@ -92,29 +92,30 @@
 ;;;;;;;;;;;;;;
 ;;;; meow ;;;;
 
+;; TODO: don't use meow-keypad, just make a leader map and then i can finally just use emark-prefix-help
 ;; NOTE: rectangle state https://github.com/Ziqi-Yang/.emacs.d/blob/
 (use-package meow
   :ensure t
   :init
-  ;; Forward C-d to H-d so we can rebind C- to page-down
+  ;; Forward C-d to H-d so we can  C- to page-down
   (global-set-key (kbd "H-d") 'delete-char)
-  ;; (setq meow--kbd-delete-char "H-d")
-  (setq meow--kbd-delete-char "<deletechar>")
+  (setq meow--kbd-delete-char "H-d")
+  ;; (setq meow--kbd-delete-char "<deletechar>")
   :config
   (use-package meow-extras)
+  ;; (add-hook 'meow-mode-hook (lambda () (setq delete-active-region t)))
   (setopt meow-use-clipboard t
 	  meow-expand-hint-remove-delay 0
 	  meow-cheatsheet-layout meow-cheatsheet-layout-colemak-dh
 	  meow-cursor-type-region-cursor 'box
 	  meow-use-cursor-position-hack t
-	  ;; Disable keypad describe until we can use Embark prefix help
-	  meow-keypad-describe-keymap-function nil
 	  ;; delete-active-region t
-	  )
+	  ;; Disable keypad describe until we can use Embark prefix help
+	  meow-keypad-describe-keymap-function nil)
   (bind (mode-specific-map
 	 "," +compile-prefix-map
 	 "a" +agenda-prefix-map
-	 ;; b bookmark
+	 "b" +buffer-prefix-map
 	 ;; c (C-c)
 	 ;; d dired
 	 "e" +eval-prefix-map
@@ -124,27 +125,19 @@
 	 ;; i
 	 ;; j
 	 ;; k
-	 ;; l
 	 "l" +bibliography-prefix-map
 	 ;; m (M-)
 	 "n" +notes-prefix-map
 	 "o" +org-prefix-map
 	 "p" +project-prefix-map
 	 "q" +quit-prefix-map
-	 "r" +buffer-prefix-map
+	 ;; "r" +register-prefix-map  ; register/bookmark
 	 "s" +search-prefix-map
 	 ;; sr . vr/query-replace
 	 "t" +toggle-prefix-map
-	 ;; tg . git-gutter-mode
-	 ;; tG . global-git-gutter-mode
 	 ;; th . hl-line-mode
 	 ;; tH . global-hl-line-mode
-	 ;; tf . flymake-mode
-	 ;; tn . display-line-numbers-mode
-	 ;; tN . global-display-line-numbers-mode
 	 ;; ti . imenu-list-smart-toggle
-	 ;; tc . colorful-mode
-	 ;; tC . global-colorful-mode
 	 ;; tj . jinx-mode
 	 ;; tJ . global-jinx-mode
 	 ;; tt . consult-theme
@@ -162,21 +155,22 @@
 	 "a" #'meow-bounds-of-thing
 	 "i" #'meow-inner-of-thing))
   (meow-motion-overwrite-define-key
-   '("<escape>" . meow-simple-motion-mode)
-   ;; '("<escape>" . ignore)
+   ;; '("<escape>" . meow-simple-motion-mode)
+   '("<escape>" . ignore)
    ;; Use a to move up, h to move down.
    ;; '("a" . meow-prev)
    ;; '("h" . meow-next)
-   '("a" . "p")
+   ;; '("a" . "p")
    '("A" . +meow-eldoc)
-   '("h" . "n"))
+   ;; '("h" . "n")
+   )
   (meow-normal-define-key
    '("a" . meow-prev)
    '("A" . +meow-eldoc)
    '("b" . meow-back-word)
    '("B" . meow-back-symbol)
    '("c" . meow-change)
-   '("d" . meow-delete)
+   '("d" . +meow-kill)
    '("C-d" . meow-page-down)
    '("e" . meow-right)
    '("f" . meow-find)
@@ -184,21 +178,25 @@
    '("h" . meow-next)
    '("H" . +meow-join-line)
    '("i" . meow-insert)
-   '("I" . meow-open-above)
+   '("I" . +meow-insert-line-start)
    ;; '("j" . meow-join)
-   '("k" . meow-search)
+   '("j" . meow-pop-selection)
+   '("J" . meow-reverse)
+   ;; '("k" . meow-search)
    ;; '("k" . +meow-keep-selection)
    ;; '("K" . +meow-remove-selection)
-   ;; '("l" . +register-prefix-map) 
+   ;; '("" . +register-prefix-map) 
+   ;; '("l" . structural-mode) 
    '("m" . +match-prefix-map)
    '("n" . meow-append)
-   '("N" . meow-open-below)
-   '("o" . meow-reverse)
-   '("O" . meow-pop-selection)
+   '("N" . +meow-append-line-end)
+   '("o" . meow-open-below)
+   '("O" . meow-open-above)
    '("p" . yank)
    '("P" . yank-pop)
    '("q" . meow-quit)
    '("r" . +meow-replace)
+   '("R" . +meow-duplicate)
    '("t" . meow-till)
    '("u" . meow-undo)
    '("U" . undo-redo)
@@ -206,8 +204,8 @@
    '("v" . meow-expand-mode)
    '("w" . meow-next-word)
    '("W" . meow-next-symbol)
-   '("x" . meow-line)
-   ;; '("X" . +meow-extend-to-line-end) ;; NOTE: extend selection to line end
+   '("x" . meow-line) ;; NOTE: make it include eol
+   '("X" . +meow-expand-line-end)
    '("y" . meow-left)
    ;; '("z" . +view-prefix-map)
    ;; '("Z" . +sticky-view-prefix-map)
@@ -232,11 +230,15 @@
   (meow-thing-register 'angle '(regexp "<" ">") '(regexp "<" ">"))
   (add-to-list 'meow-char-thing-table '(?A . angle))
   ;; start in insert
-  (add-to-list 'meow-mode-state-list '(vterm-mode . insert))
+  (add-to-list 'meow-mode-state-list '(vterm-mode . vterm-insert))
+  (add-to-list 'meow-mode-state-list '(meow-vterm-mode . vterm-insert))
   (add-to-list 'meow-mode-state-list '(eshell-mode . insert))
   (add-to-list 'meow-mode-state-list '(git-commit-mode . insert))
+  ;; special
+  (add-to-list 'meow-mode-state-list '(Info-mode . motion))
   ;; simple motion
   (add-to-list 'meow-mode-state-list '(pdf-view-mode . simple-motion))
+  ;; (add-to-list 'meow-mode-state-list '(nov-mode . simple-motion))
   ;; (add-to-list 'meow-mode-state-list '(magit-status-mode . simple-motion))
   ;; (add-to-list 'meow-mode-state-list '(dired-mode . simple-motion))
   ;; (add-to-list 'meow-mode-state-list '(ediff-mode . simple-motion))
@@ -270,15 +272,9 @@
 
 (use-package modus-themes
   :ensure t
-  :init
-  (setopt modus-themes-common-palette-overrides `((fringe unspecified)
-						  (fg-line-number-active fg-main)
-						  (bg-line-number-inactive unspecified)
-						  (bg-line-number-active unspecified)
-						  (bg-region bg-sage)
-						  (fg-region unspecified)
-						  (border-mode-line-active unspecified)
-						  (border-mode-line-inactive unspecified)
+  :config
+  (use-package themes-extras)
+  (setopt modus-themes-common-palette-overrides `((fg-region unspecified)
 						  (date-common cyan)
 						  (date-deadline red-warmer)
 						  (date-event magenta-warmer)
@@ -286,12 +282,27 @@
 						  (date-scheduled magenta-cooler)
 						  (date-weekday cyan-cooler)
 						  (date-weekend blue-faint)
-						  (mail-recipient fg-main)
 						  (bg-prose-block-contents unspecified)
 						  (bg-prose-block-delimiter unspecified)
-						  (fg-prose-block-delimiter fg-dim)))
-  (setopt modus-operandi-palette-overrides `((bg-mode-line-active bg-blue-intense)
-					     (fg-mode-line-active fg-main)
+						  (fg-prose-block-delimiter fg-dim)
+						  
+						  (bg-completion "#c0deff")
+						  (bg-region bg-sage)
+						  (border-mode-line-active unspecified)
+						  (border-mode-line-inactive unspecified)
+						  (fringe unspecified)
+						  (fg-line-number-active fg-main)
+						  (fg-line-number-inactive "gray50")
+						  (bg-line-number-active unspecified)
+						  (bg-line-number-inactive unspecified)
+						  ;; (mail-recipient fg-main)
+						  (mail-recipient indigo)
+						  ,@modus-themes-preset-overrides-faint))
+  (setopt modus-operandi-palette-overrides `(;; (bg-mode-line-active bg-inactive)
+					     (bg-mode-line-active bg-dim)
+					     (bg-mode-line-inactive bg-dim)
+					     ;; (bg-mode-line-active bg-blue-intense)
+					     ;; (fg-mode-line-active fg-main)
 					     (fg-heading-1 "#a01f64")
 					     (fg-heading-2 "#2f5f9f")
 					     (fg-heading-3 "#1a8388")))
@@ -306,8 +317,7 @@
 	  ;; modus-themes-completions '((t . (bold)))
 	  ;; modus-themes-prompts '(bold)
 	  modus-themes-variable-pitch-ui nil)
-  :config
-  (use-package themes-extras)
+  ;; :config
   (add-hook 'modus-themes-post-load-hook #'my/modus-themes-custom-faces)
   (add-hook 'ef-themes-post-load-hook #'my/ef-themes-custom-faces)
   (modus-themes-select 'modus-operandi))
@@ -315,7 +325,6 @@
 (use-package pulsar
   :ensure t
   :config
-  (pulsar-global-mode 1)
   (dolist (func '(xref-find-definitions
 		  xref-go-back
 		  xref-go-forward
@@ -324,7 +333,9 @@
 		  beginning-of-buffer
 		  end-of-buffer
 		  recenter))
-    (add-to-list 'pulsar-pulse-functions func)))
+    (add-to-list 'pulsar-pulse-functions func))
+  
+  (pulsar-global-mode 1))
 
 ;; NOTE: pulsic https://github.com/ichernyshovvv/pulsic.el
 
@@ -341,15 +352,39 @@
 ;;;;;;;;;;;;;;;;;;
 ;;;; modeline ;;;;
 
-;; TODO: mode line
+(use-package druid-modeline
+  :config
+  (druid-modeline-text-mode t)
+  (add-hook 'prog-mode-hook #'druid-modeline-prog-mode)
+  (add-hook 'messages-buffer-mode-hook #'druid-modeline-text-mode)
+  (add-hook 'org-mode-hook #'druid-modeline-org-mode)
+  (add-hook 'vterm-mode-hook #'druid-modeline-vterm-mode)
+  (add-hook 'eshell-mode-hook #'druid-modeline-eshell-mode)
+  (add-hook 'pdf-view-mode-hook #'druid-modeline-pdf-mode))
+
+;; NOTE: karthink's store-action-key+cmd and keycast-capture-avy-dispatch
+(use-package keycast
+  :ensure t
+  :config
+  (use-package keycast-extras)
+  
+  (setopt keycast-mode-line-format "%2s%k%c%R"
+	  keycast-mode-line-window-predicate 'mode-line-window-selected-p
+	  keycast-mode-line-remove-tail-elements nil)
+  
+  (dolist (input '(self-insert-command org-self-insert-command eshell-self-insert-command))
+    (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
+  
+  (dolist (event '( mouse-event-p mouse-movement-p mwheel-scroll handle-select-window
+                    mouse-set-point mouse-drag-region))
+    (add-to-list 'keycast-substitute-alist `(,event nil)))
+  
+  (druid-modeline-keycast-mode))
+
 ;; moody? minions? prots modeline? karthink? diminish?
 ;; blackout https://github.com/radian-software/blackout
 
-(use-package diminish :ensure t)
-
-(use-package simple
-  :config
-  (column-number-mode))
+;; (use-package simple :config (column-number-mode))
 
 ;;;;;;;;;;;;;;;;
 ;;;; frames ;;;;
@@ -368,20 +403,21 @@
   :no-require
   :ensure nil
   :bind (+quit-prefix-map
-	 "q" #'save-buffers-kill-terminal
-	 "r" #'restart-emacs
 	 ;; NOTE: "k" +kill-all-emacsen (lambda emacs)
-	 ))
+	 "q" #'save-buffers-kill-terminal
+	 "r" #'restart-emacs))
 
 ;; NOTE: don't turn on line-numbers by default, but put it in the toggle prefix map
 (use-package display-line-numbers
   :bind (+toggle-prefix-map
-	 "l" #'global-display-line-numbers-mode))
+	 "C-l" #'global-display-line-numbers-mode
+	 "l" #'display-line-numbers-mode))
 
 (use-package virtual-auto-fill
   :ensure t
   :hook ((org-mode markdown-mode) . virtual-auto-fill-mode)
-  :init (setopt fill-column 80))
+  :init
+  (setopt fill-column 80))
 
 ;; NOTE: aggressive-fill-paragraph-mode https://github.com/davidshepherd7/aggressive-fill-paragraph-mode
 
@@ -397,9 +433,10 @@
 
 (use-package envrc
   :ensure t
-  :diminish envrc-mode
-  :init (setopt envrc-show-summary-in-minibuffer nil)
-  :config (envrc-global-mode))
+  :init
+  (setopt envrc-show-summary-in-minibuffer nil)
+  :config
+  (envrc-global-mode))
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; external ;;;;
@@ -411,31 +448,34 @@
 
 ;; NOTE: find-file creates non-existent directories
 (use-package files
+  :bind ((+file-prefix-map
+	  "f" #'find-file))
   :init
   (setopt y-or-n-p-use-read-key t
 	  use-short-answers t
 	  confirm-kill-processes nil
-	  confirm-kill-emacs 'yes-or-no-p)
-  :config (bind +file-prefix-map "f" #'find-file))
+	  confirm-kill-emacs 'yes-or-no-p))
 
 (use-package persist-state
   :ensure t
-  :diminish persist-state-mode
-  :config (persist-state-mode))
+  :config
+  (persist-state-mode))
 
 (use-package backup
   :no-require
   :ensure nil
   ;; Disable backup
-  :init (setopt backup-inhibited t
-		make-backup-files nil))
+  :init
+  (setopt backup-inhibited t
+	  make-backup-files nil))
 
 (use-package auto-save
   :no-require
   :ensure nil
   :xdg-state (auto-save-list-file-prefix "saves/")
   ;; Disable autosave
-  :init (setopt auto-save-default nil))
+  :init
+  (setopt auto-save-default nil))
 
 (use-package lockfiles
   :no-require
@@ -445,22 +485,21 @@
   (setopt create-lockfiles nil))
 
 ;; NOTE: autorevert
-(use-package autorevert
-  :diminish auto-revert-mode
-  ;;   :init
-  ;;   (use-package auto-revert-extras)
-  ;;   ;; Be quiet about reverts
-  ;;   (setopt global-auto-revert-non-file-buffers t
-  ;; 	  auto-revert-verbose nil)
-  ;;   ;; global-auto-revert-mode can slow things down. try to enable it per active window.
-  ;;   (add-to-list 'window-state-change-functions #'+window-state-state-change)
-  ;;   :config (global-auto-revert-mode)
-  )
+;; (use-package autorevert
+;;     :init
+;;     (use-package auto-revert-extras)
+;;     ;; Be quiet about reverts
+;;     (setopt global-auto-revert-non-file-buffers t
+;; 	  auto-revert-verbose nil)
+;;     ;; global-auto-revert-mode can slow things down. try to enable it per active window.
+;;     (add-to-list 'window-state-change-functions #'+window-state-state-change)
+;;     :config (global-auto-revert-mode))
 
 ;; NOTE: recentf
 ;; (use-package recentf
 ;;   :xdg-state (recentf-save-file "recentf-save.el"))
 
+;; NOTE: +save-place-suppress-message doesn't work
 (use-package saveplace
   :xdg-state (save-place-file "save-place.el")
   :config
@@ -476,9 +515,11 @@
 ;; NOTE: (make-variable-buffer-local 'register-alist) makes registers buffer-local, kind of like vim marks
 (use-package savehist
   :xdg-state (savehist-file "savehist.el")
-  :init (setopt history-length 1000
-		history-delete-duplicates t)
-  :config (savehist-mode))
+  :init
+  (setopt history-length 1000
+	  history-delete-duplicates t)
+  :config
+  (savehist-mode))
 
 ;; NOTE: ffap
 ;; NOTE: sudo-edit https://github.com/nflath/sudo-edit
@@ -488,15 +529,13 @@
 
 (use-package minibuffer
   :init
-  (setopt
-   ;; NOTE: prot explanation
-   enable-recursive-minibuffers t
-   ;; NOTE: prot explanation
-   echo-keystrokes 0.25)
+  (setopt enable-recursive-minibuffers t ;; NOTE: prot explanation
+	  echo-keystrokes 0.25) ;; NOTE: prot explanation
+  
   (minibuffer-depth-indicate-mode)
   :config
   (use-package minibuffer-extras)
-
+  
   (advice-add #'completing-read-multiple :filter-args #'+crm-indicator)
   
   ;; Don't ignore cursor shape changes in minibuffer
@@ -514,15 +553,18 @@
 
 (use-package marginalia
   :ensure t
-  :init (setopt marginalia-max-relative-age 0)
-  :config (marginalia-mode))
+  :init
+  (setopt marginalia-max-relative-age 0)
+  :config
+  (marginalia-mode))
 
 ;;;;;;;;;;;;;;;;;;;
 ;;;; orderless ;;;;
 
 (use-package orderless
   :ensure t
-  :config (setopt completion-styles '(orderless basic)))
+  :config
+  (setopt completion-styles '(orderless basic)))
 
 ;;;;;;;;;;;;;;;;;
 ;;;; vertico ;;;;
@@ -534,10 +576,11 @@
 	  "C-d" #'vertico-scroll-up
 	  "M-h" #'vertico-next-group
 	  "C-u" #'vertico-scroll-down))
-  :init (setopt vertico-scroll-margin 0
-		vertico-count 5
-		vertico-cycle t
-		vertico-resize 'grow-only)
+  :init
+  (setopt vertico-scroll-margin 0
+	  vertico-count 5
+	  vertico-cycle t
+	  vertico-resize 'grow-only)
   :config
   (use-package vertico-extras)
   (vertico-mode))
@@ -564,6 +607,10 @@
 	  "<up>" #'+vertico-minimal-previous
 	  "C-l" #'vertico-multiform-vertical))
   :config
+  (setq vertico-multiform-commands
+	`(;; Maximal
+	  (eshell-atuin-history ,@+vertico-multiform-maximal)))
+  
   (setq vertico-multiform-categories
 	`(;; Maximal
 	  (imenu ,@+vertico-multiform-maximal)
@@ -572,6 +619,7 @@
 		(vertico-preselect . prompt)
 		(vertico-sort-function . +vertico-sort-directories-first))
 	  (t ,@+vertico-multiform-minimal)))
+  
   (vertico-multiform-mode))
 
 (use-package vertico-repeat
@@ -595,27 +643,27 @@
 ;; NOTE: consult-find-args (concat "find . -not ( " "-path */.git* -prune " "-or -path */.cache* -prune )")
 (use-package consult
   :ensure t
+  :bind ((+buffer-prefix-map
+	  "b" #'consult-buffer)
+	 (+search-prefix-map
+	  "g" #'consult-ripgrep
+	  "l" #'consult-outline
+	  "s" #'consult-line)
+	 (+file-prefix-map
+	  "i" #'consult-find
+	  "r" #'consult-recent-file))
   :init (setopt consult-project-function nil) ;; always work from the current directory (use `project-*' commands or `cd' to switch directory)
   :config
-  (bind (+buffer-prefix-map
-	 "r" #'consult-buffer)
-	(+search-prefix-map
-	 "g" #'consult-ripgrep
-	 "l" #'consult-outline
-	 "s" #'consult-line)
-	(+file-prefix-map
-	 "i" #'consult-find
-	 "r" #'consult-recent-file))
-  
   (with-eval-after-load 'pulsar
     (setq consult-after-jump-hook nil) ; reset it to avoid conflicts with my function
     (dolist (fn '(pulsar-recenter-top pulsar-reveal-entry))
       (add-hook 'consult-after-jump-hook fn)))
-
+  
   (consult-customize
    consult-bookmark consult--source-buffer consult-recent-file
    consult--source-recent-file consult--source-project-recent-file
    consult--source-bookmark consult--source-project-buffer
+   ;; consult-denote-buffer-source consult-denote-subdirectory-source consult-denote-silo-source
    ;; consult-info
    :preview-key "M-."
    consult-theme
@@ -640,7 +688,7 @@
   :ensure t
   :bind (corfu-map "SPC" #'corfu-insert-separator
 		   "TAB" #'corfu-complete
-		   "RET" nil
+		   "RET" #'+corfu-quit-and-newline
 		   "C-h" #'corfu-info-documentation
 		   "M-." #'corfu-info-location)
   :init
@@ -653,7 +701,13 @@
 	  tab-always-indent 'complete)
   :config
   (global-corfu-mode)
-  (add-hook 'meow-insert-exit-hook 'corfu-quit))
+  (add-hook 'meow-insert-exit-hook 'corfu-quit)
+  (defun +corfu-quit-and-newline ()
+    "Quit Corfu completion and insert newline."
+    (interactive)
+    (progn
+      (corfu-quit)
+      (newline))))
 
 (use-package corfu-popupinfo
   :after corfu
@@ -710,12 +764,20 @@
 	  "d" #'project-dired
 	  "e" #'project-eshell
 	  "f" #'project-find-file
-	  "g" #'project-find-regexp
-	  ;; "g" #'+project-grep ;; NOTE: do consult-grep but with (let ((consult-project-function 'consult--default-project-function)))
+	  ;; "g" #'project-find-regexp
+	  "g" #'+project-consult-ripgrep
 	  "k" #'project-kill-buffers
 	  "p" #'project-switch-project
 	  "r" #'project-query-replace-regexp
-	  "!" #'project-shell-command)))
+	  "!" #'project-shell-command))
+  :config
+  (defun +project-consult-ripgrep (&optional dir initial)
+    "Search with `rg' for files in DIR with INITIAL input with `consult-project-function'
+set to the default project function."
+
+    (interactive)
+    (let ((consult-project-function 'consult--default-project-function))
+      (consult-ripgrep dir initial))))
 
 ;; NOTE: projection
 
@@ -806,8 +868,40 @@
 				  win
 				  (floor (frame-height) 3)
 				  (floor (frame-height) 3)))
-	  popper-reference-buffers (append +popper-reference-buffers '()))
-  :config (popper-mode))
+	  popper-reference-buffers (append +popper-reference-buffers '())
+	  popper-mode-line "")
+  :config
+  ;; TODO add popper-druid-modeline patch to popper-extras
+  ;; Popper attempts to set `mode-line-format' for all popup buffers, but it
+  ;; uses the default value which overrides the buffer-local value set by
+  ;; `druid-modeline'. This is a small patch to make it stop using the default
+  ;; value. Eventually I'd like to see a customization option to leave the
+  ;; mode-line alone, but there are still some bugs to fix.
+  ;; See https://github.com/karthink/popper/issues/38
+  (defun popper--modified-mode-line ()
+    "Return modified mode-line string."
+    (when popper-mode-line
+      (if (consp mode-line-format)
+          (if (member popper-mode-line mode-line-format)
+              mode-line-format
+            (append (cl-subseq (default-value 'mode-line-format) 0 popper-mode-line-position)
+		    (append (cl-subseq mode-line-format 0 popper-mode-line-position)
+			    (list popper-mode-line
+				  (nthcdr popper-mode-line-position
+					  (default-value 'mode-line-format)))))
+            (nthcdr popper-mode-line-position mode-line-format))))
+    mode-line-format)
+  (defun popper--restore-mode-lines (win-buf-alist)
+    "Restore the default value of `mode-line-format'.
+This applies to popup-buffers in the list WIN-BUF-ALIST."
+    (dolist (buf (mapcar 'cdr win-buf-alist))
+      (when (buffer-live-p buf)
+	(with-current-buffer buf
+          (setq mode-line-format (default-value 'mode-line-format))
+          (setq mode-line-format (delete popper-mode-line mode-line-format))
+          (force-mode-line-update)))))
+
+  (popper-mode))
 
 ;; NOTE: switchy-window https://github.com/emacsmirror/switchy-window
 ;; NOTE: ace-window https://github.com/abo-abo/ace-window
@@ -821,8 +915,8 @@
 (use-package narrow
   :no-require
   :bind ((meow-normal-state-keymap
-	  "{" #'backward-page
-	  "}" #'forward-page)
+	  "[" #'backward-page
+	  "]" #'forward-page)
 	 (+buffer-prefix-map
 	  "n" #'narrow-to-region
 	  "w" #'widen)))
@@ -858,12 +952,75 @@
 ;;;; dired ;;;;
 
 (use-package dired
+  :bind ((mode-specific-map
+	  "d" #'dired-jump)
+	 (dired-mode-map
+	  ;; Lower keys for commands not operating on all the marked files
+	  "a" #'dired-previous-line
+	  ;; "b"
+	  "d" #'dired-flag-file-deletion
+	  "e" #'dired-find-file
+	  ;; "f"
+	  "g" #'revert-buffer
+	  "h" #'dired-next-line
+	  ;; "i" #'wdired
+	  "I" #'dired-maybe-insert-subdir
+	  "j" #'dired-goto-file
+	  "k" #'dired-do-kill-lines
+	  ;; "l"
+	  "m" #'dired-mark
+	  ;; "n" #'wdired
+	  "r" #'dired-do-redisplay
+	  "t" #'dired-toggle-marks
+	  "u" #'dired-unmark
+	  "x" #'dired-do-flagged-delete
+	  "y" #'dired-up-directory
+	  "'" #'dired-copy-filename-as-kill
+	  "C-+" #'dired-create-empty-file
+	  "+" #'dired-create-directory
+	  "RET" #'dired-find-file
+	  ;; sort
+	  "o" #'dired-sort-toggle-or-edit ;; wdired?
+	  ;; Upper case keys (except !) for operating on the marked files
+	  "A" #'dired-do-find-regexp
+	  "B" #'dired-do-byte-compile
+	  "C" #'dired-do-copy
+	  "D" #'dired-do-delete
+	  ;; "E"
+	  ;; "F"
+	  ;; "G" #'dired-do-chgrp ;; FIXME needs a better binding
+	  "H" #'dired-do-hardlink
+	  ;; "J"
+	  ;; "K"
+	  "L" #'dired-do-load
+	  "M" #'dired-do-chmod
+	  "N" #'dired-do-man
+	  "O" #'dired-do-chown
+	  "P" #'dired-do-print
+	  "Q" #'dired-do-find-regexp-and-replace
+	  "R" #'dired-do-rename
+	  "S" #'dired-do-symlink
+	  "T" #'dired-do-touch
+	  "U" #'dired-unmark-all-marks
+	  ;; "V"
+	  ;; "W"
+	  "X" #'dired-do-shell-command
+	  ;; "Y"
+	  "Z" #'dired-do-compress
+	  "c" #'dired-do-compress-to
+	  "!" #'dired-do-shell-command ;; TODO find better bind
+	  "&" #'dired-do-async-shell-command ;; TODO find better bind
+	  ;; "TAB" #'dired-subtree-toggle
+	  ;; <backtab> #'dired-subtree-remove
+	  
+	  "~" #'+dired-home-directory))
   :init (setopt dired-switches-in-mode-line nil
 		dired-do-revert-buffer t
 		dired-vc-rename-file t
 		dired-clean-confirm-killing-deleted-buffers nil
 		dired-kill-when-opening-new-dired-buffer t
 		dired-create-destination-dirs 'ask
+		dired-create-destination-dirs-on-trailing-dirsep t
 		dired-recursive-copies 'always
 		dired-recursive-deletes 'always
 		delete-by-moving-to-trash t
@@ -872,16 +1029,10 @@
 		;; Try to guess the target directory for operations.
 		dired-dwim-target t
 		;; Automatically refresh dired buffers when contents changes.
-		dired-auto-revert-buffer t)
+		dired-auto-revert-buffer #'dired-directory-changed-p)
   :config
   (use-package dired-extras)
-  (bind (mode-specific-map
-	 "d" #'dired-jump)
-	(dired-mode-map
-	 ;; "TAB" #'dired-subtree-toggle
-	 "~" #'+dired-home-directory
-	 "b" #'dired-up-directory
-	 "f" #'dired-find-file)))
+  (add-hook 'dired-mode-hook #'dired-hide-details-mode))
 
 (use-package dired-single
   :ensure t
@@ -1038,28 +1189,28 @@
 
 (use-package expand-region
   :ensure t
-  :init (setopt expand-region-fast-keys-enabled nil)
   :bind (meow-normal-state-keymap
-	 "Y" #'er/expand-region
-	 "E" #'er/contract-region))
+	 "C-," #'er/expand-region
+	 "C-." #'er/contract-region)
+  :init
+  (setopt expand-region-fast-keys-enabled nil))
 
 ;; NOTE: highlight surround.el semantic units
 ;; NOTE: surround.el treesitter-backed semantic units
 ;; NOTE: surround.el which-key or embark help popups
 (use-package surround
   :ensure t
-  :config
-  (bind +match-prefix-map
-	"s" #'surround-insert
-	"r" #'surround-change
-	"d" #'surround-delete))
+  :bind ((+match-prefix-map
+	  "s" #'surround-insert
+	  "r" #'surround-change
+	  "d" #'surround-delete)))
 
-;; TODO: macrursors
+;; TODO: macrursors or multiple-cursors
 ;; TODO: macrursors + avy
 (use-package macrursors
   :bind (((:global-map)
 	  "C-;" #'macrursors-mark-map
-	  "M-n" #'macrursors-mark-next-instance-of
+	  "M-h" #'macrursors-mark-next-instance-of
 	  "M-e" #'macrursors-mark-previous-instance-of)
 	 (meow-normal-state-keymap
 	  "G" #'+macrursors-select)
@@ -1147,6 +1298,64 @@
 
 ;; NOTE: packages' info files never get picked up for me. is it because of emacsWithPackagesFromUsePackage? is it services.emacs?
 ;; NOTE: info https://github.com/oantolin/emacs-config/blob/696641a592691737ba5a019c67f2af7a6cc09183/init.el#L235-L239
+(use-package info
+  :bind ((Info-mode-map
+	  ;; TODO: extract to meow-collection
+	  "y" #'meow-left
+	  "h" #'meow-next
+	  "a" #'meow-prev
+	  "e" #'meow-right
+	  "b" #'meow-back-word
+	  "B" #'meow-back-symbol
+	  "f" #'meow-find
+	  "j" #'meow-pop-selection
+	  "J" #'meow-reverse
+	  "m" #'+match-prefix-map
+	  "q" #'meow-quit
+	  "t" #'meow-till
+	  "v" #'meow-expand-mode
+	  "w" #'meow-next-word
+	  "W" #'meow-next-symbol
+	  "x" #'meow-line
+	  "X" #'+meow-expand-line-end
+	  "-" #'negative-argument
+	  ";" #'repeat
+	  "<escape>" #'meow-cancel-selection
+	 ;;;;;;;;;;;;;;;
+	  "'" #'Info-copy-current-node-name
+	  "d" #'Info-directory
+	  "o" #'Info-menu ;; (m) menu items of current node
+	  "u" #'Info-up
+	  "?" #'Info-summary
+	  "{" #'Info-next ;; (n) stay on same hierarchical level
+	  "}" #'Info-prev ;; (p) stay on same hierarchical level
+	  "]" #'Info-forward-node ;; goes through all levels
+	  "[" #'Info-backward-node ;; goes through all levels
+	  "RET" #'Info-follow-nearest-node
+	  "SPC" nil ;; #'Info-scroll-up pages down
+	  "DEL" nil ;; #'Info-scroll-down pages up
+	  "C-u" #'Info-scroll-down ;; can i somehow scroll only half the screen?
+	  "C-d" #'Info-scroll-up
+	  "r" nil ;; #'Info-history-forward (r can be used by something else since we don't modify Info buffers)
+	  "l" nil ;; reserve for structural-mode #'Info-history-back
+	  "C-t" #'Info-history-back
+	  "C-o" #'Info-history-back
+	  "C-i" #'Info-history-forward
+	  "L" #'Info-history
+	  "<tab>" #'Info-next-reference
+	  "S-<tab>" #'Info-prev-reference
+	  "t" nil ;; #'Info-top-node
+	  "<" #'Info-top-node
+	  ">" #'Info-final-node
+	  "O" #'Info-goto-node ;; (g) all nodes in info file
+	  "F" #'Info-follow-reference ;; referece items in node (not menu items)
+	  "i" #'Info-index ;; search the info manual's index
+	  "," nil ;; reserve for localleader #'Info-index-next: go to next match of index search
+	  "I" #'Info-virtual-index ;; get a virtual index; a node with menu items of matching index entries
+	  "s" nil ;; reserve for avy #'Info-search (probably just use isearch or consult-line)
+	  "A" #'info-apropos ;; searches the index across all info manuals (good as long as i don't ever need eldoc in Info buffers)
+	  )))
+
 ;; NOTE: info-colors
 ;; NOTE: info-variable-pitch https://github.com/kisaragi-hiu/info-variable-pitch
 
@@ -1155,15 +1364,19 @@
 
 ;; TODO: (:lint keyword) flymake-hook from flymake-collection  https://github.com/mohkale/flymake-collection
 ;; TODO: flymake
+(use-package flymake
+  :bind ((+toggle-prefix-map
+	  "d" #'flymake-mode)))
+
 ;; TODO: flymake-collection
 ;; TODO: flymake-margin https://github.com/LionyxML/flymake-margin
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; formatting ;;;;
 
+;; TODO don't auto-format on save
 (use-package apheleia
   :ensure t
-  :diminish apheleia-mode
   :config
   (meow-normal-define-key
    '("=" . apheleia-format-buffer))
@@ -1172,16 +1385,48 @@
 ;; Adds :format keyword for use-package forms
 (use-package apheleia-use-package)
 
+;;;;;;;;;;;;;;;;;;;;
+;;;; treesitter ;;;;
+
+;; TODO: treesit
+
+;; NOTE: treesit before eglot so i can use the build major mode alist
+;; NOTE: (:treesit keyword) add recipe to treesit-auto list
+(use-package treesit-auto
+  :ensure t
+  :config
+  (global-treesit-auto-mode)
+  (treesit-auto-add-to-auto-mode-alist 'all))
+
+;; NOTE: ts-docstr https://github.com/emacs-vs/ts-docstr
+
 ;;;;;;;;;;;;;
 ;;;; lsp ;;;;
 
 ;; NOTE: (:lsp keyword) eglot-server-programs and eglot-server-configuration?
-;; TODO: eglot
+;; TODO: prevent eglot capf from being in front of templ
 (use-package eglot
-  :ensure t ;; i want a more recent version of eglot for eglot--apply-text-edits with the silent arg
+  ;; :ensure t ;; i want a more recent version of eglot for eglot--apply-text-edits with the silent arg
+  :init
+  (setopt eglot-extend-to-xref t
+	  eglot-autoshutdown t)
+  (setq eglot-stay-out-of '(flymake eldoc-documentation-functions eldoc-documentation-strategy "company"))
+  :config
+  (use-package eglot-extras)
+  ;; Auto ensure every possibly relevant major mode
+  ;; (+eglot-auto-ensure-all)
+  ;; Just add Eglot as another item in Flymake since we asked Eglot to stay
+  ;; away from taking over Flymake.
+  (add-hook 'flymake-diagnostic-functions 'eglot-flymake-backend 90)
+  ;; Eglot automatically adds `eglot--mode-line-format' to `mode-line-misc-info'
+  ;; I don't like that. Let's remove it.
+  (add-hook 'eglot-managed-mode-hook #'+eglot-remove-mode-line-misc-info)
+  ;; disable eglot log
+  (fset #'jsonrpc--log-event #'ignore))
 
-  )
-;; TODO: eglot-booster
+(use-package eglot-booster
+  :config (eglot-booster-mode))
+
 ;; TODO: apheleia-eglot
 ;; NOTE: consult-eglot
 ;; NOTE: citre https://github.com/universal-ctags/citre
@@ -1212,21 +1457,6 @@
 (use-package tempel-collection :ensure t :after tempel)
 
 ;; NOTE: yasnippet-capf (if i decide to use yasnippet) https://github.com/elken/yasnippet-capf
-
-;;;;;;;;;;;;;;;;;;;;
-;;;; treesitter ;;;;
-
-;; TODO: treesit
-
-;; NOTE: treesit before eglot so i can use the build major mode alist
-;; NOTE: (:treesit keyword) add recipe to treesit-auto list
-(use-package treesit-auto
-  :ensure t
-  :config
-  (global-treesit-auto-mode)
-  (treesit-auto-add-to-auto-mode-alist 'all))
-
-;; NOTE: ts-docstr https://github.com/emacs-vs/ts-docstr
 
 ;;;;;;;;;;;;;;;;;
 ;;;; compile ;;;;
@@ -1264,7 +1494,6 @@
 	      xref-show-definitions-function #'consult-xref))
 
 (use-package eldoc
-  :diminish eldoc-mode
   :bind (help-map "C-." #'eldoc-print-current-symbol-info)
   :init
   (setopt eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
@@ -1282,6 +1511,9 @@
 (use-package colorful-mode
   :ensure t
   :hook (prog-mode text-mode)
+  :bind (+toggle-prefix-map
+	 "c" #'colorful-mode
+	 "C-c" #'global-colorful-mode)
   :init
   (setopt colorful-use-prefix t
 	  colorful-extra-color-keyword-functions '(colorful-add-rgb-colors
@@ -1323,10 +1555,17 @@
 ;; TODO: magit
 (use-package magit
   :ensure t
-  :bind ((+vc-prefix-map
+  :bind ((magit-mode-map
+	  "h" #'magit-section-forward
+	  ;; #'magit-dispatch
+	  "a" #'magit-section-backward
+	  ;; #'magit-cherry-apply
+	  )
+	 (+vc-prefix-map
 	  "s" #'magit-status)
 	 (+project-prefix-map
-	  "v" #'magit-project-status)))
+	  "v" #'magit-project-status))
+  :init (setopt magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 (use-package git-modes :ensure t)
 
@@ -1343,31 +1582,94 @@
 ;; NOTE: git-gutter:update-interval warning
 (use-package git-gutter
   :ensure t
-  :diminish git-gutter-mode
   :hook (prog-mode . git-gutter-mode)
   :init (setopt fringes-outside-margins t
 		git-gutter:update-interval 0.05))
 
 (use-package git-gutter-fringe
   :ensure t
-  :bind (+vc-prefix-map "h" #'git-gutter:next-hunk
-			"a" #'git-gutter:previous-hunk)
+  :bind
+  ((+vc-prefix-map "h" #'git-gutter:next-hunk
+		   "a" #'git-gutter:previous-hunk)
+   (+toggle-prefix-map "C-g" #'git-gutter-mode
+		       "g" #'global-git-gutter-mode))
   :init (setopt git-gutter-fr:side 'left-fringe)
   :config
-  (define-fringe-bitmap 'git-gutter-fr:added [#b11110000] nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:modified [#b11110000] nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:deleted [#b11110000] nil nil '(center repeated)))
+  (define-fringe-bitmap 'git-gutter-fr:added [#b11111000] nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:modified [#b11111000] nil nil '(center repeated))
+  (define-fringe-bitmap 'git-gutter-fr:deleted [#b11111000] nil nil '(center repeated)))
 
 ;; NOTE: ediff
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; terminal ;;;;
 
-;; TODO: mistty https://github.com/szermatt/mistty or vterm
-;; NOTE: eshell-visual-vterm https://github.com/accelbread/eshell-visual-vterm
-;; NOTE: isend-mode https://github.com/ffevotte/isend-mode.el
-;; NOTE: awscli-capf https://github.com/sebasmonia/awscli-capf
+(use-package vterm
+  :ensure t
+  :bind ((+project-prefix-map
+	  "t" #'+project-vterm))
+  :init
+  (setopt
+   ;; vterm-buffer-name-string nil
+   ;; vterm-buffer-name-string "*vterm %s*"
+   vterm-keymap-exceptions '("C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x"
+			     "M-o" "C-y" "M-y" "C-'" "M-'" "M-:"))
+  :config
+  (defun +project-suffixed-buffer-name (mode)
+    (concat "*"
+	    (downcase mode)
+	    " "
+	    (if-let ((proj (project-current t)))
+		(file-name-as-directory (project-root proj))
+              (file-name-as-directory
+	       (file-name-nondirectory
+		(directory-file-name default-directory))))
+            "*"))
+  ;; TODO fix +project-vterm
+  (defun +project-vterm ()
+    "Start `vterm' in the current project's root directory.
+If a buffer already exists for running vterm in the project's root,
+switch to it. Otherwise, create a new vterm buffer.
+
+With \\[universal-argument] prefix-arg, create a new vterm buffer even
+if one already exists."
+    (interactive)
+    (let* ((default-directory (project-root (project-current t)))
+	   (vterm-buffer-name (+project-suffixed-buffer-name "vterm"))
+	   (vterm-buffer (get-buffer vterm-buffer-name)))
+      (if (and vterm-buffer (not current-prefix-arg))
+	  (pop-to-buffer-same-window vterm-buffer)
+	(vterm vterm-buffer-name)))))
+
+(use-package meow-vterm
+  :config
+  ;; vterm sometimes does not respect the cursor type.
+  ;; Prevent it from ever messing with the cursor by using dynamic binding
+  ;; to prevent "set_cursor_type" from changing the cursor.
+  ;; https://github.com/akermu/emacs-libvterm/issues/313#issuecomment-1183650463
+  (advice-add #'vterm--redraw :around
+	      (lambda (fun &rest args)
+		(let ((cursor-type cursor-type))
+		  (apply fun args))))
+  
+  (add-hook 'vterm-mode-hook #'meow-vterm-mode)
+  (meow-define-keys 'vterm-normal
+    '("p" . meow-vterm-yank)
+    '("P" . meow-vterm-yank-pop)
+    '("u" . meow-vterm-undo)
+    '("d" . meow-vterm-kill)
+    '("G" . ignore)))
+
 ;; NOTE: vterm-capf https://github.com/twlz0ne/vterm-capf
+;; NOTE: awscli-capf https://github.com/sebasmonia/awscli-capf
+;; NOTE: eshell-visual-vterm https://github.com/accelbread/eshell-visual-vterm
+;; NOTE: isend-mode? https://github.com/ffevotte/isend-mode.el
+;; NOTE: mistty? https://github.com/szermatt/mistty
+
+(use-package eat
+  :ensure t
+  :disabled t
+  :config (add-hook 'eshell-mode-hook #'eat-eshell-mode))
 
 ;;;;;;;;;;;;;;;;
 ;;;; comint ;;;;
@@ -1381,7 +1683,6 @@
 ;; NOTE: if mistty or vterm doesn't suit my needs, look into setting up eshell with all the bells and whistles (pcmpl, aliases, syntax highlighting, prompt, etc.)
 ;; NOTE: eshell
 ;; NOTE: karthink eshell buffer redirection
-;; NOTE: karthink eshell atuin
 (use-package eshell
   :xdg-state
   (eshell-aliases-file "aliases")
@@ -1389,10 +1690,69 @@
   (eshell-login-script "login")
   (eshell-rc-script "rc"))
 
+(use-package em-hist)
+
+;; NOTE: if eshell-atuin isn't to my liking, karthink has some config around
+;; eshell history that might be worth looking at
+(use-package eshell-atuin
+  :ensure t
+  :bind (eshell-hist-mode-map
+	 "<up>" #'eshell-atuin-history
+	 "<down>" #'eshell-atuin-history
+	 "M-n" #'eshell-atuin-history
+	 "M-p" #'eshell-atuin-history
+	 "M-r" #'eshell-atuin-history)
+  ;; :init
+  ;; (setopt eshell-atuin-search-fields '(time duration command directory host)
+  ;; 	  eshell-atuin-history-format "%-80c %-40i %>10t %d %h")
+  :config (eshell-atuin-mode))
+
+(use-package eshell-syntax-highlighting
+  :ensure t
+  :config (add-hook 'eshell-mode-hook #'eshell-syntax-highlighting-global-mode))
+
 ;;;;;;;;;;;;;;;
 ;;;; shell ;;;;
 
+(use-package bash-completion
+  :ensure t
+  :disabled t
+  :config
+  ;; NOTE add to bash-completion-extras
+  (add-hook 'shell-dynamic-complete-functions 'bash-completion-dynamic-complete)
+  (defun +eshell-bash-completion-capf-nonexclusive ()
+    "Bash completion function for `completion-at-point-functions'.
+
+Returns the same list as the one returned by
+`bash-completion-dynamic-complete-nocomint' appended with \(:exclusive no)
+ so that other completion functions are tried when bash-completion fails to
+match the text at point."
+    
+    (let* ((bol-pos (save-mark-and-excursion
+		      (eshell-bol)
+		      (point)))
+	   (compl (bash-completion-dynamic-complete-nocomint
+		   bol-pos
+		   (point) t)))
+      (when compl
+	(append compl '(:exclusive no)))))
+  (defun +eshell-setup-bash-completion-h ()
+    (add-hook 'completion-at-point-functions
+	      #'+eshell-bash-completion-capf-nonexclusive nil t))
+  
+  (add-hook 'eshell-mode-hook #'+eshell-setup-bash-completion-h))
+
+(use-package fish-completion
+  :ensure t
+  :config (global-fish-completion-mode))
+
 ;; NOTE: dwim-shell-commad https://github.com/xenodium/dwim-shell-command
+
+;;;;;;;;;;
+;; repl ;;
+
+;; NOTE repl-toggle
+;; SPC t r
 
 ;;;;;;;;;;;;;;;
 ;;;; elisp ;;;;
@@ -1433,6 +1793,28 @@
 ;; NOTE: package-lint-flymake
 ;; NOTE: relint https://github.com/mattiase/relint
 
+;;;;;;;;;;;
+;;;; c ;;;;
+
+;; (setopt eglot-server-programs
+;; 	(nconc '(((c-mode c-ts-mode c++-mode c++-ts-mode)
+;; 		  . ("clangd"
+;; 		     ;; Performance
+;; 		     "-j=8"
+;; 		     "--background-index"
+;; 		     "--background-index-priority=normal"
+;; 		     "--pch-storage=memory"
+;; 		     ;; Formatting
+;; 		     "--fallback-style=Google"
+;; 		     ;; Completion
+;; 		     "--clang-tidy"
+;; 		     "--all-scopes-completion"
+;; 		     "--completion-style=detailed"
+;; 		     "--function-arg-placeholders"
+;; 		     "--header-insertion=never"
+;; 		     "--header-insertion-decorators")))
+;; 	       eglot-server-programs))
+
 ;;;;;;;;;;;;
 ;;;; go ;;;;
 
@@ -1445,13 +1827,35 @@
 ;;;; nix ;;;;
 
 (use-package nix-mode
-  :ensure t
-  :formatter
-  (alejandra . ("alejandra")) nix-mode)
+  ;; :formatter (alejandra . ("alejandra")) nix-mode
+  ;; :formatter (alejandra) nix-ts-mode
+  :ensure t)
 
 (use-package nix-ts-mode
   :ensure t
-  :formatter (alejandra) nix-ts-mode)
+  :formatter (nixfmt) nix-ts-mode
+  :init
+  (add-hook 'nix-ts-mode-hook #'eglot-ensure)
+  :config
+  (with-eval-after-load 'eglot
+    (when-let ((server (assoc 'nix-mode eglot-server-programs)))
+      (setcar server '(nix-mode nix-ts-mode))))
+  ;; (with-eval-after-load 'apheleia
+  ;; (cl-pushnew '((nix-mode nix-ts-mode) . nixfmt) apheleia-mode-alist :test #'equal))
+  (setopt
+   ;; eglot-server-programs
+   ;; (nconc '((((nix-mode :language-id "nix")
+   ;; 	      (nix-ts-mode :language-id "nix"))
+   ;; 	     . ("nixd")))
+   ;; 	  eglot-server-programs)
+   eglot-workspace-configuration
+   (nconc '((:nixd . (:nixpkgs (:expr "import <nixpkgs> { }") ;; "import (builtins.getFlake \"/PATH/TO/FLAKE\").inputs.nixpkgs { }"
+		      :formatting (:command ["nixfmt"])
+		      :options (:nixos (:expr "(builtins.getFlake \"/home/evermind/nix-dotfiles\").nixosConfigurations.nixos.options")
+				;; "(builtins.getFlake \"github.com:vimjoyer/nixconf\").nixosConfigurations.CONFIGNAME.options"
+				;; "(builtins.getFlake (\"git+file://\" + toString ./.)).nixosConfigurations.CONFIGNAME.options"
+				:home_manager (:expr "(builtins.getFlake \"/home/evermind/nix-dotfiles\").homeConfigurations.\"evermind@nixos\".options")))))
+	  eglot-workspace-configuration)))
 
 ;; NOTE: nix3.el https://github.com/emacs-twist/nix3.el
 
@@ -1532,7 +1936,9 @@
 
 (use-package org
   :xdg-state (org-id-locations-file ".org-id-locations")
-  :bind (org-mode-map "C-'" 'nil)
+  :bind
+  ((+org-prefix-map "c" #'org-capture)
+   (org-mode-map "C-'" 'nil))
   :init
   (setopt org-return-follows-link t
 	  org-startup-folded 'content
@@ -1565,22 +1971,25 @@
 ;; NOTE: org-modern-indent https://github.com/jdtsmith/org-modern-indent
 
 ;; TODO: org-gtd (tasks) https://github.com/Trevoke/org-gtd.el
+;; TODO: org-edna (next is wonky)
 (use-package org-gtd
   :ensure t
-  :diminish org-edna-mode
-  :after org
   :bind ((+org-prefix-map
-	  "c" #'org-gtd-capture
+	  "C-c" #'org-gtd-capture
 	  "e" #'org-gtd-engage
 	  "p" #'org-gtd-process-inbox)
 	 (org-gtd-clarify-map
 	  "C-c c" #'org-gtd-organize))
-  :init (setopt org-gtd-directory "~/OneDrive/zettelkasten/"
-		org-gtd-inbox "gtd-inbox"
-		org-edna-use-inheritance t
-		org-gtd-organize-hooks nil
-		org-gtd-update-ack "3.0.0")
-  :config (org-edna-mode))
+  :init
+  (setopt org-gtd-directory "~/OneDrive/zettelkasten/"
+	  org-edna-use-inheritance t
+	  org-gtd-organize-hooks nil
+	  org-gtd-update-ack "3.0.0")
+  :config
+  (org-edna-mode)
+  ;; these are defconst so i have to set them here instead
+  (setq org-gtd-inbox "inbox"
+	org-gtd-default-file-name "tasks"))
 
 ;; NOTE: doesn't work very well or well without corfu-auto
 (use-package corg
@@ -1595,6 +2004,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; org-agenda ;;;;
+
+(use-package org-agenda
+  :bind (+agenda-prefix-map
+	 "a" #'org-agenda))
 
 ;; TODO: org-super-agenda https://github.com/alphapapa/org-super-agenda
 ;; NOTE: org-caldav https://github.com/dengste/org-caldav
@@ -1668,15 +2081,15 @@
 (use-package denote
   :ensure t
   :bind (+notes-prefix-map
-	 "i" #'denote-link-or-create
 	 "d" #'+denote-dired-jump
-	 "k" #'denote-keywords-add
-	 "K" #'denote-keywords-remove
-	 "l" #'denote-find-link
-	 "L" #'denote-find-backlink
+	 "i" #'denote-link-or-create
+	 "l" #'denote-find-backlink
+	 "C-l" #'denote-find-link
 	 "n" #'denote
-	 "r" #'denote-rename-file
-	 "s" #'denote-rename-file-using-front-matter)
+	 "r" #'denote-rename-file-using-front-matter
+	 "C-r" #'denote-rename-file
+	 "t" #'denote-keywords-remove
+	 "C-t" #'denote-keywords-add)
   :init
   (setopt denote-directory (expand-file-name "~/OneDrive/zettelkasten/"))
   (defun +denote-dired-jump ()
@@ -1698,9 +2111,36 @@
 ;; NOTE: blk https://github.com/mahmoodsh36/blk
 ;; NOTE: denote-explore https://github.com/pprevos/denote-explore
 ;; NOTE: org-remark (is this better than org-zettel-ref-mode?) https://github.com/nobiot/org-remark
+(use-package org-remark
+  :ensure t
+  :bind ((+notes-prefix-map
+	  "]" #'org-remark-view-next
+	  "[" #'org-remark-view-prev
+	  "C-k" #'org-remark-remove
+	  "k" #'org-remark-delete
+	  "m" #'org-remark-mark-line
+	  "C-m" #'org-remark-mark
+	  "o" #'org-remark-open
+	  "C-o" #'org-remark-open))
+  :config
+  (use-package org-remark-info :after info :config (org-remark-info-mode +1))
+  (use-package org-remark-eww :after eww :config (org-remark-eww-mode +1))
+  (use-package org-remark-nov :after nov :config (org-remark-nov-mode +1))
+  (org-remark-global-tracking-mode)
+  (org-remark-create "red-line"
+		     '(:underline (:color "dark red" :style wave))
+		     '(CATEGORY "review" help-echo "Review this"))
+  (org-remark-create "yellow"
+		     '(:underline "gold" :background "lemon chiffon")
+		     '(CATEGORY "important"))
+  (org-remark-create "line-alt"
+		     'diff-hunk-header
+		     '(org-remark-type-line)))
+
 ;; NOTE: annotate https://github.com/bastibe/annotate.el
 
 (use-package org-noter
+  :disabled t
   :ensure t
   :bind (org-noter-doc-mode-map
 	 "M-h" #'org-noter-sync-next-note
@@ -1754,7 +2194,55 @@
 (use-package nov
   :ensure t
   :xdg-state (nov-save-place-file "nov-save-place.el")
-  :mode ("\\.[Ee][Pp][Uu][Bb]\\'" . nov-mode))
+  :bind ((nov-mode-map
+	  ;; TODO extract to meow-collection
+	  "y" #'meow-left
+	  "h" #'meow-next
+	  "a" #'meow-prev
+	  "e" #'meow-right
+	  "b" #'meow-back-word
+	  "B" #'meow-back-symbol
+	  "f" #'meow-find
+	  "j" #'meow-pop-selection
+	  "J" #'meow-reverse
+	  "m" #'+match-prefix-map
+	  "q" #'meow-quit
+	  "t" #'meow-till
+	  "v" #'meow-expand-mode
+	  "w" #'meow-next-word
+	  "W" #'meow-next-symbol
+	  "x" #'meow-line
+	  "X" #'+meow-expand-line-end
+	  "-" #'negative-argument
+	  ";" #'repeat
+	  "<escape>" #'meow-cancel-selection
+	  ;;;;;;;;;;;;;
+	  "SPC" nil ;; #'nov-scroll-up pages down
+	  "DEL" nil ;; #'nov-scroll-down pages up
+	  "C-u" #'nov-scroll-down ;; can i somehow scroll only half the screen?
+	  "C-d" #'nov-scroll-up
+	  "C-i" #'nov-history-forward
+	  "C-o" #'nov-history-back
+	  "C-t" #'nov-history-backward
+	  "l" nil ;; #'nov-history-backward
+	  "r" nil ;; #'nov-history-forward
+	  "[" #'nov-previous-document ;; prev chapter
+	  "]" #'nov-next-document ;; next chapter
+	  "p" nil ;; #'nov-previous-document
+	  "n" nil ;; #'nov-next-document
+	  "d" #'nov-goto-toc ;; (t)
+	  "i" #'nov-goto-toc ;; (t)
+	  "C" #'nov-view-content-source ;; (V)
+	  "c" #'nov-view-source ;; (v)
+	  "A" #'nov-reopen-as-archive ;; (a)
+	  "?" #'nov-display-metadata ;; (m) 
+	  "g" #'nov-render-document))
+  :init
+  ;; Activate nov-mode for epub files
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+  ;; Implement more flexible text filling?
+  (setq nov-text-width 80)
+  (add-hook 'nov-mode-hook #'virtual-auto-fill-mode))
 
 (use-package djvu :ensure t)
 
