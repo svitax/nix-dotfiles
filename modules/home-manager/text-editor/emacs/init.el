@@ -2707,8 +2707,8 @@ Limit list of buffers to those matching the current
      "^\\*term.*\\*$"
      "^\\*vterm.*\\*$"
      ;; VC buffers
-     "^magit-diff:.*$"
-     "^magit-process:.*$"
+     ;; "^magit-diff:.*$"
+     ;; "^magit-process:.*$"
      ;; Others
      "^\\*.*scratch\\*$"))
   (auto-side-windows-right-buffer-modes
@@ -2736,8 +2736,9 @@ Limit list of buffers to those matching the current
      ;; VC buffers
      ;; magit-status-mode
      ;; magit-log-mode
-     magit-diff-mode
-     magit-process-mode))
+     ;; magit-diff-mode
+     ;; magit-process-mode
+     ))
 
   ;; Example: Custom parameters for top windows (e.g., fit height to buffer)
   ;; (auto-side-windows-top-alist '((window-height . fit-window-to-buffer)))
