@@ -1,0 +1,20 @@
+* User
+evermind
+* Hosts
+** erasmus
+dev workstation (currently velka 7)
+in the future will be local ai/llm compute + gaming server
+** xerxes
+retired velka 7 workstation (unless i use most of its parts for tachyon)
+** tachyon
+server and nas
+proxmox or nixos proxmox
+truenas vm for storage
+** ajax
+dns and vpn server, always online (zima board? pi? or mini pc?)
+pihole + gravitysink. possibly muitiple instances with load balancing with keepalived
+tailscale or wireguard
+** vesta
+home assistant
+** juno
+tv media center (apple tv?)

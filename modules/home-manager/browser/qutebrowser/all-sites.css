@@ -1,0 +1,12 @@
+/* * { font-family: "Aporetic Sans", "Noto Sans", "Noto Color Emoji" !important; } */
+
+* {
+    font-family: "Aporetic Sans", sans-serif !important;
+}
+@font-face {
+    font-family: "EmojiFont";
+    src: local("Noto Color Emoji");
+}
+.emoji {
+    font-family: "EmojiFont", sans-serif !important;
+}
