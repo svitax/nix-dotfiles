@@ -8297,7 +8297,7 @@ from local browser. It also cleans LeetCode cookies in `url-cookie-file'."
 
 ;; TODO a minor mode that activates and deactivates icons
 
-(defcustom +emacs-load-icons t
+(defcustom +emacs-load-icons nil
   "When non-nil, enable iconography in various contexts.
 This installs and uses the `nerd-icons' package and its variants.
 NOTE that you still need to invoke `nerd-icons-install-fonts'
