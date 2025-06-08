@@ -1,7 +1,7 @@
 { inputs, ... }:
-let
-  inherit (inputs.self) outputs;
-in
+# let
+#   inherit (inputs.self) outputs;
+# in
 {
   imports = [
     ../hosts

@@ -92,7 +92,6 @@ rec {
     # neovim = ./editor/neovim;
   };
 
-
   wallpaper = {
     # NOTE: swww (animated wallpapers) https://github.com/LGFae/swww
   };

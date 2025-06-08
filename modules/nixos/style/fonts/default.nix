@@ -32,8 +32,14 @@ in
       enable = true;
       # useEmbeddedBitmaps = true;
       defaultFonts = {
-        serif = [ "Aporetic Serif" "M PLUS 1" ];
-        sansSerif = [ "Aporetic Sans" "M PLUS 1" ];
+        serif = [
+          "Aporetic Serif"
+          "M PLUS 1"
+        ];
+        sansSerif = [
+          "Aporetic Sans"
+          "M PLUS 1"
+        ];
         monospace = [ "Aporetic Sans Mono" ];
       };
     };

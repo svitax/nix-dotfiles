@@ -8,7 +8,7 @@ let
   isDirectory = name: (builtins.getAttr name (builtins.readDir templatesDir)) == "directory";
 
   mkTemplate = name: {
-    name = name;
+    inherit name;
     value = {
       path = templatesDir + "/${name}";
       description = "";

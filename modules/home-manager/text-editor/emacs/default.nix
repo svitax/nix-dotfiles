@@ -7,7 +7,6 @@
 }:
 let
   inherit (lib) mkEnableOption mkOption types;
-  inherit (inputs.self) outputs;
 
   cfg = config.text-editor.emacs;
 
@@ -21,7 +20,10 @@ let
     builtins.mapAttrs (
       _name: type:
       if type == "directory" && builtins.pathExists (lispDir + "/${_name}/default.nix") then
-        import (lispDir + "/${_name}") { inherit lib pkgs; epkgs = epkgs; }
+        import (lispDir + "/${_name}") {
+          inherit lib pkgs;
+          inherit epkgs;
+        }
       else
         null
     ) (builtins.readDir lispDir)
@@ -61,15 +63,15 @@ in
         ];
 
         home.packages = with pkgs; [
-          alejandra
           difftastic # for difftastic.el
           unzip # for nov.el
           emacs-lsp-booster
           single-file-cli
           chromium # need chromium to use single-file-cli
           # monolith
-          # `jinx' cant seem to find aspell dictionaries. hunspell seems to
-          # work better, but we need to override libenchant to not use aspell or hspell.
+          # `jinx' cant seem to find aspell dictionaries. hunspell
+          # seems to work better, but we need to override libenchant
+          # to not use aspell or hspell.
           hunspellDicts.en-us
           hunspellDicts.pt-br
           hunspellDicts.es-ar
@@ -82,8 +84,8 @@ in
         programs.emacs = {
           enable = true;
           # package = pkgs.emacs-unstable;
-          package = cfg.package;
-          extraPackages = (
+          inherit (cfg) package;
+          extraPackages =
             _:
             with epkgs;
             [
@@ -160,8 +162,7 @@ in
               nerd-icons-dired
               nerd-icons-ibuffer
             ]
-            ++ lispPackages
-          );
+            ++ lispPackages;
         };
 
         services.emacs = with pkgs; {

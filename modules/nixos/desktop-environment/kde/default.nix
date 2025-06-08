@@ -18,7 +18,7 @@ in
     services.xserver.enable = true;
 
     # Enable the KDE Plasma Desktop Environment.
-    services.displayManager.sddm.enable = true;  # TODO extract displayManager config into module
+    services.displayManager.sddm.enable = true; # TODO extract displayManager config into module
     services.desktopManager.plasma6.enable = true;
 
     # Configure keymap in X11

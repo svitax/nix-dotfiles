@@ -1,5 +1,5 @@
 {
-     description = "evrmnd configuration";
+  description = "evrmnd configuration";
 
   outputs =
     inputs@{ flake-parts, ... }:

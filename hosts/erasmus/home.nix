@@ -1,6 +1,5 @@
 {
   pkgs,
-  inputs,
   outputs,
   ...
 }:
@@ -31,9 +30,9 @@
   };
 
   # desktop = {
-    # firefox.enable = true;
-    # foot.enable = true;
-    # rofi.enable = true;
+  # firefox.enable = true;
+  # foot.enable = true;
+  # rofi.enable = true;
   # };
 
   graphical = {
