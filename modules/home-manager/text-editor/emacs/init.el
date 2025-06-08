@@ -1840,7 +1840,7 @@ first one. Else do `vertico-exit'."
   (setopt vertico-multiform-categories `(;; Maximal
                                          (embark-keybinding
                                           ,@+vertico-multiform-maximal)
-                                         (imenu
+                                         (citar-candidate
                                           ,@+vertico-multiform-maximal)
                                          ;; (jinx grid (vertico-grid-annotate . 20))
                                          ;; Minimal
