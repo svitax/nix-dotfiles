@@ -5788,7 +5788,6 @@ region is active."
 (use-package nix-ts-mode
   :mode "\\.nix\\'"
   :lsp-hook nix-ts-mode
-  :format (alejandra . ("alejandra")) nix-ts-mode
   :config
   (define-derived-mode nix-mode nix-ts-mode "Nix"))
 
