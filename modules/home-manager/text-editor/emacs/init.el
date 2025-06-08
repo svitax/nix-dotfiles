@@ -2684,7 +2684,7 @@ Limit list of buffers to those matching the current
      ;; VC buffers
      "^COMMIT_EDITMSG$"
      ;; Org buffers
-     "^\\*Org Agenda\\*$"
+     ;; "^\\*Org Agenda\\*$"
      "^\\*Org Src.*\\$"
      "^\\*Org Select\\*$"
      "^\\*Org-Babel Error Output\\*"
