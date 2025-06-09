@@ -2713,8 +2713,8 @@ Limit list of buffers to those matching the current
      "^\\*term.*\\*$"
      "^\\*vterm.*\\*$"
      ;; VC buffers
-     ;; "^magit-diff:.*$"
-     ;; "^magit-process:.*$"
+     "^magit-diff:.*$"
+     "^magit-process:.*$"
      ;; Others
      "^\\*.*scratch\\*$"))
   (auto-side-windows-right-buffer-modes
@@ -2740,10 +2740,10 @@ Limit list of buffers to those matching the current
      grep-mode
      xref--xref-buffer-mode
      ;; VC buffers
-     ;; magit-status-mode
-     ;; magit-log-mode
-     ;; magit-diff-mode
-     ;; magit-process-mode
+     magit-status-mode
+     magit-log-mode
+     magit-diff-mode
+     magit-process-mode
      ))
 
   ;; Example: Custom parameters for top windows (e.g., fit height to buffer)
@@ -4966,13 +4966,9 @@ Interactively also sends a terminating newline."
         ;; exceed the limit, it is for a good reason.
         git-commit-style-convention-checks '(non-empty-second-line))
 
-  ;; (setopt magit-diff-refine-hunk t
-  ;;         magit-display-buffer-function #'display-buffer
-  ;;         magit-commit-diff-inhibit-same-window t)
-
   (setopt magit-diff-refine-hunk t
-          magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
-          magit-commit-diff-inhibit-same-window nil)
+          magit-display-buffer-function #'display-buffer
+          magit-commit-diff-inhibit-same-window t)
 
   (bind-keys
    :map +prefix-map
