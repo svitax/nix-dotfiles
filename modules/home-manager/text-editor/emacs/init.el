@@ -5536,6 +5536,28 @@ If no shell is running, execute `+shell' to start a fresh one."
                  (call-interactively '+project-shell))))
       (+shell--maybe-remember-buffer buffer)))
 
+  (defun +shell-command-at-line (&optional prefix)
+    "Run contents of line around point as a shell command and
+replace the line with output. With a prefix argument, append the
+output instead."
+    (interactive "P")
+    (let ((command
+           (if (use-region-p)
+               (buffer-substring-no-properties
+                (region-beginning)
+                (region-end))
+             (thing-at-point 'line))))
+      (cond ((use-region-p)
+             (call-interactively #'delete-region))
+            ((null prefix)
+             (kill-whole-line)
+             (indent-according-to-mode))
+            (t (newline-and-indent)))
+      (insert (string-trim
+               (ansi-color-apply
+                (shell-command-to-string command))))
+      (exchange-point-and-mark)))
+
   ;;;; Minor mode setup
 
   (defvar-keymap +shell-mode-map
@@ -5589,7 +5611,9 @@ Add a bookmark handler for shell buffer and activate the
             ("^[^ \t\n]+:.*" . font-lock-string-face)
             ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face)))
 
-  (bind-keys :map +prefix-map
+  (bind-keys :map global-map
+             ("C-!" . +shell-command-at-line)
+             :map +prefix-map
              ("C-z" . +shell-switch)
              ("RET" . +shell-home)
              :map +project-prefix-map
