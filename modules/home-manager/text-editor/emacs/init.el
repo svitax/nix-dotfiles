@@ -3443,6 +3443,8 @@ narrowed."
      (save-excursion (up-list -1 t t) (point))
      (save-excursion (up-list +1 t t) (point))))
 
+  (put 'narrow-to-page 'disabled nil)
+
   (bind-keys
    :map global-map
    ("C-c n" . +narrow-prefix-map)
@@ -3454,7 +3456,14 @@ narrowed."
    ("l" . +narrow-to-sexp) ; alias for Org mode
    ("p" . narrow-to-page)
    ("s" . +narrow-to-sexp)
-   ("w" . widen)))
+   ("w" . widen))
+
+  (eval-after-load 'org
+    (bind-keys
+     :map +narrow-prefix-map
+     ("b" . org-narrow-to-block)
+     ("e" . org-narrow-to-element)
+     ("s" . org-narrow-to-subtree))))
 
 (use-package goto-chg
   ;; The `goto-chg' package, authored by David Andersson and maintained by
