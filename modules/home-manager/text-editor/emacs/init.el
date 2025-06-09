@@ -2514,7 +2514,8 @@ Limit list of buffers to those matching the current
    :map global-map
    ;; TODO put all s-* keybinds into sxhkd
    ("M-o" . other-window) ; `s-o' if i'm using exwm?
-   ;; ("M-r" . rotate-windows) ; Emacs 31 override `move-to-window-line-top-bottom'
+   ("M-r" . +window-toggle-split)
+   ;; ("M-r" . window-layout-transpose) ; Emacs 31 override `move-to-window-line-top-bottom'
    ;; ("M-S-r" . rotate-windows-back) ; Emacs 31
    ("s-y" . windmove-left)
    ("s-h" . windmove-down)
@@ -2538,7 +2539,7 @@ Limit list of buffers to those matching the current
    ("$" . window-toggle-side-windows)
    ("5" . ctl-x-5-prefix)
    ("%" . toggle-window-dedicated)
-   ("6" . +window-toggle-split)
+   ;; ("6" . )
    ;; ("^" . tear-off-window) ; ^ should be tear or detach
    ;; ("7" . )
    ("+" . balance-windows-area)
