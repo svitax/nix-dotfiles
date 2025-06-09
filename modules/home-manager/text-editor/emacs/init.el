@@ -6071,7 +6071,6 @@ written in lower case and ignore casing while spell-checking."
           jinx--predicates))
     (jinx-mode 1))
 
-  (add-hook 'text-mode-hook #'jinx-mode)
   ;; There is a specific category of errors for with `jinx' cannot help:
   ;; duplicate words. When quickly rephrasing a sentence or adjusting a
   ;; paragraph it could happen that I do not pay enough attention to the words I
