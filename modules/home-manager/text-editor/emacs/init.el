@@ -4970,6 +4970,12 @@ Interactively also sends a terminating newline."
 ;; derivation to the INFOPATH. envrc also changes the INFOPATH
 (use-package info)
 
+;; TODO document man
+(use-package man
+  :config
+  (bind-keys :map help-map
+             ("C-." . man)))
+
 ;; (use-package devdocs)
 
 ;; (use-package rfc-mode)
@@ -5621,7 +5627,6 @@ Add a bookmark handler for shell buffer and activate the
              :map shell-mode-map
              ("C-c C-k" . comint-clear-buffer)
              ("C-c C-w" . comint-write-output)
-             ("C-h C-." . man)
              :map comint-mode-map
              ("C-c C-q" . +kill-this-buffer)))
 
