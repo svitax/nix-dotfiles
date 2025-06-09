@@ -5543,6 +5543,8 @@ if one already exists."
              :map +project-prefix-map
              ("C-<return>" . +project-vterm)))
 
+(use-package mistty)
+
 ;;;;;;;;;;;;;;
 ;;;; prog ;;;;
 

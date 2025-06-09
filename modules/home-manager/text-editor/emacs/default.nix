@@ -133,6 +133,7 @@ in
               git-gutter
               git-gutter-fringe
               vterm
+              mistty
               nix-ts-mode
               # templ-ts-mode
               dts-mode
