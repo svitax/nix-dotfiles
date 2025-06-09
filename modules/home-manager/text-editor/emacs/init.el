@@ -4501,10 +4501,8 @@ The parameter ARGS is explained in the `use-package' documentation."
 The parameters NAME, ARGS, REST, and STATE are explained in the
 `use-package' documentation."
     (let (eval-forms)
-      (message "normalized args: %S" args)
       (when args
         (dolist (entry args)
-          (message "entry: %S" entry)
           (push `(setq-default eglot-workspace-configuration
                   (append eglot-workspace-configuration
                    '(,entry)))
