@@ -3693,13 +3693,11 @@ Optional ARG is a numeric prefix to match ARGth occurrence of CHAR."
 Used by `+insert-date'."
     :type 'string
     :group 'simple)
-
   (defcustom +time-specifier "%R %z"
     "Time specifier for `format-time-string'.
 Used by `insert-date'."
     :type 'string
     :group 'simple)
-
   (defun +insert-date (&optional arg)
     "Insert the current date as `+date-specifier'.
 
@@ -3831,6 +3829,7 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    ("C-{" . pop-to-mark-command)
    ("C-}" . +unpop-to-mark-command)
 
+   ;; Escape urls and insert dates
    ("C-<" . +escape-url-dwim)
    ("C-=" . +insert-date)
 
