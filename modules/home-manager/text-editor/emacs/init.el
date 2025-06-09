@@ -7060,6 +7060,12 @@ continue, per `org-agenda-skip-function'."
 
   ;; TODO (setopt org-agenda-format-date #'+org-agenda-format-date-aligned) (from prot)
 
+  (defun +org-agenda-set-outline ()
+    "Set `outline-regexp' for my Org agenda buffers."
+    (when (derived-mode-p 'org-agenda-mode)
+      (setq-local outline-regexp "\\(^[ \t]+\\([A-Z]+ \\|[0-9]+:[0-9]+ \\)\\)\\|\\(^[A-Z][^ \t].*\\)")))
+  (add-hook 'org-agenda-mode-hook #'+org-agenda-set-outline)
+
   (defun +org-agenda-custom ()
     "Call Org agenda with my custom daily agenda configuration."
     (interactive)
