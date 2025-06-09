@@ -1776,6 +1776,10 @@ automatically.")
     '((vertico-count . 10)
       (vertico-preselect . directory))
     "List of configurations for maximal Vertico multiform.")
+  (defvar +vertico-multiform-grid
+    '(grid
+      (vertico-grid-annotate . 20))
+    "List of configurations for grid Vertico multiform.")
   (defun +vertico--match-directory (str)
     "Match directory delimiter in STR."
     (string-suffix-p "/" str))
@@ -1842,7 +1846,9 @@ first one. Else do `vertico-exit'."
                                           ,@+vertico-multiform-maximal)
                                          (citar-candidate
                                           ,@+vertico-multiform-maximal)
-                                         ;; (jinx grid (vertico-grid-annotate . 20))
+                                         ;; Grid
+                                         (jinx
+                                          ,@+vertico-multiform-grid)
                                          ;; Minimal
                                          (file
                                           ,@+vertico-multiform-minimal
