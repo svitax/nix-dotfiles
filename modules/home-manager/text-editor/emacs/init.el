@@ -1778,7 +1778,8 @@ automatically.")
     "List of configurations for maximal Vertico multiform.")
   (defvar +vertico-multiform-grid
     '(grid
-      (vertico-grid-annotate . 20))
+      (vertico-grid-annotate . 20)
+      (vertico-count . 4))
     "List of configurations for grid Vertico multiform.")
   (defun +vertico--match-directory (str)
     "Match directory delimiter in STR."
