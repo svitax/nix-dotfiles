@@ -3769,11 +3769,21 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
         (+escape-url-region (region-beginning) (region-end))
       (+escape-url-line (line-beginning-position))))
 
-  ;; TODO I would rather replace this with something like dogears.el
-  ;; Make Emacs repeat the C-u C-SPC command (`set-mark-command') by
+  ;; Make Emacs repeat the C-u C-SPC command (`pop-to-mark-command') by
   ;; following it up with another C-SPC. It is faster to type C-u
   ;; C-SPC, C-SPC, C-SPC, than C-u C-SPC, C-u C-SPC, C-u C-SPC...
   (setopt set-mark-command-repeat-pop t)
+
+  ;; Do the reverse of C-u C-SPC (`pop-to-mark-command')
+  (defun +unpop-to-mark-command ()
+    "Unpop off mark ring. Does nothing if mark ring is empty."
+    (interactive)
+    (when mark-ring
+      (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+      (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
+      (when (null (mark t)) (ding))
+      (setq mark-ring (nbutlast mark-ring))
+      (goto-char (marker-position (car (last mark-ring))))))
 
   (bind-keys
    :map global-map
@@ -3813,6 +3823,13 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    ("C-z" . zap-up-to-char) ; Complements `M-z' for zap-to-char
    ("C-Z" . +zap-up-to-char-backward)
    ("M-Z" . +zap-to-char-backward)
+
+   ;; TODO I would rather replace this with something like dogears or
+   ;; better-jumper
+   ;;
+   ;; Pop and unpop to mark command.
+   ("C-{" . pop-to-mark-command)
+   ("C-}" . +unpop-to-mark-command)
 
    ("C-<" . +escape-url-dwim)
    ("C-=" . +insert-date)
