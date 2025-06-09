@@ -4986,11 +4986,29 @@ Interactively also sends a terminating newline."
               (add-hook 'with-editor-post-cancel-hook
                         #'+magit-kill-diff-buffer-in-current-repo nil t)))
 
+  ;; Magit has a penchant for open buffers. Jonas Bernoulli already explained
+  ;; the reasoning behind this behavior.
+  ;; <https://github.com/magit/magit/issues/2124#issuecomment-125987469>.
+  ;;
+  ;; But he also suggested a solution to clean up Magit-related buffers when the
+  ;; work is done. This function collects the available Magit buffers, then
+  ;; restores the window configuration as it was before calling `magit-status',
+  ;; and finally applies `kill-buffer' on the buffers previously collected.
+  (defun +magit-kill-buffers ()
+    "Restore window configuration and kill all Magit buffers."
+    (interactive)
+    (let ((buffers (magit-mode-get-buffers)))
+      (magit-restore-window-configuration)
+      (mapc #'kill-buffer buffers)))
+
   (bind-keys
    :map +prefix-map
    ("v" . magit-status)
    :map +project-prefix-map
-   ("v" . magit-project-status)))
+   ("v" . magit-project-status)
+   :map magit-status-mode-map
+   ;; Apply our +magit-kill-buffers command only in magit-status
+   ("q" . +magit-kill-buffers)))
 
 (use-package diff
   :config
