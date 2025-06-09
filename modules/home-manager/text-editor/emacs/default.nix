@@ -120,6 +120,7 @@ in
               # popper
               avy
               ace-link
+              logos
               mowie
               move-text
               expand-region

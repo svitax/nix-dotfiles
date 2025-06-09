@@ -3311,10 +3311,38 @@ end of the buffer.")
   (bind-keys ("M-e" . forward-paragraph)
              ("M-a" . backward-paragraph)))
 
-;; TODO document logos
 (use-package logos
+  ;; This package provides a simple approach to setting up a "focus mode". It
+  ;; uses the `page-delimiter' (typicall `^L') or the outline together with some
+  ;; commands to move between pages whether narrowing is in effect or not. It
+  ;; also provides some optional aesthetic tweaks which come into effect when
+  ;; the buffer-local `logos-focus-mode' is enabled. The manual shows how to
+  ;; extend the code to achieve the desired result.
+  ;;
+  ;; I use `logos' to do video presentations that involve "slides". Each
+  ;; heading/section becomes its own "slide" simply by narrowing to it.
   :no-require
+  :config
+  (setopt logos-outlines-are-pages t
+          logos-outline-regexp-alist
+          `((emacs-lisp-mode . ,(format "\\(^;;;+ \\|%s\\)" logos-page-delimiter))
+            (org-mode . ,(format "\\(^\\*+ +\\|^-\\{5\\}$\\|%s\\)" logos-page-delimiter))
+            (markdown-mode . ,(format "\\(^\\#+ +\\|^[*-]\\{5\\}$\\|^\\* \\* \\*$\\|%s\\)" logos-page-delimiter))
+            (conf-toml-mode . "^\\[")))
+
+  ;; Place point at the top when changing pages, but not in `prog-mode'.
+  (defun +logos--recenter-top ()
+    "Use `recenter' to reposition the view at the top."
+    (unless (derived-mode-p 'prog-mode)
+      (recenter 1))) ; Use 0 for the absolute top
+  (add-hook 'logos-page-motion-hook #'+logos--recenter-top)
+
   (bind-keys
+   :map global-map
+   ("M-e" . logos-forward-page-dwim)
+   ("M-a" . logos-backward-page-dwim)
+   :map +narrow-prefix-map
+   ("p" . logos-narrow-dwim)
    :map +prefix-map
    ("C-n" . forward-page)
    ("C-p" . backward-page)))
