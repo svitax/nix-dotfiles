@@ -6037,8 +6037,9 @@ region is active."
 ;;;; spelling ;;;;
 
 (use-package jinx
-  ;; For spell checking on demand, I rely on the `jinx' package by Daniel Mendler.
-
+  ;; For spell checking on demand, I rely on the `jinx' package by Daniel
+  ;; Mendler.
+  ;;
   ;; In terms of workflow, I do not like to see any spell checking while I
   ;; type. I prefer to write out the entire draft and then do a spell check at
   ;; the end. Whatever typos there are do not bother me. (this is the "alla
@@ -6071,9 +6072,26 @@ written in lower case and ignore casing while spell-checking."
     (jinx-mode 1))
 
   (add-hook 'text-mode-hook #'jinx-mode)
+  ;; There is a specific category of errors for with `jinx' cannot help:
+  ;; duplicate words. When quickly rephrasing a sentence or adjusting a
+  ;; paragraph it could happen that I do not pay enough attention to the words I
+  ;; remove and so I keep typing with to care whatsoever.
+  ;; the the
+  ;; I want a command that scans the buffer, finds consecutive occurrences of
+  ;; the same word, and removes all but one of them.
+  (defun +delete-duplicate-words ()
+    "Delete duplicate words via `query-replace-regexp'."
+    (interactive nil text-mode)
+    (save-excursion
+      (if (region-active-p)
+          (query-replace-regexp "\\(\\b\\w+\\b\\)\\W+\\1\\b" "\\1" nil
+                                (region-beginning) (region-end))
+        (query-replace-regexp "\\(\\b\\w+\\b\\)\\W+\\1\\b" "\\1" nil
+                              (point-min) (point-max)))))
 
   (bind-keys
    :map global-map
+   ("C-$" . +delete-duplicate-words)
    ("M-$" . jinx-correct)
    ("C-M-$" . jinx-languages)
    :map +toggle-prefix-map
