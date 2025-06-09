@@ -4162,6 +4162,13 @@ back to regular `er/expand-region'"
   (defvar-keymap mc-mark-map
     :doc "multiple-cursors mark map."
     :prefix 'mc-mark-map)
+  (defvar-keymap mc-mark-repeat-map
+    :repeat (:hints ((mc/mark-next-like-this-symbol . "next")
+                     (mc/mark-previous-like-this-symbol . "prev")
+                     (mc/mark-next-lines . "next line")
+                     (mc/mark-previous-lines . "prev line")
+                     (mc/skip-to-next-like-this . "skip next")
+                     (mc/skip-to-previous-like-this . "skip prev"))))
   (bind-keys
    :map global-map
    ("C-'" . mc-mark-map) ; C-c m
