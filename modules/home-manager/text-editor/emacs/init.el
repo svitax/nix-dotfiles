@@ -3428,7 +3428,15 @@ narrowed."
    ("s" . +narrow-to-sexp)
    ("w" . widen)))
 
-;; (use-package goto-chg)
+(use-package goto-chg
+  ;; The `goto-chg' package, authored by David Andersson and maintained by
+  ;; Vasilij Scheidermann, moves the cursor to the point where the last change
+  ;; happenend. Calling the command again cycles to the point before that and so
+  ;; on. Simple and super effective.
+  :config
+  (bind-keys
+   ("C-(" . goto-last-change)
+   ("C-)" . goto-last-change-reverse)))
 
 ;; (use-package poi) ;; or better-jumper
 
@@ -3950,16 +3958,6 @@ Meant to be assigned to a prefix key, like this:
    ("C-c r" . substitute-prefix-map)
    :map isearch-mode-map
    ("C-c r" . +substitute-from-isearch-prefix-map)))
-
-(use-package goto-chg
-  ;; The `goto-chg' package, authored by David Andersson and maintained by
-  ;; Vasilij Scheidermann, moves the cursor to the point where the last change
-  ;; happenend. Calling the command again cycles to the point before that and so
-  ;; on. Simple and super effective.
-  :config
-  (bind-keys
-   ("C-(" . goto-last-change)
-   ("C-)" . goto-last-change-reverse)))
 
 (use-package scratch
   :no-require
