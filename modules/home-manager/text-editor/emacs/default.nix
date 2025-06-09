@@ -89,8 +89,8 @@ in
             _:
             with epkgs;
             [
-              evil
-              meow
+              # evil
+              # meow
               fontaine
               modus-themes
               ef-themes
@@ -116,14 +116,14 @@ in
               # projection
               substitute
               dired-preview
-              popper
+              # popper
               avy
               ace-link
               mowie
               move-text
               expand-region
               multiple-cursors
-              vundo
+              # vundo
               flymake-collection
               apheleia
               treesit-grammars.with-all-grammars
@@ -155,7 +155,7 @@ in
               elpher
               # erc-hl-nicks
               # leetcode
-              gptel
+              # gptel
               nerd-icons
               nerd-icons-completion
               nerd-icons-corfu
