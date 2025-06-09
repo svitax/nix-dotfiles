@@ -3783,6 +3783,19 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
       (setq mark-ring (nbutlast mark-ring))
       (goto-char (marker-position (car (last mark-ring))))))
 
+  ;; C-x C-c does the usual killing, whereas C-u C-x C-c restarts the Emacs
+  ;; systemd service. This will come in handy when I switch Home Manager
+  ;; profiles because I tend to restart Emacs after that and being able to do it
+  ;; quickly is a great thing.
+  (defun +restart-emacs ()
+    (shell-command "systemctl --user restart emacs.service"))
+  (defun +kill-terminal-or-restart (&optional restart)
+    "Quit emacsclient or restart it with RESTART."
+    (interactive "P")
+    (if restart
+        (+restart-emacs)
+      (save-buffers-kill-terminal)))
+
   (bind-keys
    :map global-map
    ("C-w" . +kill-region)
@@ -3837,7 +3850,10 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    ;; toggles line wise commenting instead of appending them by default.
    ("M-;" . +comment-line-dwim)
    ("C-M-;" . +comment-sexp-dwim)
-   ("s-;" . +comment-sexp-dwim)))
+   ("s-;" . +comment-sexp-dwim)
+
+   :map +prefix-map
+   ("C-c" . +kill-terminal-or-restart)))
 
 (use-package substitute
   ;; I use `substitute' to efficiently replace targets in the buffer or
