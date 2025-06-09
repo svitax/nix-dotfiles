@@ -1417,8 +1417,8 @@ Add this to `dired-mode-hook'."
    ("i" . +dired-insert-subdir) ; override `dired-maybe-insert-subdir'
    ("l" . dired-up-directory)
    ("/" . +dired-limit-regexp)
-   ("M-n" . +dired-subdirectory-next)
-   ("M-p" . +dired-subdirectory-previous)
+   ("M-e" . +dired-subdirectory-next)
+   ("M-a" . +dired-subdirectory-previous)
    ("C-c C-n" . +dired-subdirectory-next)
    ("C-c C-p" . +dired-subdirectory-previous)
    ("C-c C-l" . +dired-limit-regexp)
@@ -2327,8 +2327,8 @@ together."
   ;; (cape-super-capf #'elisp-completion-at-point #'tempel-complete)
   (bind-keys :map tempel-map
              ("C-g" . tempel-done)
-             ("M-n" . tempel-next)
-             ("M-p" . tempel-previous)))
+             ("M-e" . tempel-next)
+             ("M-a" . tempel-previous)))
 
 ;; TODO document tempel-collection
 (use-package tempel-collection)
@@ -3308,8 +3308,8 @@ end of the buffer.")
                     org-backward-paragraph))
       (add-to-list 'pulsar-pulse-functions func)))
 
-  (bind-keys ("M-n" . forward-paragraph)
-             ("M-p" . backward-paragraph)))
+  (bind-keys ("M-e" . forward-paragraph)
+             ("M-a" . backward-paragraph)))
 
 ;; TODO document logos
 (use-package logos
