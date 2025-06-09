@@ -3313,7 +3313,7 @@ end of the buffer.")
 
 (use-package logos
   ;; This package provides a simple approach to setting up a "focus mode". It
-  ;; uses the `page-delimiter' (typicall `^L') or the outline together with some
+  ;; uses the `page-delimiter' (typically `^L') or the outline together with some
   ;; commands to move between pages whether narrowing is in effect or not. It
   ;; also provides some optional aesthetic tweaks which come into effect when
   ;; the buffer-local `logos-focus-mode' is enabled. The manual shows how to
@@ -3321,7 +3321,6 @@ end of the buffer.")
   ;;
   ;; I use `logos' to do video presentations that involve "slides". Each
   ;; heading/section becomes its own "slide" simply by narrowing to it.
-  :no-require
   :config
   (setopt logos-outlines-are-pages t
           logos-outline-regexp-alist
