@@ -7034,7 +7034,10 @@ continue, per `org-agenda-skip-function'."
    :map +prefix-map
    ;; NOTE replaced abbrev maps, find somewhere to relocate them later
    ("a" . +org-agenda-custom)
-   ("C-a" . org-agenda)))
+   ("C-a" . org-agenda)
+   :map org-agenda-mode-map
+   ("n" . org-agenda-next-item)
+   ("p" . org-agenda-previous-item)))
 
 ;; TODO make my org-mode look like this (mainly the utf-8? headline stars and src block):
 ;; https://raw.githubusercontent.com/jxq0/org-tidy/main/screenshot.png
