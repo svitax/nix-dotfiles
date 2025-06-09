@@ -4973,6 +4973,19 @@ Interactively also sends a terminating newline."
           magit-display-buffer-function #'display-buffer
           magit-commit-diff-inhibit-same-window t)
 
+  ;; When 'C-c C-c' or 'C-c C-k' are pressed in the Magit commit message buffer,
+  ;; delete the magit-diff buffer related to the current repo.
+  (defun +magit-kill-diff-buffer-in-current-repo (&rest _)
+    "Kill the `magit-diff-mode' buffers related to the current repository."
+    (let ((magit-diff-buffer-in-current-repo (magit-get-mode-buffer 'magit-diff-mode)))
+      (kill-buffer magit-diff-buffer-in-current-repo)))
+  (add-hook 'git-commit-setup-hook
+            (lambda ()
+              (add-hook 'with-editor-post-finish-hook
+                        #'+magit-kill-diff-buffer-in-current-repo nil t)
+              (add-hook 'with-editor-post-cancel-hook
+                        #'+magit-kill-diff-buffer-in-current-repo nil t)))
+
   (bind-keys
    :map +prefix-map
    ("v" . magit-status)
