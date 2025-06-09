@@ -115,6 +115,7 @@ in
               eglot-tempel
               # projection
               substitute
+              goto-chg
               dired-preview
               # popper
               avy
