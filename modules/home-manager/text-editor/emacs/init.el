@@ -1875,6 +1875,10 @@ first one. Else do `vertico-exit'."
     ;; keep only your current input.
     (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy))
 
+  ;; Setup vertico-repeat
+  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
+  (add-to-list 'savehist-additional-variables 'vertico-repeat-history)
+
   (bind-keys :map vertico-map
              ("TAB" . +vertico-minimal-complete)
              ("DEL" . vertico-directory-delete-char)
@@ -1895,7 +1899,9 @@ first one. Else do `vertico-exit'."
              ("RET" . +vertico-minimal-exit)
              ("<return>" . +vertico-minimal-exit)
              ("M-a" . vertico-previous-group)
-             ("M-e" . vertico-next-group)))
+             ("M-e" . vertico-next-group)
+             :map +prefix-map
+             ("z" . vertico-repeat)))
 
 (use-package consult
   ;; Provides a number of commands that turbocharge the minibuffer with advanced
