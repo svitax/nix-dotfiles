@@ -166,6 +166,7 @@ in
               nerd-icons-corfu
               nerd-icons-dired
               nerd-icons-ibuffer
+              nerd-icons-grep
             ]
             ++ lispPackages;
         };

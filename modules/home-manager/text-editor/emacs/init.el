@@ -8601,3 +8601,8 @@ manually to first get the icon files."
   :if +emacs-load-icons
   :config
   (add-hook 'ibuffer-mode-hook #'nerd-icons-ibuffer-mode))
+
+(use-package nerd-icons-grep
+  :if +emacs-load-icons
+  :config
+  (nerd-icons-grep-mode))
