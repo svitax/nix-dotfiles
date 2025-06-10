@@ -3869,7 +3869,8 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    ("s-;" . +comment-sexp-dwim)
 
    :map +prefix-map
-   ("C-c" . +kill-terminal-or-restart)))
+   ("C-c" . +kill-terminal-or-restart)
+   ("h" . mark-whole-buffer)))
 
 (use-package substitute
   ;; I use `substitute' to efficiently replace targets in the buffer or
