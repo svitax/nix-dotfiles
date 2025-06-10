@@ -1884,7 +1884,9 @@ first one. Else do `vertico-exit'."
              ("<up>" . +vertico-minimal-previous)
              ("C-l" . vertico-multiform-vertical)
              ("RET" . +vertico-minimal-exit)
-             ("<return>" . +vertico-minimal-exit)))
+             ("<return>" . +vertico-minimal-exit)
+             ("M-a" . vertico-previous-group)
+             ("M-e" . vertico-next-group)))
 
 (use-package consult
   ;; Provides a number of commands that turbocharge the minibuffer with advanced
