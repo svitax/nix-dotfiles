@@ -90,7 +90,6 @@
     # # "Hello, world!" when run.
     # pkgs.hello
     # TODO extract home.packages into modules
-    python3Full
     mpv
     yt-dlp
     runelite
