@@ -2890,40 +2890,6 @@ split."
            (let ((split-height-threshold 0))
              (window--try-vertical-split window)))))))
 
-;; (use-package popper
-;;   :custom
-;;   (popper-reference-buffers
-;;    '("\\*Messages\\*"
-;;      "Output\\*$"
-;;      "\\*Async Shell Command\\*"
-;;      "\\*Warnings\\*"
-;;      "\\*shell.*\\*"
-;;      "\\*ielm\\*"
-;;      "\\*compilation\\*"
-;;      "\\*eldoc.*\\*"
-;;      "\\*Man.*\\*"
-;;      helpful-mode
-;;      help-mode
-;;      eshell-mode
-;;      vterm-mode
-;;      world-clock-mode
-;;      eww-buffers-mode
-;;      compilation-mode))
-;;   :init
-;;   (setopt popper-window-height (lambda (win)
-;;                                  (fit-window-to-buffer
-;;                                   win
-;;                                   (floor (frame-height) 3)
-;;                                   (floor (frame-height) 3))))
-;;   :config
-;;   (popper-mode)
-;;   (bind-keys
-;;    :map global-map
-;;    ("M-'" . popper-toggle)
-;;    ("C-M-'" . popper-cycle)
-;;    :map +prefix-map
-;;    ("6" . popper-toggle-type)))
-
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; navigation ;;;;
 

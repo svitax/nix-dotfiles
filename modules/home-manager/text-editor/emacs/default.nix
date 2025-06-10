@@ -117,7 +117,6 @@ in
               substitute
               goto-chg
               dired-preview
-              # popper
               avy
               ace-link
               logos
