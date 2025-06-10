@@ -2475,12 +2475,9 @@ Limit list of buffers to those matching the current
 
   (bind-keys :map global-map
              ("M-s b" . +buffers-major-mode)
-             ;; TODO put all s-* keybinds into sxhkd
-             ("s-n" . next-buffer)
-             ("s-p" . previous-buffer)
              :map +prefix-map
-             ("C-b" . ibuffer)
              ("k" . +kill-this-buffer)
+             ("C-b" . ibuffer)
              ("C-n" . next-buffer)
              ("C-p" . previous-buffer)
              ;; :map +buffer-prefix-map
@@ -2522,27 +2519,27 @@ Limit list of buffers to those matching the current
   (bind-keys
    :map global-map
    ;; TODO put all s-* keybinds into sxhkd
-   ("M-o" . other-window) ; `s-o' if i'm using exwm?
-   ("M-r" . +window-toggle-split)
-   ;; ("M-r" . window-layout-transpose) ; Emacs 31 override `move-to-window-line-top-bottom'
-   ;; ("M-S-r" . rotate-windows-back) ; Emacs 31
-   ("s-y" . windmove-left)
-   ("s-h" . windmove-down)
    ("s-a" . windmove-up)
-   ("s-e" . windmove-right)
-   ("s-Y" . windmove-swap-states-left)
-   ("s-H" . windmove-swap-states-down)
    ("s-A" . windmove-swap-states-up)
+   ("s-e" . windmove-right)
    ("s-E" . windmove-swap-states-right)
+   ("s-h" . windmove-down)
+   ("s-H" . windmove-swap-states-down)
+   ("s-o" . other-window)
+   ("s-r" . +window-toggle-split)
+   ;; ("s-r" . window-layout-transpose) ; Emacs 31 override `move-to-window-line-top-bottom'
+   ;; ("s-R" . rotate-windows-back) ; Emacs 31
+   ("s-y" . windmove-left)
+   ("s-Y" . windmove-swap-states-left)
    :map +prefix-map
-   ("0" . delete-window)
-   ("1" . delete-other-windows)
-   ("!" . delete-other-windows-vertically)
-   ("2" . split-window-below)
-   ("@" . split-root-window-below)
+   ("0" . delete-window) ; `s-k' or `s-0'
+   ("1" . delete-other-windows) ; `s-K' or `s-1'
+   ("!" . delete-other-windows-vertically) ; `s-!'
+   ("2" . split-window-below) ; `s-s' or `s-2'
+   ("@" . split-root-window-below) ; `s-S' or `s-@'
    ;; ("M-2" . +split-window-below-and-focus) ; lambda emacs
-   ("3" . split-window-right)
-   ("#" . split-root-window-right)
+   ("3" . split-window-right) ; `s-v' or `s-3'
+   ("#" . split-root-window-right) ; `s-V' or `s-\#'
    ;; ("M-3" . +split-window-right-and-focus) ; lambda emacs
    ("4" . ctl-x-4-prefix)
    ("$" . window-toggle-side-windows)
@@ -2551,7 +2548,7 @@ Limit list of buffers to those matching the current
    ;; ("6" . )
    ;; ("^" . tear-off-window) ; ^ should be tear or detach
    ;; ("7" . )
-   ("+" . balance-windows-area)
+   ("+" . balance-windows-area) ; `s-+'
    ;; ("8" . )
    ;; ("*" . )
    ;; ("9" . )
@@ -3318,10 +3315,7 @@ end of the buffer.")
    ("M-e" . logos-forward-page-dwim)
    ("M-a" . logos-backward-page-dwim)
    :map +narrow-prefix-map
-   ("p" . logos-narrow-dwim)
-   :map +prefix-map
-   ("C-n" . forward-page)
-   ("C-p" . backward-page)))
+   ("p" . logos-narrow-dwim)))
 
 ;; NOTE document golden-ratio-scroll
 (use-package golden-ratio-scroll
