@@ -136,6 +136,7 @@ in
               git-gutter-fringe
               vterm
               mistty
+              jupyter
               nix-ts-mode
               # templ-ts-mode
               dts-mode

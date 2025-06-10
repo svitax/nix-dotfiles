@@ -1048,7 +1048,6 @@ to produce the opposite effect of `fill-paragraph' and `fill-region'."
   ;; `inheritenv' provides the macro `inheritenv-add-advice' which wraps any
   ;; command with an advice function so it inherits buffer-local variables. This
   ;; is useful for when we discover problems we can't patch upstream.
-  (inheritenv-add-advice 'jupyter-run-repl)
   (inheritenv-add-advice 'process-lines))
 
 (use-package add-node-modules-path
@@ -2714,6 +2713,7 @@ Limit list of buffers to those matching the current
      "^\\*shell.*\\*$"
      "^\\*term.*\\*$"
      "^\\*vterm.*\\*$"
+     "^\\*jupyter-repl.*\\*$"
      ;; VC buffers
      "^magit-diff:.*$"
      "^magit-process:.*$"
@@ -5945,6 +5945,80 @@ region is active."
           python-shell-completion-native-enable nil
           python-indent-guess-indent-offset nil
           python-indent-offset 4))
+
+(use-package jupyter
+  :config
+  (with-eval-after-load 'inheritenv
+    (inheritenv-add-advice 'jupyter-run-repl)
+    (inheritenv-add-advice 'jupyter-connect-repl))
+
+  (defvar-local +jupyter--repl nil)
+  (defvar-local +jupyter--last-buffer nil)
+
+  (defun +jupyter--maybe-remember-buffer (buffer)
+    (when (and buffer
+               (eq major-mode 'jupyter-repl-mode))
+      (setq +jupyter--last-buffer buffer)))
+
+  (defsubst +jupyter--set-this-buffer-repl (s &optional this)
+    (with-current-buffer (or this (current-buffer)) (setq +jupyter--repl s)))
+
+  (defun +jupyter--switch-to-buffer (buffer)
+    (unless (eq buffer (current-buffer))
+      (switch-to-buffer-other-window buffer)))
+
+  (defun +jupyter-run-repl ()
+    (interactive)
+    (let* ((origin (current-buffer))
+           (_ (call-interactively 'jupyter-run-repl))
+           (repl (jupyter-with-repl-buffer jupyter-current-client (current-buffer))))
+      (with-current-buffer repl
+        (+jupyter--set-this-buffer-repl repl origin)
+        (+jupyter--set-this-buffer-repl repl))))
+
+  (defun +jupyter-connect-repl ()
+    (interactive)
+    (let* ((origin (current-buffer))
+           (_ (call-interactively 'jupyter-connect-repl))
+           (repl (jupyter-with-repl-buffer jupyter-current-client (current-buffer))))
+      (with-current-buffer repl
+        (+jupyter--set-this-buffer-repl repl origin)
+        (+jupyter--set-this-buffer-repl repl))))
+
+  (defun +jupyter-repl-pop-to-buffer (&optional arg impl buffer)
+    "Switch to a kernel's REPL buffer.
+
+If REPL is the current buffer, switch to the previously used buffer.
+
+With \\[universal-argument] prefix argument, the user can connect to an
+existing kernel using the kernel's connection file.
+
+If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
+    (interactive "P")
+    (let* ((in-repl (eq major-mode 'jupyter-repl-mode))
+           (repl (and (buffer-live-p +jupyter--repl) +jupyter--repl))
+           (origin (current-buffer)))
+      (cond (in-repl
+             (when (and (not (eq repl buffer))
+                        (buffer-live-p +jupyter--last-buffer))
+               (+jupyter--switch-to-buffer +jupyter--last-buffer)))
+            (repl (+jupyter--set-this-buffer-repl repl)
+                  (+jupyter--switch-to-buffer repl))
+            (t (if arg (call-interactively '+jupyter-connect-repl)
+                 (call-interactively '+jupyter-run-repl))))
+      (+jupyter--maybe-remember-buffer (or buffer origin))))
+
+  (setopt jupyter-eval-use-overlays t)
+  (bind-keys :map python-mode-map
+             ("C-c C-c" . jupyter-eval-defun)
+             ("C-c C-d" . nil) ; unmap `python-describe-at-point'
+             ("C-c C-e" . jupyter-eval-line-or-region)
+             ("C-c C-k" . jupyter-eval-buffer)
+             ("C-c C-z" . +jupyter-repl-pop-to-buffer)
+             :map jupyter-repl-mode-map
+             ("C-c C-z" . +jupyter-repl-pop-to-buffer)
+             :map jupyter-repl-interaction-mode-map
+             ("C-c C-z" . +jupyter-repl-pop-to-buffer)))
 
 (use-package nix-ts-mode
   :mode "\\.nix\\'"
