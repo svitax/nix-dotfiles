@@ -5906,14 +5906,17 @@ region is active."
   (dolist (fn '(eval-print-last-sexp eval-last-sexp eval-defun))
     (advice-add fn :before-until #'+eval-region-if-active))
 
-  (bind-keys
-   :map +prefix-map
-   ("C-e" . eval-last-sexp)
-   :map emacs-lisp-mode-map
-   ("C-c C-c" . eval-defun)
-   ("C-c C-k" . eval-buffer)
-   ("C-c C-e" . elisp-eval-region-or-buffer)
-   ("C-c C-z" . ielm)))
+  (bind-keys :map emacs-lisp-mode-map
+             ("C-M-x" . eval-defun)
+             ("C-c C-c" . eval-defun)
+             ("C-c C-e" . eval-last-sexp)
+             ("C-x C-e" . eval-last-sexp)
+             ("C-c C-k" . eval-buffer)
+             ("C-c C-m" . emacs-lisp-macroexpand)
+             ("C-c M-m" . pp-macroexpand-last-sexp)
+             ("C-c C-r" . eval-region)
+             ("C-c C-l" . load-file)
+             ("C-c C-z" . ielm)))
 
 (use-package ielm
   :config
