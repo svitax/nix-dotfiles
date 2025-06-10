@@ -254,25 +254,25 @@ Like `+common-completion-table' but also disable sorting."
              :map +prefix-map
              ;; ("a" . org-agenda-custom) ("C-a" . org-agenda) ; edebug
              ;; ("b" . consult-buffer) ("C-b" . ibuffer)  ; list-buffers
-             ("c" . org-capture) ("C-c" . save-buffers-kill-emacs)
+             ("c" . org-capture) ; ("C-c" . +kill-terminal-or-restart) ; save-buffers-kill-emacs
              ;; ("d" . dired) ("C-d" . consult-dir) ; list-directory
              ("e" . kmacro-end-and-call-macro) ; ("C-e" . eval-last-sexp)
-             ;; ("f" . set-fill-column) ("C-f" . find-file)
+             ;; ("f" . ) ; set-fill-column ("C-f" . find-file)
              ;; ("g" . +guix-prefix-map) ("C-g" . )
              ;; ("h" . mark-whole-buffer) ("C-h" . help-map)
-             ;; ("i" . +org-capture-inbox) ("C-i" . )
+             ;; ("i" . +org-capture-inbox) ("C-i" . ) ; indent-rigidly
              ("j" . +dap-prefix-map) ; ("C-j" . dired-jump) ; i don't like dap/debug on j
              ;; ("k" . +kill-this-buffer) ("C-k" . kmacro-keymap)
              ("l" . +bib-prefix-map) ; ("C-l" . ) ; "lib" mnemonic
              ("m" . +mail-prefix-map) ; ("C-m" . )
-             ("n" . +notes-prefix-map) ; ("C-n" . next-buffer)
+             ("n" . +notes-prefix-map) ; ("C-n" . next-buffer) ; set-goal-column
              ;; ("o" . other-window) ("C-o" . ) ; "os" mnemonic?
              ("p" . +project-prefix-map) ; ("C-p" . previous-buffer) ; mark-page
              ("q" . kbd-macro-query) ("C-q" . read-only-mode)
              ("r" . +registers-prefix-map) ("C-r" . find-file-read-only)
-             ("s" . save-some-buffers) ("C-s" . save-buffer) ; ("s" . +search-prefix-map)
+             ("s" . save-some-buffers) ("C-s" . save-buffer)
              ("t" . +tab-prefix-map) ("C-t" . transpose-lines)
-             ;; ("u" . ) ("C-u" . undo) ; "undo" mnemonic?
+             ;; ("u" . ) ("C-u" . ) ; "undo" mnemonic?
              ("v" . +vc-prefix-map) ("C-v" . find-alternate-file)
              ("w" . +window-prefix-map) ("C-w" . write-file)
              ("x" . +toggle-prefix-map) ("C-x" . exchange-point-and-mark)
