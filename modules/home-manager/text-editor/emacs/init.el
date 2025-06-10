@@ -1844,8 +1844,6 @@ first one. Else do `vertico-exit'."
   (setopt vertico-multiform-categories `(;; Maximal
                                          (embark-keybinding
                                           ,@+vertico-multiform-maximal)
-                                         (citar-candidate
-                                          ,@+vertico-multiform-maximal)
                                          ;; Grid
                                          (jinx
                                           ,@+vertico-multiform-grid)
@@ -1856,6 +1854,8 @@ first one. Else do `vertico-exit'."
                                            . +vertico-sort-directories-first))
                                          (t ,@+vertico-multiform-minimal))
           vertico-multiform-commands `(("consult-\\(.*\\)?\\(find\\|fd\\|grep\\|ripgrep\\)"
+                                        ,@+vertico-multiform-maximal)
+                                       ("citar-\\(.*\\)"
                                         ,@+vertico-multiform-maximal))
           vertico-cycle t
           vertico-count 5)
