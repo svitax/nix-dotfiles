@@ -6000,10 +6000,14 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
 
   (setopt jupyter-eval-use-overlays t)
   (bind-keys :map python-mode-map
+             ("C-c C-b" . jupyter-repl-interrupt-kernel)
              ("C-c C-c" . jupyter-eval-defun)
              ("C-c C-d" . nil) ; unmap `python-describe-at-point'
-             ("C-c C-e" . jupyter-eval-line-or-region)
              ("C-c C-k" . jupyter-eval-buffer)
+             ("C-c C-l" . jupyter-load-file)
+             ("C-c C-q" . jupyter-repl-shutdown-kernel)
+             ("C-c C-r" . jupyter-eval-region)
+             ("C-c M-r" . jupyter-repl-restart-kernel)
              ("C-c C-z" . +jupyter-repl-pop-to-buffer)
              :map jupyter-repl-mode-map
              ("C-c C-z" . +jupyter-repl-pop-to-buffer)
