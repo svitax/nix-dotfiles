@@ -6178,30 +6178,30 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
   ;;
   ;; To have our face remapping adapt gracefully while switching between the
   ;; Modus themes, we need to also account for the current theme and control the
-  ;; activation of `pdf-view-midnight-minor-mode'. To which end we arrive at
+  ;; activation of `pdf-view-themed-minor-mode'. To which end we arrive at
   ;; something like the following:
   (defun +in-list-p (val list)
     "Return t if VAL is in LIST, otherwise nil."
     (when (member val list) t))
 
-  (defun +pdf-tools-midnight-mode-toggle (&rest _)
+  (defun +pdf-tools-themed-mode-toggle (&rest _)
     (when (derived-mode-p 'pdf-view-mode)
       (if (+in-list-p (car custom-enabled-themes)
                       (append ef-themes-collection
                               modus-themes-collection
                               doric-themes-collection))
-          (pdf-view-midnight-minor-mode 1)
-        (pdf-view-midnight-minor-mode -1))
+          (pdf-view-themed-minor-mode 1)
+        (pdf-view-themed-minor-mode -1))
       (+pdf-tools-backdrop)))
 
   (defun +pdf-tools-themes-toggle (&rest _)
     (mapc
      (lambda (buf)
        (with-current-buffer buf
-         (+pdf-tools-midnight-mode-toggle)))
+         (+pdf-tools-themed-mode-toggle)))
      (buffer-list)))
 
-  (add-hook 'pdf-tools-enabled-hook #'+pdf-tools-midnight-mode-toggle)
+  (add-hook 'pdf-tools-enabled-hook #'+pdf-tools-themed-mode-toggle)
   (add-hook 'enable-theme-functions #'+pdf-tools-themes-toggle)
 
   ;; With those in place, PDFs have a distinct backdrop for their page, while
@@ -6216,7 +6216,7 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
   (bind-keys
    :map pdf-view-mode-map
    ("i" . consult-imenu)
-   ("d" . pdf-view-midnight-minor-mode)))
+   ("d" . pdf-view-themed-minor-mode)))
 
 ;; This package extends the built-in `save-place-mode' by adding support for PDF
 ;; buffers under PDFView or DocView mode. Revisiting PDF files will restore the
