@@ -3457,7 +3457,7 @@ narrowed."
    ("s" . +narrow-to-sexp)
    ("w" . widen))
 
-  (eval-after-load 'org
+  (with-eval-after-load 'org
     (bind-keys
      :map +narrow-prefix-map
      ("b" . org-narrow-to-block)
