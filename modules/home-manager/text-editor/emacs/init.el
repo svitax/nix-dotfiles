@@ -2719,6 +2719,7 @@ Limit list of buffers to those matching the current
      "^magit-process:.*$"
      ;; "^\\*difftastic.*\\*"
      ;; Others
+     "^\\*Embark.*\\*$"
      "^\\*.*scratch\\*$"))
   (auto-side-windows-right-buffer-modes
    '(;; Doc buffers
@@ -5944,6 +5945,7 @@ region is active."
              ("C-c C-q" . +kill-this-buffer)))
 
 (use-package python
+  :lsp-hook (python-mode python-ts-mode)
   :config
   (with-eval-after-load 'inheritenv
     (inheritenv-add-advice 'run-python)
