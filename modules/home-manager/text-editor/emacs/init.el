@@ -2662,9 +2662,11 @@ Limit list of buffers to those matching the current
   ;;  `allow-no-window': A non-nil value means that `display-buffer'
   ;;     may not display the buffer and return nil immediately.
 
-  ;; (setopt display-buffer-base-action
-  ;;         '((display-buffer-reuse-window
-  ;;            display-buffer-in-previous-window)))
+  (setopt display-buffer-base-action
+          '((display-buffer-reuse-window
+             display-buffer-same-window
+             display-buffer-in-previous-window
+             display-buffer-use-some-window)))
 
   ;; The following settings are relevant for the `display-buffer-alist' we saw
   ;; right above. Notice, in particular, the `split-height-threshold' and
