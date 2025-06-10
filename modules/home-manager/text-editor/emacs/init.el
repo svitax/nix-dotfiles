@@ -8317,6 +8317,8 @@ instead of the current one."
   ;; Imenu support for `elpher'.
   (add-hook 'eww-mode-hook '+shr-heading-setup-imenu)
 
+  (setopt elpher-default-url-type "gemini")
+
   (bind-keys
    :map elpher-mode-map
    ("<" . beginning-of-buffer)
