@@ -7921,6 +7921,54 @@ BibTeX file."
   ;; `text-mode-hook').
 
   :config
+  ;; Imenu support for shr modes
+  ;; From https://github.com/oantolin/emacs-config/blob/master/my-lisp/shr-heading.el
+  (defun +shr-heading-next (&optional arg)
+    "Move forward by ARG headings (any h1-h5).
+If ARG is negative move backwards, ARG defaults to 1."
+    (interactive "p")
+    (unless arg (setq arg 1))
+    (catch 'return
+      (dotimes (_ (abs arg))
+        (when (> arg 0) (end-of-line))
+        (if-let ((match
+                  (funcall (if (> arg 0)
+                               #'text-property-search-forward
+                             #'text-property-search-backward)
+                           'face '(shr-h1 shr-h2 shr-h3 shr-h4 shr-h5)
+                           (lambda (tags face)
+                             (cl-loop for x in (if (consp face) face (list face))
+                                      thereis (memq x tags))))))
+            (goto-char
+             (if (> arg 0) (prop-match-beginning match) (prop-match-end match)))
+          (throw 'return nil))
+        (when (< arg 0) (beginning-of-line)))
+      (beginning-of-line)
+      (point)))
+
+  (defun +shr-heading-previous (&optional arg)
+    "Move backward by ARG headings (any h1-h5).
+If ARG is negative move forwards instead, ARG defaults to 1."
+    (interactive "p")
+    (+shr-heading-next (- (or arg 1))))
+  (defun +shr-heading--line-at-point ()
+    "Return the current line."
+    (concat
+     (and-let* ((faces (ensure-list (get-char-property (point) 'face)))
+                (level (cl-find-if (lambda (f) (string-match "shr-h.$" (symbol-name f)))
+                                   faces))
+                (indent (- (aref (symbol-name level) 5) 49)))
+       (make-string indent ? ))
+     (buffer-substring (line-beginning-position) (line-end-position))))
+
+  (defun +shr-heading-setup-imenu ()
+    "Setup Imenu for h1-h5 headings in eww buffer.
+Add this function to appropriate major mode hooks such as
+`eww-mode-hook' or `elfeed-show-mode-hook'."
+    (setq-local
+     imenu-prev-index-position-function #'+shr-heading-previous
+     imenu-extract-index-name-function  #'+shr-heading--line-at-point))
+
   (setopt shr-use-colors nil ; t is bad for accessibility
           shr-use-fonts nil ; t is superfluous, given `variable-pitch-mode'
           shr-max-image-proportion 0.6
@@ -8223,6 +8271,9 @@ instead of the current one."
         (goto-char position)
       (error "Cannot position in data `%s'" data)))
 
+  ;; Imenu support for `eww'.
+  (add-hook 'eww-mode-hook '+shr-heading-setup-imenu)
+
   (setopt eww-auto-rename-buffer '+eww-rename-buffer
           eww-header-line-format ""
           eww-history-limit 150
@@ -8263,6 +8314,9 @@ instead of the current one."
 ;; TODO document elpher
 (use-package elpher
   :config
+  ;; Imenu support for `elpher'.
+  (add-hook 'eww-mode-hook '+shr-heading-setup-imenu)
+
   (bind-keys
    :map elpher-mode-map
    ("<" . beginning-of-buffer)
@@ -8276,7 +8330,9 @@ instead of the current one."
    ("l" . elpher-back)
    ;; ("L" . +elpher-list-histories)
    ("m" . elpher-jump)
+   ("n" . elpher-next-link)
    ("o" . elpher-go-current)
+   ("p" . elpher-prev-link)
    ;; ("r" . +elpher-forward)
    ("R" . nil) ; unmap `elpher-reload'
    ("s" . nil) ; unmap `elpher-show-history'
@@ -8284,7 +8340,8 @@ instead of the current one."
    ("t" . elpher-root-dir)
    ("v" . elpher-view-raw)
    ;; ("w" . +elpher-copy-page-url) ; link at point or current page
-   ))
+   ("<tab>" . elpher-next-link)
+   ("<backtab>" . elpher-prev-link)))
 
 (defun +qutebrowser-choose-file ()
   (interactive)
