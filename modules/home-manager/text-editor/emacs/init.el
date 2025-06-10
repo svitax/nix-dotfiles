@@ -5629,6 +5629,15 @@ Add a bookmark handler for shell buffer and activate the
              :map comint-mode-map
              ("C-c C-q" . +kill-this-buffer)))
 
+(use-package native-complete
+  :config
+  (with-eval-after-load 'shell
+    (native-complete-setup-bash))
+
+  (defun +capf-setup-shell ()
+    (add-hook 'completion-at-point-functions #'native-complete-at-point nil t))
+  (add-hook 'shell-mode-hook #'+capf-setup-shell))
+
 ;; (use-package dwim-shell-command)
 
 ;;;;;;;;;;;;;;;;;;

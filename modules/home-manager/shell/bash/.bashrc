@@ -20,3 +20,9 @@ else
     # Quit once you try to scroll past the end of the file.
     export PAGER="less --quit-at-eof"
 fi
+
+# For the Emacs package 'native-complete', if the 'HISTCONTROL' environment
+# variable is not set to 'ignorespace' or 'ignoreboth' we get a lot of garbage
+# in the shell history. We also need to disable bracketed-paste.
+export HISTCONTROL=ignoreboth
+bind 'set enable-bracketed-past off'

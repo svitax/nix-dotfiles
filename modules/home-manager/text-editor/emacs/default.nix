@@ -134,6 +134,7 @@ in
               magit
               git-gutter
               git-gutter-fringe
+              native-complete
               vterm
               mistty
               jupyter
