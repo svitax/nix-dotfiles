@@ -1754,6 +1754,7 @@ Add this to `dired-mode-hook'."
   ;; The "multiform" mechanism of the `vertico' package allows us to change the
   ;; layout on a per-command or per-category basis. We can use this mechanism to
   ;; make the minibuffer not show up eagerly.
+
   (defvar +vertico-multiform-minimal
     '(unobtrusive
       (vertico-flat-format . ( :multiple ""
@@ -1771,23 +1772,28 @@ Toggle the vertical view with the `vertico-multiform-vertical'
 command or use the commands `+vertico-minimal-next' and
 `+vertico-minimal-previous', which toggle the vertical view
 automatically.")
+
   (defvar +vertico-multiform-maximal
     '((vertico-count . 10)
       (vertico-preselect . directory))
     "List of configurations for maximal Vertico multiform.")
+
   (defvar +vertico-multiform-grid
     '(grid
       (vertico-grid-annotate . 20)
       (vertico-count . 4))
     "List of configurations for grid Vertico multiform.")
+
   (defun +vertico--match-directory (str)
     "Match directory delimiter in STR."
     (string-suffix-p "/" str))
+
   (defun +vertico-sort-directories-first (files)
     "Sort directories before FILES."
     (setq files (vertico-sort-alpha files))
     (nconc (seq-filter #'+vertico--match-directory files)
            (seq-remove #'+vertico--match-directory files)))
+
   (defun +vertico-minimal-next ()
     "Like `vertico-next' but toggle vertical view if needed.
 This is done to accommodate `+vertico-multiform-minimal'."
@@ -1797,6 +1803,7 @@ This is done to accommodate `+vertico-multiform-minimal'."
           (vertico-multiform-vertical)
           (vertico-next 1))
       (vertico-next 1)))
+
   (defun +vertico-minimal-previous ()
     "Like `vertico-previous' but toggle vertical view if needed.
 This is done to accommodate `+vertico-multiform-minimal'."
@@ -1806,6 +1813,7 @@ This is done to accommodate `+vertico-multiform-minimal'."
           (vertico-multiform-vertical)
           (vertico-previous 1))
       (vertico-previous 1)))
+
   (defun +vertico-minimal-complete ()
     "Expand contents and show remaining candidates, if needed.
 This is dote to accommodate `+vertico-multiform-minimal'."
