@@ -5934,6 +5934,18 @@ region is active."
   (bind-keys :map ielm-map
              ("C-c C-q" . +kill-this-buffer)))
 
+(use-package python
+  :config
+  (with-eval-after-load 'inheritenv
+    (inheritenv-add-advice 'run-python)
+    (inheritenv-add-advice 'run-python-internal))
+
+  (setopt python-shell-interpreter "ipython"
+          python-shell-interpreter-args "-i --simple-prompt"
+          python-shell-completion-native-enable nil
+          python-indent-guess-indent-offset nil
+          python-indent-offset 4))
+
 (use-package nix-ts-mode
   :mode "\\.nix\\'"
   :lsp-hook nix-ts-mode
