@@ -740,8 +740,8 @@ writeable."
             (fg-mode-line-active fg-main)))
 
   (setopt modus-vivendi-palette-overrides
-          `(;; (fg-main "#e1e1e1")
-            ;; (bg-main "#1f1f1f")
+          `(;; (fg-main "#ebebeb")
+            ;; (bg-main "#1e1e1e")
             (cursor yellow-warmer)
             (bg-region bg-lavender)
             (bg-mode-line-active bg-lavender)
