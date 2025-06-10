@@ -5900,7 +5900,9 @@ region is active."
   (dolist (fn '(eval-print-last-sexp eval-last-sexp eval-defun))
     (advice-add fn :before-until #'+eval-region-if-active))
 
-  (bind-keys :map emacs-lisp-mode-map
+  (bind-keys :map +prefix-map
+             ("C-e" . eval-last-sexp)
+             :map emacs-lisp-mode-map
              ("C-M-x" . eval-defun)
              ("C-c C-c" . eval-defun)
              ("C-c C-e" . eval-last-sexp)
