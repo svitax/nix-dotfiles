@@ -5,71 +5,38 @@
   };
 
   outputs =
-    { nixpkgs, ... }:
-
+    inputs@{ self, nixpkgs, ... }:
     let
       system = "x86_64-linux";
       #       ↑ Swap it for your system if needed
       #       "aarch64-linux" / "x86_64-darwin" / "aarch64-darwin"
       pkgs = nixpkgs.legacyPackages.${system};
     in
-
     {
+      # Shell for dev dependencies
+      #
+      #     nix develop
+      #
+      # Use this shell for developing your app
       devShells.${system}.default = pkgs.mkShell {
         name = "nix-python-template";
+        packages = with pkgs; [
+          uv
 
-        packages = [
-          pkgs.poetry # or pkgs.uv
+          nixfmt-rfc-style
+          nixd
 
-          pkgs.nixfmt-rfc-style
-          pkgs.nixd
-
-          # TODO these should be provided by poetry or uv
-          pkgs.jupyter
-          pkgs.basedpyright
-          pkgs.black
-          pkgs.ruff
+          # These can be provided by uv.
+          jupyter
+          basedpyright
+          black
+          ruff
 
           # If the dependencies need system libs, you usually need pkg-config + the lib
-          # pkgs.pkg-config
-          # pkgs.openssl
+          # pkg-config
+          # openssl
         ];
 
       };
     };
 }
-
-# {
-#   description = "A Nix-flake-based Go development environment";
-
-#   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
-#   outputs = { nixpkgs, ... }@inputs:
-#     let
-#       goVersion = 24; # Change this to update the whole stack
-#       overlays = [ (final: prev: { go = prev."go_1_${toString goVersion}"; }) ];
-#       systems = [ "x86_64-linux" ];
-#       forEachSupportedSystem = f:
-#         nixpkgs.lib.genAttrs systems
-#         (system: f { pkgs = import nixpkgs { inherit overlays system; }; });
-#     in {
-#       formatter = forEachSupportedSystem (pkgs: pkgs.alejandra);
-#       devShells = forEachSupportedSystem ({ pkgs }: {
-#         default = pkgs.mkShell {
-#           name = "nix-go-template";
-#           packages = with pkgs; [
-#             # go 1.24 (specified by overlay)
-#             go
-#             gopls
-
-#             # goimports, godoc, etc.
-#             gotools
-#             go-tools
-
-#             # https://github.com/golangci/golangci-lint
-#             golangci-lint
-#           ];
-#         };
-#       });
-#     };
-# }
