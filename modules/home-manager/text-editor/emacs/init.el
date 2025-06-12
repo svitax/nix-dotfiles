@@ -3492,11 +3492,13 @@ narrowed."
    ("w" . widen))
 
   (with-eval-after-load 'org
-    (bind-keys
-     :map +narrow-prefix-map
-     ("b" . org-narrow-to-block)
-     ("e" . org-narrow-to-element)
-     ("s" . org-narrow-to-subtree))))
+    (bind-keys :map org-mode-map
+               ("C-c n" . +narrow-prefix-map)
+               ("C-c C-n" . +narrow-or-widen-dwim)
+               :map +narrow-prefix-map
+               ("b" . org-narrow-to-block)
+               ("e" . org-narrow-to-element)
+               ("s" . org-narrow-to-subtree))))
 
 (use-package goto-chg
   ;; The `goto-chg' package, authored by David Andersson and maintained by
