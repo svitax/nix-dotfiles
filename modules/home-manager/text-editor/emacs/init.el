@@ -938,7 +938,10 @@ writeable."
                     mouse-set-point mouse-drag-region))
     (add-to-list 'keycast-substitute-alist `(,event nil)))
 
-  (druid-modeline-keycast-mode))
+  (druid-modeline-keycast-mode)
+
+  (bind-keys :map +toggle-prefix-map
+             ("k" . druid-modeline-keycast-mode)))
 
 ;; (use-package spacious-padding)
 
