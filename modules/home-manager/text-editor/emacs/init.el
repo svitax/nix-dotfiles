@@ -5448,7 +5448,7 @@ Push `shell-last-dir' to `+shell-cd-directories'."
   (with-eval-after-load 'consult
     (defvar +shell-buffer-source
       `( :name "Shell"
-         :narrow   ?S
+         :narrow   ?s
          :category buffer
          :state    ,#'consult--buffer-state
          :items    ,(lambda ()
