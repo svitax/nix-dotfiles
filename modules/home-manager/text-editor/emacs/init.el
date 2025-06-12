@@ -937,7 +937,6 @@ writeable."
                     mouse-set-point mouse-drag-region))
     (add-to-list 'keycast-substitute-alist `(,event nil)))
 
-  (druid-modeline-keycast-mode)
 
   (defun store-action-key+cmd (cmd)
     (setq keycast--this-command-keys (this-single-command-keys)
