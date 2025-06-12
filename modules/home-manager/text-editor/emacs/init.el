@@ -7492,6 +7492,25 @@ continue, per `org-agenda-skip-function'."
    :preview-key "M-."
    :name "Denote")
 
+  ;; By default `consult-denote-buffer-source' only shows buffers if their file
+  ;; is an actual Denote note (see `denote-file-types'). I want it to show every
+  ;; file that has a Denoted name, regardless of whether it is a note or not.
+  ;; NOTE 2025-06-11 I might want to filter only actual Denote notes in the
+  ;; future. In that case I can make a new source with the ?D key.
+  (defun +consult-denote--buffers ()
+    "Return file names of Denote buffers."
+    (delq nil
+          (mapcar
+           (lambda (buffer)
+             (when-let* ((file (buffer-file-name buffer))
+                         ((buffer-live-p buffer))
+                         ((denote-file-has-denoted-filename-p file)))
+               (buffer-name buffer)))
+           (buffer-list))))
+  (consult-customize
+   consult-denote-buffer-source
+   :items #'+consult-denote--buffers)
+
   ;; Disable the subdirectory and silo sources.
   (consult-customize
    consult-denote-subdirectory-source
