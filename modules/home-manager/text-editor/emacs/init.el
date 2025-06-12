@@ -8361,9 +8361,7 @@ instead of the current one."
    ("l" . elpher-back)
    ;; ("L" . +elpher-list-histories)
    ("m" . elpher-jump)
-   ("n" . elpher-next-link)
    ("o" . elpher-go-current)
-   ("p" . elpher-prev-link)
    ;; ("r" . +elpher-forward)
    ("R" . nil) ; unmap `elpher-reload'
    ("s" . nil) ; unmap `elpher-show-history'
