@@ -914,7 +914,6 @@ writeable."
   (add-hook 'Info-mode-hook #'druid-modeline-info-mode)
   (add-hook 'elpher-mode-hook #'druid-modeline-elpher-mode))
 
-;; NOTE: karthink's store-action-key+cmd and keycast-capture-avy-dispatch
 (use-package keycast
   :config
   (define-minor-mode druid-modeline-keycast-mode
@@ -939,6 +938,23 @@ writeable."
     (add-to-list 'keycast-substitute-alist `(,event nil)))
 
   (druid-modeline-keycast-mode)
+
+  (defun store-action-key+cmd (cmd)
+    (setq keycast--this-command-keys (this-single-command-keys)
+          keycast--this-command cmd)
+    cmd)
+  (defun store-action-key-no-cmd (cmd)
+    (setq keycast--this-command-keys (this-single-command-keys)
+          keycast--this-command cmd))
+  (defun keycast-capture-avy-dispatch (char)
+    (if-let ((cmd (assoc char avy-dispatch-alist)))
+        (setq keycast--this-command-keys (make-vector 1 char)
+              keycast--this-command (cdr cmd))))
+
+  ;; Make keycast capture keys used in Embark and Avy
+  (advice-add 'embark-keymap-prompter :filter-return #'store-action-key+cmd)
+  (advice-add 'avy-goto-char-timer :filter-return #'store-action-key+cmd)
+  (advice-add 'avy-handler-default :before #'keycast-capture-avy-dispatch)
 
   (bind-keys :map +toggle-prefix-map
              ("k" . druid-modeline-keycast-mode)))
