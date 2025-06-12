@@ -7434,10 +7434,10 @@ continue, per `org-agenda-skip-function'."
   (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 
   ;; Automatically rename Denote buffers when opening them so that instead of
-  ;; their long file name they have a literal "[D]" followed by the file's title
-  ;; and then the backlinks indicator. Read the doc string of
-  ;; `denote-rename-buffer-format' for how to modify this.
-  (setopt denote-rename-buffer-format "[d] %t%b")
+  ;; their long file name they have the file's title and then the backlinks
+  ;; indicator. Read the doc string of `denote-rename-buffer-format' for how to
+  ;; modify this.
+  (setopt denote-rename-buffer-format "%t%b")
   ;; Customize what the backlink indicator looks like.
   (setopt denote-buffer-has-backlinks-string " (<-->)")
   ;; `denote-rename-buffer-mode' provides the means to automatically rename the
@@ -8112,7 +8112,7 @@ Return the exit code and output in a list."
     (when (eq major-mode 'eww-mode)
       (when-let ((string (or (plist-get eww-data :title)
                              (plist-get eww-data :url))))
-        (format "[w] %s" (truncate-string-to-width
+        (format "%s" (truncate-string-to-width
                           string eww-buffer-name-length)))))
 
   (defun +eww-denote-slug-hyphenate (str)
@@ -8195,7 +8195,7 @@ Use link at point if there is one, otherwise the current page's URL."
                     (plist-get eww-data :url)))
            (title (or (plist-get eww-data :title) url))
            (source (plist-get eww-data :source))
-           (buf-name (format " [w] feeds: %s" title)))
+           (buf-name (format "feeds: %s" title)))
       (with-temp-buffer
         (insert source)
         (occur-1 +eww--occur-feed-regexp "\\3" (list (current-buffer)) buf-name))
