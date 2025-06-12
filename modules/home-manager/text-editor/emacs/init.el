@@ -8489,6 +8489,14 @@ instead of the current one."
              ("M-a" . gptel-beginning-of-response)
              ("M-e" . gptel-end-of-response)))
 
+(use-package gptel-quick
+  :config
+  (setopt gptel-quick-backend gptel-backend
+          ;; Reasoning models don't work well with `gptel-quick'
+          gptel-quick-model 'gemma3:1b)
+  (bind-keys :map embark-general-map
+             ("?" . gptel-quick)))
+
 
 ;;;;;;;;;;;;;
 ;;;; irc ;;;;
