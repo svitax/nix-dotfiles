@@ -931,7 +931,7 @@ writeable."
           keycast-mode-line-window-predicate 'mode-line-window-selected-p
           keycast-mode-line-remove-tail-elements nil)
 
-  (dolist (input '(self-insert-command org-self-insert-command eshell-self-insert-command))
+  (dolist (input '(self-insert-command org-self-insert-command))
     (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
 
   (dolist (event '( mouse-event-p mouse-movement-p mwheel-scroll handle-select-window
