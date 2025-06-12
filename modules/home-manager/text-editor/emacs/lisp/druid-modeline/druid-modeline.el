@@ -788,7 +788,7 @@ other characters."
              (druid-modeline-buffer-identification)
              ;; (druid-modeline-remote-status)
              " "
-             (druid-modeline-org-narrow-status) " "
+             ;; (druid-modeline-org-narrow-status) " "
              (druid-modeline-vc-info)
              (druid-modeline-misc-info))
            '(;; (druid-modeline-selection-info)
