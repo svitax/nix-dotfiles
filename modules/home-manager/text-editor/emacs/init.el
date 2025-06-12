@@ -903,7 +903,7 @@ writeable."
 
 (use-package druid-modeline
   :config
-  ;; (druid-modeline-text-mode 1)
+  (druid-modeline-text-mode 1)
   (add-hook 'prog-mode-hook #'druid-modeline-prog-mode)
   (add-hook 'org-mode-hook #'druid-modeline-org-mode)
   (add-hook 'org-capture-mode-hook #'druid-modeline-org-capture-mode)
