@@ -735,17 +735,17 @@ writeable."
             ,@modus-themes-preset-overrides-faint))
 
   (setopt modus-operandi-palette-overrides
-          `((bg-region bg-sage)
-            (bg-mode-line-active bg-blue-intense)
-            (fg-mode-line-active fg-main)))
+          `(;; (bg-mode-line-active bg-blue-intense)
+            ;; (fg-mode-line-active fg-main)
+            (bg-region bg-sage)))
 
   (setopt modus-vivendi-palette-overrides
           `(;; (fg-main "#ebebeb")
             ;; (bg-main "#1e1e1e")
+            ;; (bg-mode-line-active bg-lavender)
+            ;; (fg-mode-line-active fg-main)
             (cursor yellow-warmer)
-            (bg-region bg-lavender)
-            (bg-mode-line-active bg-lavender)
-            (fg-mode-line-active fg-main)))
+            (bg-region bg-lavender)))
 
   (set-fringe-bitmap-face 'right-arrow 'shadow)
 
