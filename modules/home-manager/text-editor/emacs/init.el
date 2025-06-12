@@ -912,8 +912,31 @@ writeable."
   (add-hook 'Info-mode-hook #'druid-modeline-info-mode)
   (add-hook 'elpher-mode-hook #'druid-modeline-elpher-mode))
 
+;; NOTE: karthink's store-action-key+cmd and keycast-capture-avy-dispatch
+(use-package keycast
+  :config
+  (define-minor-mode druid-modeline-keycast-mode
+    "Show current command and its key binding in the mode line."
+    :global t
+    (if druid-modeline-keycast-mode
+        (progn
+          (add-hook 'pre-command-hook 'keycast--update t)
+          (add-to-list 'global-mode-string '("" keycast-mode-line)))
+      (remove-hook 'pre-command-hook 'keycast--update)
+      (setq global-mode-string (remove '("" keycast-mode-line) global-mode-string))))
 
-;; (use-package keycast)
+  (setopt keycast-mode-line-format "%2s%k%c%R"
+          keycast-mode-line-window-predicate 'mode-line-window-selected-p
+          keycast-mode-line-remove-tail-elements nil)
+
+  (dolist (input '(self-insert-command org-self-insert-command eshell-self-insert-command))
+    (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
+
+  (dolist (event '( mouse-event-p mouse-movement-p mwheel-scroll handle-select-window
+                    mouse-set-point mouse-drag-region))
+    (add-to-list 'keycast-substitute-alist `(,event nil)))
+
+  (druid-modeline-keycast-mode))
 
 ;; (use-package spacious-padding)
 

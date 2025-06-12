@@ -98,6 +98,7 @@ in
               pulsar
               cursory
               highlight-numbers
+              keycast
               envrc
               inheritenv
               add-node-modules-path
