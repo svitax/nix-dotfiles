@@ -460,7 +460,7 @@ other characters."
                  shell-file-name)))
     (propertize
      (cond (name name)
-           (mode (format ("(%s, %s mode)" shell mode)))
+           (mode (format "(%s, %s mode)" shell mode))
            (t (format "(%s)" shell)))
      'face (druid-modeline-face 'primary))))
 
