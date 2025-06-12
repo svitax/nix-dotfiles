@@ -160,7 +160,7 @@ in
               elpher
               # erc-hl-nicks
               # leetcode
-              # gptel
+              gptel
               nerd-icons
               nerd-icons-completion
               nerd-icons-corfu

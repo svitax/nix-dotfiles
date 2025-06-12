@@ -8435,71 +8435,60 @@ instead of the current one."
 
 ;; TODO document gptel
 (use-package gptel
-  :disabled t
   :config
 
-  (defun +gptel--show-response (response info)
-    "Display RESPONSE in the echo area or a buffer, depending on length.
+  (setopt gptel-directives
+          `((default . "To assist:  Be terse.  Do not offer unprompted advice or clarifications.  Speak in specific,
+   topic relevant terminology.  Do NOT hedge or qualify.  Speak directly and be willing to make creative guesses.
 
-For use as a `:callback' with `gptel-request'."
-    (cond
-     ((not response)
-      (message "gptel-mini failed with message: %s" (plist-get info :status)))
-     ((< (length response) 250)
-      (message "%s" response))
-     (t (pop-to-buffer (get-buffer-create "*gptel-mini*"))
-        (let ((inhibit-read-only t))
-          (erase-buffer)
-          (insert response)
-          (fill-region (point-min) (point-max)))
-        (goto-char (point-min))
-        (special-mode))))
+  Explain your reasoning.  if you don’t know, say you don’t know.  Be willing to reference less reputable sources for
+   ideas.
 
-  (defun +gptel-mini (prompt)
-    "Display the LLM's response to PROMPT.
-If the region is active, it is included as context. If the response is
-short, it is shown in the echo area; otherwise, it is displayed in a
-buffer."
-    (interactive "sAsk LLM: ")
-    (when (string= prompt "") (user-error "A prompt is required."))
-    (when (use-region-p)
-      (gptel-context--add-region
-       (current-buffer) (region-beginning) (region-end)))
-    (gptel-request prompt :callback #'+gptel--show-response))
+  Do NOT summarize your answers.
 
-  (defun +gptel-define (term)
-    "Use an LLM to define a TERM."
-    (interactive "sLookup: ")
-    (when (string= term "") (user-error "A term to define is required."))
-    (gptel-request (format "Explain this very briefly: %S" term)
-                   :callback #'+gptel--show-response))
+  If you use LaTex notation, enclose math in \\( and \\), or \\[ and \\] delimiters.
+
+   Never apologize.  Ask questions when unsure.")
+            (tutor . "You are a tutor and domain expert in the domain of my questions.  You will lead me to discover the answer myself by providing hints.  Your instructions are as follows:
+  - If the question or notation is not clear to you, ask for clarifying details.
+  - At first your hints should be general and vague.
+  - If I fail to make progress, provide more explicit hints.
+  - Never provide the answer itself unless I explicitly ask you to.  If my answer is wrong, again provide only hints to correct it.
+  - If you use LaTeX notation, enclose math in \\( and \\) or \\[ and \\] delimiters.")
+            (programmer . "You are a careful programmer.  Provide code and only code as output without any additional text, prompt or note.  Do NOT use markdown backticks (```) to format your response.")
+            (cliwhiz . "You are a command line helper.  Generate command line commands that do what is requested, without any additional description or explanation.  Generate ONLY the command, without any markdown code fences.")
+            (emacser . "You are an Emacs maven.  Reply only with the most appropriate built-in Emacs command for the task I specify.  Do NOT generate any additional description or explanation.")
+            (explain . "Explain what this code does to a novice programmer.")))
+
+  (setq gptel--system-message (alist-get 'default gptel-directives))
+
+  (defvar gptel--ollama
+    (gptel-make-ollama "Ollama"
+      :host "localhost:11434"
+      :stream t
+      :models '(deepseek-r1:1.5b deepscaler qwen3:1.7b
+                gemma3:1b llama3.2:1b
+                ;; (qwen2.5vl:3b :description Qwen 2.5vl: Vision capable model
+                ;;  :capabilities (media)
+                ;;  :mime-types (image/jpeg image/png))
+                )))
 
   (setopt gptel-default-mode 'org-mode
           gptel-include-reasoning nil
-          gptel-model 'deepseek-r1:latest
-          gptel-backend (gptel-make-ollama "Ollama"
-                          :host "localhost:11434"
-                          :stream t
-                          :models '(deepseek-r1:latest
-                                    qwen2.5:7b
-                                    qwen2.5-coder:7b)))
+          gptel-model 'qwen3:1.7b
+          gptel-backend gptel--ollama
+          gptel-display-buffer-action '(pop-to-buffer-same-window))
 
-  (defvar-keymap +global-gptel-map
-    :doc "Prefix keymap for gptel."
-    :prefix '+global-gptel-map)
+  (bind-keys :map global-map
+             ("C-c <return>" . gptel-send)
+             ("C-c C-<return>" . gptel-menu)
+             ("C-c C-g" . gptel-abort)
+             :map embark-region-map
+             ("+" . gptel-add)
+             :map gptel-mode-map
+             ("M-a" . gptel-beginning-of-response)
+             ("M-e" . gptel-end-of-response)))
 
-  (bind-keys
-   :map global-map
-   ("C-c RET" . gptel-send)
-   ("C-c a" . +global-gptel-map)
-   :map +global-gptel-map
-   ("c" . gptel)
-   ("s" . gptel-send)
-   ("r" . gptel-rewrite)
-   ("a" . gptel-add)
-   ("m" . gptel-mode)
-   ("q" . +gptel-mini)
-   ("d" . +gptel-define)))
 
 ;;;;;;;;;;;;;
 ;;;; irc ;;;;
