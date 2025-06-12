@@ -899,8 +899,19 @@ writeable."
            (rx (and symbol-start (or (+ digit) (+ hex-digit) (and "0" (any "xX") (+ hex-digit))) symbol-end))
            highlight-numbers-modelist))
 
-;; (use-package modeline
-;;   :no-require t)
+(use-package druid-modeline
+  :config
+  ;; (druid-modeline-text-mode 1)
+  (add-hook 'prog-mode-hook #'druid-modeline-prog-mode)
+  (add-hook 'org-mode-hook #'druid-modeline-org-mode)
+  (add-hook 'org-capture-mode-hook #'druid-modeline-org-capture-mode)
+  (add-hook 'shell-mode-hook #'druid-modeline-shell-mode)
+  (add-hook 'pdf-view-mode-hook #'druid-modeline-pdf-mode)
+  (add-hook 'nov-mode-hook #'druid-modeline-nov-mode)
+  (add-hook 'eww-mode-hook #'druid-modeline-eww-mode)
+  (add-hook 'Info-mode-hook #'druid-modeline-info-mode)
+  (add-hook 'elpher-mode-hook #'druid-modeline-elpher-mode))
+
 
 ;; (use-package keycast)
 
@@ -4461,6 +4472,14 @@ The parameter NAME, ARGS, REST, and STATE are explained in the
               (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend nil t)))
   ;; Stay away from ElDoc as well.
   (add-to-list 'eglot-stay-out-of 'eldoc)
+
+  ;; Eglot automatically adds `eglot--mode-line-format' to `mode-line-misc-info'
+  ;; I don't like that, so let's remove it.
+  (defun +eglot-remove-mode-line-misc-info ()
+    (setq mode-line-misc-info
+          (delete '(eglot--managed-mode (" [" eglot--mode-line-format "] "))
+                  mode-line-misc-info)))
+  (add-hook 'eglot-managed-mode-hook #'+eglot-remove-mode-line-misc-info)
 
   (setopt eglot-extend-to-xref t)
 
