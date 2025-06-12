@@ -479,7 +479,8 @@ other characters."
                       (downcase
                        (string-trim
                         (substring-no-properties mode-line-process)))
-                    "ready"))))
+                    "ready"))
+   'face (druid-modeline-face 'primary)))
 
 (defun druid-modeline-button-gptel-context ()
   "Finalize the capture process."
@@ -492,14 +493,16 @@ other characters."
                     context)))
     ;; (nano-modeline-button (upcase (format "%s" context))
     ;;                       #'gptel-system-prompt 'active "Set context")
-    (propertize (upcase (format "%s" context)))))
+    (propertize (upcase (format "%s" context))
+                'face (druid-modeline-face 'secondary))))
 
 (defun druid-modeline-button-gptel-model ()
   "Finalize the capture process."
   (let ((model (gptel--model-name gptel-model)))
     ;; (nano-modeline-button (string-trim (upcase (format" %s" model)))
     ;;                       #'gptel-menu 'active "Set model")
-    (propertize (string-trim (upcase (format " %s" model))))))
+    (propertize (string-trim (upcase (format " %s" model)))
+                'face (druid-modeline-face 'secondary))))
 
 ;; TODO +modeline-book-title
 
