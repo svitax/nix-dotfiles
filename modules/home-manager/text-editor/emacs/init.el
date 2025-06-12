@@ -766,7 +766,9 @@ writeable."
        ;; faces to yield the desired color combinations.
        `(git-gutter-fr:added ((,c :foreground ,bg-added-fringe :background ,fringe)))
        `(git-gutter-fr:deleted ((,c :foreground ,bg-removed-fringe :background ,fringe)))
-       `(git-gutter-fr:modified ((,c :foreground ,bg-changed-fringe :background ,fringe))))))
+       `(git-gutter-fr:modified ((,c :foreground ,bg-changed-fringe :background ,fringe)))
+       `(keycast-key ((,c :inherit bold :foreground ,fg-mode-line-active :background ,bg-mode-line-active)))
+       `(keycast-command ((,c :inherit mode-line :foreground ,fg-mode-line-active :background ,bg-mode-line-active))))))
   (add-hook 'enable-theme-functions #'+customize-theme-faces)
 
   (modus-themes-select 'modus-vivendi))
