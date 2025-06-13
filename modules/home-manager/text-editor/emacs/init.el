@@ -2187,10 +2187,24 @@ first one. Else do `vertico-exit'."
   ;; TODO add consult-dir source for docker containers using TRAMP
   ;; https://github.com/karthink/consult-dir/wiki#docker-containers-using-tramp
 
+  ;; Switch projects using `consult-dir'.
+  (defun +consult-dir-project (dir)
+    (interactive
+     (let ((unread-command-events (list ?p ?\s)))
+       (list (funcall #'consult-dir--pick "Select project: "))))
+    (let* ((command (if (symbolp project-switch-commands)
+                        project-switch-commands
+                      (project--switch-project-command)))
+           (consult-dir-default-command command)
+           (default-directory dir))
+      (call-interactively command)))
+
   (setopt consult-dir-shadow-filenames nil)
 
   (bind-keys :map +prefix-map
              ("C-d" . consult-dir)
+             :map +search-prefix-map
+             ("M-p" . +consult-dir-project)
              :map minibuffer-local-completion-map
              ("C-x C-d" . consult-dir)
              ("M-s M-f" . consult-dir-jump-file)
@@ -2461,7 +2475,9 @@ together."
     (let ((consult-project-function 'consult--default-project-function))
       (consult-grep dir initial)))
 
-  (bind-keys :map +project-prefix-map
+  (bind-keys :map +search-prefix-map
+             ("M-p" . project-switch-project)
+             :map +project-prefix-map
              ("b" . project-switch-to-buffer)
              ("d" . project-dired)
              ("e" . project-eshell)
