@@ -8421,6 +8421,15 @@ instead of the current one."
   ;; Imenu support for `eww'.
   (add-hook 'eww-mode-hook '+shr-heading-setup-imenu)
 
+  ;;; Automatically activate `eww-readable' on certain URLs
+  (defvar +eww-auto-readable-urls
+    (regexp-opt '("guardian.co.uk" "theguardian.com" "github.com"
+                  "eldiario.es")))
+  (defun +eww-autoread ()
+    (when (string-match-p +eww-auto-readable-urls (or (eww-current-url)))
+      (eww-readable)))
+  (add-hook 'eww-after-render-hook #'+eww-autoread)
+
   (setopt eww-auto-rename-buffer '+eww-buffer-name
           eww-header-line-format ""
           eww-history-limit 150
