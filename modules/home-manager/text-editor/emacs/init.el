@@ -1994,13 +1994,19 @@ first one. Else do `vertico-exit'."
   ;; prompt.  Unfortunately, the eager previewing can be disorienting when
   ;; moving quickly between candidates. The `consult-customize' macro allows us
   ;; to configure the the preview on a per-command basis. Here I set it to
-  ;; activate preview with the key `M-.' for certain commands and sources.
+  ;; activate preview with the key `M-.' for certain commands and sources. I
+  ;; also configure it so `C-M-n' and `C-M-p' always moves between candidates
+  ;; with preview.
   :config
   (consult-customize
    consult-bookmark consult-info consult-recent-file consult-buffer
-   :preview-key "M-."
+   consult-grep consult-ripgrep
+   :preview-key '("M-." "C-M-n" "C-M-p")
    consult-theme
-   :preview-key (list :debounce 0.3 "M-."))
+   :preview-key (list :debounce 0.3 "M-." "C-M-n" "C-M-p"))
+   (bind-keys :map vertico-map
+              ("C-M-n" . vertico-next)
+              ("C-M-p" . vertico-previous))
 
   ;; When I call `consult-buffer', I usually instantly narrow to the buffer
   ;; subset, although I sometimes want to select a recent file or a shell
@@ -7530,7 +7536,7 @@ continue, per `org-agenda-skip-function'."
   (consult-customize
    consult-denote-buffer-source
    :narrow ?d
-   :preview-key "M-."
+   :preview-key '("M-." "C-M-n" "C-M-p")
    :name "Denote")
 
   ;; By default `consult-denote-buffer-source' only shows buffers if their file
