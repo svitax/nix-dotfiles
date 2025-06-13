@@ -6022,6 +6022,11 @@ region is active."
              ("C-c C-l" . load-file)
              ("C-c C-z" . ielm)))
 
+;; (use-package beardbolt
+;;   :config
+;;   (bind-keys :map global-map
+;;              ("C-c M-d" . beardbolt-starter)))
+
 (use-package ielm
   :config
   (bind-keys :map ielm-map
