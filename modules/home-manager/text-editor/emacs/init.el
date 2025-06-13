@@ -2789,6 +2789,7 @@ Limit list of buffers to those matching the current
      "^\\*shell.*\\*$"
      "^\\*term.*\\*$"
      "^\\*vterm.*\\*$"
+     "^\\*mistty.*\\*$"
      "^\\*jupyter-repl.*\\*$"
      ;; VC buffers
      "^magit-diff:.*$"
@@ -2811,6 +2812,7 @@ Limit list of buffers to those matching the current
      eshell-mode
      shell-mode
      term-mode
+     mistty-mode
      comint-mode
      debugger-mode
      ;; Grep buffers
@@ -5738,7 +5740,10 @@ if one already exists."
              :map +project-prefix-map
              ("C-<return>" . +project-vterm)))
 
-(use-package mistty)
+(use-package mistty
+  :config
+  (bind-keys :map +prefix-map
+             ("C-<return>" . mistty-in-project)))
 
 ;;;;;;;;;;;;;;
 ;;;; prog ;;;;
