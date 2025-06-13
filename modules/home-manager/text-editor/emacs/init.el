@@ -2268,8 +2268,10 @@ first one. Else do `vertico-exit'."
   (bind-keys :map global-map
              ("C-c C-." . embark-act)
              :map minibuffer-local-map
+             ("C-c C-a" . embark-act-all)
              ("C-c C-c" . embark-collect)
-             ("C-c C-e" . embark-export)))
+             ("C-c C-e" . embark-export)
+             ("C-c C-i" . embark-select)))
 
 ;; Needed for correct exporting while using Embark with Consult commands.
 (use-package embark-consult)
