@@ -2111,14 +2111,13 @@ first one. Else do `vertico-exit'."
              ("f" . consult-focus-lines) ; C-u to unfocus
              ("M-g" . +consult-grep-dwim) ; rg
              ("M-h" . consult-history)
-             ("M-i" . consult-info)
+             ("M-i" . consult-imenu)
              ("M-k" . consult-kmacro)
              ("k" . consult-keep-lines)
              ("M-l" . +consult-line-dwim)
              ("M-m" . consult-mark)
-             ("M-o" . consult-outline)
              ("M-r" . consult-register)
-             ("M-s" . consult-imenu)
+             ("M-s" . consult-outline)
              ("M-t" . +consult-tab)
              ("M-," . +consult-xref-history)
              :map +registers-prefix-map
@@ -2129,6 +2128,8 @@ first one. Else do `vertico-exit'."
              ;; Available filters are displayed with the `consult-narrow-help'
              ;; command at the prompt
              ("?" . consult-narrow-help)
+             :map help-map
+             ("C-i" . consult-info)
              :map isearch-mode-map
              ("M-s M-l" . consult-line) ; needed by consult-line to detect Isearch
              ("M-s M-h" . consult-isearch-history)
