@@ -5415,6 +5415,11 @@ Only account for the history Emacs knows about, ignoring
     (+shell--insert-and-send
      (+shell--input-history-prompt)))
 
+  ;;;; Outline support for shell prompts
+
+  (add-hook 'shell-mode-hook
+            (lambda ()
+              (setq outline-regexp shell-prompt-pattern)))
 
   ;;;; Directory navigation
 
