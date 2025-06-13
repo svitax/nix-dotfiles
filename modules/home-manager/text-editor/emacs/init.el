@@ -942,7 +942,6 @@ writeable."
                     mouse-set-point mouse-drag-region))
     (add-to-list 'keycast-substitute-alist `(,event nil)))
 
-
   (defun store-action-key+cmd (cmd)
     (setq keycast--this-command-keys (this-single-command-keys)
           keycast--this-command cmd)
@@ -5715,6 +5714,7 @@ Add a bookmark handler for shell buffer and activate the
   ;; My workflow is to keep `shell' as my main conduit to the command line, such
   ;; as for when I need to call one of my scripts, and only use `vterm' when I
   ;; really need a CLI tool that is likely to produce graphical artefacts.
+  :disabled t
   :config
   (defun +project-vterm ()
     "Start an inferior shell in the current project's root directory.
@@ -5734,17 +5734,24 @@ if one already exists."
   ;; my +shell command
 
   (setopt vterm-kill-buffer-on-exit nil
-          vterm-max-scrollback 9999)
-
-  (bind-keys :map +prefix-map
-             ("C-<return>" . vterm)
-             :map +project-prefix-map
-             ("C-<return>" . +project-vterm)))
+          vterm-max-scrollback 9999))
 
 (use-package mistty
   :config
+
+  (defun +mistty (&optional prompt)
+    "Start an Mistty term in the specified directory.
+
+If PROMPT is nil, don't prompt for a directory and use
+`default-directory'."
+    (interactive "P")
+    (if prompt
+        (let ((default-directory (read-directory-name "Directory: " default-directory)))
+          (mistty))
+      (mistty-in-project)))
+
   (bind-keys :map +prefix-map
-             ("C-<return>" . mistty-in-project)))
+             ("C-<return>" . +mistty)))
 
 ;;;;;;;;;;;;;;
 ;;;; prog ;;;;

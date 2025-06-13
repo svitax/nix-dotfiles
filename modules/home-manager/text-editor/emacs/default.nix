@@ -135,7 +135,7 @@ in
               git-gutter
               git-gutter-fringe
               native-complete
-              vterm
+              # vterm
               mistty
               jupyter
               nix-ts-mode
