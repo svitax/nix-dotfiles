@@ -7964,6 +7964,9 @@ BibTeX file."
 ;;;;;;;;;;;;;;;
 ;;;; email ;;;;
 
+;; TODO consult-notmuch <https://codeberg.org/jao/consult-notmuch>
+;; (use-package consult-notmuch)
+
 (use-package ol-notmuch
   :disabled t
   ;; It can be useful to include links to e-mail messages or search queries in
