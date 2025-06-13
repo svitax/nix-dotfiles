@@ -2074,6 +2074,29 @@ first one. Else do `vertico-exit'."
     (interactive)
     (consult-global-mark (flatten-list xref--history)))
 
+  ;; Start `consult-line' search with active region, if available.
+  (defalias '+consult-line-dwim 'consult-line)
+  (consult-customize
+   consult-line +consult-line-dwim
+   :prompt "Search: "
+   +consult-line-dwim
+   :initial (when (use-region-p)
+              (deactivate-mark)
+              (buffer-substring-no-properties
+               (region-beginning)
+               (region-end))))
+
+  ;; Start `consult-grep' search with active region, if available.
+  (defalias '+consult-grep-dwim 'consult-grep)
+  (defalias '+consult-ripgrep-dwim 'consult-ripgrep)
+  (consult-customize
+   +consult-grep-dwim +consult-ripgrep-dwim
+   :initial (when (use-region-p)
+              (deactivate-mark)
+              (buffer-substring-no-properties
+               (region-beginning)
+               (region-end))))
+
   (bind-keys :map global-map
              ("M-y" . consult-yank-pop)
              :map +prefix-map
@@ -2086,12 +2109,12 @@ first one. Else do `vertico-exit'."
              ("c" . count-matches)
              ("M-f" . consult-find) ; fd
              ("f" . consult-focus-lines) ; C-u to unfocus
-             ("M-g" . consult-grep) ; rg
+             ("M-g" . +consult-grep-dwim) ; rg
              ("M-h" . consult-history)
              ("M-i" . consult-info)
              ("M-k" . consult-kmacro)
              ("k" . consult-keep-lines)
-             ("M-l" . consult-line)
+             ("M-l" . +consult-line-dwim)
              ("M-m" . consult-mark)
              ("M-o" . consult-outline)
              ("M-r" . consult-register)
