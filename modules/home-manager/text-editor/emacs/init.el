@@ -1998,14 +1998,14 @@ first one. Else do `vertico-exit'."
   ;; `consult-customize' macro allows us to configure the the preview on a
   ;; per-command basis.
   :config
-
-  (setopt consult-preview-key '("M-." "C-M-n" "C-M-p"))
   (bind-keys :map vertico-map
              ("C-M-n" . vertico-next)
              ("C-M-p" . vertico-previous))
 
+  (setopt consult-preview-key '("M-." "C-M-n" "C-M-p"))
   (consult-customize
-   consult-theme :preview-key (list :debounce 0.3 "M-." "C-M-n" "C-M-p"))
+   consult-theme :preview-key (list :debounce 0.3 "M-." "C-M-n" "C-M-p")
+   consult-mark :preview-key 'any)
 
   ;; When I call `consult-buffer', I usually instantly narrow to the buffer
   ;; subset, although I sometimes want to select a recent file or a shell
