@@ -8206,12 +8206,12 @@ Return the exit code and output in a list."
       (list (apply 'call-process command nil (current-buffer) nil args)
             (buffer-string))))
 
-  (defun +eww-rename-buffer ()
-    (when (eq major-mode 'eww-mode)
-      (when-let ((string (or (plist-get eww-data :title)
-                             (plist-get eww-data :url))))
+  (defun +eww-buffer-name ()
+    (when-let ((string (or (plist-get eww-data :title)
+                           (plist-get eww-data :url))))
+      (when (not (string-blank-p string))
         (format "%s" (truncate-string-to-width
-                          string eww-buffer-name-length)))))
+                      string eww-buffer-name-length)))))
 
   (defun +eww-denote-slug-hyphenate (str)
     "Replace spaces, underscores, slashes, dots, and colons with hyphens in
@@ -8421,7 +8421,7 @@ instead of the current one."
   ;; Imenu support for `eww'.
   (add-hook 'eww-mode-hook '+shr-heading-setup-imenu)
 
-  (setopt eww-auto-rename-buffer '+eww-rename-buffer
+  (setopt eww-auto-rename-buffer '+eww-buffer-name
           eww-header-line-format ""
           eww-history-limit 150
           eww-download-directory (concat denote-directory "reference/"))
