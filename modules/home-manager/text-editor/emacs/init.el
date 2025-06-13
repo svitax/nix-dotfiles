@@ -8471,7 +8471,8 @@ instead of the current one."
             (emacser . "You are an Emacs maven.  Reply only with the most appropriate built-in Emacs command for the task I specify.  Do NOT generate any additional description or explanation.")
             (explain . "Explain what this code does to a novice programmer.")))
 
-  (setq gptel--system-message (alist-get 'default gptel-directives))
+  ;; TODO add karthink's gptel-rewrite-commit-message rewrite directive
+  ;; <https://github.com/karthink/.emacs.d/blob/25a0aec771c38e340789d7c304f3e39ff23aee3e/init.el#L4570>
 
   (defvar gptel--ollama
     (gptel-make-ollama "Ollama"
@@ -8484,6 +8485,7 @@ instead of the current one."
                 ;;  :mime-types (image/jpeg image/png))
                 )))
 
+  (setq gptel--system-message (alist-get 'default gptel-directives))
   (setopt gptel-default-mode 'org-mode
           gptel-include-reasoning nil
           gptel-model 'qwen3:1.7b
@@ -8507,7 +8509,6 @@ instead of the current one."
           gptel-quick-model 'gemma3:1b)
   (bind-keys :map embark-general-map
              ("?" . gptel-quick)))
-
 
 ;;;;;;;;;;;;;
 ;;;; irc ;;;;
