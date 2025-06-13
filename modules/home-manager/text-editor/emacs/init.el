@@ -4785,7 +4785,7 @@ Interactively also sends a terminating newline."
    ("C-," . +compile)
    ("C-." . recompile)
    :map compilation-mode-map
-   ("C-c i" . +compile-toggle-comint)
+   ("C-x C-q" . +compile-toggle-comint)
    ;; TODO is C-c C-q used anywhere at all? should i bind this globally?
    ("C-c C-q" . +kill-this-buffer)
    ("C-d" . +comint-send-self)
@@ -4793,9 +4793,9 @@ Interactively also sends a terminating newline."
    ("y" . +comint-send-self)
    ("n" . +comint-send-self)
    :map compilation-minor-mode-map
-   ("C-c i" . +compile-toggle-comint)
+   ("C-x C-q" . +compile-toggle-comint)
    :map compilation-shell-minor-mode-map
-   ("C-c i" . +compile-toggle-comint)
+   ("C-x C-q" . +compile-toggle-comint)
    :map minibuffer-local-shell-command-map
    ("C-c C-r" . +compile-input-from-history)
    :map +goto-prefix-map
