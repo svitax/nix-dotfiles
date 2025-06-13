@@ -603,13 +603,10 @@ other characters."
 
 ;;;;;; Org Agenda
 
-(defun druid-modeline-calendar-date (&optional format)
+(defun druid-modeline-agenda-date (&optional format)
   "Calendar date"
-  (let* ((date (calendar-cursor-to-date))
-         (date (when date
-                 (encode-time 0 0 0 (nth 1 date) (nth 0 date) (nth 2 date))))
-         (format (or format "%d %B %Y")))
-    (propertize (format-time-string format date)
+  (let ((format (or format "%A %d %B %Y")))
+    (propertize (format-time-string format)
                 'face (druid-modeline-face 'secondary))))
 
 ;;;;;; TODO Selection
@@ -767,8 +764,8 @@ other characters."
              (druid-modeline-vc-info)
              (druid-modeline-misc-info))
            '(;; (druid-modeline-selection-info)
-             (druid-modeline-cursor-position)
-             (druid-modeline-window-dedicated-status))
+             (druid-modeline-cursor-position) " "
+             (druid-modeline-window-dedicated-status) " ")
            default))
 
 ;; ** init.el@host (#rewrite, edited) | <5L, 258C> 352:58 ◦
@@ -782,8 +779,8 @@ other characters."
              (druid-modeline-vc-info)
              (druid-modeline-misc-info))
            '(;; (druid-modeline-selection-info)
-             (druid-modeline-cursor-position)
-             (druid-modeline-window-dedicated-status))
+             (druid-modeline-cursor-position) " "
+             (druid-modeline-window-dedicated-status) " ")
            default))
 
 ;; ** how-to-study.org@host (#rewrite, edited) | <5L, 258C> 352:58 ◦
@@ -798,17 +795,21 @@ other characters."
              (druid-modeline-vc-info)
              (druid-modeline-misc-info))
            '(;; (druid-modeline-selection-info)
-             (druid-modeline-cursor-position)
-             (druid-modeline-window-dedicated-status))
+             (druid-modeline-cursor-position) " "
+             (druid-modeline-window-dedicated-status) " ")
            default))
 
 ;; ** Agenda | Tuesday 22 October 2024 ◦
 (defun druid-modeline-org-agenda-mode ()
   (funcall druid-modeline-position
            '((druid-modeline-buffer-status) " "
-             (druid-modeline-buffer-identification)
+             (druid-modeline-agenda-date) " " ; "%A %-e %B %Y" as arg
              (druid-modeline-misc-info))
-           '((druid-modeline-calendar-date) " " ; "%A %-e %B %Y" as arg
+           '(;; (druid-modeline-button-agenda-prev-month) " "
+             ;; (druid-modeline-button-agenda-prev-day) " "
+             ;; (druid-modeline-button-agenda-today) " "
+             ;; (druid-modeline-button-agenda-next-day) " "
+             ;; (druid-modeline-button-agenda-next-month) " "
              (druid-modeline-window-dedicated-status))))
 
 ;; NRW Capture (my org capture description) | KILL REFILE SAVE ◦
@@ -832,7 +833,7 @@ other characters."
              (druid-modeline-buffer-identification) " "
              (druid-modeline-file-size)
              (druid-modeline-misc-info))
-           '((druid-modeline-pdf-page)
+           '((druid-modeline-pdf-page) " "
              (druid-modeline-window-dedicated-status))
            default))
 
@@ -883,7 +884,7 @@ other characters."
              (druid-modeline-elpher-title)
              (druid-modeline-misc-info))
            '((druid-modeline-button-elpher-back) " "
-             (druid-modeline-window-dedicated-status))))
+             (druid-modeline-window-dedicated-status) " ")))
 
 ;; WEB Ink & Switch | BACK ◦
 (defun druid-modeline-eww-mode ()
@@ -893,7 +894,7 @@ other characters."
              (druid-modeline-eww-title)
              (druid-modeline-misc-info))
            '((druid-modeline-button-eww-back) " "
-             (druid-modeline-window-dedicated-status))))
+             (druid-modeline-window-dedicated-status) " ")))
 
 ;; ** Ollama (typing) | MEDIA Context Model ◦
 (defun druid-modeline-gptel-mode ()

@@ -907,6 +907,7 @@ writeable."
   (add-hook 'prog-mode-hook #'druid-modeline-prog-mode)
   (add-hook 'org-mode-hook #'druid-modeline-org-mode)
   (add-hook 'org-capture-mode-hook #'druid-modeline-org-capture-mode)
+  (add-hook 'org-agenda-mode-hook #'druid-modeline-org-agenda-mode)
   (add-hook 'gptel-mode-hook #'druid-modeline-gptel-mode)
   (add-hook 'shell-mode-hook #'druid-modeline-shell-mode)
   (add-hook 'term-mode-hook #'druid-modeline-shell-mode)
