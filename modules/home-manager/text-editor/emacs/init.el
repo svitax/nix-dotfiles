@@ -5511,7 +5511,7 @@ Push `shell-last-dir' to `+shell-cd-directories'."
   ;;;; Consult support
 
   (with-eval-after-load 'consult
-    (defvar +shell-buffer-source
+    (defvar +consult--source-shell-buffer
       `( :name "Shell"
          :narrow   ?s
          :category buffer
@@ -5522,8 +5522,7 @@ Push `shell-last-dir' to `+shell-cd-directories'."
                                      (with-current-buffer buf
                                       (derived-mode-p 'shell-mode)))
                         (buffer-list))))))
-
-    (add-to-list 'consult-buffer-sources '+shell-buffer-source :append))
+    (add-to-list 'consult-buffer-sources '+consult--source-shell-buffer :append))
 
   ;;;; General commands
 
@@ -8314,7 +8313,7 @@ Use link at point if there is one, otherwise the current page's URL."
 
   ;; Consult support
   (with-eval-after-load 'consult
-    (defvar +eww-buffer-source
+    (defvar +consult--source-eww-buffer
       `( :name "EWW"
          :narrow   ?w
          :category buffer
@@ -8325,7 +8324,7 @@ Use link at point if there is one, otherwise the current page's URL."
                                      (with-current-buffer buf
                                       (derived-mode-p 'eww-mode)))
                         (buffer-list))))))
-    (add-to-list 'consult-buffer-sources '+eww-buffer-source :append))
+    (add-to-list 'consult-buffer-sources '+consult--source-eww-buffer :append))
 
   (defun +consult-history-eww ()
     "Fetch URL from `eww-history' and render the page."
