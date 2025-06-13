@@ -8508,6 +8508,9 @@ instead of the current one."
                 ;;  :mime-types (image/jpeg image/png))
                 )))
 
+  ;; TODO replace visual-line-mode in gptel-mode with visual-fill-column-mode
+  (add-hook 'gptel-mode-hook #'visual-line-mode)
+
   (setq gptel--system-message (alist-get 'default gptel-directives))
   (setopt gptel-default-mode 'org-mode
           gptel-include-reasoning nil
