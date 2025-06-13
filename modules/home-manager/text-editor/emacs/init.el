@@ -2456,7 +2456,8 @@ together."
                                     (magit-project-status "VC" ?v)
                                     (project-compile "Compile" ?,)
                                     (project-async-shell-command "Async Command" ?&)
-                                    (project-shell-command "Command" ?!)))
+                                    (project-shell-command "Command" ?!)
+                                    (keyboard-quit "Cancel" ?\C-g)))
 
   ;; While inside a project, we have many commands that operate on the project
   ;; level. For example, `project-find-file' searches for a file across the
