@@ -2134,6 +2134,11 @@ first one. Else do `vertico-exit'."
              ("M-s M-h" . consult-isearch-history)
              ("C-c C-r" . consult-isearch-history)))
 
+;; (use-package consult-omni
+;;   :config
+;;   (bind-keys :map +search-prefix-map
+;;              ("M-w" . consult-omni)))
+
 (use-package consult-dir
   ;; `consult-dir' allows you to easily insert directory paths into the
   ;; minibuffer prompt in Emacs.
@@ -8437,8 +8442,9 @@ instead of the current one."
           eww-history-limit 150
           eww-download-directory (concat denote-directory "reference/"))
 
-  ;; M-s M-w for +eww-search-words or consult-omni
   (bind-keys
+   :map +search-prefix-map
+   ("M-w" . eww-search-words)
    :map eww-mode-map
    ("<" . beginning-of-buffer)
    (">" . end-of-buffer)
