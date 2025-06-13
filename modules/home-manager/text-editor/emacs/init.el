@@ -8503,10 +8503,9 @@ instead of the current one."
       :stream t
       :models '(deepseek-r1:1.5b deepscaler qwen3:1.7b
                 gemma3:1b llama3.2:1b
-                ;; (qwen2.5vl:3b :description Qwen 2.5vl: Vision capable model
-                ;;  :capabilities (media)
-                ;;  :mime-types (image/jpeg image/png))
-                )))
+                (qwen2.5vl:3b :description "Qwen 2.5vl: Vision capable model"
+                 :capabilities (media)
+                 :mime-types (image/jpeg image/png)))))
 
   ;; TODO replace visual-line-mode in gptel-mode with visual-fill-column-mode
   (add-hook 'gptel-mode-hook #'visual-line-mode)
