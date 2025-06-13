@@ -5371,6 +5371,18 @@ ARGS is a list of strings."
 
   ;;;; Input from shell command history using completion
 
+  ;; TODO: Do I need +shell-input-from-history when I have consult-history?
+  (with-eval-after-load 'consult
+    (add-to-list
+     'consult-mode-histories
+     '(shell-mode comint-input-ring comint-input-ring-index comint-bol)))
+
+  (defun +consult-history-comint-send ()
+    (declare (interactive-only t))
+    (interactive)
+    (consult-history)
+    (comint-send-input))
+
   (defun +shell--build-input-history ()
     "Return `comint-input-ring' as a list."
     (when (and (ring-p comint-input-ring)
@@ -5405,12 +5417,6 @@ Only account for the history Emacs knows about, ignoring
     (+shell--insert-and-send
      (+shell--input-history-prompt)))
 
-  ;; TODO I don't know if i need to add to consult-mode-histories when i have
-  ;; +shell-input-from-history
-  (with-eval-after-load 'consult
-    (add-to-list
-     'consult-mode-histories
-     '(shell-mode comint-input-ring comint-input-ring-index comint-bol)))
 
   ;;;; Directory navigation
 
@@ -5673,9 +5679,7 @@ output instead."
     "C-x C-z" #'+shell-switch
     ;; "C-c C-." #'+shell-cd-vc-root-dir
     ;; "C-c d" #'+shell-cd
-    "C-c C-q" #'+kill-this-buffer
-    "M-s M-h" #'+shell-input-from-history
-    "C-c C-r" #'+shell-input-from-history)
+    "C-c C-q" #'+kill-this-buffer)
 
   (define-minor-mode +shell-mode
     "Provide extra functionality for the Emacs `shell'.
@@ -5723,6 +5727,7 @@ Add a bookmark handler for shell buffer and activate the
              :map +project-prefix-map
              ("z" . +project-shell)
              :map shell-mode-map
+             ("M-s M-h" . +consult-history-comint-send)
              ("C-c C-k" . comint-clear-buffer)
              ("C-c C-w" . comint-write-output)
              :map comint-mode-map
