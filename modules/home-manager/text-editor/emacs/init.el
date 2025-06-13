@@ -2172,12 +2172,10 @@ first one. Else do `vertico-exit'."
     :init-value nil
     :global nil
     (if +consult-dir-shell-mode
-        (progn
-          (bind-keys :map shell-mode-map ("C-c d" . consult-dir))
-          (setq-local consult-dir-default-command
-                      (lambda ()
-                        (interactive)
-                        (+shell--insert-and-send "cd" default-directory))))
+        (setq-local consult-dir-default-command
+                    (lambda ()
+                      (interactive)
+                      (+shell--insert-and-send "cd" default-directory)))
       (setq-local consult-dir-default-command nil)))
   (add-hook 'shell-mode-hook #'+consult-dir-shell-mode)
 
