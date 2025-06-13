@@ -3219,6 +3219,7 @@ end of the buffer.")
    ("C-." . isearch-forward-thing-at-point) ; easier than M-s .
    :map +search-prefix-map
    ("o" . occur)
+   ("M-o" . multi-occur)
    ("." . isearch-forward-thing-at-point)
    ("M-<" . +isearch-beginning-of-buffer)
    ("M->" . +isearch-end-of-buffer)
