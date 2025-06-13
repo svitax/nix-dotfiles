@@ -2504,9 +2504,7 @@ together."
     (let ((consult-project-function 'consult--default-project-function))
       (consult-grep dir initial)))
 
-  (bind-keys :map +search-prefix-map
-             ("M-p" . project-switch-project)
-             :map +project-prefix-map
+  (bind-keys :map +project-prefix-map
              ("b" . project-switch-to-buffer)
              ("d" . project-dired)
              ("e" . project-eshell)
