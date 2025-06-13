@@ -1995,8 +1995,8 @@ first one. Else do `vertico-exit'."
   ;; moving quickly between candidates. The `consult-customize' macro allows us
   ;; to configure the the preview on a per-command basis. Here I set it to
   ;; activate preview with the key `M-.' for certain commands and sources. I
-  ;; also configure it so `C-M-n' and `C-M-p' always moves between candidates
-  ;; with preview.
+  ;; also configure it so `C-M-n' and `C-M-p' always scrolls over the list of
+  ;; candidates while doing preview.
   :config
   (consult-customize
    consult-bookmark consult-info consult-recent-file consult-buffer
