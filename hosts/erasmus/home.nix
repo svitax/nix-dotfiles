@@ -58,17 +58,6 @@
 
   # window-manager.sway.enable = true;
 
-  # services.ollama = {
-  #   enable = true;
-  #   acceleration = "rocm";
-  #   environmentVariables = {
-  #     # Override the LLVM target by getting the version from your GPU like so
-  #     # nix-shell -p "rocmPackages.rocminfo" --run "rocminfo" | grep "gfx"
-  #     HSA_OVERRIDE_GFX_VERSION = "10.3.1";
-  #     HCC_AMDGPU_TARGET = "gfx1031";
-  #   };
-  # };
-
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "evermind";
