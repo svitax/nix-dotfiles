@@ -8449,7 +8449,8 @@ instead of the current one."
    ("t" . eww-top-url)
    ("u" . eww-up-url)
    ("w" . eww-copy-page-url)
-   ("s" . nil) ; unmap `eww-switch-to-buffer'
+   ("W" . +eww-find-feed)
+   ("s" . eww-search-words) ; overrides `eww-switch-to-buffer'
    ("S" . nil) ; unmap `eww-list-buffers'
    ("V" . +eww-view-archive)
    ("S-RET" . eww-open-in-new-buffer)
