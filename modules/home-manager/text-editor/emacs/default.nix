@@ -120,6 +120,7 @@ in
               dired-preview
               avy
               ace-link
+              link-hint
               logos
               mowie
               move-text

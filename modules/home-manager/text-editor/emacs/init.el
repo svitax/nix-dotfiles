@@ -3324,53 +3324,40 @@ end of the buffer.")
              :map isearch-mode-map
              ("M-j" . avy-isearch)))
 
-;; TODO replace with link-hint
-;; TODO document ace-link
-(use-package ace-link
+;; TODO document link-hint
+(use-package link-hint
   :config
-  (bind-keys
-   :map compilation-mode-map
-   ("f" . ace-link-compilation)
-   :map help-mode-map
-   ("f" . ace-link-help)
-   :map Info-mode-map
-   ("f" . ace-link-info))
+  (defun +link-hint--nop () nil)
 
+  (dolist (type link-hint-types)
+    (let* ((name (symbol-name type))
+           (stripped (intern (string-remove-prefix "link-hint-" name))))
+      (link-hint-define-type stripped
+        :jump #'+link-hint--nop)))
+
+  (defun +link-hint-jump-link ()
+    (interactive)
+    (let ((link-hint-restore nil))
+      (avy-with +link-hint-jump-link
+        (link-hint--one :jump))))
+
+  (setopt link-hint-message nil)
+
+  (bind-keys :map global-map
+             ("M-o" . link-hint-open-link)
+             ("C-j" . +link-hint-jump-link))
   (with-eval-after-load 'eww
-    (defun +ace-link--eww-action (pt external)
-      (when (number-or-marker-p pt)
-        (goto-char pt)))
-    (defun +ace-link-jump-eww ()
-      (interactive)
-      (let ((orig (symbol-function 'ace-link--eww-action)))
-        (unwind-protect
-            (progn
-              (fset 'ace-link--eww-action #'+ace-link--eww-action)
-              (ace-link-eww))
-          (fset 'ace-link--eww-action orig))))
     (bind-keys :map eww-mode-map
-               ("f" . ace-link-eww)
-               ("m" . +ace-link-jump-eww)))
-
+               ("f" . link-hint-open-link)
+               ("m" . +link-hint-jump-link)))
   (with-eval-after-load 'nov
-    (defun +ace-link--nov-action (pt)
-      (when (number-or-marker-p pt)
-        (goto-char (1+ pt))
-        (nov-browse-url)))
-    (defun +ace-link-nov ()
-      "Open a visible link in a `nov-mode' buffer."
-      (interactive)
-      (let ((pt (avy-with ace-link-eww
-                  (avy--process
-                   (mapcar #'cdr (ace-link--eww-collect))
-                   (avy--style-fn avy-style)))))
-        (+ace-link--nov-action pt)))
     (bind-keys :map nov-mode-map
-               ("f" . +ace-link-nov)))
-
-  (with-eval-after-load 'woman
-    (bind-keys :map woman-mode-map
-               ("f" . ace-link-woman))))
+               ("f" . link-hint-open-link)
+               ("m" . +link-hint-jump-link)))
+  (with-eval-after-load 'elpher
+    (bind-keys :map elpher-mode-map
+               ("f" . link-hint-open-link)
+               ("m" . +link-hint-jump-link))))
 
 ;; TODO document mowie
 (use-package mowie
