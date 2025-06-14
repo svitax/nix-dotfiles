@@ -1,8 +1,11 @@
+# Don't load settings configured in GUI
 config.load_autoconfig(False)
 
 # To enable flat web browsing and to make the Consult buffer sources work,
 # Qutebrowser has to be configured to open tabs as windows. It is also
 # recommended to hide the tab bar, since there will be no tabs.
+# Qutebrowser configured the right way i.e. with Emacs keybindings
+
 # c.tabs.tabs_are_windows = True
 c.tabs.show = 'never'
 
@@ -25,9 +28,21 @@ c.tabs.show = 'never'
 
 c.statusbar.show = 'never'
 
+# Height of completion menu
+c.completion.height = '45%'
+
+# Remove scrollbar from completion menu
+c.completion.scrollbar.padding = 0
+c.completion.scrollbar.width = 0
+
+# Configure title format for windows
 c.window.title_format = '{audio}{private}{current_title}'
 
+# Configure external editor
 c.editor.command = ['emacsclient', '-c', '{file}']
+
+# For privacy reasons, I’m setting a generic user-agent to minimize fingerprinting.
+c.content.headers.user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
 
 # requires +qutebrowser-choose-file and +qutebrowser-dired-hook is Emacs
 c.fileselect.handler = 'external'
@@ -49,21 +64,22 @@ c.fonts.web.size.minimum = 16
 
 c.content.user_stylesheets = ["all-sites.css"]
 
-# disable insert mode completely
+# All default keybindings will be disabled and redefined one by one.
+c.bindings.default['normal'] = {}
+c.bindings.default['insert'] = {}
+
+# Insert mode will be disabled completely. All keybindings in normal mode will
+# have a modifier key, so it's not needed.
 c.input.insert_mode.auto_enter = False
 c.input.insert_mode.auto_leave = False
 c.input.insert_mode.plugins = False
 
-# Forward unbound keys
+# All unbound keys will be forwarded.
 c.input.forward_unbound_keys = "all"
 
 ESC_BIND = 'clear-keychain ;; search ;; fullscreen --leave'
 
-import string
-
-c.bindings.default['normal'] = {}
-c.bindings.default['insert'] = {}
-
+# Insert mode becomes our "set-mark" mode.
 c.bindings.commands['insert'] = {
     '<ctrl-space>': 'mode-leave',
     '<ctrl-g>': 'mode-leave;;fake-key <Left>;;fake-key <Right>',
@@ -73,14 +89,19 @@ c.bindings.commands['insert'] = {
     '<ctrl-a>': 'fake-key <Shift-Home>',
     '<ctrl-p>': 'fake-key <Shift-Up>',
     '<ctrl-n>': 'fake-key <Shift-Down>',
+    '<alt-f>': 'fake-key <Ctrl-Shift-Right>',
+    '<alt-b>': 'fake-key <Ctrl-Shift-Left>',
     '<Return>': 'mode-leave',
     '<ctrl-w>': 'fake-key <Ctrl-x>;;message-info "cut to clipboard";;mode-leave',
     '<alt-w>': 'fake-key <Ctrl-c>;;message-info "copy to clipboard";;mode-leave',
     '<backspace>': 'fake-key <backspace>;;mode-leave',
     '<alt-x>': 'mode-leave;;cmd-set-text :',
     '<alt-o>': 'mode-leave;;tab-focus last',
-    '<Tab>': 'fake-key <f1>'
+    '<Tab>': 'fake-key <f1>',
+    '<ctrl-y>': 'insert-text {primary}',
 }
+
+import string
 
 for char in list(string.ascii_lowercase):
     c.bindings.commands['insert'].update({char: 'fake-key ' + char + ';;mode-leave'})
@@ -96,66 +117,109 @@ for symb in [',', '.', '/', '\'', ';', '[', ']', '\\',
              ':', '\"', '<', '>', '?','{', '}', '|']:
     c.bindings.commands['insert'].update({symb: 'insert-text ' + symb + ' ;;mode-leave'})
 
-
-# Bindings
 c.bindings.commands['normal'] = {
-    # Navigation
-    '<ctrl-space>': 'mode-enter insert',
-    '<ctrl-]>': 'fake-key <Ctrl-Shift-Right>',
-    '<ctrl-[>': 'fake-key <Ctrl-Shift-Left>',
-    '<ctrl-v>': 'scroll-page 0 0.5',
-    '<alt-v>': 'scroll-page 0 -0.5',
-    '<ctrl-shift-v>': 'scroll-page 0 1',
-    '<alt-shift-v>': 'scroll-page 0 -1',
+    # Fake keys will be used. This makes everything easier.
 
-    '<alt-x>': 'cmd-set-text :',
-    '<ctrl-x>b': 'cmd-set-text -s :tab-select;;fake-key <Down><Down><Down>',
-    '<ctrl-x>k': 'tab-close',
-    '<ctrl-x>r': 'config-cycle statusbar.hide',
-    '<ctrl-x>1': 'tab-only;;message-info "cleared all other tabs"',
-    '<ctrl-x><ctrl-c>': 'quit',
+    # Editing
+    '<ctrl-f>': 'fake-key <Right>',
+    '<ctrl-b>': 'fake-key <Left>',
 
-    # searching
-    '<ctrl-s>': 'cmd-set-text /',
-    '<ctrl-r>': 'cmd-set-text ?',
+    '<alt-f>': 'fake-key <Ctrl-Right>',
+    '<alt-b>': 'fake-key <Ctrl-Left>',
 
-    # hinting
-    '<alt-j>': 'hint',
-    '<ctrl-j>': 'hint links spawn --detach mpv {hint-url}',
-    # '<alt-o>': 'hint links spawn --detach umpv --force-window yes {hint-url}',
-    # '<alt-.>': 'spawn --detach umpv --force-window yes {url}',
-    '<alt-.>': 'spawn --detach mpv {url}',
+    '<ctrl-a>': 'fake-key <Home>',
+    '<ctrl-e>': 'fake-key <End>',
 
-    # open links
-    '<ctrl-l>': 'cmd-set-text -s :open',
-    '<alt-l>': 'cmd-set-text -s :open -t',
-    '<ctrl-alt-l>': 'cmd-set-text -s :open {url:pretty}',
+    '<ctrl-n>': 'fake-key <Down>',
+    '<ctrl-p>': 'fake-key <Up>',
 
-    # editing
-    '<alt-p>': 'back',
     '<alt-n>': 'forward',
-    '<alt-r>': 'reload',
+    '<alt-p>': 'back',
+
+    '<ctrl-d>': 'fake-key <Delete>',
+    '<alt-d>': 'fake-key <Ctrl-Delete>',
+
+    '<ctrl-k>': 'fake-key <Shift-End>;;fake-key <Backspace>',
+    '<alt-k>': 'fake-key <Shift-Home>;;fake-key <Backspace>',
+
+    '<ctrl-w>': 'fake-key <Ctrl-x>;;message-info "cut to clipboard"',
+    '<alt-w>': 'fake-key <Ctrl-c>;;message-info "copy to clipboard"',
+
+    '<ctrl-y>': 'insert-text {primary}',
+
+    '<alt-backspace>': 'fake-key <Ctrl-Backspace>',
+
     '<ctrl-/>': 'fake-key <Ctrl-z>',
     '<ctrl-shift-?>': 'fake-key <Ctrl-Shift-z>',
     '<ctrl-_>': 'fake-key <Ctrl-Shift-z>',
-    '<ctrl-k>': 'fake-key <Shift-End>;;fake-key <Backspace>',
-    '<ctrl-f>': 'fake-key <Right>',
-    '<ctrl-b>': 'fake-key <Left>',
-    # '<alt-o>': 'tab-focus last',
-    '<ctrl-a>': 'fake-key <Home>',
-    '<ctrl-x>h': 'fake-key <Ctrl-a>',
-    '<ctrl-e>': 'fake-key <End>',
-    '<ctrl-n>': 'fake-key <Down>',
-    '<ctrl-p>': 'fake-key <Up>',
-    '<alt-f>': 'fake-key <Ctrl-Right>',
-    '<alt-b>': 'fake-key <Ctrl-Left>',
-    '<ctrl-d>': 'fake-key <Delete>',
-    '<alt-d>': 'fake-key <Ctrl-Delete>',
-    '<alt-backspace>': 'fake-key <Ctrl-Backspace>',
-    '<ctrl-w>': 'fake-key <Ctrl-x>;;message-info "cut to clipboard"',
-    '<alt-w>': 'fake-key <Ctrl-c>;;message-info "copy to clipboard"',
-    '<ctrl-y>': 'insert-text {primary}',
 
+    '<ctrl-x>h': 'fake-key <Ctrl-a>',
+
+    # Navigation
+    '<ctrl-v>': 'scroll-page 0 0.5',
+    '<alt-v>': 'scroll-page 0 -0.5',
+
+    '<ctrl-shift-v>': 'scroll-page 0 1',
+    '<alt-shift-v>': 'scroll-page 0 -1',
+
+    '<alt-shift-,>': 'scroll-to-perc 0',
+    '<alt-shift-.>': 'scroll-to-perc',
+
+    # Basic
+    '<alt-x>': 'cmd-set-text :',
+    '<ctrl-x><ctrl-c>': 'quit',
+
+    '<ctrl-g>': ESC_BIND,
+    '<ctrl-h>': 'cmd-set-text -s :help',
+
+    '<ctrl-space>': 'mode-enter insert',
+
+    # Opening links
+    '<ctrl-l>': 'cmd-set-text -s :open',
+    '<ctrl-shift-l>': 'cmd-set-text -s :open {url:pretty}',
+    '<alt-l>': 'cmd-set-text -s :open -t',
+    '<ctrl-shift-l>': 'cmd-set-text -s :open -t {url:pretty}',
+
+    '<ctrl-x><ctrl-f>': 'cmd-set-text -s :open',
+    '<ctrl-u><ctrl-x><ctrl-f>': 'cmd-set-text -s :open -t',
+
+    # Searching
+    '<ctrl-s>': 'cmd-set-text /',
+    '<ctrl-r>': 'cmd-set-text ?',
+
+    # Hinting
+    '<alt-j>': 'hint all',
+    '<ctrl-alt-j>': 'hint all tab',
+
+    '<alt-o>': 'hint links spawn --detach mpv {hint-url}',
+    '<alt-.>': 'spawn --detach mpv {url}',
+    # '<alt-o>': 'hint links spawn --detach umpv --force-window yes {hint-url}',
+    # '<alt-.>': 'spawn --detach umpv --force-window yes {url}',
+
+    # Tabs
+    '<ctrl-]': 'tab-next',
+    '<ctrl-[': 'tab-prev',
+    '<alt-]': 'tab-move +',
+    '<alt-[': 'tab-move -',
+
+    '<ctrl-x>k': 'tab-close',
+    '<ctrl-x>0': 'tab-close',
+
+    '<ctrl-x>1': 'tab-only;;message-info "cleared all other tabs"',
+
+    '<ctrl-x>b': 'cmd-set-text -s :tab-select;;fake-key <Down><Down><Down>',
+
+    '<ctrl-x>r': 'config-cycle statusbar.hide',
+
+    # '<alt-o>': 'tab-focus last',
+
+    # History
+    '<alt-a>': 'back',
+    '<alt-e>': 'forward',
+
+    '<alt-r>': 'reload',
+
+    # Numbers
     '1': 'fake-key 1',
     '2': 'fake-key 2',
     '3': 'fake-key 3',
@@ -166,34 +230,33 @@ c.bindings.commands['normal'] = {
     '8': 'fake-key 8',
     '9': 'fake-key 9',
     '0': 'fake-key 0',
-
-	# escape hatch
-    '<ctrl-h>': 'cmd-set-text -s :help',
-    '<ctrl-g>': ESC_BIND,
 }
 
 c.bindings.commands['command'] = {
-    '<ctrl-s>': 'search-next',
-    '<ctrl-r>': 'search-prev',
-
-    '<ctrl-p>': 'completion-item-focus prev',
+    # Completion
     '<ctrl-n>': 'completion-item-focus next',
-
+    '<ctrl-p>': 'completion-item-focus prev',
+    '<ctrl-d>': 'rl-delete-char',
+    '<ctrl-y>': 'fake-key -g <Ctrl-V>',
     '<alt-p>': 'command-history-prev',
     '<alt-n>': 'command-history-next',
+    '<ctrl-g>': 'mode-leave',
 
-    # editing
-    '<ctrl-y>': 'insert-text',
+    # Searching
+    '<ctrl-s>': 'search-next',
+    '<ctrl-r>': 'search-prev',
+}
 
-	# escape hatch
+c.bindings.commands['prompt'] = {
+    # Completion
+    '<ctrl-n>': 'prompt-item-focus next',
+    '<ctrl-p>': 'prompt-item-focus prev',
     '<ctrl-g>': 'mode-leave',
 }
 
 c.bindings.commands['hint'] = {
-    # escape hatch
     '<ctrl-g>': 'mode-leave',
 }
-
 
 c.bindings.commands['caret'] = {
     # escape hatch
