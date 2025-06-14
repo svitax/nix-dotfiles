@@ -179,8 +179,9 @@ c.bindings.commands['normal'] = {
     # Opening links
     '<ctrl-l>': 'cmd-set-text -s :open',
     '<ctrl-shift-l>': 'cmd-set-text -s :open {url:pretty}',
+    '<ctrl-alt-l>': 'cmd-set-text -s :open {url:pretty}',
     '<alt-l>': 'cmd-set-text -s :open -t',
-    '<ctrl-shift-l>': 'cmd-set-text -s :open -t {url:pretty}',
+    '<alt-shift-l>': 'cmd-set-text -s :open -t {url:pretty}',
 
     '<ctrl-x><ctrl-f>': 'cmd-set-text -s :open',
     '<ctrl-u><ctrl-x><ctrl-f>': 'cmd-set-text -s :open -t',
