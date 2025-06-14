@@ -28,6 +28,8 @@ c.tabs.show = 'never'
 
 c.statusbar.show = 'never'
 
+c.auto_save.session = True
+
 # Height of completion menu
 c.completion.height = '45%'
 
