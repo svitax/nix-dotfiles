@@ -213,6 +213,8 @@ c.bindings.commands['normal'] = {
 
     '<ctrl-x>r': 'config-cycle statusbar.hide',
 
+    '<ctrl-x>u': 'undo --window',
+
     # '<alt-o>': 'tab-focus last',
 
     # History
