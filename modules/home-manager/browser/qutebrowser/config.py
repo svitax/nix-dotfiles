@@ -276,6 +276,8 @@ config.bind('<Ctrl-x><Ctrl-l>', 'config-source')
 c.url.searchengines["g"] = "https://www.google.com/search?q={}"
 c.url.searchengines["ddg"] = "https://www.duckduckgo.com/?q={}"
 c.url.searchengines["yt"] = "https://www.youtube.com/results?search_query={}"
+c.url.searchengines["np"] = "https://search.nixos.org/packages?query={}"
+c.url.searchengines["no"] = "https://search.nixos.org/options?query={}"
 c.url.searchengines["DEFAULT"] = "https://www.duckduckgo.com/?q={}"
 
 # * Adblocking
