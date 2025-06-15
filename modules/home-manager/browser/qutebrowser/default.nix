@@ -19,6 +19,17 @@ in
       qutebrowser
     ];
 
+    xdg.mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "text/html" = "org.qutebrowser.qutebrowser.desktop";
+        "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
+        "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
+        "x-scheme-handler/about" = "org.qutebrowser.qutebrowser.desktop";
+        "x-scheme-handler/unknown" = "org.qutebrowser.qutebrowser.desktop";
+      };
+    };
+
     home.file.".config/qutebrowser/config.py".source = ./config.py;
     home.file.".config/qutebrowser/all-sites.css".source = ./all-sites.css;
     # Make sure to do `:greasemonkey-reload' every time you change or add a
