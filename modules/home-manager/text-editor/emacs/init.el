@@ -7982,6 +7982,8 @@ BibTeX file."
 ;;;;;;;;;;;;;;;
 ;;;; media ;;;;
 
+(use-package empv)
+
 ;;;;;;;;;;;;;;;;;
 ;;;; browser ;;;;
 

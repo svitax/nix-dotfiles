@@ -156,6 +156,7 @@ in
               pdf-tools
               saveplace-pdf-view
               nov
+              empv
               shr-tag-pre-highlight
               elpher
               # erc-hl-nicks
