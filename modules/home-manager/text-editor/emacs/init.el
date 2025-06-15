@@ -7980,7 +7980,38 @@ BibTeX file."
 ;;;;;;;;;;;;;;;
 ;;;; media ;;;;
 
-(use-package empv)
+(use-package empv
+  :config
+  ;; `empv-play-video' and `empv-play-audio' lets me select a local media file
+  ;; under the following directories with a `completing-read' interface.  Also
+  ;; `empv-play-file' uses a classic `read-file-name' interface.
+  (setopt empv-video-dir (concat (denote-directory) "reference/")
+          empv-audio-dir (concat (denote-directory) "reference/"))
+
+  ;; If I start playing a YouTube video, it'll start playing itself in the
+  ;; background. I'm often tempted to call `empv-toggle-video' to start watching
+  ;; the video but it will not work. `mpv' tries to be smart when it's in the
+  ;; background and only downloads the audio if possible. If I want to be able
+  ;; to watch YouTube videos on demand, I need to add the following
+  ;; configuration to change the args supplied to mpv to force it to download
+  ;; videos.
+  (add-to-list 'empv-mpv-args
+               ;; It's bestvideo+bestaudio/best by default. We slightly change
+               ;; it to override the default no-video behavior.
+               "--ytdl-format=bestvideo+bestaudio/best[ext=mp4]/best")
+
+  ;; `empv-save-and-exit' shuts down empv and saves the current playing
+  ;; position but I can also add `--save-position-on-quit' to the args supplied
+  ;; to mpv so that every time I quit empv, it'll automatically save the
+  ;; playback position of the currently playing file and seeks to the previous
+  ;; position on start.
+  (add-to-list 'empv-mpv-args
+               "--save-position-on-quit")
+
+  ;; If I hit the q key in an mpv window, it will close mpv altogether and I may
+  ;; lose my current playlist. A more graceful way to handle this is to simply
+  ;; hide mpv instead of shutting it down.
+  (add-hook 'empv-init-hook #'empv-override-quit-key))
 
 ;;;;;;;;;;;;;;;;;
 ;;;; browser ;;;;
