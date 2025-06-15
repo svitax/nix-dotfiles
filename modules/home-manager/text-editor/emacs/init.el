@@ -2307,7 +2307,7 @@ first one. Else do `vertico-exit'."
                               embark-isearch-highlight-indicator))
 
   (bind-keys :map global-map
-             ("C-c C-." . embark-act)
+             ("C-." . embark-act)
              :map minibuffer-local-map
              ("C-c C-a" . embark-act-all)
              ("C-c C-c" . embark-collect)
@@ -3212,8 +3212,6 @@ With numeric ARG, move to ARGth occurrence counting from the
 end of the buffer.")
 
   (bind-keys
-   :map global-map
-   ("C-." . isearch-forward-thing-at-point) ; easier than M-s .
    :map +search-prefix-map
    ("o" . occur)
    ("M-o" . multi-occur)
