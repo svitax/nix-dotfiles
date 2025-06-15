@@ -278,6 +278,9 @@ c.url.searchengines["ddg"] = "https://www.duckduckgo.com/?q={}"
 c.url.searchengines["yt"] = "https://www.youtube.com/results?search_query={}"
 c.url.searchengines["np"] = "https://search.nixos.org/packages?query={}"
 c.url.searchengines["no"] = "https://search.nixos.org/options?query={}"
+c.url.searchengines["mp"] = "https://melpa.org/#/?q={}"
+c.url.searchengines["gep"] = "https://elpa.gnu.org/#/?q={}"
+c.url.searchengines["gh"] = "https://github.com/search?q={}"
 c.url.searchengines["DEFAULT"] = "https://www.duckduckgo.com/?q={}"
 
 # * Adblocking
