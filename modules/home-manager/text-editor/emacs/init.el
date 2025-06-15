@@ -7560,6 +7560,7 @@ continue, per `org-agenda-skip-function'."
    consult-denote-buffer-source
    :narrow ?d
    :preview-key '("M-." "C-M-n" "C-M-p")
+   :hidden t
    :name "Denote")
 
   ;; By default `consult-denote-buffer-source' only shows buffers if their file
@@ -8312,6 +8313,7 @@ Use link at point if there is one, otherwise the current page's URL."
          :narrow   ?w
          :category buffer
          :state    ,#'consult--buffer-state
+         :hidden t
          :items    ,(lambda ()
                       (mapcar #'buffer-name
                        (seq-filter (lambda (buf)
