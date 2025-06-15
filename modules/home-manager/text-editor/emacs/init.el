@@ -8189,6 +8189,13 @@ Add this function to appropriate major mode hooks such as
   ;; browser, which should be a fully fledged application like Firefox.
   :config
 
+  (defun +eww-buffer-name ()
+    (when-let ((string (or (plist-get eww-data :title)
+                           (plist-get eww-data :url))))
+      (when (not (string-blank-p string))
+        (format "%s" (truncate-string-to-width
+                      string eww-buffer-name-length)))))
+
   ;; The `+shell-command-with-exit-code-and-output' function is
   ;; courtesy of Harold Carr, who also sent a patch that improved
   ;; `+eww-download-html'
@@ -8201,13 +8208,6 @@ Return the exit code and output in a list."
       (list (apply 'call-process command nil (current-buffer) nil args)
             (buffer-string))))
 
-  (defun +eww-buffer-name ()
-    (when-let ((string (or (plist-get eww-data :title)
-                           (plist-get eww-data :url))))
-      (when (not (string-blank-p string))
-        (format "%s" (truncate-string-to-width
-                      string eww-buffer-name-length)))))
-
   (defun +eww-denote-slug-hyphenate (str)
     "Replace spaces, underscores, slashes, dots, and colons with hyphens in
 STR.
@@ -8219,60 +8219,66 @@ leading and trailing hyphen."
       "-\\{2,\\}" "-"
       (replace-regexp-in-string "[/_:.?#=&%[:space:]]+" "-" str))))
 
-  (defun +eww-download-html (name)
-    "Download a Web page to `eww-download-directory'.
+  (defun +web-archive-download-html (url)
+    "Download URL as a web page to `eww-download-directory'."
+    (interactive (list (read-string "URL: "
+                                    (or (get-text-property (point) 'shr-url)
+                                        (eww-current-url)
+                                        ""))))
+    (let* ((dir (if (stringp eww-download-directory)
+                    eww-download-directory
+                  (funcall eww-download-directory)))
+           (_ (access-file dir "Download failed"))
+           (name (+eww-denote-slug-hyphenate url))
+           (filepath (expand-file-name
+                      (denote-format-file-name
+                       dir (denote-get-identifier (current-time))
+                       '("reference") name ".html" "")))
+           ;; TODO extract download command (defcustom +eww-download-command)
+           ;; (out (+shell-command-with-exit-code-and-output
+           ;;       "wget" "-q" (format "%s" (plist-get eww-data :url))
+           ;;       "-O" (format "%s" (shell-quote-argument path))))
+           ;; (out (+shell-command-with-exit-code-and-output
+           ;;       "monolith" url "-o" path))
+           (out (+shell-command-with-exit-code-and-output
+                 "single-file" "--browser-executable-path" "chromium"
+                 url filepath)))
+      (if (= (car out) 0)
+          (progn
+            (message "Downloaded page at: %s" filepath)
+            filepath)
+        (error "Download failed: %s" (cdr out)))))
+
+  (defun +web-archive-bookmark-handler (bookmark)
+    "Open the archived page saved in BOOKMARK."
+    (eww-open-file (bookmark-prop-get bookmark 'filename)))
+
+  (defun +web-archive-url (&optional url bookmark-name)
+    "Archive URL in `eww-download-directory' and save it as a bookmark.
 Use link at point if there is one, otherwise the current page's URL."
-    (interactive
-     (list (read-string "Set downloaded file name: "
-                        (+eww-denote-slug-hyphenate
-                         (or (get-text-property (point) 'shr-url)
-                             (eww-current-url))))))
-    (let ((dir (if (stringp eww-download-directory)
-                   eww-download-directory
-                 (funcall eww-download-directory))))
-      (access-file dir "Download failed")
-      (let* ((url (or (get-text-property (point) 'shr-url)
-                      (eww-current-url)))
-             (path (expand-file-name
-                    (denote-format-file-name
-                     dir (denote-get-identifier (current-time))
-                     '("reference") name ".html" "")))
-             ;; TODO extract download command (defcustom +eww-download-command)
-             ;; (out (+shell-command-with-exit-code-and-output
-             ;;       "wget" "-q" (format "%s" (plist-get eww-data :url))
-             ;;       "-O" (format "%s" (shell-quote-argument path))))
-             ;; (out (+shell-command-with-exit-code-and-output
-             ;;       "monolith" url "-o" path))
-             (out (+shell-command-with-exit-code-and-output
-                   "single-file" "--browser-executable-path" "chromium" url path)))
-        (if (= (car out) 0)
-            (message "Downloaded page at: %s" path)
-          (message "Error downloading page: %s" (cdr out))))))
-
-  (defun +eww-view-archive ()
-    "View the archived file for the current EWW page."
     (interactive)
-    (unless (derived-mode-p 'eww-mode)
-      (user-error "Not in EWW buffer"))
-    (let ((url (eww-current-url))
-          (file nil))
-      (setq file (+eww--find-archive url))
-      (cond ((string-prefix-p "file://" url)
-             (message "Already viewing an archive file."))
-            (file
-             (eww-open-file file))
-            (t
-             (message "No archive file found for this page.")))))
+    (let* ((url (or url (read-string "URL: "
+                                     (or (get-text-property (point) 'shr-url)
+                                         (eww-current-url)
+                                         ""))))
+           (title (cond ((derived-mode-p 'eww-mode)
+                         (plist-get eww-data :title))
+                        (t url)))
+           (bookmark-name (read-string "Bookmark name: " title)))
+      (bookmark-store bookmark-name
+                      `((filename . ,(+web-archive-download-html url))
+                        (handler . ,#'+web-archive-bookmark-handler)
+                        (location . ,url)
+                        (last-modified . ,(current-time))
+                        (type . web-archive))
+                      nil)))
 
-  (defun +eww--find-archive (url)
-    "Find the path to the archived file for URL."
-    (let* ((title (+eww-denote-slug-hyphenate url))
-           (files (denote--directory-get-files)))
-      (seq-find
-       (lambda (file)
-         (and (string-match-p (regexp-quote title) file)
-              (string-match-p "_reference" file)))
-       files)))
+  (with-eval-after-load 'consult
+    (add-to-list 'consult-bookmark-narrow
+                 '(?a "Web archive" +web-archive-bookmark-handler
+                   ;; any other handlers under web archive
+                   )
+                 t))
 
   (defvar +eww--occur-feed-regexp
     (concat "\\(rss\\|atom\\)\\+xml.\\(.\\|\n\\)"
@@ -8440,7 +8446,7 @@ instead of the current one."
    ("a" . bookmark-set) ; TODO link at point or current page
    ("b" . +buffers-major-mode) ; overrides `eww-add-bookmark'
    ("B" . +consult-bookmark-eww) ; overrides `eww-list-bookmarks'
-   ("d" . +eww-download-html)
+   ("d" . +web-archive-url)
    ("F" . +eww-follow-link-on-page)
    ("g" . eww-reload)
    ("M-s M-h" . +consult-history-eww)
