@@ -765,7 +765,7 @@ other characters."
              (druid-modeline-misc-info))
            '(;; (druid-modeline-selection-info)
              (druid-modeline-cursor-position) " "
-             (druid-modeline-window-dedicated-status) " ")
+             (druid-modeline-window-dedicated-status))
            default))
 
 ;; ** init.el@host (#rewrite, edited) | <5L, 258C> 352:58 ◦
@@ -780,7 +780,7 @@ other characters."
              (druid-modeline-misc-info))
            '(;; (druid-modeline-selection-info)
              (druid-modeline-cursor-position) " "
-             (druid-modeline-window-dedicated-status) " ")
+             (druid-modeline-window-dedicated-status))
            default))
 
 ;; ** how-to-study.org@host (#rewrite, edited) | <5L, 258C> 352:58 ◦
@@ -796,7 +796,7 @@ other characters."
              (druid-modeline-misc-info))
            '(;; (druid-modeline-selection-info)
              (druid-modeline-cursor-position) " "
-             (druid-modeline-window-dedicated-status) " ")
+             (druid-modeline-window-dedicated-status))
            default))
 
 ;; ** Agenda | Tuesday 22 October 2024 ◦
