@@ -235,6 +235,15 @@ c.bindings.commands['normal'] = {
     '8': 'fake-key 8',
     '9': 'fake-key 9',
     '0': 'fake-key 0',
+
+    # TODO some require qutebrowser.el
+    # "h" = "spawn --userscript emacsclient-wrapper '(qutebrowser-launcher)'";
+    # "H" = "spawn --userscript emacsclient-wrapper '(qutebrowser-launcher-tab)'";
+    # ";l" = "spawn --userscript qute-pass";
+    # ";u" = "spawn --userscript qute-pass --username-only";
+    # ";p" = "spawn --userscript qute-pass --password-only";
+    # ";o" = "spawn --userscript qute-pass --otp-only";
+    # ";P" = "spawn --userscript emacsclient-wrapper '(qutebrowser-pass \"{url}\")'";
 }
 
 c.bindings.commands['command'] = {
