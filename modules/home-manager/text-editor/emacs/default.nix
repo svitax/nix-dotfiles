@@ -122,7 +122,6 @@ in
               ace-link
               link-hint
               logos
-              mowie
               move-text
               expand-region
               multiple-cursors

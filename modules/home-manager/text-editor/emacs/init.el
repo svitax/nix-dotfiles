@@ -598,11 +598,6 @@ writeable."
                      (kbd "C-d") #'+golden-ratio-scroll-screen-down
                      (kbd "C-u") #'+golden-ratio-scroll-screen-up))
 
-  (with-eval-after-load 'mowie
-    (evil-define-key '(normal motion visual basic) global-map
-                     (kbd "gy") #'+beginning-of-line
-                     (kbd "ge") #'+end-of-line))
-
   (with-eval-after-load 'magit
     (evil-define-key '(visual basic) magit-status-mode-map
                      (kbd "K") #'magit-discard)
@@ -3358,24 +3353,6 @@ end of the buffer.")
     (bind-keys :map elpher-mode-map
                ("f" . link-hint-open-link)
                ("m" . +link-hint-jump-link))))
-
-;; TODO document mowie
-(use-package mowie
-  :config
-  (defun +beginning-of-line ()
-    (interactive "^")
-    (mowie
-     #'mowie-beginning-of-code
-     #'beginning-of-line
-     #'beginning-of-visual-line))
-  (defun +end-of-line ()
-    (interactive "^")
-    (mowie
-     #'end-of-line
-     #'end-of-visual-line
-     #'mowie-end-of-code))
-  (bind-keys ("C-a" . +beginning-of-line)
-             ("C-e" . +end-of-line)))
 
 ;; TODO document paragraphs
 (use-package paragraphs
