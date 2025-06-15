@@ -324,3 +324,5 @@ c.content.blocking.adblock.lists = [
     "https://github.com/uBlockOrigin/uAssets/raw/master/filters/unbreak.txt",
     "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/quick-fixes.txt",
 ]
+
+c.content.autoplay = False
