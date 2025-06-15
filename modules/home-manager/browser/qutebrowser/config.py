@@ -299,17 +299,28 @@ c.url.searchengines["DEFAULT"] = "https://www.duckduckgo.com/?q={}"
 #   - hosts: Use hosts blocking
 #   - both: Use both hosts blocking and Brave's ABP-style adblocker
 c.content.blocking.method = 'both'
+# Don't forget to do `:adblock-update' if you change any of the lists. And
+# update them periodically.
 c.content.blocking.adblock.lists = [
-    'https://easylist.to/easylist/easylist.txt',
-    'https://easylist.to/easylist/easyprivacy.txt',
-    #'https://easylist.to/easylist/fanboy-social.txt', Already included in fanboy-annoyance.txt
-    #'https://secure.fanboy.co.nz/fanboy-cookiemonster.txt', Already included in fanboy-annoyance.txt
-    'https://secure.fanboy.co.nz/fanboy-annoyance.txt',
-    'https://raw.githubusercontent.com/DandelionSprout/adfilt/master/NorwegianExperimentalList%20alternate%20versions/NordicFiltersABP-Inclusion.txt',
-    'https://easylist-downloads.adblockplus.org/antiadblockfilters.txt',
-    'https://github.com/uBlockOrigin/uAssets/raw/master/filters/privacy.txt',
-    'https://github.com/uBlockOrigin/uAssets/raw/master/filters/annoyances.txt',
-    'https://github.com/uBlockOrigin/uAssets/raw/master/filters/annoyances-others.txt',
-    'https://github.com/uBlockOrigin/uAssets/raw/master/filters/annoyances-cookies.txt',
-    'https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/quick-fixes.txt',
+    "https://easylist.to/easylist/easylist.txt",
+    "https://easylist.to/easylist/easyprivacy.txt",
+    "https://easylist.to/easylist/fanboy-social.txt",
+    "https://secure.fanboy.co.nz/fanboy-annoyance.txt",
+    "https://easylist-downloads.adblockplus.org/abp-filters-anti-cv.txt",
+    #"https://gitlab.com/curben/urlhaus-filter/-/raw/master/urlhaus-filter.txt",
+    "https://pgl.yoyo.org/adservers/serverlist.php?showintro=0;hostformat=hosts",
+    "https://raw.githubusercontent.com/DandelionSprout/adfilt/master/NorwegianExperimentalList%20alternate%20versions/NordicFiltersABP-Inclusion.txt",
+    "https://github.com/uBlockOrigin/uAssets/raw/master/filters/legacy.txt",
+    "https://github.com/uBlockOrigin/uAssets/raw/master/filters/filters.txt",
+    "https://github.com/uBlockOrigin/uAssets/raw/master/filters/filters-2020.txt",
+    "https://github.com/uBlockOrigin/uAssets/raw/master/filters/filters-2021.txt",
+    "https://github.com/uBlockOrigin/uAssets/raw/master/filters/badware.txt",
+    "https://github.com/uBlockOrigin/uAssets/raw/master/filters/privacy.txt",
+    "https://github.com/uBlockOrigin/uAssets/raw/master/filters/badlists.txt",
+    "https://github.com/uBlockOrigin/uAssets/raw/master/filters/annoyances.txt",
+    "https://github.com/uBlockOrigin/uAssets/raw/master/filters/resource-abuse.txt",
+    "https://www.i-dont-care-about-cookies.eu/abp/",
+    "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt",
+    "https://github.com/uBlockOrigin/uAssets/raw/master/filters/unbreak.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/quick-fixes.txt",
 ]
