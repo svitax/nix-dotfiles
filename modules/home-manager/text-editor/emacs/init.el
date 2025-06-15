@@ -8002,8 +8002,26 @@ BibTeX file."
   ;; which is bound to `&' by default, to open the page in whichever browser I
   ;; have specified in the `browse-url-secondary-browser-function'.
   :config
+  (defun +browse-url-purified-handler (fn)
+    "Clear the redundant stuff from urls.
+Some links are prefixed with google redirection url, this
+removes (and other similar stuff) so that the url handler works
+properly."
+    (lambda (url &rest _)
+      (funcall
+       fn
+       (s-chop-prefix "https://www.google.com/url?q=" url))))
+
   (setopt browse-url-browser-function 'eww-browse-url
-          browse-url-secondary-browser-function 'browse-url-default-browser))
+          browse-url-secondary-browser-function 'browse-url-default-browser
+          browse-url-handlers `((;; (".*\\.mp4"
+                                 ;;  . (lambda (link &rest _) (empv-play-or-enqueue link)))
+                                 ".*\\.mp4"
+                                 . ,(+browse-url-purified-handler #'empv-play-or-enqueue))
+                                (".*\\(youtube.com/watch.*\\|youtu.be/.*\\)"
+                                 . ,(+browse-url-purified-handler #'empv-play-or-enqueue))
+                                ("."
+                                 . eww-browse-url))))
 
 (use-package goto-addr
   ;; The built-in `goto-addr' is used to turn any plain text web URL into a
