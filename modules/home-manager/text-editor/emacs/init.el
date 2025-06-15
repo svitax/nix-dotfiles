@@ -3897,12 +3897,13 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
         (+restart-emacs)
       (save-buffers-kill-terminal)))
 
+  (setopt kill-whole-line t)
+
   (bind-keys
    :map global-map
    ("C-w" . +kill-region)
    ("M-w" . +kill-ring-save)
    ("M-k" . +kill-line-backward)
-   ("M-K". kill-whole-line)
    ;; `+save-next-kill' causes the following command, if it kills, to save in
    ;; the kill ring instead. With prefix argument has same behavior as
    ;; `append-next-kill', which adds to previous kill.
