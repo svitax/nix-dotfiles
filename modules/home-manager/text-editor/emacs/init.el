@@ -7889,7 +7889,7 @@ BibTeX file."
 
   (bind-keys
    :map +search-prefix-map
-   ("l" . citar-open) ; "lib" mnemonic
+   ("M-c" . citar-open)
    :map +bib-prefix-map
    ("f" . citar-open) ; "find" mnemonic
    :map org-mode-map
