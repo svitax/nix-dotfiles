@@ -7980,6 +7980,10 @@ BibTeX file."
 ;;;;;;;;;;;;;;;
 ;;;; media ;;;;
 
+(use-package mpv
+  :config
+  (setopt mpv-executable "umpv"))
+
 (use-package empv
   :config
   ;; `empv-play-video' and `empv-play-audio' lets me select a local media file
@@ -7998,20 +8002,7 @@ BibTeX file."
   (add-to-list 'empv-mpv-args
                ;; It's bestvideo+bestaudio/best by default. We slightly change
                ;; it to override the default no-video behavior.
-               "--ytdl-format=bestvideo+bestaudio/best[ext=mp4]/best")
-
-  ;; `empv-save-and-exit' shuts down empv and saves the current playing
-  ;; position but I can also add `--save-position-on-quit' to the args supplied
-  ;; to mpv so that every time I quit empv, it'll automatically save the
-  ;; playback position of the currently playing file and seeks to the previous
-  ;; position on start.
-  (add-to-list 'empv-mpv-args
-               "--save-position-on-quit")
-
-  ;; If I hit the q key in an mpv window, it will close mpv altogether and I may
-  ;; lose my current playlist. A more graceful way to handle this is to simply
-  ;; hide mpv instead of shutting it down.
-  (add-hook 'empv-init-hook #'empv-override-quit-key))
+               "--ytdl-format=bestvideo+bestaudio/best[ext=mp4]/best"))
 
 ;;;;;;;;;;;;;;;;;
 ;;;; browser ;;;;
@@ -8046,9 +8037,9 @@ properly."
           browse-url-handlers `((;; (".*\\.mp4"
                                  ;;  . (lambda (link &rest _) (empv-play-or-enqueue link)))
                                  ".*\\.mp4"
-                                 . ,(+browse-url-purified-handler #'empv-play-or-enqueue))
+                                 . ,(+browse-url-purified-handler #'mpv-play-url))
                                 (".*\\(youtube.com/watch.*\\|youtu.be/.*\\)"
-                                 . ,(+browse-url-purified-handler #'empv-play-or-enqueue))
+                                 . ,(+browse-url-purified-handler #'mpv-play-url))
                                 ("."
                                  . eww-browse-url))))
 
