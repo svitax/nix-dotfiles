@@ -3485,12 +3485,12 @@ narrowed."
   (bind-keys
    :map global-map
    ("C-c n" . +narrow-prefix-map)
-   ("C-c C-n" . +narrow-or-widen-dwim)
    :map +narrow-prefix-map
    ("d" . narrow-to-defun)
    ;; ("g" . goto-line-relative) ; if narrowed, make "M-g g" do goto-line-relative instead
    ("r" . narrow-to-region)
    ("l" . +narrow-to-sexp) ; alias for Org mode
+   ("n" . +narrow-or-widen-dwim)
    ("p" . narrow-to-page)
    ("s" . +narrow-to-sexp)
    ("w" . widen))
