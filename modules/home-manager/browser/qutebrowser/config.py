@@ -135,9 +135,6 @@ c.bindings.commands['normal'] = {
     '<ctrl-n>': 'fake-key <Down>',
     '<ctrl-p>': 'fake-key <Up>',
 
-    '<alt-n>': 'forward',
-    '<alt-p>': 'back',
-
     '<ctrl-d>': 'fake-key <Delete>',
     '<alt-d>': 'fake-key <Ctrl-Delete>',
 
@@ -219,9 +216,8 @@ c.bindings.commands['normal'] = {
     # '<alt-o>': 'tab-focus last',
 
     # History
-    '<alt-a>': 'back',
-    '<alt-e>': 'forward',
-
+    '<alt-n>': 'forward',
+    '<alt-p>': 'back',
     '<alt-r>': 'reload',
 
     # Numbers
