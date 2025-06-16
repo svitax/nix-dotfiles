@@ -2028,9 +2028,6 @@ first one. Else do `vertico-exit'."
   ;;                             "--ignore-case" "--with-filename" "--line-number"
   ;;                             "-I" "-R"))
 
-  ;; TODO rga in consult
-  ;; (setopt consult-grep-arg '("rga" "--rga-adapters=+pdfpages,tesserac"))
-
   ;; NOTE document pulsar and consult integration
   (with-eval-after-load 'pulsar
     (setq consult-after-jump-hook nil)
