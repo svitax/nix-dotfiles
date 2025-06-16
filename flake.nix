@@ -14,7 +14,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nh.url = "github:viperML/nh";
     stylix.url = "github:danth/stylix";
-    zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";

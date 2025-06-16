@@ -10,7 +10,6 @@
 
   browser = {
     qutebrowser.enable = true;
-    zen.enable = true;
   };
 
   # TODO add all of these command-line modules to a single module?

@@ -3,7 +3,6 @@ rec {
     # NOTE: firefox
     # NOTE: nyxt
     qutebrowser = ./browser/qutebrowser;
-    zen = ./browser/zen;
   };
 
   clipboard = {
@@ -116,7 +115,6 @@ rec {
   allModules = {
     imports = [
       browser.qutebrowser
-      browser.zen
 
       # command-line.atuin
       command-line.buku
