@@ -197,10 +197,10 @@ c.bindings.commands['normal'] = {
     # '<alt-.>': 'spawn --detach umpv --force-window yes {url}',
 
     # Tabs
-    '<alt-]>': 'tab-prev',
-    '<alt-[>': 'tab-next',
-    '<alt-shift-]>': 'tab-move -',
-    '<alt-shift-[>': 'tab-move +',
+    '<alt-e>': 'tab-prev',
+    '<alt-a>': 'tab-next',
+    '<alt-shift-e>': 'tab-move -',
+    '<alt-shift-a>': 'tab-move +',
 
     '<ctrl-x>k': 'tab-close',
     '<ctrl-x>0': 'tab-close',
