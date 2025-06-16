@@ -45,7 +45,7 @@ rec {
     # NOTE: hyprpicker (for color picker) https://github.com/hyprwm/hyprpicker
     # rofi = ./desktop/rofi;
     # NOTE: swayimg (for image viewer) https://github.com/artemsen/swayimg
-    # mpv = ./graphical/mpv;
+    mpv = ./graphical/mpv;
   };
 
   hardware = {
@@ -139,6 +139,7 @@ rec {
 
       graphical.anki
       graphical.discord
+      graphical.mpv
 
       shell.bash
       # shell.fish

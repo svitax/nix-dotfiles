@@ -37,6 +37,7 @@
   graphical = {
     anki.enable = true;
     discord.enable = true;
+    mpv.enable = true;
   };
 
   shell = {
@@ -78,8 +79,6 @@
     # # "Hello, world!" when run.
     # pkgs.hello
     # TODO extract home.packages into modules
-    mpv
-    yt-dlp
     runelite
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
