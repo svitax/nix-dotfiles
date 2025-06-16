@@ -66,7 +66,7 @@ in
           difftastic # for difftastic.el
           unzip # for nov.el
           emacs-lsp-booster
-          single-file-cli
+          single-file-cli # for +web-archive-url
           chromium # need chromium to use single-file-cli
           # monolith
           # `jinx' cant seem to find aspell dictionaries. hunspell
