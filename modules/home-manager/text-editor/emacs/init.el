@@ -103,20 +103,6 @@
                       (zerop (forward-line 1))))
           (eobp))))
 
-  (defun +common-window-small-p ()
-    "Return non-nil if window is small.
-Check if the `window-width' or `window-height' is less than
-`split-width-threshold' and `split-height-threshold', respectively."
-    (or (and (numberp split-width-threshold)
-             (< (window-total-width) split-width-threshold))
-        (and (numberp split-height-threshold)
-             (< (window-total-height) split-height-threshold))))
-
-  (defun +common-three-or-more-windows-p (&optional frame)
-    "Return non-nil if three or more windows occupy FRAME.
-If FRAME is non-nil, inspect the current frame."
-    (>= (length (window-list frame :no-minibuffer)) 3))
-
   ;; The `+common-line-regexp-p' and `+common--line-regexp-alist'
   ;; are contributed by Gabriel: <https://github.com/gabriel376>.  They
   ;; provide a more elegant approach to using a macro, as shown further
