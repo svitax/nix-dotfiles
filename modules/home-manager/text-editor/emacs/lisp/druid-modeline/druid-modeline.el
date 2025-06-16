@@ -758,10 +758,9 @@ other characters."
 
   (funcall druid-modeline-position
            '((druid-modeline-buffer-status) " "
-             (druid-modeline-buffer-identification)
+             (druid-modeline-buffer-identification) " "
              ;; (druid-modeline-remote-status)
-             " "
-             (druid-modeline-vc-info)
+             (druid-modeline-vc-info) " "
              (druid-modeline-misc-info))
            '(;; (druid-modeline-selection-info)
              (druid-modeline-cursor-position) " "
@@ -773,10 +772,9 @@ other characters."
   "Modeline for prog modes. Can be made DEFAULT mode."
   (funcall druid-modeline-position
            '((druid-modeline-buffer-status) " "
-             (druid-modeline-buffer-identification)
+             (druid-modeline-buffer-identification) " "
              ;; (druid-modeline-remote-status)
-             " "
-             (druid-modeline-vc-info)
+             (druid-modeline-vc-info) " "
              (druid-modeline-misc-info))
            '(;; (druid-modeline-selection-info)
              (druid-modeline-cursor-position) " "
@@ -788,11 +786,10 @@ other characters."
   "Modeline for org-mode."
   (funcall druid-modeline-position
            '((druid-modeline-buffer-status) " "
-             (druid-modeline-buffer-identification)
+             (druid-modeline-buffer-identification) " "
              ;; (druid-modeline-remote-status)
-             " "
              ;; (druid-modeline-org-narrow-status) " "
-             (druid-modeline-vc-info)
+             (druid-modeline-vc-info) " "
              (druid-modeline-misc-info))
            '(;; (druid-modeline-selection-info)
              (druid-modeline-cursor-position) " "
@@ -818,7 +815,7 @@ other characters."
   (funcall druid-modeline-position
            '((druid-modeline-buffer-status) " "
              (druid-modeline-buffer-identification) " "
-             (druid-modeline-org-capture-description)
+             (druid-modeline-org-capture-description) " "
              (druid-modeline-misc-info))
            '((druid-modeline-button-org-capture-kill) " "
              (druid-modeline-button-org-capture-refile) " "
@@ -831,7 +828,7 @@ other characters."
   (funcall druid-modeline-position
            '((druid-modeline-buffer-status "PDF") " "
              (druid-modeline-buffer-identification) " "
-             (druid-modeline-file-size)
+             (druid-modeline-file-size) " "
              (druid-modeline-misc-info))
            '((druid-modeline-pdf-page) " "
              (druid-modeline-window-dedicated-status))
@@ -843,7 +840,7 @@ other characters."
   (funcall druid-modeline-position
            '((druid-modeline-buffer-status "NOV") " "
              (druid-modeline-nov-title) " "
-             (druid-modeline-file-size)
+             (druid-modeline-file-size) " "
              (druid-modeline-misc-info))
            '((druid-modeline-cursor-position) " "
              (druid-modeline-nov-chapter) " "
@@ -855,7 +852,7 @@ other characters."
   "Modeline for Info files."
   (funcall druid-modeline-position
            '((druid-modeline-buffer-status "INFO") " "
-             (druid-modeline-info-file)
+             (druid-modeline-info-file) " "
              (druid-modeline-misc-info))
            '((druid-modeline-cursor-position) " "
              (druid-modeline-info-node) " "
@@ -866,10 +863,9 @@ other characters."
   "Modeline for terminals and shells."
   (funcall druid-modeline-position
            '((druid-modeline-shell-status) " "
-             (druid-modeline-buffer-identification)
+             (druid-modeline-buffer-identification) " "
              ;; (druid-modeline-remote-status)
-             " "
-             (druid-modeline-shell-name)
+             (druid-modeline-shell-name) " "
              (druid-modeline-misc-info))
            '(;; (druid-modeline-selection-info)
              (druid-modeline-default-directory) " "
@@ -881,7 +877,7 @@ other characters."
   "Modeline for elpher."
   (funcall druid-modeline-position
            '((druid-modeline-elpher-buffer-status) " "
-             (druid-modeline-elpher-title)
+             (druid-modeline-elpher-title) " "
              (druid-modeline-misc-info))
            '((druid-modeline-button-elpher-back) " "
              (druid-modeline-window-dedicated-status) " ")))
@@ -891,7 +887,7 @@ other characters."
   "Modeline for eww."
   (funcall druid-modeline-position
            '((druid-modeline-buffer-status "WEB") " "
-             (druid-modeline-eww-title)
+             (druid-modeline-eww-title) " "
              (druid-modeline-misc-info))
            '((druid-modeline-button-eww-back) " "
              (druid-modeline-window-dedicated-status) " ")))
@@ -902,7 +898,7 @@ other characters."
   (funcall druid-modeline-position
            '((druid-modeline-buffer-interactive) " "
              (druid-modeline-gptel-backend) " "
-             (druid-modeline-gptel-query-status)
+             (druid-modeline-gptel-query-status) " "
              (druid-modeline-misc-info))
            '(;; (druid-modeline-button-gptel-media) " "
              (druid-modeline-button-gptel-context) " "
