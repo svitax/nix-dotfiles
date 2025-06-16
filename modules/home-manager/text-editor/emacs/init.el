@@ -6119,7 +6119,16 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
   :mode "\\.nix\\'"
   :lsp-hook nix-ts-mode
   :config
-  (define-derived-mode nix-mode nix-ts-mode "Nix"))
+  (define-derived-mode nix-mode nix-ts-mode "Nix")
+
+  ;; This fixes the missing Nix icon when using `consult-buffer'
+  (with-eval-after-load 'nerd-icons
+    (add-to-list 'nerd-icons-mode-icon-alist
+                 '(nix-mode nerd-icons-devicon "nf-dev-nixos" :face
+                   nerd-icons-blue))
+    (add-to-list 'nerd-icons-mode-icon-alist
+                 '(nix-ts-mode nerd-icons-devicon "nf-dev-nixos" :face
+                   nerd-icons-blue))))
 
 ;; TODO document go-ts-mode
 ;; TODO add C-c C-a `go-import-add' from `go-mode'
