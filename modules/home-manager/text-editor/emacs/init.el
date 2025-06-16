@@ -2846,6 +2846,7 @@ Limit list of buffers to those matching the current
      occur-mode
      grep-mode
      xref--xref-buffer-mode
+     pdf-occur-buffer-mode
      ;; VC buffers
      magit-status-mode
      magit-log-mode
