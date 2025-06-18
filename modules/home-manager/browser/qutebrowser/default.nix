@@ -39,5 +39,9 @@ in
       source = ./greasemonkey;
       recursive = true;
     };
+    home.file.".config/qutebrowser/themes" = {
+      source = ./themes;
+      recursive = true;
+    };
   };
 }

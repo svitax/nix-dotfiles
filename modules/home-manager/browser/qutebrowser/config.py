@@ -25,6 +25,7 @@ c.tabs.show = 'never'
 # load the exported theme on Qutebrowser startup:
 
 # config.source("emacs_theme.py")
+config.source("themes/modus-vivendi.py")
 
 c.statusbar.show = 'never'
 
