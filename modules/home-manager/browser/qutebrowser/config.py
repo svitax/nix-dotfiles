@@ -28,6 +28,7 @@ c.tabs.show = 'never'
 config.source("themes/modus-vivendi.py")
 
 c.statusbar.show = 'never'
+c.statusbar.widgets = ["search_match", "url", "history"]
 
 c.auto_save.session = True
 
@@ -210,7 +211,7 @@ c.bindings.commands['normal'] = {
 
     '<ctrl-x>b': 'cmd-set-text -s :tab-select;;fake-key <Down><Down><Down>',
 
-    '<ctrl-x>r': 'config-cycle statusbar.hide',
+    '<ctrl-x>r': 'config-cycle statusbar.show always never',
 
     '<ctrl-x>u': 'undo --window',
 
