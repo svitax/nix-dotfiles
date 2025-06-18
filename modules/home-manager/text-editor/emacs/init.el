@@ -2861,6 +2861,7 @@ Limit list of buffers to those matching the current
   (auto-side-windows-common-window-parameters '())
   (auto-side-windows-right-alist '((window-width . 132)))
   (auto-side-windows-top-alist '((window-height . 10)))
+  (auto-side-windows-common-alist '((body-function . +select-window)))
 
   ;; Maximum number of side windows on the left, top, right and bottom
   (window-sides-slots '(1 1 1 1)) ; Example: Allow one window per side
@@ -2873,7 +2874,15 @@ Limit list of buffers to those matching the current
    (append window-persistent-parameters
            '((tab-line-format . t)
              (header-line-format . t)
-             (mode-line-format . t)))))
+             (mode-line-format . t))))
+  :config
+  (defun +select-window (window)
+    "Select WINDOW but prioritize top side windows."
+    (let ((top-win
+           (seq-find (lambda (w)
+                       (eq (window-parameter w 'window-side) 'top))
+                     (window-list))))
+      (select-window (or top-win window)))))
 
 (use-package horizontal-splits
   :no-require
