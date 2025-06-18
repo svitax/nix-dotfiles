@@ -19,22 +19,17 @@
 epkgs.melpaBuild {
   pname = "templ-ts-mode";
   version = "20250223.2347";
-  src = ./.;
+  src = pkgs.fetchFromGitHub {
+    owner = "danderson";
+    repo = "templ-ts-mode";
+    rev = "020976f0cf2cf27a1a6e1b59e92c443c52b03a52";
+    hash = "sha256-yicePCaXWf8xgDsKeLuZ7e5FEqF8F+wc5Xg1Oe21XvE=";
+  };
   recipe = pkgs.writeText "recipe" ''
-    (templ-ts-mode :fetcher git :url "localhost")
+    (templ-ts-mode :repo "danderson/templ-ts-mode" :fetcher github)
   '';
-  # src = pkgs.fetchFromGitHub {
-  #   owner = "danderson";
-  #   repo = "templ-ts-mode";
-  #   rev = "020976f0cf2cf27a1a6e1b59e92c443c52b03a52";
-  #   hash = "sha256-yicePCaXWf8xgDsKeLuZ7e5FEqF8F+wc5Xg1Oe21XvE=";
-  # };
-  # recipe = pkgs.writeText "recipe" ''
-  #   (templ-ts-mode :repo "danderson/templ-ts-mode" :fetcher github)
-  # '';
   packageRequires = with epkgs; [
     pkgs.tree-sitter-grammars.tree-sitter-templ
-    # tree-sitter-templ
   ];
   meta = {
     homepage = "";
