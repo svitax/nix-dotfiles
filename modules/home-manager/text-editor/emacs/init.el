@@ -8514,22 +8514,42 @@ instead of the current one."
    ("<tab>" . elpher-next-link)
    ("<backtab>" . elpher-prev-link)))
 
-(defun +qutebrowser-choose-file ()
-  (interactive)
-  (let ((files (dired-get-marked-files)))
-    (with-temp-file qute-filename
-      (insert (s-join "\n" files)))
-    (unbind-key "C-c C-c" 'dired-mode-map)
-    (kill-buffer)))
+;; NOTE I don't remember why this has to be outside a use-package block
+(use-package qutebrowser
+  :no-require
+  :config
+  ;; NOTE this is for when I want to use qutebrowser.el
+  ;; (with-eval-after-load 'modus-themes
+  ;;   (dolist (entry '((completion.match.fg . modus-themes-completion-match-0)
+  ;;                    (completion.item.selected.match.fg . modus-themes-completion-match-0)
+  ;;                    (completion.item.selected.bg . modus-themes-completion-selected)
+  ;;                    (completion.item.selected.border.top . modus-themes-completion-selected)
+  ;;                    (completion.item.selected.border.bottom . modus-themes-completion-selected)
+  ;;                    (contextmenu.selected.bg . modus-themes-completion-selected)
+  ;;                    (contextmenu.selected.fg . modus-themes-completion-selected)
+  ;;                    (keyhint.bg . modus-themes-completion-selected)
+  ;;                    (prompts.bg . modus-themes-completion-selected)))
+  ;;     (let ((existing-entry (assoc (car entry) qutebrowser-theme-export-face-mappings)))
+  ;;       (if existing-entry
+  ;;           (setf (cdr existing-entry) (cdr entry))  ; Update the value if the key exists
+  ;;         (push entry qutebrowser-theme-export-face-mappings)))))
 
-(defun +qutebrowser-dired-hook (&optional _)
-  (when (s-starts-with? "/tmp/qutebrowser-fileselect" buffer-file-name)
-    (setq qute-filename buffer-file-name)
-    (kill-buffer)
-    (dired "~/")
-    (bind-key "C-c C-c" #'+qutebrowser-choose-file 'dired-mode-map)))
+  (defun +qutebrowser-choose-file ()
+    (interactive)
+    (let ((files (dired-get-marked-files)))
+      (with-temp-file qute-filename
+        (insert (s-join "\n" files)))
+      (unbind-key "C-c C-c" 'dired-mode-map)
+      (kill-buffer)))
 
-(add-hook 'server-visit-hook #'+qutebrowser-dired-hook)
+  (defun +qutebrowser-dired-hook (&optional _)
+    (when (s-starts-with? "/tmp/qutebrowser-fileselect" buffer-file-name)
+      (setq qute-filename buffer-file-name)
+      (kill-buffer)
+      (dired "~/")
+      (bind-key "C-c C-c" #'+qutebrowser-choose-file 'dired-mode-map)))
+
+  (add-hook 'server-visit-hook #'+qutebrowser-dired-hook))
 
 ;;;;;;;;;;;;
 ;;;; ai ;;;;
