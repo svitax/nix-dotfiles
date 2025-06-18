@@ -6116,16 +6116,7 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
   :mode "\\.nix\\'"
   :lsp-hook nix-ts-mode
   :config
-  (define-derived-mode nix-mode nix-ts-mode "Nix")
-
-  ;; This fixes the missing Nix icon when using `consult-buffer'
-  (with-eval-after-load 'nerd-icons
-    (add-to-list 'nerd-icons-mode-icon-alist
-                 '(nix-mode nerd-icons-devicon "nf-dev-nixos" :face
-                   nerd-icons-blue))
-    (add-to-list 'nerd-icons-mode-icon-alist
-                 '(nix-ts-mode nerd-icons-devicon "nf-dev-nixos" :face
-                   nerd-icons-blue))))
+  (define-derived-mode nix-mode nix-ts-mode "Nix"))
 
 ;; TODO document go-ts-mode
 ;; TODO add C-c C-a `go-import-add' from `go-mode'
@@ -8831,7 +8822,49 @@ manually to first get the icon files."
   :config
   ;; Show icons for files in the Magit status and other buffers
   (with-eval-after-load 'magit
-    (setopt magit-format-file-function #'magit-format-file-nerd-icons)))
+    (setopt magit-format-file-function #'magit-format-file-nerd-icons))
+
+  ;; This fixes the missing Nix icon when using `consult-buffer'
+  (with-eval-after-load 'nix-ts-mode
+    (add-to-list 'nerd-icons-mode-icon-alist
+                 '(nix-mode nerd-icons-devicon "nf-dev-nixos" :face
+                   nerd-icons-blue))
+    (add-to-list 'nerd-icons-mode-icon-alist
+                 '(nix-ts-mode nerd-icons-devicon "nf-dev-nixos" :face
+                   nerd-icons-blue)))
+
+  (with-eval-after-load 'nov
+    (add-to-list 'nerd-icons-mode-icon-alist
+                 '(nov-mode nerd-icons-faicon "nf-fa-book" :face
+                   nerd-icons-green)))
+
+  (with-eval-after-load 'citar
+    (defvar citar-indicator-files-icons
+      (citar-indicator-create
+       :symbol (nerd-icons-faicon "nf-fa-file" :face 'nerd-icons-dgreen)
+       :function #'citar-has-files
+       ;; :padding "  " ; need this because the default padding is too low for these icons
+       :tag "has:files"))
+
+    (defvar citar-indicator-links-icons
+      (citar-indicator-create
+       :symbol (nerd-icons-faicon "nf-fa-link" :face 'nerd-icons-dorange)
+       :function #'citar-has-links :padding "  " :tag "has:links"))
+
+    (defvar citar-indicator-notes-icons
+      (citar-indicator-create
+       :symbol (nerd-icons-octicon "nf-oct-note" :face 'nerd-icons-dblue)
+       :function #'citar-has-notes :padding "  " :tag "has:notes"))
+
+    (defvar citar-indicator-cited-icons
+      (citar-indicator-create
+       :symbol (nerd-icons-faicon "nf-fa-comment_dots" :face 'nerd-icons-dyellow)
+       :function #'citar-is-cited :padding "  " :tag "is:cited"))
+
+    (setq citar-indicators
+          (list citar-indicator-files-icons ; citar-indicator-links-icons
+                citar-indicator-notes-icons ; citar-indicator-cited-icons
+                ))))
 
 (use-package nerd-icons-completion
   :if +emacs-load-icons
