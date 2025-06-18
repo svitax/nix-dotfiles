@@ -2162,7 +2162,9 @@ first one. Else do `vertico-exit'."
   ;; A function that returns a list of directories
   (defun +consult-dir--zoxide-dirs ()
     "Return list of zoxide dirs."
-    (split-string (shell-command-to-string "zoxide query --list") "\n" t))
+    (mapcar
+     #'abbreviate-file-name
+     (split-string (shell-command-to-string "zoxide query --list") "\n" t)))
   ;; A consult source that calls this function
   (defvar +consult-dir--source-zoxide
     `( :name     "Zoxide dirs"
