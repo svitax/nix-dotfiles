@@ -8843,16 +8843,14 @@ manually to first get the icon files."
 
   (with-eval-after-load 'nov
     (add-to-list 'nerd-icons-mode-icon-alist
-                 '(nov-mode nerd-icons-faicon "nf-fa-book" :face
+                 '(nov-mode nerd-icons-mdicon "nf-md-book_open" :face
                    nerd-icons-green)))
 
   (with-eval-after-load 'citar
     (defvar citar-indicator-files-icons
       (citar-indicator-create
        :symbol (nerd-icons-faicon "nf-fa-file" :face 'nerd-icons-dgreen)
-       :function #'citar-has-files
-       ;; :padding "  " ; need this because the default padding is too low for these icons
-       :tag "has:files"))
+       :function #'citar-has-files :padding "  " :tag "has:files"))
 
     (defvar citar-indicator-links-icons
       (citar-indicator-create
