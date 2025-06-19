@@ -92,7 +92,7 @@ in
         SPACE = "cycle pause";
         f = "cycle fullscreen";
 
-        "Ctrl-l" = "script-binding uosc/toggle-ui";
+        "Ctrl+l" = "script-binding uosc/toggle-ui";
 
         "F" = "script-binding quality_menu/video_formats_toggle";
         "Alt+f" = "script-binding quality_menu/audio_formats_toggle";
