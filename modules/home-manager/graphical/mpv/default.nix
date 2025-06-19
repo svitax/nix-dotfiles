@@ -45,6 +45,7 @@ in
         write-filename-in-watch-later-config = true;
         watch-later-directory = "${config.xdg.stateHome}/mpv/watch_later";
         hwdec = "auto-safe";
+        vo = "dmabuf-wayland";
         ytdl-format = "(bestvideo[vcodec^=av01][height<=?2160]/bestvideo[height<=?2160])+bestaudio/best";
       };
       scriptOpts = {
