@@ -5009,10 +5009,21 @@ Interactively also sends a terminating newline."
    ("l" . +helpful-previous)
    ("r" . +helpful-next)))
 
-;; TODO fix info in nixos
-;; the info files are in my load path, but nix hasn't added the emacs-packages
-;; derivation to the INFOPATH. envrc also changes the INFOPATH
-(use-package info)
+(use-package info
+  :config
+  ;; `envrc' changes the INFOPATH, so every time I'm in an envrc managed
+  ;; project, `info' can't find the Info manuals from my emacs-packages
+  ;; derivations that were added to the INFOPATH.
+  ;;
+  ;; While I understand wanting to isolate the INFOPATH for example when you're
+  ;; hacking on an Info manual for a package, I almost never need to do that.
+  (defun +info ()
+    (interactive)
+    (let ((default-directory (getenv "HOME")))
+      (call-interactively #'info)))
+
+  (bind-keys :map help-map
+             ("i" . +info)))
 
 ;; TODO document man
 (use-package man
