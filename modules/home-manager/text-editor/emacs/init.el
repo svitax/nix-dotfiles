@@ -2104,8 +2104,7 @@ first one. Else do `vertico-exit'."
              ("C-i" . consult-info)
              :map isearch-mode-map
              ("M-s M-l" . consult-line) ; needed by consult-line to detect Isearch
-             ("M-s M-h" . consult-isearch-history)
-             ("C-c C-r" . consult-isearch-history)))
+             ("M-s M-h" . consult-isearch-history)))
 
 ;; (use-package consult-omni
 ;;   :config
@@ -4789,7 +4788,7 @@ Interactively also sends a terminating newline."
    :map compilation-shell-minor-mode-map
    ("C-x C-q" . +compile-toggle-comint)
    :map minibuffer-local-shell-command-map
-   ("C-c C-r" . +compile-input-from-history)
+   ("M-s M-h" . +compile-input-from-history)
    :map +goto-prefix-map
    ("n" . next-error)
    ("M-n" . next-error)
