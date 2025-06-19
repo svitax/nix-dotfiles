@@ -6145,6 +6145,9 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
 
 (use-package templ-ts-mode)
 
+;; TODO https://sr.ht/~p00f/hare-ts-mode/
+;; (use-package hare-ts-mode)
+
 ;; (use-package cc)
 
 ;; (use-package geiser)
