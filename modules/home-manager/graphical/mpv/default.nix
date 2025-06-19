@@ -15,6 +15,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    command-line.yt-dlp.enable = true;
+
     programs.mpv = {
       enable = true;
       package = (
