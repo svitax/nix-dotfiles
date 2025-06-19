@@ -42,6 +42,7 @@ in
         save-watch-history = true;
         write-filename-in-watch-later-config = true;
         watch-later-directory = "${config.xdg.stateHome}/mpv/watch_later";
+        ytdl-format = "bestvideo[height<=1440][vcodec^=av01]+bestaudio";
       };
       scriptOpts = {
         autoload = {
