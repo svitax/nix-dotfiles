@@ -130,6 +130,7 @@ in
               apheleia
               treesit-grammars.with-all-grammars
               helpful
+              devdocs
               difftastic
               magit
               git-gutter

@@ -5029,9 +5029,13 @@ Interactively also sends a terminating newline."
 (use-package man
   :config
   (bind-keys :map help-map
-             ("C-." . man)))
+             ("C-m" . man)))
 
-;; (use-package devdocs)
+(use-package devdocs
+  :config
+  (bind-keys :map help-map
+             ("C-d" . devdocs-lookup)
+             ("d" . devdocs-peruse)))
 
 ;; (use-package rfc-mode)
 
