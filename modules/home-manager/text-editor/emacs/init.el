@@ -4745,11 +4745,11 @@ Interactively also sends a terminating newline."
   (defun +compile-input-from-history ()
     "Insert command from compile input history."
     (interactive)
-    (let* ((default (car compile-history))
+    (let* ((history compile-history)
+           (default (car history))
            (selected (completing-read
                       (format-prompt "Insert input from history" default)
-                      compile-history nil :require-match nil nil
-                      default)))
+                      history nil nil nil 'compile-history default)))
       (delete-minibuffer-contents)
       (insert selected)))
 
