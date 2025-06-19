@@ -145,6 +145,7 @@ c.bindings.commands['normal'] = {
 
     '<ctrl-w>': 'fake-key <Ctrl-x>;;message-info "cut to clipboard"',
     '<alt-w>': 'fake-key <Ctrl-c>;;message-info "copy to clipboard"',
+    '<ctrl-alt-w>': 'yank',
 
     '<ctrl-y>': 'insert-text {primary}',
 
