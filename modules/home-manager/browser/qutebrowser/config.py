@@ -280,14 +280,15 @@ config.bind('<Tab>', 'fake-key <f1>')
 config.bind('<Ctrl-x><Ctrl-l>', 'config-source')
 # c.tabs.show = 'never'
 # c.statusbar.hide = False
-c.url.searchengines["g"] = "https://www.google.com/search?q={}"
-c.url.searchengines["ddg"] = "https://www.duckduckgo.com/?q={}"
-c.url.searchengines["yt"] = "https://www.youtube.com/results?search_query={}"
-c.url.searchengines["np"] = "https://search.nixos.org/packages?query={}"
-c.url.searchengines["no"] = "https://search.nixos.org/options?query={}"
-c.url.searchengines["melpa"] = "https://melpa.org/#/?q={}"
-c.url.searchengines["gh"] = "https://github.com/search?q={}"
 c.url.searchengines["DEFAULT"] = "https://www.duckduckgo.com/?q={}"
+c.url.searchengines["ddg"] = "https://www.duckduckgo.com/?q={}"
+c.url.searchengines["ep"] = "https://melpa.org/#/?q={}"
+c.url.searchengines["g"] = "https://www.google.com/search?q={}"
+c.url.searchengines["gh"] = "https://github.com/search?q={}"
+c.url.searchengines["no"] = "https://search.nixos.org/options?query={}"
+c.url.searchengines["np"] = "https://search.nixos.org/packages?query={}"
+c.url.searchengines["sh"] = "https://sr.ht/projects?search={}"
+c.url.searchengines["yt"] = "https://www.youtube.com/results?search_query={}"
 
 # * Adblocking
 # Valid values:
