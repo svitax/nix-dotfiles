@@ -6324,7 +6324,12 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
   :mode ("\\.epub\\'" . nov-mode)
   ;; (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
   :init
-  (setq-default nov-text-width 80))
+  (setq-default nov-text-width 80)
+  :config
+  ;; Using a variable pitch font in nov-mode often causes the bottom most line
+  ;; to clip. Adding extra line spacing ameliorates this.
+  (add-hook 'nov-mode-hook (lambda ()
+                             (setq-local line-spacing 1))))
 
 ;; (use-package csv)
 
