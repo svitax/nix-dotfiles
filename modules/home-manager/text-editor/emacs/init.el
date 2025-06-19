@@ -215,20 +215,14 @@ Like `+common-completion-table' but also disable sorting."
   (defvar-keymap +tab-prefix-map
     :doc "Prefix map for tabs."
     :prefix '+tab-prefix-map)
-  (defvar-keymap +vc-prefix-map
-    :doc "Prefix map for version control."
-    :prefix '+vc-prefix-map)
   (defvar-keymap +window-prefix-map
     :doc "Prefix map for windows."
     :prefix '+window-prefix-map)
   (defvar-keymap +toggle-prefix-map
     :doc "Prefix map for minor mode toggles."
     :prefix '+toggle-prefix-map
-    ;; "f" #'flymake-mode
     "h" #'hl-line-mode
-    ;; "k" #'keycast-mode-line-mode
     ;; "l" #'logos-focus-map
-    "n" #'display-line-numbers-mode
     ;; "s" #'spacious-padding-mode
     ;; "r" #'rainbow-mode
     )
@@ -238,32 +232,33 @@ Like `+common-completion-table' but also disable sorting."
              ("M-s" . +search-prefix-map)
              ("M-g" . +goto-prefix-map)
              :map +prefix-map
-             ;; ("a" . org-agenda-custom) ("C-a" . org-agenda) ; edebug
-             ;; ("b" . consult-buffer) ("C-b" . ibuffer)  ; list-buffers
-             ("c" . org-capture) ; ("C-c" . +kill-terminal-or-restart) ; save-buffers-kill-emacs
+             ;; ("a" . org-agenda-custom) ; abbrev-keymap ("C-a" . ) ; edebug
+             ;; ("b" . consult-buffer) ; switch-to-buffer ("C-b" . ibuffer)  ; list-buffers
+             ;; ("c" . org-capture) ; ("C-c" . +kill-terminal-or-restart) ; save-buffers-kill-emacs
              ;; ("d" . dired) ("C-d" . consult-dir) ; list-directory
              ("e" . kmacro-end-and-call-macro) ; ("C-e" . eval-last-sexp)
              ;; ("f" . ) ; set-fill-column ("C-f" . find-file)
              ;; ("g" . +guix-prefix-map) ("C-g" . )
              ;; ("h" . mark-whole-buffer) ("C-h" . help-map)
-             ;; ("i" . +org-capture-inbox) ("C-i" . ) ; indent-rigidly
-             ("j" . +dap-prefix-map) ; ("C-j" . dired-jump) ; i don't like dap/debug on j
+             ;; ("i" . +org-capture-inbox) ; insert-file ("C-i" . indent-rigidly)
+             ;; ("j" . ) ; ("C-j" . dired-jump)
              ;; ("k" . +kill-this-buffer) ("C-k" . kmacro-keymap)
-             ("l" . +bib-prefix-map) ; ("C-l" . ) ; "lib" mnemonic
-             ("m" . +mail-prefix-map) ; ("C-m" . )
+             ("l" . +bib-prefix-map) ; "lib" mnemonic ; ("C-l" . ) ; downcase-region
+             ("m" . +mail-prefix-map) ; ("C-m" . ) ; mule-keymap
              ("n" . +notes-prefix-map) ; ("C-n" . next-buffer) ; set-goal-column
-             ;; ("o" . other-window) ("C-o" . ) ; "os" mnemonic?
+             ;; ("o" . ) ; other-window ("C-o" . guix) ; delete-blank-lines ; "os" mnemonic
              ("p" . +project-prefix-map) ; ("C-p" . previous-buffer) ; mark-page
              ("q" . kbd-macro-query) ("C-q" . read-only-mode)
              ("r" . +registers-prefix-map) ("C-r" . find-file-read-only)
              ("s" . save-some-buffers) ("C-s" . save-buffer)
              ("t" . +tab-prefix-map) ("C-t" . transpose-lines)
-             ;; ("u" . ) ("C-u" . ) ; "undo" mnemonic?
-             ("v" . +vc-prefix-map) ("C-v" . find-alternate-file)
+             ;; ("u" . ) ; undo ("C-u" . vundo) ; upcase-region ; "undo" mnemonic?
+             ;; ("v" . magit-status) ; vc-prefix-map ("C-v" . find-alternate-file)
              ("w" . +window-prefix-map) ("C-w" . write-file)
              ("x" . +toggle-prefix-map) ("C-x" . exchange-point-and-mark)
-             ;; ("y" . ) ("C-y" . )
-             ;; ("z" . ) ("C-z" . +switch-to-shell-buffer) ; "zettelkasten" mnemonic?
+             ("y" . +dap-prefix-map) ; ("C-y" . ) ; "why" mnemonic
+             ;; ("z" . vertico-repeat) ("C-z" . +switch-to-shell-buffer)
+             ("(" . kmacro-start-macro) (")" . kmacro-end-macro)
              ("TAB" . indent-rigidly)))
 
 ;; NOTE document repeat
@@ -4401,7 +4396,9 @@ through the edits."
   (bind-keys
    :map flymake-mode-map
    ("M-g M-n" . flymake-goto-next-error)
-   ("M-g M-p" . flymake-goto-prev-error)))
+   ("M-g M-p" . flymake-goto-prev-error)
+   :map +toggle-prefix-map
+   ("l" . flymake-mode)))
 
 ;; TODO document flymake-collection
 (use-package flymake-collection)
