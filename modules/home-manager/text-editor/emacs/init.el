@@ -6143,12 +6143,6 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
   (define-derived-mode go-mode go-ts-mode "Go")
   (setopt go-ts-mode-indent-offset 4))
 
-;; TODO add flymake-collection-golangci to flymake-collection
-(use-package flymake-collection-golangci
-  :disabled t
-  :config
-  (add-hook 'go-ts-mode-hook #'flymake-golangci-load-backend))
-
 (use-package templ-ts-mode)
 
 ;; (use-package cc)
