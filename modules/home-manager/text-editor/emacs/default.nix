@@ -152,7 +152,7 @@ in
               denote
               consult-denote
               citar-denote
-              # org-remark
+              org-remark
               markdown-mode
               pdf-tools
               saveplace-pdf-view

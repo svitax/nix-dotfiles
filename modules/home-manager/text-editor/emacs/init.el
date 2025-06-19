@@ -2806,7 +2806,8 @@ Limit list of buffers to those matching the current
      ;; "^\\*difftastic.*\\*"
      ;; Others
      "^\\*Embark.*\\*$"
-     "^\\*.*scratch\\*$"))
+     "^\\*.*scratch\\*$"
+     "^\\*marginal notes\\*$"))
   (auto-side-windows-right-buffer-modes
    '(;; Doc buffers
      Info-mode
@@ -2866,7 +2867,10 @@ Limit list of buffers to those matching the current
            (seq-find (lambda (w)
                        (eq (window-parameter w 'window-side) 'top))
                      (window-list))))
-      (select-window (or top-win window)))))
+      (select-window (or top-win window))))
+
+  (with-eval-after-load 'org-remark
+    (setopt org-remark-notes-display-buffer-action '(auto-side-windows--display-buffer)))
 
 (use-package horizontal-splits
   :no-require
@@ -7576,7 +7580,6 @@ continue, per `org-agenda-skip-function'."
    ("n" . consult-denote-grep)))
 
 (use-package org-remark
-  :disabled t
   ;; Simply saving, excerpting, or copying materials is not enough; information
   ;; needs to be processed to be transformed into useful knowledge. The reason is
   ;; that merely transporting material only increases the amount of information
@@ -7611,12 +7614,13 @@ continue, per `org-agenda-skip-function'."
   ;; the power of Org while acting like notes that are made inside of the
   ;; document. They are an incredibly efficient way of taking literature notes
   ;; while reading any text document.
-  ;;
+
   ;; These minor modes lets us highlight and annotate Info documentation,
   ;; websites, and EPUB books just like text files.
   (use-package org-remark-info :after info :config (org-remark-info-mode +1))
   (use-package org-remark-eww :after eww :config (org-remark-eww-mode +1))
   (use-package org-remark-nov :after nov :config (org-remark-nov-mode +1))
+
   ;; Automatically turn on highlights after re-starting Emacs. Without this
   ;; global minor mode we would need to remember to activate `org-remark-mode'
   ;; for each file where we add highlights and annotations, which is often
@@ -7627,71 +7631,78 @@ continue, per `org-agenda-skip-function'."
   (setopt org-remark-report-no-highlights nil)
 
   ;; Create a Denote-compatible marginal note
-  ;; (defun +org-remark-denote-filename-has-note-p (filename)
-  ;;   "Find the Denote filename similar to FILENAME but with the 'literature' keyword."
-  ;;   (let* ((files (denote-directory-files))
-  ;;          (source-title (denote-retrieve-filename-title filename))
-  ;;          (source-signature (denote-retrieve-filename-signature filename))
-  ;;          (source-keywords (denote-retrieve-filename-keywords filename))
-  ;;          (source-keywords (if source-keywords
-  ;;                               (split-string source-keywords "_")
-  ;;                             nil))
-  ;;          (buffer-files (mapcar
-  ;;                         (lambda (buffer)
-  ;;                           (buffer-file-name buffer))
-  ;;                         (buffer-list)))
-  ;;          (buffer-files (cl-remove nil buffer-files))
-  ;;          (files (cl-union files buffer-files)))
-  ;;     (cl-find-if (lambda (file)
-  ;;                   (let* ((file-title (denote-retrieve-filename-title file))
-  ;;                          (file-signature (denote-retrieve-filename-signature file))
-  ;;                          (file-keywords (denote-retrieve-filename-keywords file))
-  ;;                          (file-keywords
-  ;;                           (if (and source-keywords file-keywords)
-  ;;                               (split-string file-keywords "_")
-  ;;                             nil)))
-  ;;                     (and (string= file-title source-title)
-  ;;                          (string= file-signature source-signature)
-  ;;                          (member "literature" file-keywords)
-  ;;                          (seq-set-equal-p
-  ;;                           (seq-remove (lambda (elt) (member elt '("literature" "reference")))
-  ;;                                       source-keywords)
-  ;;                           (seq-remove (lambda (elt) (member elt '("literature" "reference")))
-  ;;                                       file-keywords)))))
-  ;;                 files)))
+  (defun +org-remark-denote--note (filename)
+    "Find the Denote filename similar to FILENAME but with the 'literature' keyword."
+    (if-let* ((source-title (denote-retrieve-filename-title filename))
+              (source-signature (denote-retrieve-filename-signature filename))
+              (source-keywords (denote-retrieve-filename-keywords filename))
+              (source-keywords (if source-keywords
+                                   (split-string source-keywords "_")
+                                 nil))
+              (buffer-files (mapcar
+                             (lambda (buffer)
+                               (buffer-file-name buffer))
+                             (buffer-list)))
+              (buffer-files (cl-remove nil buffer-files))
+              (files (cl-union (denote-directory-files) buffer-files)))
+        (cl-find-if (lambda (file)
+                      (let* ((file-title (denote-retrieve-filename-title file))
+                             (file-signature (denote-retrieve-filename-signature file))
+                             (file-keywords (denote-retrieve-filename-keywords file))
+                             (file-keywords
+                              (if (and source-keywords file-keywords)
+                                  (split-string file-keywords "_")
+                                nil)))
+                        (and (string= file-title source-title)
+                             (string= file-signature source-signature)
+                             (member "literature" file-keywords)
+                             (seq-set-equal-p
+                              (seq-remove (lambda (elt) (member elt '("literature" "reference")))
+                                          source-keywords)
+                              (seq-remove (lambda (elt) (member elt '("literature" "reference")))
+                                          file-keywords)))))
+                    files)
+      nil))
 
-  ;;   (defun +org-remark-denote-file-name-function ()
-  ;;     "Return a Denote-compatible file name for the current buffer.
+  (defun +org-remark-denote-file-name-function ()
+    "Return a Denote-compatible file name for the current buffer.
 
-  ;; When the current buffer is visiting a file, the name of the
-  ;; marginal notes file will be \"DATE==SIGNATURE--TITLE__literature.org\"
-  ;; in your `denote-directory'."
-  ;;     (let* ((source-filename (cond ((eq major-mode 'nov-mode)
-  ;;                                    (file-name-nondirectory nov-file-name))
-  ;;                                   ((eq major-mode 'pdf-view-mode)
-  ;;                                    (file-name-nondirectory buffer-file-name))
-  ;;                                   (t
-  ;;                                    (org-remark-source-find-file-name))))
-  ;;            ;; (source-filename (file-name-sans-extension (file-name-nondirectory (org-remark-source-find-file-name))))
-  ;;            (denote-id (denote-retrieve-filename-identifier source-filename))
-  ;;            (denote-signature (denote-retrieve-filename-signature source-filename))
-  ;;            (denote-title (denote-retrieve-filename-title source-filename))
-  ;;            (denote-keywords (denote-retrieve-filename-keywords source-filename)))
-  ;;       (if-let ((literature-note (+org-remark-denote-filename-has-note-p source-filename)))
-  ;;           literature-note
-  ;;         (denote-format-file-name
-  ;;          (denote-directory)
-  ;;          (denote--find-first-unused-id (denote-get-identifier nil))
-  ;;          (if denote-keywords
-  ;;              (remove
-  ;;               "reference"
-  ;;               (append (split-string denote-keywords "_") '("literature")))
-  ;;            nil)
-  ;;          (or denote-title "")
-  ;;          (or denote-file-type ".org")
-  ;;          (or denote-signature "")))))
+When the current buffer is visiting a file, the name of the
+marginal notes file will be \"DATE==SIGNATURE--TITLE__literature.org\"
+in your `denote-directory'."
+    (if-let* ((source-filename (cond ((eq major-mode 'nov-mode)
+                                      (file-name-nondirectory nov-file-name))
+                                     ((eq major-mode 'pdf-view-mode)
+                                      (file-name-nondirectory buffer-file-name))
+                                     (t
+                                      (org-remark-source-find-file-name))))
+              (is-source-denote (if source-filename
+                                    (denote-file-has-denoted-filename-p source-filename)
+                                  nil))
+              (literature-note (+org-remark-denote--note source-filename)))
+        (cond (literature-note literature-note)
+              (t
+               (denote-format-file-name
+                (denote-directory)
+                (denote--find-first-unused-id (denote-get-identifier (current-time)))
+                (if-let* (is-source-denote
+                          (denote-keywords (denote-retrieve-filename-keywords source-filename)))
+                    (remove
+                     "reference"
+                     (append (split-string denote-keywords "_") '("literature")))
+                  '("literature"))
+                (if-let* (is-source-denote
+                          (denote-title (denote-retrieve-filename-title source-filename)))
+                    denote-title
+                  (file-name-sans-extension (file-name-nondirectory source-filename)))
+                (or denote-file-type ".org")
+                (if-let* (is-source-denote
+                          (denote-signature (denote-retrieve-filename-signature source-filename)))
+                    denote-signature
+                  ""))))
+      "marginalia.org"))
 
-  ;;   (setopt org-remark-notes-file-name #'+org-remark-denote-file-name-function)
+  (setopt org-remark-notes-file-name #'+org-remark-denote-file-name-function)
 
   (bind-keys
    :map org-remark-mode-map
