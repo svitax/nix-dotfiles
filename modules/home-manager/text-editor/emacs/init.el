@@ -8868,17 +8868,17 @@ manually to first get the icon files."
   (with-eval-after-load 'citar
     (defvar citar-indicator-files-icons
       (citar-indicator-create
-       :symbol (nerd-icons-faicon "nf-fa-file" :face 'nerd-icons-dgreen)
+       :symbol (nerd-icons-faicon "nf-fa-file_text_o" :face 'nerd-icons-dorange)
        :function #'citar-has-files :padding "  " :tag "has:files"))
 
     (defvar citar-indicator-links-icons
       (citar-indicator-create
-       :symbol (nerd-icons-faicon "nf-fa-link" :face 'nerd-icons-dorange)
+       :symbol (nerd-icons-faicon "nf-fa-link" :face 'nerd-icons-dred)
        :function #'citar-has-links :padding "  " :tag "has:links"))
 
     (defvar citar-indicator-notes-icons
       (citar-indicator-create
-       :symbol (nerd-icons-octicon "nf-oct-note" :face 'nerd-icons-dblue)
+       :symbol (nerd-icons-faicon "nf-fa-pencil_square_o" :face 'nerd-icons-dgreen)
        :function #'citar-has-notes :padding "  " :tag "has:notes"))
 
     (defvar citar-indicator-cited-icons
