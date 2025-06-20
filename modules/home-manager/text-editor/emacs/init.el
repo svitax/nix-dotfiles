@@ -2870,7 +2870,7 @@ Limit list of buffers to those matching the current
       (select-window (or top-win window))))
 
   (with-eval-after-load 'org-remark
-    (setopt org-remark-notes-display-buffer-action '(auto-side-windows--display-buffer)))
+    (setopt org-remark-notes-display-buffer-action '(auto-side-windows--display-buffer))))
 
 (use-package horizontal-splits
   :no-require
