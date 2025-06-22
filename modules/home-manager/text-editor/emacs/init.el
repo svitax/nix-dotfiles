@@ -7821,8 +7821,15 @@ in your `denote-directory'."
    ("C-c m r" . org-remark-remove)
    ("C-c m v" . org-remark-view)))
 
-;; TODO document org-noter
+;; TODO i really with i could fully replace org-noter with org-remark because of
+;; all the annoying bugs and sloppy code
 (use-package org-noter
+  :init
+  ;; i don't have djvu-read-mode but org-noter keeps trying to load in org-noter-djvu.
+  ;; another one in the long list of annoying bugs with this package...
+  (require 'org-noter-core)
+  (setopt org-noter-supported-modes
+          (remove 'djvu-read-mode org-noter-supported-modes))
   :config
   ;; default value always gives an error and i can't be bothered to fix it
   (setopt org-noter--show-arrow-hook '())
