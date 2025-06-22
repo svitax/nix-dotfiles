@@ -6865,10 +6865,10 @@ When SEARCH-BACKWARD is non-nil, move backward."
                                (goto-char begin)
                                (org-element-context))))
                 (pcase (org-element-lineage context '(link node-property) t)
-                  (node-property
-                   (goto-char begin)
-                   (throw :found t))
-                  (link
+                  ;; (node-property
+                  ;;  (goto-char begin)
+                  ;;  (throw :found t))
+                  ('link
                    (goto-char (org-element-property :begin link))
                    (throw :found t)))))))
         (goto-char pos)
