@@ -970,6 +970,8 @@ writeable."
 
 (use-package druid-modeline
   :config
+  (setopt druid-modeline-padding '(0.0 . 0.0))
+
   (druid-modeline-text-mode 1)
   (add-hook 'prog-mode-hook #'druid-modeline-prog-mode)
   (add-hook 'org-mode-hook #'druid-modeline-org-mode)
