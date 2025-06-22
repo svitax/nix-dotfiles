@@ -767,27 +767,75 @@ writeable."
   )
 
 (use-package helix
-  :disabled t
   :config
   (setopt helix-normal-state-cursor '(box "#fec43f")
           helix-insert-state-cursor '(bar "#fec43f"))
 
-  (add-hook 'shell-mode-hook (lambda () (helix-insert-state)))
+  ;; BUG use helix-local-mode because helix-mode makes my window/cursor jump
+  ;; around when using vertico
+  (dolist (mode-hook '(prog-mode-hook text-mode-hook comint-mode-hook))
+    (add-hook mode-hook (lambda () (helix-local-mode))))
+
+  ;; Modes to start in insert state.
+  (dolist (mode-hook '(shell-mode-hook))
+    (add-hook mode-hook (lambda () (helix-insert-state 1))))
+
+  ;; Modes to start in motion state.
+  (dolist (mode-hook '(dired-mode-hook magit-section-mode-hook))
+    (add-hook mode-hook (lambda () (helix-motion-state 1))))
+
+  (defun +helix-avy-char-timer ()
+    "Move to the beginning of one or many consecutive chars, choosing it with Avy."
+    (interactive)
+    (helix-remove-all-fake-cursors)
+    (unless helix--extend-selection
+      (deactivate-mark))
+    (let ((mark (and helix--extend-selection
+                     (not (region-active-p))
+                     (point)))
+          (avy-all-windows nil))
+      (cond (mark (set-mark mark))
+            ((not helix--extend-selection)
+             (set-mark (point))))
+    (avy-goto-char-timer)))
 
   (bind-keys :map helix-normal-state-map
-             ("y" . helix-backward-char) ("gy" . helix-first-non-blank)
-             ("h" . helix-next-line) ("gh" . helix)
-             ("a" . helix-previous-line)
-             ("e" . helix-forward-char) ("ge" . helix-end-of-line)
+             ;; Motions
+             ("y" . helix-backward-char) ("<left>" . helix-backward-char)
+             ("h" . helix-next-line) ("<down>" . helix-next-line)
+             ("a" . helix-previous-line) ("<up>" . helix-previous-line)
+             ("e" . helix-forward-char) ("<right>" . helix-forward-char)
+             ("gs" . helix-first-non-blank)
+             ("gy" . helix-beginning-of-line)
+             ("ge" . helix-end-of-line)
 
+             ;; Easymotion / Avy
+             ("gh" . helix-avy-next-line)
+             ("ga" . helix-avy-previous-line)
+             ("gj" . +helix-avy-char-timer)
+
+             ;; Changes
              ("j" . helix-append)
-
+             ("J" . helix-append-line)
              ("k" . helix-yank)
              ("H" . helix-join-line)
+             ("gc" . +comment-line-dwim)
 
+             ;; Selections
              ("M-s" . nil))
 
-  (helix-mode))
+  ;; NOTE temporary unless proper motion state support gets added
+  (helix-keymap-set dired-mode-map 'motion
+    "h" #'dired-next-line     ; overrides `describe-mode'
+    "a" #'dired-previous-line ; overrides `dired-find-alternate-file'
+    "y" #'dired-up-directory  ; overrides `dired-show-file-type'
+    )
+  (helix-keymap-set magit-section-mode-map 'motion
+    "h" #'magit-section-forward  ; overrides `magit-dispatch'
+    "a" #'magit-section-backward ; overrides `magit-cherry-apply'
+    )
+
+  )
 
 ;;;;;;;;;;;;;;;;
 ;;;; themes ;;;;
