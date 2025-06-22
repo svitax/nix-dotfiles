@@ -7812,14 +7812,38 @@ in your `denote-directory'."
 
   (bind-keys
    :map org-remark-mode-map
+   ("M-n" . org-remark-view-next)
+   ("M-p" . org-remark-view-prev)
    ("C-c m d" . org-remark-delete)
    ("C-c m l" . org-remark-mark-line)
    ("C-c m m" . org-remark-mark)
-   ("C-c m n" . org-remark-view-next)
    ("C-c m o" . org-remark-open)
-   ("C-c m p" . org-remark-view-prev)
    ("C-c m r" . org-remark-remove)
    ("C-c m v" . org-remark-view)))
+
+;; TODO document org-noter
+(use-package org-noter
+  :config
+  ;; default value always gives an error and i can't be bothered to fix it
+  (setopt org-noter--show-arrow-hook '())
+
+  ;; heavy-handed way of preventing org-noter from modifying my mode-line
+  ;; without my permission.
+  (defun org-noter--mode-line-text () "")
+
+  (setopt org-noter-always-create-frame nil
+          org-noter-kill-frame-at-session-end nil
+          org-noter-highlight-selected-text t)
+
+  (bind-keys :map org-noter-doc-mode-map
+             ("i" . org-noter-insert-precise-note)
+             ("M-i" . org-noter-insert-note)
+             ("M-n" . org-noter-sync-next-note)
+             ("M-p" . org-noter-sync-prev-note)
+             ("M-." . org-noter-sync-current-note)
+             ("C-M-n" . org-noter-sync-next-page-or-chapter)
+             ("C-M-p" . org-noter-sync-prev-page-or-chapter)
+             ("C-M-." . org-noter-sync-current-page-or-chapter)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;;;; bibliography ;;;;
