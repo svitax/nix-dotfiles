@@ -7733,6 +7733,9 @@ continue, per `org-agenda-skip-function'."
   ;; Don't tell me that a buffer has no highlights. Too noisy.
   (setopt org-remark-report-no-highlights nil)
 
+  ;; Heading titles can be longer than the default of 40.
+  (setopt org-remark-line-heading-title-max-length 70)
+
   ;; Create a Denote-compatible marginal note
   (defun +org-remark-denote--note (filename)
     "Find the Denote filename similar to FILENAME but with the 'literature' keyword."
