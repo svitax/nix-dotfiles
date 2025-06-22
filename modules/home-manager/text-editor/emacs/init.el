@@ -3341,7 +3341,7 @@ end of the buffer.")
   (setopt link-hint-message nil)
 
   (bind-keys :map global-map
-             ("M-o" . link-hint-open-link)
+             ("C-c j" . link-hint-open-link)
              ("C-j" . +link-hint-jump-link))
   (with-eval-after-load 'eww
     (bind-keys :map eww-mode-map
@@ -3540,18 +3540,16 @@ narrowed."
 (use-package editing
   :no-require
   :config
-  (defun +open-line-above ()
-    "Insert a new line above current line."
-    (interactive)
-    (back-to-indentation)
-    (split-line))
-  (defun +open-line-below ()
+  (defun +open-line-below (&optional next)
     "Insert a new line below current line."
-    (interactive)
-    (end-of-line)
-    (open-line 1)
-    (next-line)
-    (indent-according-to-mode))
+    (interactive "P")
+    (if next
+        (progn (end-of-line)
+               (open-line 1)
+               (next-line)
+               (indent-according-to-mode))
+      (save-excursion (end-of-line)
+                      (open-line 1))))
 
   (defun +mark-line ()
     "Put point at beginning of this line, mark at end.
@@ -3928,9 +3926,11 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    ;; `delete-active-region'. Make it so `C-d' deletes the region if active.
    ("C-d" . delete-forward-char)
 
-   ;; Open new lines similar to Vim's o and O commands.
-   ;; ("C-o" . +open-line-below)
-   ;; ("C-M-o" . +open-line-above)
+   ;; Open new lines similar to Vim's o command.
+   ("C-o" . +open-line-below)
+
+   ;; Easier key for `delete-blank-lines'.
+   ("M-o" . delete-blank-lines)
 
    ;; Join the current line with the line below it similar to Vim's J command.
    ("C-^" . +delete-indentation-below) ; Complements `M-^' for delete-indentation
