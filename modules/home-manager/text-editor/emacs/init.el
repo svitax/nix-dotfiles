@@ -3479,7 +3479,9 @@ end of the buffer.")
   (bind-keys
    :map global-map
    ("C-v" . +golden-ratio-scroll-screen-down)
-   ("M-v" . +golden-ratio-scroll-screen-up))
+   ("M-v" . +golden-ratio-scroll-screen-up)
+   ("<next>" . +golden-ratio-scroll-screen-down)
+   ("<prior>" . +golden-ratio-scroll-screen-up))
 
   (setq-default scroll-preserve-screen-position t
                 scroll-conservatively 1
