@@ -698,6 +698,29 @@ writeable."
    ;; '("" . meow-goto-line)
    ))
 
+(use-package helix
+  :disabled t
+  :config
+  (setopt helix-normal-state-cursor '(box "#fec43f")
+          helix-insert-state-cursor '(bar "#fec43f"))
+
+  (add-hook 'shell-mode-hook (lambda () (helix-insert-state)))
+
+  (bind-keys :map helix-normal-state-map
+             ("y" . helix-backward-char) ("gy" . helix-first-non-blank)
+             ("h" . helix-next-line) ("gh" . helix)
+             ("a" . helix-previous-line)
+             ("e" . helix-forward-char) ("ge" . helix-end-of-line)
+
+             ("j" . helix-append)
+
+             ("k" . helix-yank)
+             ("H" . helix-join-line)
+
+             ("M-s" . nil))
+
+  (helix-mode))
+
 ;;;;;;;;;;;;;;;;
 ;;;; themes ;;;;
 
