@@ -5,12 +5,12 @@
 }:
 epkgs.melpaBuild {
   pname = "helix";
-  version = "20250622.1135";
+  version = "20250622.1829";
   src = pkgs.fetchFromGitHub {
     owner = "anuvyklack";
     repo = "helix.el";
-    rev = "7af64a8b47063f3499e9baf95d61f624837878fe";
-    hash = "sha256-eCQq+0oKhjucaF9/EYdmYswZd+4aZtTaSORDAY6bnDI=";
+    rev = "c417a5230713e36b5014a0a5203d76d810f8a7b3";
+    hash = "sha256-amX7awgyhxopuZe5a+KB5yD9wuDSfANNfibRfa9PzYg=";
   };
   recipe = pkgs.writeText "recipe" ''
     (helix :repo "anuvyklack/helix.el" :fetcher github)
