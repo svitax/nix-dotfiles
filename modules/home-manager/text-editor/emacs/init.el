@@ -664,39 +664,107 @@ writeable."
    '("a" . meow-prev)
    '("<escape>" . ignore))
 
-  (meow-normal-define-key
-   '("b" . meow-find) '("B" . +meow-negative-find)
-   '("l" . meow-inner-of-thing) '("<" . beginning-of-buffer)
-   '("d" . meow-bounds-of-thing) '(">" . end-of-buffer)
-   '("w" . meow-join) ;; '("W" . )
-   '("z" . xref-find-definitions) '("Z" . xref-go-back)
-   '("n" . meow-line) ;; '("N" . )
-   '("r" . +meow-inner-str) '("R" . +meow-bounds-str)
-   '("t" . meow-mark-word) '("T" . meow-mark-symbol)
-   '("s" . +meow-insert-at-cursor) '("S" . meow-insert)
-   '("g" . meow-block) '("G" . meow-block-expand)
-   '("q" . meow-quit) ;; '("Q" . )
-   '("x" . meow-reverse) ;; '("X")
-   '("m" . meow-grab) ;; '("M" . )
-   '("c" . meow-back-word) '("C" . meow-back-symbol)
-   '("v" . meow-next-word) '("V" . meow-next-symbol)
-   '("'" . meow-left) '("\"" . meow-left-expand)
-   '("f" . meow-open-below) '("F" . meow-open-above)
-   '("o" . meow-right) '("O" . meow-right-expand)
-   ;; '("u" . ) '("U" . )
-   '("j" . meow-undo) '("J" . meow-undo-in-selection)
-   '("y" . meow-save) '("Y" . meow-yank)
-   '("h" . meow-next) '("H" . meow-next-expand)
-   '("a" . meow-prev) '("A" . meow-prev-expand)
-   '("e" . meow-change) '("E" . meow-replace)
-   '("i" . meow-kill) ;; '("I" . )
-   ;; '("k" . +meow-paren-mode) ;; '("K" . )
-   '("p" . avy-goto-char) ;; '("P" . )
-   '("," . meow-cancel-selection) ;; '(";" . )
-   '("." . repeat) ;; '(":" . )
-   '("?" . meow-pop-selection) ;; '("!" . )
-   ;; '("" . meow-goto-line)
-   ))
+  ;; (meow-normal-define-key
+  ;;  ;; Mnemonic
+  ;;  ;;; bldwz
+  ;;  '("b" . meow-back-word) '("B" . meow-back-symbol)
+  ;;  '("l" . ) '("L" . )
+  ;;  '("d" . meow-kill) '("D" . )
+  ;;  '("w" . meow-next-word) '("W" . meow-next-symbol)
+  ;;  '("z" . view_mode) '("Z" . sticky_view_mode)
+
+  ;;  '("gb" . goto_window_bottom) '("zb" . align_view_bottom)
+  ;;  '("gl" . goto_last_line)
+  ;;  '("gd" . meow-find-ref) '("zd" . delete_fold) '("md" . surround_delete)
+  ;;  ;;; nrtsg
+  ;;  '("n" . meow-search) '("N" . meow-pop-search)
+  ;;  '("r" . meow-replace-char) '("R" . meow-replace)
+  ;;  '("t" . meow-till) '("T" . +meow-till-prev) '("C-t" . meow-pop-marker)
+  ;;  '("s" . select_regex) '("S" . split_selection) '("C-s" . save_selection)
+  ;;  '("g" . goto_mode) '("G" . goto_line)
+
+  ;;  '("gn" . goto_next_buffer)
+  ;;  '("gr" . goto_reference) '("mr" . surround_replace)
+  ;;  '("gt" . goto_window_top) '("zt" . align_view_top)
+  ;;  '("gs" . meow-back-to-indentation) '("ms" . surround_add)
+  ;;  '("gg" . goto_file_start)
+  ;;  ;;; qxmcv
+  ;;  '("q" . replay_macro) '("Q" . record_macro)
+  ;;  '("x" . meow-line) '("X" . +meow-rline)
+  ;;  '("m" . match_mode) '("M" . mark)
+  ;;  '("c" . meow-change) '("C" . ) '("C-c" . toggle_comments)
+  ;;  '("v" . select_mode) '("V" . )
+
+  ;;  '("gx" . goto_type_definition)
+  ;;  '("gm" . goto_window_center) '("zm" . align_view_center) '("mm" . match_brackets)
+  ;;  '("gc" . comment) '("zc" . close_fold)
+  ;;  ;;; 'fouj
+  ;;  '("'" . select_mark) '("\"" . select_register)
+  ;;  '("f" . meow-find) '("F" . +meow-find-prev)
+  ;;  '("o" . meow-open-below) '("O" . meow-open-above) '("C-o" . meow-pop-to-mark)
+  ;;  '("u" . meow-undo) '("U" . redo)
+  ;;  '("j" . meow-append) '("J" . append_at_line_end)
+
+  ;;  '("gf" . goto_file)
+  ;;  '("go" . ) '("zo" . open_fold)
+  ;;  ;;; yhaei
+  ;;  '("y" . meow-left) '("Y" . )
+  ;;  '("h" . meow-next) '("H" . join_selections) '("C-h" . harpoon_1)
+  ;;  '("a" . meow-prev) '("A" . lookup) '("C-a" . harpoon_2)
+  ;;  '("e" . meow-right) '("E" . ) '("C-e" . harpoon_3)
+  ;;  '("i" . meow-insert) '("I" . insert_at_line_start) '("C-i" . meow-unpop-to-mark)
+
+  ;;  '("gy" . beginning-of-line)
+  ;;  '("ga" . avy) '("za" . toggle_fold) '("ma" . select_textobject_around)
+  ;;  '("ge" . end-of-line)
+  ;;  '("gi" . goto_implementation) '("zi" . ) '("mi" . select_textobject_inner)
+  ;;  ;;; kp,.?
+  ;;  '("k" . meow-save) '("K" . )
+  ;;  '("p" . meow-yank) '("P" . meow-yank-pop)
+  ;;  ;; NOTE: `,' cancels multicursor
+  ;;  ;; i want to use , for reverse/flip selection and ; for repeat motion
+  ;;  '("," . keep_primary_selection) '(";" . collapse_selection) '("C-," . )
+  ;;  '("." . repeat_last_insert) '(":" . command_mode) '("C-." . )
+  ;;  '("?" . ) '("!" . ) '("C-?" . )
+
+  ;;  '("gp" . goto_previous_buffer)
+  ;;  '("g." . goto_last_modification)
+  ;;  ;;; others
+  ;;  '("-" . negative-argument) '("+" . meow-universal-argument)
+  ;;  '("/" . meow-visit) '("?" . +meow-rvisit)
+
+  ;;  '("<esc>" . meow-cancel-selection)
+
+  ;;  '("<prev>" . meow-page-up) '("<next>" . meow-page-down)
+
+  ;;  '(")" . meow-forward-slurp) '("(" . meow-forward-barf)
+  ;;  '("{" . meow-backward-slurp) '("}" . meow-backward-barf)
+
+  ;;  '("SPC" . keypad)
+  ;;  '("%" . select_all)
+  ;;  '("*" . search_selection)
+  ;;  '("<" . indent) '(">" . unindent)
+
+  ;; '("=" . format_selections)
+  ;; '("M-." . repeat_last_motion)
+  ;; '("`" . switch_to_lowercase) '("~" . switch_case) '("M-`" . switch_to_uppercase)
+  ;; '("a" . append_mode) '("A" . insert_at_line_end) '("C-a" . increment)
+  ;; '("C" . copy_selection_on_next_line) '("M-c" . change_selection_noyank) '("M-C" . copy_selection_on_prev_line)
+  ;; '("M-d" . delete_selection_noyank)
+  ;; '("S" . split_selection) '("M-s" . split_selection_on_newline)
+  ;; '("C-x" . decrement)
+  ;; '("y" . yank)
+  ;; '("M-," . remove_primary_selection)
+  ;; '("M--" . merge_selections)
+  ;; '("_" . trim_selections) '("M-_" . merge_consecutive_selections)
+  ;; '("&" . align_selections)
+  ;; '(";" . collapse_selection) '("M-;" . flip_selections)
+  ;; '("M-:" . ensure_selections_forward)
+  ;; '("|". shell_pipe) '("M-|" . shell_pipe_to)
+  ;; '("!" . shell_insert_output) '("M-!" . shell_append_output)
+  ;; '("$" . shell_keep_pipe)
+  ;; '("(" . rotate_selections_backward) '(")" . rotate_selections_forward)
+  )
 
 (use-package helix
   :disabled t
