@@ -153,6 +153,7 @@ in
               consult-denote
               citar-denote
               org-remark
+              org-noter
               markdown-mode
               pdf-tools
               saveplace-pdf-view
