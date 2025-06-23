@@ -767,17 +767,19 @@ writeable."
   )
 
 (use-package helix
+  :disabled t
   :config
   (setopt helix-normal-state-cursor '(box "#fec43f")
           helix-insert-state-cursor '(bar "#fec43f"))
 
   ;; BUG use helix-local-mode because helix-mode makes my window/cursor jump
   ;; around when using vertico
-  (dolist (mode-hook '(prog-mode-hook text-mode-hook comint-mode-hook))
+  (dolist (mode-hook '(prog-mode-hook text-mode-hook comint-mode-hook
+                       bibtex-mode-hook))
     (add-hook mode-hook (lambda () (helix-local-mode))))
 
   ;; Modes to start in insert state.
-  (dolist (mode-hook '(shell-mode-hook))
+  (dolist (mode-hook '(comint-mode-hook git-commit-mode-hook))
     (add-hook mode-hook (lambda () (helix-insert-state 1))))
 
   ;; Modes to start in motion state.
@@ -825,17 +827,18 @@ writeable."
              ("M-s" . nil))
 
   ;; NOTE temporary unless proper motion state support gets added
-  (helix-keymap-set dired-mode-map 'motion
+  (with-eval-after-load 'dired
+    (helix-keymap-set dired-mode-map 'motion
     "h" #'dired-next-line     ; overrides `describe-mode'
     "a" #'dired-previous-line ; overrides `dired-find-alternate-file'
     "y" #'dired-up-directory  ; overrides `dired-show-file-type'
-    )
-  (helix-keymap-set magit-section-mode-map 'motion
-    "h" #'magit-section-forward  ; overrides `magit-dispatch'
-    "a" #'magit-section-backward ; overrides `magit-cherry-apply'
-    )
+    ))
 
-  )
+  (with-eval-after-load 'magit
+    (helix-keymap-set magit-section-mode-map 'motion
+      "h" #'magit-section-forward  ; overrides `magit-dispatch'
+      "a" #'magit-section-backward ; overrides `magit-cherry-apply'
+      )))
 
 ;;;;;;;;;;;;;;;;
 ;;;; themes ;;;;
