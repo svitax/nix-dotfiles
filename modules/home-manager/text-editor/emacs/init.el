@@ -775,16 +775,13 @@ writeable."
   ;; BUG use helix-local-mode because helix-mode makes my window/cursor jump
   ;; around when using vertico
   (dolist (mode-hook '(prog-mode-hook text-mode-hook comint-mode-hook
-                       bibtex-mode-hook))
+                       bibtex-mode-hook dired-mode-hook magit-section-mode-hook
+                       special-mode-hook messages-buffer-mode-hook))
     (add-hook mode-hook (lambda () (helix-local-mode))))
 
   ;; Modes to start in insert state.
-  (dolist (mode-hook '(comint-mode-hook git-commit-mode-hook))
-    (add-hook mode-hook (lambda () (helix-insert-state 1))))
-
-  ;; Modes to start in motion state.
-  (dolist (mode-hook '(dired-mode-hook magit-section-mode-hook))
-    (add-hook mode-hook (lambda () (helix-motion-state 1))))
+  (dolist (mode-hook '(shell-mode-hook comint-mode-hook git-commit-mode-hook))
+    (add-hook mode-hook (lambda () (helix-insert-state))))
 
   (defun +helix-avy-char-timer ()
     "Move to the beginning of one or many consecutive chars, choosing it with Avy."
@@ -801,15 +798,60 @@ writeable."
              (set-mark (point))))
     (avy-goto-char-timer)))
 
+  ;; When calling 'd' on non-regions, I like for it to kill the char forward.
+  ;; By default 'D' does that, but it deletes regions. Let's swap this
+  ;; behaviour.
+  (defun +helix-kill (count)
+    "Kill (cut) text in region. I.e. delete text and put it in the `kill-ring'.
+If no selection — delete COUNT chars after point."
+    (interactive "p")
+    (cond ((use-region-p)
+           ;; If selection is a whole line then add newline character (for logical
+           ;; line) or space (for visual line) after into selection.
+           (when (and (not (helix-blank-line-p))
+                      (helix-line-selected-p))
+             (when (< (helix-region-direction) 0)
+               (helix-exchange-point-and-mark))
+             (forward-char))
+           (kill-region nil nil t))
+          (t
+           (delete-char count)))
+    (helix-extend-selection -1))
+  (setq helix-default-commands-to-run-for-all-cursors
+        (append helix-default-commands-to-run-for-all-cursors
+                '(+helix-kill)))
+
+  (defun +helix-delete (count)
+  "Delete text in region, without modifying the `kill-ring'.
+If no selection — delete COUNT chars before point."
+  (interactive "p")
+  (cond ((use-region-p)
+         (when (and (not (helix-blank-line-p))
+                    (helix-line-selected-p))
+           (when (< (helix-region-direction) 0)
+             (helix-exchange-point-and-mark))
+           (forward-char))
+         (delete-region (region-beginning) (region-end)))
+        (t
+         (delete-char (- count))))
+  (helix-extend-selection -1))
+  (setq helix-default-commands-to-run-for-all-cursors
+        (append helix-default-commands-to-run-for-all-cursors
+                '(+helix-delete)))
+
   (bind-keys :map helix-normal-state-map
              ;; Motions
              ("y" . helix-backward-char) ("<left>" . helix-backward-char)
              ("h" . helix-next-line) ("<down>" . helix-next-line)
              ("a" . helix-previous-line) ("<up>" . helix-previous-line)
              ("e" . helix-forward-char) ("<right>" . helix-forward-char)
+             ("j" . helix-forward-word-end)
+             ("J" . helix-forward-WORD-end)
              ("gs" . helix-first-non-blank)
              ("gy" . helix-beginning-of-line)
              ("ge" . helix-end-of-line)
+             ("gn" . next-buffer)
+             ("gp" . previous-buffer)
 
              ;; Easymotion / Avy
              ("gh" . helix-avy-next-line)
@@ -817,16 +859,34 @@ writeable."
              ("gj" . +helix-avy-char-timer)
 
              ;; Changes
-             ("j" . helix-append)
-             ("J" . helix-append-line)
+             ("l" . helix-append)
+             ("L" . helix-append-line)
+             ("d" . +helix-kill)
+             ("D" . +helix-delete)
              ("k" . helix-yank)
              ("H" . helix-join-line)
              ("gc" . +comment-line-dwim)
 
              ;; Selections
-             ("M-s" . nil))
+             ("M-s" . nil)
 
-  ;; NOTE temporary unless proper motion state support gets added
+             ;; Scrolling
+             ("C-d" . nil)
+             ("C-u" . universal-argument)
+
+             ;; Misc
+             ("gd" . xref-find-definitions)
+             ("gr" . xref-find-references)
+             ("C-t" . xref-go-back))
+
+  (helix-keymap-set special-mode-map 'motion
+    "q" #'quit-window)
+
+  (with-eval-after-load 'org
+    (helix-keymap-set org-mode-map 'normal
+      "<tab>" #'org-cycle))
+
+  ;; NOTE dired starts out in motion state and I don't know why
   (with-eval-after-load 'dired
     (helix-keymap-set dired-mode-map 'motion
     "h" #'dired-next-line     ; overrides `describe-mode'
@@ -834,11 +894,43 @@ writeable."
     "y" #'dired-up-directory  ; overrides `dired-show-file-type'
     ))
 
+  ;; NOTE magit-status starts out in motion state and I don't know why
   (with-eval-after-load 'magit
     (helix-keymap-set magit-section-mode-map 'motion
-      "h" #'magit-section-forward  ; overrides `magit-dispatch'
-      "a" #'magit-section-backward ; overrides `magit-cherry-apply'
-      )))
+      "y" #'helix-backward-char ; overrides `magit-show-refs'
+      "h" #'magit-next-line ; overrides `magit-dispatch'
+      "a" #'magit-previous-line ; overrides `magit-cherry-apply'
+      "e" #'helix-forward-char ; overrides `magit-ediff-dwim'
+      "<left>" #'helix-backward-char
+      "<down>" #'magit-next-line
+      "<up>" #'magit-previous-line
+      "<right>" #'helix-forward-char
+      "v" #'set-mark-command ; overrides `magit-revert-no-commit'
+      ;; "-" #'magit-revert-no-commit ; overrides `magit-diff-less-context'
+      ;; "_" #'magit-revert
+      "E" #'magit-ediff-dwim
+      "g g" #'helix-goto-first-line
+      "G" #'helix-goto-last-line
+      "g r" #'magit-refresh
+      "g R" #'magit-refresh-all
+      "g ESC" #'keyboard-quit
+      ":" #'execute-extended-command
+      ))
+
+  (with-eval-after-load 'nov
+    (helix-keymap-set nov-mode-map 'motion
+      "y" #'helix-backward-char
+      "h" #'next-line ; overrides `describe-mode'
+      "a" #'previous-line ; overrides `nov-reopen-as-archive'
+      "e" #'helix-forward-char
+
+      "<escape>" #'helix-normal-state-escape
+      "v" #'helix-extend-selection ; overrides `nov-view-source'
+
+      "q" #'quit-window
+      "g r" #'nov-render-document
+      "C-d" #'nov-scroll-up
+      "C-u" #'nov-scroll-down)))
 
 ;;;;;;;;;;;;;;;;
 ;;;; themes ;;;;
