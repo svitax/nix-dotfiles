@@ -1243,6 +1243,8 @@ to produce the opposite effect of `fill-paragraph' and `fill-region'."
   ;; (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 
   (bind-keys :map global-map
+             ;; TODO I don't using shift in the binding for +unfill-dwim
+             ;; NOTE 2025-06-26 I also never use this so do I really need it?
              ("M-Q" . +unfill-dwim)
              :map +prefix-map
              ("f" . set-fill-column)
@@ -4384,8 +4386,6 @@ for the given MAJOR-MODE, any text is appended to it."
 
   (bind-keys
    :map global-map
-   ("M-P" . move-text-up)
-   ("M-N" . move-text-down)
    ("M-<up>" . move-text-up)
    ("M-<down>" . move-text-down)))
 
