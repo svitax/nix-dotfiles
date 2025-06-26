@@ -1331,6 +1331,72 @@ to produce the opposite effect of `fill-paragraph' and `fill-region'."
 ;;;;;;;;;;;;;;;
 ;;;; files ;;;;
 
+;; TODO document files
+(use-package files
+  :config
+  (setopt y-or-n-p-use-read-key t
+          use-short-answers t
+          confirm-kill-processes nil
+          confirm-kill-emacs 'yes-or-no-p
+          large-file-warning-threshold nil)
+
+  (bind-keys :map +prefix-map
+             ("C-f" . find-file)
+             ;; TODO add mark to xref before navigating to library
+             ;; ("b" . find-library)
+             ;; ("m" . man)
+             ))
+
+(use-package backup
+  :no-require
+  :config
+  ;; By default, Emacs tries to keep backups (i.e. some-file.el~). I do not need
+  ;; this feature because all the files I care about are either under version
+  ;; control or backed up to a flash drive.
+  (setopt backup-inhibited t
+          make-backup-files nil))
+
+(use-package lockfiles
+  :no-require
+  :config
+  ;; By default, Emacs tries to lock down files so that they are not modified by
+  ;; other programs (i.e. .#some-file.el). I do not need this feature because if
+  ;; I am ever modifying my files externally, then I know what I am doing.
+  (setopt create-lockfiles nil
+          auto-save-default nil))
+
+(use-package autorevert
+  :config
+  ;; The "auto-revert" facility makes Emacs update the contents of a saved
+  ;; buffer when its underlying file is changed externally. This can happen, for
+  ;; example, when a "git pull" modifies the file we are already displaying in a
+  ;; buffer. Emacs thus automatically reverts the buffer to reflect the new file
+  ;; contents.
+  (global-auto-revert-mode))
+
+(use-package recentf
+  ;; Emacs can keep track of recently visited files. Then we can revisit them
+  ;; with the command `recent-open', which provides minibuffer completion.
+
+  ;; Recent files are also available in the `consult-buffer' interface, which
+  ;; makes it a one-stop-shop for opening buffers, recent files, or
+  ;; bookmarks. This can be better than having to remember if something is a
+  ;; buffer or is stored by bookmarks/recentf. Same idea for using one command
+  ;; instead of three (or more).
+
+  ;; I generally do not rely on `recentf-mode', as most of my work is done in
+  ;; projects, which I switch to directly. Though I sometimes need to revisit a
+  ;; file that I do not need to keep track of.
+  :config
+  (recentf-mode))
+
+;; TODO document saveplace
+(use-package saveplace
+  ;; Tell Emacs to record where we were in the file, so we resume there on next
+  ;; visit. Turn on place saving globally.
+  :config
+  (save-place-mode))
+
 ;;;;;;;;;;;;;;;
 ;;;; dired ;;;;
 
@@ -1726,72 +1792,6 @@ Add this to `dired-mode-hook'."
 
   (bind-keys :map dired-mode-map
              ("V" . dired-preview-mode)))
-
-;; TODO document files
-(use-package files
-  :config
-  (setopt y-or-n-p-use-read-key t
-          use-short-answers t
-          confirm-kill-processes nil
-          confirm-kill-emacs 'yes-or-no-p
-          large-file-warning-threshold nil)
-
-  (bind-keys :map +prefix-map
-             ("C-f" . find-file)
-             ;; TODO add mark to xref before navigating to library
-             ;; ("b" . find-library)
-             ;; ("m" . man)
-             ))
-
-(use-package backup
-  :no-require
-  :config
-  ;; By default, Emacs tries to keep backups (i.e. some-file.el~). I do not need
-  ;; this feature because all the files I care about are either under version
-  ;; control or backed up to a flash drive.
-  (setopt backup-inhibited t
-          make-backup-files nil))
-
-(use-package lockfiles
-  :no-require
-  :config
-  ;; By default, Emacs tries to lock down files so that they are not modified by
-  ;; other programs (i.e. .#some-file.el). I do not need this feature because if
-  ;; I am ever modifying my files externally, then I know what I am doing.
-  (setopt create-lockfiles nil
-          auto-save-default nil))
-
-(use-package autorevert
-  :config
-  ;; The "auto-revert" facility makes Emacs update the contents of a saved
-  ;; buffer when its underlying file is changed externally. This can happen, for
-  ;; example, when a "git pull" modifies the file we are already displaying in a
-  ;; buffer. Emacs thus automatically reverts the buffer to reflect the new file
-  ;; contents.
-  (global-auto-revert-mode))
-
-(use-package recentf
-  ;; Emacs can keep track of recently visited files. Then we can revisit them
-  ;; with the command `recent-open', which provides minibuffer completion.
-
-  ;; Recent files are also available in the `consult-buffer' interface, which
-  ;; makes it a one-stop-shop for opening buffers, recent files, or
-  ;; bookmarks. This can be better than having to remember if something is a
-  ;; buffer or is stored by bookmarks/recentf. Same idea for using one command
-  ;; instead of three (or more).
-
-  ;; I generally do not rely on `recentf-mode', as most of my work is done in
-  ;; projects, which I switch to directly. Though I sometimes need to revisit a
-  ;; file that I do not need to keep track of.
-  :config
-  (recentf-mode))
-
-;; TODO document saveplace
-(use-package saveplace
-  ;; Tell Emacs to record where we were in the file, so we resume there on next
-  ;; visit. Turn on place saving globally.
-  :config
-  (save-place-mode))
 
 ;;;;;;;;;;;;;;;;;;;
 ;;;; bookmarks ;;;;
