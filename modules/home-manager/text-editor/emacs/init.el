@@ -4911,191 +4911,6 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
 ;; Adds :dap keyword to use-package forms
 ;; (use-package dape-use-package)
 
-;;;;;;;;;;;;;;;;;;;;;
-;;;; compilation ;;;;
-
-;; NOTE document compile
-;; TODO running project-compile doesn't inherit environment defined by guix and envrc
-(use-package compile
-  :config
-  ;; NOTE `compilation-filter-hook' is a set of filters to be applied to the
-  ;; output of our compiler.
-
-  ;; Automatically scroll build output
-  (setopt compilation-scroll-output t)
-  ;; Kill compilation process before starting another.
-  (setopt compilation-always-kill t)
-  ;; Don't underline.
-  (setopt compilation-message-face 'default)
-  ;; I'm not scared of saving everything
-  (setopt compilation-ask-about-save nil)
-  ;; Translate ANSI escape sequences into faces
-  (defun +compile-ansi-color-apply ()
-    "Translate control sequences into text properties in `compile' buffer."
-    (interactive)
-    (ansi-color-apply-on-region (point-min) (point-max)))
-  ;; (add-hook 'compilation-filter-hook '+compile-ansi-color-apply)
-
-  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
-  (add-hook 'compilation-filter-hook 'ansi-osc-compilation-filter)
-
-  (defun +compile (&optional arg)
-    "Runs `project-compile'.
-With prefix argument ARG (\\[universal-argument]), prompt for a
-directory to run `compile'."
-    (interactive "P")
-    (if arg
-        (let* ((dir (read-directory-name "Compile in directory: " default-directory nil t))
-               (default-directory dir)
-               (current-prefix-arg nil)  ; prevent propagation to `compile'
-               (compilation-read-command t)
-               (orig (symbol-function 'read-from-minibuffer)))
-          (fset 'read-from-minibuffer
-                (lambda (_prompt initial &rest args)
-                  (apply orig (format "Compile command in %s: " dir) initial args)))
-          (unwind-protect
-              (call-interactively 'compile)
-            (fset 'read-from-minibuffer orig)))
-      (call-interactively 'project-compile)))
-
-  (defun +compile-send-input (input &optional nl)
-    "Send INPUT to the current process.
-Interactively also sends a terminating newline."
-    (interactive "MInput: \nd")
-    (let ((string (concat input (if nl "\n"))))
-      ;; This is just for visual feedback
-      (let ((inhibit-read-only t))
-        (insert-before-markers string))
-      ;; This is the important stuff
-      (process-send-string
-       (get-buffer-process (current-buffer))
-       string)))
-  (defun +comint-send-self ()
-    "Send the pressed key to the current process."
-    (interactive)
-    (+compile-send-input
-     (apply #'string
-            (append (this-command-keys-vector) nil))))
-
-  (defun +compile-toggle-comint ()
-    "Restart compilation with (or without) `comint-mode'."
-    (interactive)
-    (cl-callf (lambda (mode) (if (eq mode t) nil t))
-        (elt compilation-arguments 1))
-    (recompile))
-
-  (defun +compile-input-from-history ()
-    "Insert command from compile input history."
-    (interactive)
-    (let* ((history compile-history)
-           (default (car history))
-           (selected (completing-read
-                      (format-prompt "Insert input from history" default)
-                      history nil nil nil 'compile-history default)))
-      (delete-minibuffer-contents)
-      (insert selected)))
-
-  (defvar +compile-commands
-    '(;; (c++-mode-hook
-      ;;       . (concat "g++ -std=c++17 -Wall -Wextra -Wshadow -Wno-sign-conversion \
-      ;; -O2 -I/Users/admin/problems/include " buffer-file-name " && ./a.out"))
-      ;; (c++-ts-mode-hook
-      ;;       . (concat "g++ -std=c++17 -Wall -Wextra -Wshadow -Wno-sign-conversion \
-      ;; -O2 -I/Users/admin/problems/include " buffer-file-name " && ./a.out"))
-      (go-ts-mode-hook . (concat "go run " buffer-file-name))
-      ;; (go-ts-mode-hook . "go build -o a.out ")
-      (rust-ts-mode-hook . "cargo run ")
-      ;; (rust-ts-mode-hook . "rustc -o a.out ")
-      (sh-mode-hook . buffer-file-name)))
-
-  (dolist (pair +compile-commands)
-    (let ((mode (car pair))
-          (command (cdr pair)))
-      (add-hook mode
-                (lambda ()
-                  (setq-local compile-command command)))))
-
-  (add-hook 'shell-mode-hook 'compilation-shell-minor-mode)
-
-  (bind-keys
-   :map +prefix-map
-   ("C-," . +compile)
-   ("C-." . recompile)
-   :map compilation-mode-map
-   ("C-x C-q" . +compile-toggle-comint)
-   ;; TODO is C-c C-q used anywhere at all? should i bind this globally?
-   ("C-c C-q" . +kill-this-buffer)
-   ("C-d" . +comint-send-self)
-   ("C-j" . +comint-send-self)
-   ("y" . +comint-send-self)
-   ("n" . +comint-send-self)
-   :map compilation-minor-mode-map
-   ("C-x C-q" . +compile-toggle-comint)
-   :map compilation-shell-minor-mode-map
-   ("C-x C-q" . +compile-toggle-comint)
-   :map minibuffer-local-shell-command-map
-   ("M-s M-h" . +compile-input-from-history)
-   :map +goto-prefix-map
-   ("n" . next-error)
-   ("M-n" . next-error)
-   ("p" . previous-error)
-   ("M-p" . previous-error)))
-
-;; TODO create compile-use-package that adds to compile-commands. or use
-;; compile-multi-use-package
-;; Adds :compile keyword to use-package forms
-;; (use-package compile-use-package)
-
-(use-package compile-multi
-  :disabled t
-  :config
-  ;; `compile-multi' is a multi-target interface to `compile'. It allows you to
-  ;; configure and interactively select compilation targets based on arbitrary
-  ;; project types, build frameworks, or test tools.
-  ;;
-  ;; In simplified terms, `compile-multi' provides a framework for associating
-  ;; actions with triggers. A trigger is any predicate that applies to the
-  ;; current file, project, or directory. An action is a shell command or
-  ;; interactive function or anything that can be invoked when the associated
-  ;; trigger is set. For example, we can write a function that parses out all
-  ;; the targets from a Makefile and generates actions for them. This allows us
-  ;; to construct rich command interfaces.
-  (bind-keys
-   :map +prefix-map
-   ("/" . compile-multi)))
-
-;; TODO create compile-multi-use-package that adds to compile-multi-config
-;; Adds :compile keyword to use-package forms
-;; (use-package compile-multi-use-package)
-
-(use-package consult-compile-multi
-  :disabled t
-  :config
-  ;; `consult-compile-multi' is an extension for `compile-multi' that runs the
-  ;; interactive selection of targets through `consult' instead of
-  ;; `completing-read', which enhances it with some useful consult features such
-  ;; as narrowing.
-  (consult-compile-multi-mode))
-
-(use-package projection-multi
-  :disabled t
-  :config
-  ;; `projection' has an optional extension package called `projection-multi' to
-  ;; integrate `compile-multi' into the current project type. It can extract
-  ;; available compilation targets from Makefiles, CMake configuration, etc. and
-  ;; lets you execute them easily. By default, `projection-multi-compile'
-  ;; determines all project types matching the current project and then resolves
-  ;; compilation targets based on them. For example, a project that would match
-  ;; CMake and tox would let you select both tox and CMake build
-  ;; targets.
-  ;;
-  ;; Currently automatic target generation functions are available for the
-  ;; following project types: projection (simply presents available projection
-  ;; commands for the matching project types), CMake, Make, Poetry Poe, and Tox.
-  (bind-keys
-   :map +prefix-map
-   ("/" . projection-multi-compile)))
-
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; documentation ;;;;
 
@@ -5523,6 +5338,237 @@ Interactively also sends a terminating newline."
   (with-eval-after-load 'vc-annotate
     (+eldoc-diffstat-setup-binds vc-annotate-mode-map)))
 
+;;;;;;;;;;;;;;;;
+;;;; comint ;;;;
+
+(use-package comint
+  ;; The built-in `comint' library defines the infrastructure necessary to run a
+  ;; command line shell or other Read Evaluate Print Loop (REPL) interfaces. It
+  ;; underpins the standart `shell' as well as the built-in Emacs Lisp REPL of
+  ;; `ielm'.
+  ;;
+  ;; What I define here are some basic tweaks to control the behaviour of Comint
+  ;; buffers. The `ansi-color-for-comint-mode' in particular takes care to
+  ;; interpret the ANSI escape sequences such that they produce the same result
+  ;; they would have had they been executed in a terminal emulator. For example:
+  ;;
+  ;;     echo -e "\e[31mThis text is red\e[0m"
+  ;;
+  ;; I never want to see the escape sequences. They look busy and will distort
+  ;; the output when there are lots of them. In the section about `compile', I
+  ;; have a similar setting for the compilation buffers.
+  :config
+
+  ;; Support for OS-specific escape sequences such as what `ls --hyperlink'
+  ;; uses. I normally don't use those, but I am checking this to see if there
+  ;; are any obvious advantages/disadvantages.
+  (add-hook 'comint-output-filter-functions #'comint-osc-process-output)
+
+  (setq-default comint-scroll-to-bottom-on-input t
+                comint-scroll-to-bottom-on-output nil
+                comint-input-autoexpand 'input)
+
+  (setopt comint-prompt-read-only t
+          comint-buffer-maximum-size 9999
+          comint-completion-autolist t
+          comint-input-ignoredups t))
+
+;;;;;;;;;;;;;;;;;;;;;
+;;;; compilation ;;;;
+
+;; TODO running project-compile doesn't inherit environment defined by guix and envrc
+(use-package compile
+  ;; Similar to the `comint' library, Emacs comes with a built-in interface for
+  ;; running compilation-related commands. In principle, any shell command will
+  ;; do. The output is collected in a buffer which (i) keeps track of errors and
+  ;; warnings, and (ii) adds direct links to the relevant sources.
+  ;;
+  ;; The way to modify hot `compile' adds those links are described in great
+  ;; detail in the doc string of the variable
+  ;; `compilation-error-regexp-alist'. Here is a sample:
+  ;;
+  ;;     (add-to-list 'compilation-error-regexp-alist-alist
+  ;;                   '(+compile-sample
+  ;;                     "^[\s\t]*\\(?:.*(\\)\\(?1:.*\\):\\(?2:[0-9]+\\)?:\\(?3:[0-9]+\\)?"
+  ;;                     1 2 3))
+  ;;
+  ;;     (add-to-list 'compilation-error-regexp-alist '+compile-sample)
+  ;;
+  ;; The difference between `compile' and `comint' is that the latter is
+  ;; interactive and does not add links to errors/warnings. Use whichever one is
+  ;; relevant to the task at hand.
+  :config
+
+  ;; Set `compile' up to handle ANSI escape sequences, like I do with `comint'.
+  ;; Note that `compilation-filter-hook' is a set of filters to be applied to
+  ;; the output of our compiler.
+  (setopt ansi-color-for-compilation-mode t)
+  (setopt ansi-osc-for-compilation-buffer t)
+  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+  (add-hook 'compilation-filter-hook 'ansi-osc-compilation-filter)
+
+  (setopt compilation-scroll-output t ; Automatically scroll build output
+          compilation-always-kill t ; Kill compilation process before starting another.
+          compilation-message-face 'default ; Don't underline.
+          compilation-ask-about-save nil ; I'm not scared of saving everything
+          )
+
+  (defun +compile (&optional arg)
+    "Runs `project-compile'.
+With prefix argument ARG (\\[universal-argument]), prompt for a
+directory to run `compile'."
+    (interactive "P")
+    (if arg
+        (let* ((dir (read-directory-name "Compile in directory: " default-directory nil t))
+               (default-directory dir)
+               (current-prefix-arg nil)  ; prevent propagation to `compile'
+               (compilation-read-command t)
+               (orig (symbol-function 'read-from-minibuffer)))
+          (fset 'read-from-minibuffer
+                (lambda (_prompt initial &rest args)
+                  (apply orig (format "Compile command in %s: " dir) initial args)))
+          (unwind-protect
+              (call-interactively 'compile)
+            (fset 'read-from-minibuffer orig)))
+      (call-interactively 'project-compile)))
+
+  (defun +compile-send-input (input &optional nl)
+    "Send INPUT to the current process.
+Interactively also sends a terminating newline."
+    (interactive "MInput: \nd")
+    (let ((string (concat input (if nl "\n"))))
+      ;; This is just for visual feedback
+      (let ((inhibit-read-only t))
+        (insert-before-markers string))
+      ;; This is the important stuff
+      (process-send-string
+       (get-buffer-process (current-buffer))
+       string)))
+  (defun +comint-send-self ()
+    "Send the pressed key to the current process."
+    (interactive)
+    (+compile-send-input
+     (apply #'string
+            (append (this-command-keys-vector) nil))))
+
+  (defun +compile-toggle-comint ()
+    "Restart compilation with (or without) `comint-mode'."
+    (interactive)
+    (cl-callf (lambda (mode) (if (eq mode t) nil t))
+        (elt compilation-arguments 1))
+    (recompile))
+
+  (defun +compile-input-from-history ()
+    "Insert command from compile input history."
+    (interactive)
+    (let* ((history compile-history)
+           (default (car history))
+           (selected (completing-read
+                      (format-prompt "Insert input from history" default)
+                      history nil nil nil 'compile-history default)))
+      (delete-minibuffer-contents)
+      (insert selected)))
+
+  (defvar +compile-commands
+    '(;; (c++-mode-hook
+      ;;       . (concat "g++ -std=c++17 -Wall -Wextra -Wshadow -Wno-sign-conversion \
+      ;; -O2 -I/Users/admin/problems/include " buffer-file-name " && ./a.out"))
+      ;; (c++-ts-mode-hook
+      ;;       . (concat "g++ -std=c++17 -Wall -Wextra -Wshadow -Wno-sign-conversion \
+      ;; -O2 -I/Users/admin/problems/include " buffer-file-name " && ./a.out"))
+      (go-ts-mode-hook . (concat "go run " buffer-file-name))
+      ;; (go-ts-mode-hook . "go build -o a.out ")
+      (rust-ts-mode-hook . "cargo run ")
+      ;; (rust-ts-mode-hook . "rustc -o a.out ")
+      (sh-mode-hook . buffer-file-name)))
+
+  (dolist (pair +compile-commands)
+    (let ((mode (car pair))
+          (command (cdr pair)))
+      (add-hook mode
+                (lambda ()
+                  (setq-local compile-command command)))))
+
+  (add-hook 'shell-mode-hook 'compilation-shell-minor-mode)
+
+  (bind-keys
+   :map +prefix-map
+   ("C-," . +compile)
+   ("C-." . recompile)
+   :map compilation-mode-map
+   ("C-x C-q" . +compile-toggle-comint)
+   ;; TODO is C-c C-q used anywhere at all? should i bind this globally?
+   ("C-c C-q" . +kill-this-buffer)
+   ("C-d" . +comint-send-self)
+   ("C-j" . +comint-send-self)
+   ("y" . +comint-send-self)
+   ("n" . +comint-send-self)
+   :map compilation-minor-mode-map
+   ("C-x C-q" . +compile-toggle-comint)
+   :map compilation-shell-minor-mode-map
+   ("C-x C-q" . +compile-toggle-comint)
+   :map minibuffer-local-shell-command-map
+   ("M-s M-h" . +compile-input-from-history)
+   :map +goto-prefix-map
+   ("n" . next-error)
+   ("M-n" . next-error)
+   ("p" . previous-error)
+   ("M-p" . previous-error)))
+
+;; TODO create compile-use-package that adds to compile-commands. or use
+;; compile-multi-use-package
+;; Adds :compile keyword to use-package forms
+;; (use-package compile-use-package)
+
+(use-package compile-multi
+  :disabled t
+  :config
+  ;; `compile-multi' is a multi-target interface to `compile'. It allows you to
+  ;; configure and interactively select compilation targets based on arbitrary
+  ;; project types, build frameworks, or test tools.
+  ;;
+  ;; In simplified terms, `compile-multi' provides a framework for associating
+  ;; actions with triggers. A trigger is any predicate that applies to the
+  ;; current file, project, or directory. An action is a shell command or
+  ;; interactive function or anything that can be invoked when the associated
+  ;; trigger is set. For example, we can write a function that parses out all
+  ;; the targets from a Makefile and generates actions for them. This allows us
+  ;; to construct rich command interfaces.
+  (bind-keys
+   :map +prefix-map
+   ("/" . compile-multi)))
+
+;; TODO create compile-multi-use-package that adds to compile-multi-config
+;; Adds :compile keyword to use-package forms
+;; (use-package compile-multi-use-package)
+
+(use-package consult-compile-multi
+  :disabled t
+  :config
+  ;; `consult-compile-multi' is an extension for `compile-multi' that runs the
+  ;; interactive selection of targets through `consult' instead of
+  ;; `completing-read', which enhances it with some useful consult features such
+  ;; as narrowing.
+  (consult-compile-multi-mode))
+
+(use-package projection-multi
+  :disabled t
+  :config
+  ;; `projection' has an optional extension package called `projection-multi' to
+  ;; integrate `compile-multi' into the current project type. It can extract
+  ;; available compilation targets from Makefiles, CMake configuration, etc. and
+  ;; lets you execute them easily. By default, `projection-multi-compile'
+  ;; determines all project types matching the current project and then resolves
+  ;; compilation targets based on them. For example, a project that would match
+  ;; CMake and tox would let you select both tox and CMake build
+  ;; targets.
+  ;;
+  ;; Currently automatic target generation functions are available for the
+  ;; following project types: projection (simply presents available projection
+  ;; commands for the matching project types), CMake, Make, Poetry Poe, and Tox.
+  (bind-keys
+   :map +prefix-map
+   ("/" . projection-multi-compile)))
 
 ;;;;;;;;;;;;;;;
 ;;;; shell ;;;;
@@ -5928,15 +5974,6 @@ Add a bookmark handler for shell buffer and activate the
       (setq-local bookmark-make-record-function nil)))
 
   (add-hook 'shell-mode-hook #'+shell-mode)
-
-  (setq-default comint-scroll-to-bottom-on-input t
-                comint-scroll-to-bottom-on-output nil
-                comint-input-autoexpand 'input)
-
-  (setopt comint-prompt-read-only t
-          comint-buffer-maximum-size 9999
-          comint-completion-autolist t
-          comint-input-ignoredups t)
 
   ;; (setopt tramp-default-remote-shell "/bin/bash")
 
