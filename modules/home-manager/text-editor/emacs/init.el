@@ -1962,8 +1962,7 @@ Add this to `dired-mode-hook'."
   ;; always write our own functions or opt out of some annotations by modifying
   ;; the user option `marginalia-annotator-registry'. I used to do that, but
   ;; ultimately decided that I did not need to make any changes.
-  (setopt marginalia-max-relative-age 0 ; absolute time
-          marginalia-align 'right)
+  (setopt marginalia-max-relative-age 0) ; absolute time
   (bind-keys :map minibuffer-local-map
              ("M-]" . marginalia-cycle))
   (marginalia-mode))
