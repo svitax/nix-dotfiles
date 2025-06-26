@@ -5501,7 +5501,28 @@ Interactively also sends a terminating newline."
   (define-fringe-bitmap 'git-gutter-fr:modified [#b11111000] nil nil '(center repeated))
   (define-fringe-bitmap 'git-gutter-fr:deleted [#b11111000] nil nil '(center repeated)))
 
-;; (use-package eldoc-diffstat)
+(use-package eldoc-diffstat
+  :config
+  ;; I have `eldoc-echo-area-use-multiline-p' set to nil, so a lot of useful
+  ;; information is truncated from the echo area like the number of files
+  ;; changed, insertions, and deletions. However, this information is still
+  ;; available with `eldoc-doc-buffer'.
+  (global-eldoc-diffstat-mode)
+
+  (defun +eldoc-diffstat-setup-binds (mode-map)
+    (bind-keys :map mode-map
+               ("C-c C-d" . eldoc-doc-buffer)))
+
+  (with-eval-after-load 'git-rebase
+    (+eldoc-diffstat-setup-binds git-rebase-mode-map))
+  (with-eval-after-load 'log-view
+    (+eldoc-diffstat-setup-binds log-view-mode-map))
+  (with-eval-after-load 'magit
+    (+eldoc-diffstat-setup-binds magit-log-mode-map)
+    (+eldoc-diffstat-setup-binds magit-status-mode-map))
+  (with-eval-after-load 'vc-annotate
+    (+eldoc-diffstat-setup-binds vc-annotate-mode-map)))
+
 
 ;;;;;;;;;;;;;;;
 ;;;; shell ;;;;

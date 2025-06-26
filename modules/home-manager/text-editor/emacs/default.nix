@@ -135,6 +135,7 @@ in
               magit
               git-gutter
               git-gutter-fringe
+              eldoc-diffstat
               # native-complete
               # vterm
               mistty
