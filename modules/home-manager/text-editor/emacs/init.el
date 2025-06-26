@@ -2788,8 +2788,8 @@ Limit list of buffers to those matching the current
 
   (bind-keys :map global-map
              ("M-s b" . +buffers-major-mode)
-             ("S-<next>" . end-of-buffer)
-             ("S-<prior>" . beginning-of-buffer)
+             ("C-<next>" . end-of-buffer)
+             ("C-<prior>" . beginning-of-buffer)
              :map +prefix-map
              ("k" . +kill-this-buffer)
              ("C-b" . ibuffer)
