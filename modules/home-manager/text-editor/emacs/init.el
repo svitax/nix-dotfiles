@@ -3482,12 +3482,6 @@ end of the buffer.")
 
 ;; TODO recursive project search https://www.youtube.com/watch?v=1jBbVUnNbDU
 
-;; TODO recoll
-;; can recoll search through my epubs?
-;; if it can, set up the nov keymap to use it instead of consult-ripgrep or consult-lini
-;; maybe define a function +consult-ripgrep-or-recoll that calls recoll if current mode is nov
-;; (defvar +recoll-major-modes)
-
 (use-package xref
   :config
   ;; `xref' provides infrastructure to jump to and from a definition. For
