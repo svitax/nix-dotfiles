@@ -6444,6 +6444,75 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
 ;;   (with-eval-after-load 'magit
 ;;     (setopt git-commit-major-mode 'git-commit-ts-mode)))
 
+;; (use-package csv)
+
+;;;;;;;;;;;;;;;;;;
+;;;; spelling ;;;;
+
+(use-package jinx
+  ;; For spell checking on demand, I rely on the `jinx' package by Daniel
+  ;; Mendler.
+  ;;
+  ;; In terms of workflow, I do not like to see any spell checking while I
+  ;; type. I prefer to write out the entire draft and then do a spell check at
+  ;; the end. Whatever typos there are do not bother me. (this is the "alla
+  ;; prima" method of creativity that Protesilaos Stavrou talks about in
+  ;; https://protesilaos.com/books/2024-10-15-alla-prima-method-productivity/).
+  :config
+  ;; Sometimes I want to stick to lower-case for informal documents, but I still
+  ;; want to have spell-checking. Invoke `+jinx-lower-case-only' in the buffer
+  ;; of such an informal document.
+  (defun +jinx--lower-case-word-valid-p (start)
+    "Return non-nil if word, that is assumed to be in lower case, at
+START is valid, or would be valid if capitalized or upcased."
+    (let ((word (buffer-substring-no-properties start (point))))
+      (or (member word jinx--session-words)
+          (cl-loop for dict in jinx--dicts thereis
+                   (or
+                    (jinx--mod-check dict (upcase word))
+                    (jinx--mod-check dict (capitalize word))
+                    (jinx--mod-check dict word))))))
+  (defun +jinx-lower-case-only ()
+    "Make `jinx-mode' assume that everything in the current buffer is
+written in lower case and ignore casing while spell-checking."
+    (interactive)
+    (jinx-mode 0)
+    (set (make-local-variable 'jinx--predicates)
+         (cl-substitute
+          #'+jinx--lower-case-word-valid-p
+          #'jinx--word-valid-p
+          jinx--predicates))
+    (jinx-mode 1))
+
+  ;; There is a specific category of errors for with `jinx' cannot help:
+  ;; duplicate words. When quickly rephrasing a sentence or adjusting a
+  ;; paragraph it could happen that I do not pay enough attention to the words I
+  ;; remove and so I keep typing with to care whatsoever.
+  ;; the the
+  ;; I want a command that scans the buffer, finds consecutive occurrences of
+  ;; the same word, and removes all but one of them.
+  (defun +delete-duplicate-words ()
+    "Delete duplicate words via `query-replace-regexp'."
+    (interactive nil text-mode)
+    (save-excursion
+      (if (region-active-p)
+          (query-replace-regexp "\\(\\b\\w+\\b\\)\\W+\\1\\b" "\\1" nil
+                                (region-beginning) (region-end))
+        (query-replace-regexp "\\(\\b\\w+\\b\\)\\W+\\1\\b" "\\1" nil
+                              (point-min) (point-max)))))
+
+  (bind-keys
+   :map global-map
+   ("C-$" . +delete-duplicate-words)
+   ("M-$" . jinx-correct)
+   ("C-M-$" . jinx-languages)
+   :map +toggle-prefix-map
+   ("s" . jinx-mode)
+   ("S" . +jinx-lower-case-only)))
+
+;;;;;;;;;;;;;;;;;
+;;;; reading ;;;;
+
 (use-package pdf-tools
   ;; The `pdf-tools' package builds on top of the external libraries `poppler'
   ;; and `imagemagick' (if Emacs is compiled with support for it) to deliver a
@@ -6567,72 +6636,6 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
   ;; to clip. Adding extra line spacing ameliorates this.
   (add-hook 'nov-mode-hook (lambda ()
                              (setq-local line-spacing 1))))
-
-;; (use-package csv)
-
-;;;;;;;;;;;;;;;;;;
-;;;; spelling ;;;;
-
-(use-package jinx
-  ;; For spell checking on demand, I rely on the `jinx' package by Daniel
-  ;; Mendler.
-  ;;
-  ;; In terms of workflow, I do not like to see any spell checking while I
-  ;; type. I prefer to write out the entire draft and then do a spell check at
-  ;; the end. Whatever typos there are do not bother me. (this is the "alla
-  ;; prima" method of creativity that Protesilaos Stavrou talks about in
-  ;; https://protesilaos.com/books/2024-10-15-alla-prima-method-productivity/).
-  :config
-  ;; Sometimes I want to stick to lower-case for informal documents, but I still
-  ;; want to have spell-checking. Invoke `+jinx-lower-case-only' in the buffer
-  ;; of such an informal document.
-  (defun +jinx--lower-case-word-valid-p (start)
-    "Return non-nil if word, that is assumed to be in lower case, at
-START is valid, or would be valid if capitalized or upcased."
-    (let ((word (buffer-substring-no-properties start (point))))
-      (or (member word jinx--session-words)
-          (cl-loop for dict in jinx--dicts thereis
-                   (or
-                    (jinx--mod-check dict (upcase word))
-                    (jinx--mod-check dict (capitalize word))
-                    (jinx--mod-check dict word))))))
-  (defun +jinx-lower-case-only ()
-    "Make `jinx-mode' assume that everything in the current buffer is
-written in lower case and ignore casing while spell-checking."
-    (interactive)
-    (jinx-mode 0)
-    (set (make-local-variable 'jinx--predicates)
-         (cl-substitute
-          #'+jinx--lower-case-word-valid-p
-          #'jinx--word-valid-p
-          jinx--predicates))
-    (jinx-mode 1))
-
-  ;; There is a specific category of errors for with `jinx' cannot help:
-  ;; duplicate words. When quickly rephrasing a sentence or adjusting a
-  ;; paragraph it could happen that I do not pay enough attention to the words I
-  ;; remove and so I keep typing with to care whatsoever.
-  ;; the the
-  ;; I want a command that scans the buffer, finds consecutive occurrences of
-  ;; the same word, and removes all but one of them.
-  (defun +delete-duplicate-words ()
-    "Delete duplicate words via `query-replace-regexp'."
-    (interactive nil text-mode)
-    (save-excursion
-      (if (region-active-p)
-          (query-replace-regexp "\\(\\b\\w+\\b\\)\\W+\\1\\b" "\\1" nil
-                                (region-beginning) (region-end))
-        (query-replace-regexp "\\(\\b\\w+\\b\\)\\W+\\1\\b" "\\1" nil
-                              (point-min) (point-max)))))
-
-  (bind-keys
-   :map global-map
-   ("C-$" . +delete-duplicate-words)
-   ("M-$" . jinx-correct)
-   ("C-M-$" . jinx-languages)
-   :map +toggle-prefix-map
-   ("s" . jinx-mode)
-   ("S" . +jinx-lower-case-only)))
 
 ;;;;;;;;;;;;;
 ;;;; org ;;;;
@@ -8254,9 +8257,6 @@ BibTeX file."
   ;; `org-link-store-props' can be accessed in capture templates in a similar
   ;; way.
   :after notmuch)
-
-;;;;;;;;;;;;;;;;;
-;;;; reading ;;;;
 
 ;;;;;;;;;;;;;;;
 ;;;; media ;;;;
