@@ -93,15 +93,15 @@ in
               # meow
               fontaine
               modus-themes
-              ef-themes
-              doric-themes
+              # ef-themes
+              # doric-themes
               pulsar
               cursory
               highlight-numbers
               keycast
               envrc
               inheritenv
-              add-node-modules-path
+              # add-node-modules-path
               marginalia
               orderless
               vertico
@@ -115,9 +115,9 @@ in
               tempel-collection
               eglot-tempel
               # projection
-              substitute
+              # substitute
               goto-chg
-              dired-preview
+              # dired-preview
               avy
               ace-link
               link-hint
@@ -131,11 +131,11 @@ in
               treesit-grammars.with-all-grammars
               helpful
               devdocs
-              difftastic
+              # difftastic
               magit
               git-gutter
               git-gutter-fringe
-              native-complete
+              # native-complete
               # vterm
               mistty
               jupyter

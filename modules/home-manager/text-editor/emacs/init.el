@@ -983,9 +983,9 @@ If no selection — delete COUNT chars before point."
 
   (modus-themes-select 'modus-vivendi))
 
-(use-package ef-themes)
+(use-package ef-themes :disabled t)
 
-(use-package doric-themes)
+(use-package doric-themes :disabled t)
 
 ;;;;;;;;;;;;
 ;;;; ui ;;;;
@@ -1323,7 +1323,7 @@ to produce the opposite effect of `fill-paragraph' and `fill-region'."
   (inheritenv-add-advice 'process-lines))
 
 (use-package add-node-modules-path
-  :disabled t
+  :disabled t ; disabled 2025-06-26
   :config
   ;; Adds the "node_modules/.bin" directory to the buffer "exec_path"
   (add-hook 'js-base-mode #'add-node-modules-path)
@@ -1787,6 +1787,7 @@ Add this to `dired-mode-hook'."
              ("M-s f" . nil)))
 
 (use-package dired-preview
+  :disabled t ; disabled 2025-06-26
   :config
   ;; The `dired-preview' package previews the file at point in an Emacs
   ;; window.
@@ -2873,6 +2874,7 @@ Limit list of buffers to those matching the current
    ))
 
 (use-package too-wide-minibuffer-mode
+  :disabled t ; NOTE disabled 2025-06-26 (local)
   ;; Adjust the minibuffer size and position so it is displayed under the
   ;; selected window if the frame is too wide. Great for my ultrawide monitor.
   :config
@@ -2994,6 +2996,7 @@ Limit list of buffers to those matching the current
           window-min-width 10))
 
 (use-package auto-side-windows
+  :disabled t
   :init (auto-side-windows-mode +1)
   :custom
   ;; Respects display actions when switching buffers
@@ -4178,6 +4181,7 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    ("h" . mark-whole-buffer)))
 
 (use-package substitute
+  :disabled t ; NOTE disabled 2025-06-26
   ;; I use `substitute' to efficiently replace targets in the buffer or
   ;; context. The `substitute' package provides a set of commands that perform
   ;; text replacement (i) throughout the buffer, (ii) limited to the current
@@ -4273,6 +4277,7 @@ Meant to be assigned to a prefix key, like this:
    ("C-c r" . +substitute-from-isearch-prefix-map)))
 
 (use-package scratch
+  :disabled t ; NOTE disabled 2025-06-26
   :no-require
   :config
   ;; This custom library provides the means to create a scratch buffer for a
@@ -5438,6 +5443,7 @@ Interactively also sends a terminating newline."
           ediff-show-clashes-only t))
 
 (use-package difftastic
+  :disabled t ; NOTE disabled 2025-06-26
   :config
   (setopt difftastic-display-buffer-function #'display-buffer)
   ;; (add-to-list 'display-buffer-alist '("\\*difftastic git show.*\\*"
@@ -5939,6 +5945,7 @@ Add a bookmark handler for shell buffer and activate the
              ("C-c C-q" . +kill-this-buffer)))
 
 (use-package native-complete
+  :disabled t ; NOTE disabled 2025-06-26
   :config
   (with-eval-after-load 'shell
     (native-complete-setup-bash))
