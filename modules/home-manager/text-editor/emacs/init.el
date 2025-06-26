@@ -3349,8 +3349,8 @@ split."
   ;; Here I am making some minor tweaks to the `occur' buffer (remember to read
   ;; the introduction to the section). I always want (i) the cursor to be at the
   ;; top of the buffer, (ii) the current line to be highlighted, as it is easier
-  ;; for selection purposes, and (iii) for long lines to be trucated, meaning to
-  ;; stretch beyond the visible portion of the window without wrapping below,
+  ;; for selection purposes, and (iii) for long lines to be truncated, meaning
+  ;; to stretch beyond the visible portion of the window without wrapping below,
   ;; and for this to be done silently without messaging me about it. The latter
   ;; depends on my custom `+truncate-lines-silently'.
   (setopt list-matching-lines-jump-to-current-line nil)
