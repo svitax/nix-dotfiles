@@ -158,7 +158,7 @@ in
               pdf-tools
               saveplace-pdf-view
               nov
-              empv
+              # empv
               mpv
               shr-tag-pre-highlight
               elpher

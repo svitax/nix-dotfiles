@@ -8272,6 +8272,7 @@ BibTeX file."
   (setopt mpv-executable "umpv"))
 
 (use-package empv
+  :disabled t
   :config
   ;; `empv-play-video' and `empv-play-audio' lets me select a local media file
   ;; under the following directories with a `completing-read' interface.  Also
