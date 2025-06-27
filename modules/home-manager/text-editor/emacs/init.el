@@ -2996,7 +2996,6 @@ Limit list of buffers to those matching the current
           window-min-width 10))
 
 (use-package auto-side-windows
-  :disabled t
   :init (auto-side-windows-mode +1)
   :custom
   ;; Respects display actions when switching buffers
@@ -3004,6 +3003,10 @@ Limit list of buffers to those matching the current
 
   ;; Ensure Org src buffers are opend using display-buffer
   (org-src-window-setup 'plain)
+
+  (transient-display-buffer-action
+   '(display-buffer-below-selected
+     (dedicated . t)))
 
   ;; Top side window configurations
   (auto-side-windows-top-buffer-names
@@ -3045,8 +3048,8 @@ Limit list of buffers to those matching the current
      "^\\*mistty.*\\*$"
      "^\\*jupyter-repl.*\\*$"
      ;; VC buffers
-     "^magit-diff:.*$"
-     "^magit-process:.*$"
+     ;; "^magit-diff:.*$"
+     ;; "^magit-process:.*$"
      ;; "^\\*difftastic.*\\*"
      ;; Others
      "^\\*Embark.*\\*$"
@@ -3077,11 +3080,11 @@ Limit list of buffers to those matching the current
      xref--xref-buffer-mode
      pdf-occur-buffer-mode
      ;; VC buffers
-     magit-status-mode
-     magit-log-mode
-     magit-diff-mode
-     magit-process-mode
-     difftastic-mode
+     ;; magit-status-mode
+     ;; magit-log-mode
+     ;; magit-diff-mode
+     ;; magit-process-mode
+     ;; difftastic-mode
      ))
 
   ;; Example: Custom parameters for top windows (e.g., fit height to buffer)
@@ -5172,8 +5175,8 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
         git-commit-style-convention-checks '(non-empty-second-line))
 
   (setopt magit-diff-refine-hunk t
-          magit-display-buffer-function #'display-buffer
-          magit-commit-diff-inhibit-same-window t)
+          magit-display-buffer-function #'magit-display-buffer-traditional
+          magit-commit-diff-inhibit-same-window nil)
 
   ;; When 'C-c C-c' or 'C-c C-k' are pressed in the Magit commit message buffer,
   ;; delete the magit-diff buffer related to the current repo.
