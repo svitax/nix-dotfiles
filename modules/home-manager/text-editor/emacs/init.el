@@ -3040,6 +3040,7 @@ Limit list of buffers to those matching the current
      "^\\*Metahelp\\*$"
      "^\\*Man.*\\*$"
      "^\\*woman.*\\*$"
+     "^\\*devdocs\\*$"
      ;; REPL buffers
      "^\\*eshell.*\\*$"
      "^\\*shell.*\\*$"
