@@ -3053,8 +3053,7 @@ Limit list of buffers to those matching the current
      ;; "^\\*difftastic.*\\*"
      ;; Others
      "^\\*Embark.*\\*$"
-     "^\\*.*scratch\\*$"
-     "^\\*marginal notes\\*$"))
+     "^\\*.*scratch\\*$"))
   (auto-side-windows-right-buffer-modes
    '(;; Doc buffers
      Info-mode
@@ -3086,6 +3085,8 @@ Limit list of buffers to those matching the current
      ;; magit-process-mode
      ;; difftastic-mode
      ))
+  (auto-side-windows-left-buffer-names
+   '("^\\*marginal notes\\*$"))
 
   ;; Example: Custom parameters for top windows (e.g., fit height to buffer)
   ;; (auto-side-windows-top-alist '((window-height . fit-window-to-buffer)))
