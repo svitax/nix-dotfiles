@@ -5911,22 +5911,22 @@ If PROMPT is nil, don't prompt for a directory and use
 If shell is the current buffer, switch to the previously used
 buffer.
 
-With \\[universal-argument] prefix argument, the user can specify a
-directory.
+If no shell is running, execute `+shell' to start a fresh one.
 
-If no shell is running, execute `+shell' to start a fresh one."
+With \\[universal-argument] prefix argument, the user can specify a
+directory."
     (interactive "P")
     (let* ((in-shell (eq major-mode 'shell-mode))
            (in-live-shell (and in-shell (get-buffer-process (current-buffer))))
            (shell (and (buffer-live-p +shell--shell) +shell--shell)))
-      (cond (in-live-shell
+      (cond (arg (call-interactively '+shell)) ;
+            (in-live-shell
              (when (and (not (eq shell buffer))
                         (buffer-live-p +shell--last-buffer))
                (+shell--switch-to-buffer +shell--last-buffer)))
             (shell (+shell--set-this-buffer-shell shell)
                    (+shell--switch-to-buffer shell))
-            (t (if arg (call-interactively '+shell)
-                 (call-interactively '+project-shell))))
+            (t (call-interactively '+project-shell)))
       (+shell--maybe-remember-buffer buffer)))
 
   (defun +shell-command-at-line (&optional prefix)
