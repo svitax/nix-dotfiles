@@ -5905,7 +5905,7 @@ If PROMPT is nil, don't prompt for a directory and use
     (let ((default-directory (or (getenv "HOME") (expand-file-name "~"))))
       (+shell nil)))
 
-  (defun +shell-switch (&optional arg impl buffer)
+  (defun +shell-pop-to-buffer (&optional arg impl buffer)
     "Switch to running a shell in the current project's root directory.
 
 If shell is the current buffer, switch to the previously used
@@ -5959,7 +5959,7 @@ output instead."
     "<down>" #'+shell-down-dwim
     "M-p" #'+shell-up-dwim
     "M-n" #'+shell-down-dwim
-    "C-x C-z" #'+shell-switch
+    "C-x C-z" #'+shell-pop-to-buffer
     ;; "C-c C-." #'+shell-cd-vc-root-dir
     ;; "C-c d" #'+shell-cd
     "C-c C-q" #'+kill-this-buffer)
@@ -5996,7 +5996,7 @@ Add a bookmark handler for shell buffer and activate the
   (bind-keys :map global-map
              ("C-!" . +shell-command-at-line)
              :map +prefix-map
-             ("C-z" . +shell-switch)
+             ("C-z" . +shell-pop-to-buffer)
              ("RET" . +shell-home)
              :map +project-prefix-map
              ("z" . +project-shell)
