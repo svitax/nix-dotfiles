@@ -1000,7 +1000,7 @@ If no selection — delete COUNT chars before point."
           text-scale-remap-header-line t
           fontaine-presets '((regular)
                              (small
-                              :default-height 110)
+                              :default-height 120)
                              (presentation
                               :default-height 260)
                              (t
