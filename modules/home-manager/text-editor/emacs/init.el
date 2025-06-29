@@ -6002,6 +6002,7 @@ Add a bookmark handler for shell buffer and activate the
              ("z" . +project-shell)
              :map shell-mode-map
              ("M-s M-h" . +consult-history-comint-send)
+             ("M-r" . +consult-history-comint-send)
              ("C-c C-k" . comint-clear-buffer)
              ("C-c C-w" . comint-write-output)
              :map comint-mode-map
