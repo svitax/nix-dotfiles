@@ -3093,8 +3093,8 @@ Limit list of buffers to those matching the current
   ;; (auto-side-windows-top-alist '((window-height . fit-window-to-buffer)))
   ;; (auto-side-windows-top-window-parameters '((mode-line-format . ...))) ;; Adjust mode-line
   (auto-side-windows-common-window-parameters '())
-  (auto-side-windows-right-alist '((window-width . 132)))
-  (auto-side-windows-top-alist '((window-height . 10)))
+  (auto-side-windows-right-alist '((window-width . .50)))
+  (auto-side-windows-top-alist '((window-height . .25)))
   (auto-side-windows-common-alist '((body-function . +select-window)))
 
   ;; Maximum number of side windows on the left, top, right and bottom
