@@ -8,9 +8,9 @@
     outputs.homeManagerModules.allModules
   ];
 
-  browser = {
-    qutebrowser.enable = true;
-  };
+  # browser = {
+  #   qutebrowser.enable = true;
+  # };
 
   # TODO add all of these command-line modules to a single module?
   command-line = {
