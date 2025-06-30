@@ -20,7 +20,7 @@ rec {
     # nurl = ./command-line/nurl;
     # pandoc = ./command-line/pandoc;
     # poppler = ./command-line/poppler;
-    # ripgrep = ./command-line/ripgrep;
+    ripgrep = ./command-line/ripgrep;
     yt-dlp = ./command-line/yt-dlp;
     zoxide = ./command-line/zoxide;
   };
@@ -126,7 +126,7 @@ rec {
       # command-line.nurl
       # command-line.pandoc
       # command-line.poppler
-      # command-line.ripgrep
+      command-line.ripgrep
       command-line.yt-dlp
       command-line.zoxide
 

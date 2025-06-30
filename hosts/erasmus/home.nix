@@ -23,7 +23,7 @@
     # nurl.enable = true;
     # pandoc.enable = true;
     # poppler.enable = true;
-    # ripgrep.enable = true;
+    ripgrep.enable = true;
     yt-dlp.enable = true;
     zoxide.enable = true;
   };

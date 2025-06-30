@@ -2255,12 +2255,16 @@ first one. Else do `vertico-exit'."
   ;; NOTE 2025-05-28: -R isn't always desirable. I mainly want it for grepping
   ;; inside the /nix/store. We can avoid some of the issues of using the -R flag
   ;; with `consult-git-grep', which respects my .gitignore.
-  ;; TODO `consult-grep-dwim' that uses `(locate-dominating-file ".git")' to
-  ;; determine whether to use consult-grep or consult-git-grep.
   ;; (setopt consult-grep-args '("grep" (consult--grep-exclude-args)
   ;;                             "--null" "--line-buffered" "--color=never"
   ;;                             "--ignore-case" "--with-filename" "--line-number"
   ;;                             "-I" "-R"))
+
+  ;; Make sure all files are read and symbolic links are followed with the
+  ;; `--follow' argument to ripgrep.
+  (setopt consult-ripgrep-args
+          "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
+ --smart-case --no-heading --with-filename --line-number --search-zip --follow")
 
   ;; NOTE document pulsar and consult integration
   (with-eval-after-load 'pulsar
@@ -2297,6 +2301,10 @@ first one. Else do `vertico-exit'."
                (region-beginning)
                (region-end))))
 
+  ;; TODO `+consult-grep-dwim' that uses `(locate-dominating-file ".git")' to
+  ;; determine whether to use consult-grep or consult-git-grep.
+  ;; NOTE ripgrep already respects .gitignore
+
   ;; Start `consult-grep' search with active region, if available.
   (defalias '+consult-grep-dwim 'consult-grep)
   (defalias '+consult-ripgrep-dwim 'consult-ripgrep)
@@ -2320,7 +2328,7 @@ first one. Else do `vertico-exit'."
              ("c" . count-matches)
              ("M-f" . consult-fd)
              ("f" . consult-focus-lines) ; C-u to unfocus
-             ("M-g" . +consult-grep-dwim) ; rg
+             ("M-g" . +consult-ripgrep-dwim)
              ("M-h" . consult-history)
              ("M-i" . consult-imenu)
              ("M-k" . consult-kmacro)
@@ -3467,7 +3475,7 @@ end of the buffer.")
    ("t" . toggle-truncate-lines)))
 
 (use-package grep
-  ;; `grep' is a wrapper for the U  nix program of the same name. Not much to add
+  ;; `grep' is a wrapper for the Unix program of the same name. Not much to add
   ;; there. Note the use of the `let' to decide wether I use the `grep' or `rg'
   ;; (`ripgrep') program: this covers Xref as well.
 
