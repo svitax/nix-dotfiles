@@ -2209,17 +2209,20 @@ first one. Else do `vertico-exit'."
   ;; prompt.  Unfortunately, the eager previewing can be disorienting when
   ;; moving quickly between candidates. The `consult-preview-key' variable
   ;; allows us to configure this behavior. I have set it so `C-M-n' and `C-M-p'
-  ;; always scrolls over the list of candidates while doing preview. The
-  ;; `consult-customize' macro allows us to configure the the preview on a
-  ;; per-command basis.
+  ;; + `S-<down>' and `S-<up>' always scrolls over the list of candidates while
+  ;; doing preview. The `consult-customize' macro allows us to configure the the
+  ;; preview on a per-command basis.
   :config
   (bind-keys :map vertico-map
              ("C-M-n" . vertico-next)
-             ("C-M-p" . vertico-previous))
+             ("C-M-p" . vertico-previous)
+             ("S-<down>" . vertico-next)
+             ("S-<up>" . vertico-previous))
 
-  (setopt consult-preview-key '("M-." "C-M-n" "C-M-p"))
+  (setopt consult-preview-key '("M-." "C-M-n" "C-M-p" "S-<down>" "S-<up>"))
   (consult-customize
-   consult-theme :preview-key (list :debounce 0.3 "M-." "C-M-n" "C-M-p")
+   consult-theme :preview-key (list :debounce 0.3
+                                    "M-." "C-M-n" "C-M-p" "S-<down>" "S-<up>")
    consult-mark :preview-key 'any)
 
   ;; When I call `consult-buffer', I usually instantly narrow to the buffer
