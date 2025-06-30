@@ -1999,7 +1999,7 @@ Add this to `dired-mode-hook'."
   ;; completion styles parses the empty space (the default
   ;; orderless-component-separator), so as soon as I type a space after some
   ;; characters I am using orderless.
-  (setopt completion-styles '(basic partial-completion orderless))
+  (setopt completion-styles '(basic orderless))
   ;; While we can override only the categories we care about, the presence of
   ;; those `completion-category-defaults' will surprise us in some cases because
   ;; we will not be using what was specified in the `completion-styles'. As
