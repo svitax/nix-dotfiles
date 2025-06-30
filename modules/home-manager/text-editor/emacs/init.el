@@ -6365,6 +6365,7 @@ region is active."
           python-indent-guess-indent-offset nil
           python-indent-offset 4))
 
+;; TODO look into using `jupyter-completion-at-point' and `eglot' with `cape'
 (use-package jupyter
   :config
   (with-eval-after-load 'inheritenv
