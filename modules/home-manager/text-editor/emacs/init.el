@@ -5769,6 +5769,8 @@ Push `shell-last-dir' to `+shell-cd-directories'."
       (user-error "Cannot find the VC root of `%s'" default-directory)))
 
   ;;;; Bookmark support
+  ;;;; NOTE 2025-06-26 Emacs 31 supports bookmarking shell buffers natively. Remove this
+  ;;;; code when it's time to upgrade
 
   ;; Adapted from esh-mode.el
   (declare-function bookmark-prop-get "bookmark" (bookmark prop))
