@@ -12,7 +12,7 @@ rec {
   command-line = {
     # atuin = ./command-line/atuin;
     direnv = ./command-line/direnv;
-    # fd = ./command-line/fd;
+    fd = ./command-line/fd;
     # fzf = ./command-line/fzf;
     git = ./command-line/git;
     man = ./command-line/man;
@@ -118,7 +118,7 @@ rec {
 
       # command-line.atuin
       command-line.direnv
-      # command-line.fd
+      command-line.fd
       # command-line.fzf
       command-line.git
       command-line.man

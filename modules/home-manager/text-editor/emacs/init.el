@@ -2318,7 +2318,7 @@ first one. Else do `vertico-exit'."
              :map +search-prefix-map
              ("M-b" . consult-bookmark)
              ("c" . count-matches)
-             ("M-f" . consult-find) ; fd
+             ("M-f" . consult-fd)
              ("f" . consult-focus-lines) ; C-u to unfocus
              ("M-g" . +consult-grep-dwim) ; rg
              ("M-h" . consult-history)

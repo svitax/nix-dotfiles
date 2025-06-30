@@ -16,7 +16,7 @@
   command-line = {
     # atuin.enable = true;
     direnv.enable = true;
-    # fd.enable = true;
+    fd.enable = true;
     git.enable = true;
     man.enable = true;
     nh.enable = true;
