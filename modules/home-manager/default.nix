@@ -11,7 +11,6 @@ rec {
 
   command-line = {
     # atuin = ./command-line/atuin;
-    buku = ./command-line/buku;
     direnv = ./command-line/direnv;
     # fd = ./command-line/fd;
     # fzf = ./command-line/fzf;
@@ -118,7 +117,6 @@ rec {
       browser.qutebrowser
 
       # command-line.atuin
-      command-line.buku
       command-line.direnv
       # command-line.fd
       # command-line.fzf

@@ -15,7 +15,6 @@
   # TODO add all of these command-line modules to a single module?
   command-line = {
     # atuin.enable = true;
-    buku.enable = true;
     direnv.enable = true;
     # fd.enable = true;
     git.enable = true;
