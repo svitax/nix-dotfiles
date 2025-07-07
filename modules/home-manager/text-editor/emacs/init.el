@@ -1850,7 +1850,94 @@ Add this to `dired-mode-hook'."
 ;;;; completion ;;;;
 
 (use-package minibuffer
+  ;; The term "completion" describes a process where user input is assisted by
+  ;; pattern matching algorithms to type out incomplete items. The most basic
+  ;; way of this model of interaction is what we get in a command-line prompt,
+  ;; where we can hit "TAB" to expand the word before point to something the
+  ;; program already knows about (e.g. ema followed by TAB may complete to
+  ;; emacs).
+  ;;
+  ;; In Emacs, completion encompasses user interfaces that show the available
+  ;; candidates (the likely options) right away, as well as provide more advanced
+  ;; capabilities for storing the history of previous inputs, displaying helpful
+  ;; annotations next to each candidate, and "completion styles" to control how
+  ;; user input is matched to candidates. Because we use the minibuffer for most
+  ;; common interactions, completion is an integral part of any setup.
   :config
+  ;; The `completion-styles' are pattern matching algorithms. They interpret
+  ;; input and match candidates accordingly.
+  ;;
+  ;; `emacs-22': prefix completion that only operates on the text before
+  ;; point. If we are in "prefix|suffix", with "|" representing the cursor, it
+  ;; will consider everything that expands "prefix" and then add back to it the
+  ;; "suffix".
+  ;;
+  ;; `basic': prefix completion that also accounts for the text after
+  ;; point. Using the above example, this one will consider patterns that match
+  ;; all of `emacs22' as well as anything thet completes "suffix".
+  ;;
+  ;; `partial-completion': this is used for file navigation. Instead of typing
+  ;; out a full path like "~/.local/share/fonts", we do "~/.l/s/f" or variants
+  ;; thereof to make the matches unique such as ~/.l/sh/fon. It is a joy to
+  ;; navigate the file system in this way.
+  ;;
+  ;; `substring': matches the given sequence of characters literally regardless
+  ;; of where it is in a word. So "pro" will match "professional" as well as
+  ;; "reproduce".
+  ;;
+  ;; `flex': completion of an in-order subset of characters. It does not matter
+  ;; where the characters are in the word, so long as they are encountered in
+  ;; the given order. The input "lad" will thus match "list-faces-display" as
+  ;; well as "pulsard-highlight-dwim".
+  ;;
+  ;; `initials': completion of acronyms and initialisms. Typing "lfd" will thus
+  ;; match "list-faces-display". This completion style can also be used for file
+  ;; system navigation, though I prefer to only have `partial-completion' handle
+  ;; that task.
+  ;;
+  ;; `orderless': this is the only completion style I use which is not built
+  ;; into Emacs and which I tweak further in a separate section. It matches
+  ;; patterns out-of-order. Patterns are typically words separated by spaces,
+  ;; though they can also be regular expressions, and even styles that are the
+  ;; same as the aforementioned `flex' and `initials'.
+
+  ;; Now that you know about the completions styles I use, take a look at the
+  ;; value of my `completion-styles'. You will notice that `orderless', which is
+  ;; the most powerful/flexible is placed last. I do this because Emacs tries
+  ;; the styles in the given order from left to right, moving the next one until
+  ;; it finds a match. As such, I usually want to start with tight matches
+  ;; (e.g. "li-fa-di" for "list-faces-display") and only widen the scope of the
+  ;; search as I need to. This is easy to do because none of the built-in
+  ;; completion styles parses the empty space (the default
+  ;; `orderless-component-separator'), so as soon as I type a space after some
+  ;; characters I am using `orderless'.
+  (setopt completion-styles '(basic orderless))
+
+  ;; The `completion-styles' is the fallback option in case there is no
+  ;; provision for the given completion category. The completion category is a
+  ;; piece of metada that is associated with the completion table we are
+  ;; matching against while using the minibuffer. For example, the "find-file"
+  ;; command has the "file" category, while the "switch-to-buffer" command uses
+  ;; the "buffer" category. The defaults for those are specified in the variable
+  ;; `completion-category-defaults', while overrides for them can be set in the
+  ;; `completion-category-overrides'.
+  ;;
+  ;; While we can override the categories we care about, the presence of those
+  ;; `completion-category-defaults' will surprise us in some cases because we
+  ;; will not be using what we specified in the `completion-styles'. As such, I
+  ;; set the `completion-category-defaults' to nil, to always fall back to my
+  ;; preferred `completion-styles' and then I further configure overrides where
+  ;; those make sense to me.
+  (setopt completion-category-defaults nil)
+
+  ;; We can opt for per-category styles by configuring the user option
+  ;; `completion-category-overrides'.
+  (setopt completion-category-overrides
+          ;; In order to narrow our Citar searches not only using citation keys
+          ;; (i.e. using authors, titles, etc.), we need a completion style that
+          ;; is order independent.
+          '((citar-candidate (styles . (orderless basic)))))
+
   ;; This makes it so that the minibuffer prompt is not accessible with regular
   ;; motions to avoid mistakes.
   (setopt minibuffer-prompt-properties
@@ -1972,7 +2059,25 @@ Add this to `dired-mode-hook'."
   (marginalia-mode))
 
 (use-package orderless
+  ;; The `orderless' package by Omar Antolin Camarena provides one of the
+  ;; completion styles that I use. It is a powerful pattern matching algorithm
+  ;; that parses user input and interprets it out-of-order, so that `in pa' will
+  ;; cover "insert-pair" as well as "package-install". Components of the search
+  ;; are space-separated, by default, though we can modify the user option
+  ;; `orderless-component-separator' to have something else (but I cannot think
+  ;; of a better value). In the section about completion styles, I explain how I
+  ;; use `orderless' and why its power does not result in lots of false
+  ;; positives.
   :init
+  ;; With orderless we can also define so-called "style-dispatchers". These are
+  ;; characters attached to the input which instruct orderless to use a specific
+  ;; pattern for that component.
+  ;;
+  ;; I define such style dispatchers as postfix operators: they are added to the
+  ;; end of the input. The dot interprets the input as a file type extension,
+  ;; while the tilde means to match the input either at the beginning or the
+  ;; end. Granted, these are overkill most of the time. It is easier to just
+  ;; continue typing to narrow the list of candidates.
   ;; NOTE these dispatchers aren't particularly useful but I leave this here as
   ;; an example of how to write and use them.
   ;; (setf (alist-get ?` orderless-affix-dispatch-alist) #'orderless-flex)
@@ -1984,40 +2089,7 @@ Add this to `dired-mode-hook'."
   (defun +orderless-file-ext (component)
     "Match COMPONENT to a file suffix when completing file names."
     (when minibuffer-completing-file-name
-      (orderless-regexp (format "\\.%s\\'" component))))
-  :config
-  ;; `basic' only matches candidates that have the same beginning as the text in
-  ;; the minibuffer. It is required for /ssh: completion to work for TRAMP.
-  ;;
-  ;; `partial-completion' divides the minibuffer text into words separated by
-  ;; hyphens or spaces, and completes each word separately. This is wonderful
-  ;; for files because it can expand ~/.l/s/fo to ~/.local/share/fonts. It also
-  ;; expands em-l-m to emacs-lisp-mode. Bear in mind we do not need to have
-  ;; partial-completion first as basic will never match something like this.
-  ;;
-  ;; `orderless', which is the most powerful/flexible is placed last. I do this
-  ;; because Emacs tries the styles in the given order from left to right,
-  ;; moving until it finds a match. As such, I usually want to start with tight
-  ;; matches (e.g. li-fa-di for list-faces-display) and only widen the scope of
-  ;; the search as I need to. This is easy to do because none of the built-in
-  ;; completion styles parses the empty space (the default
-  ;; orderless-component-separator), so as soon as I type a space after some
-  ;; characters I am using orderless.
-  (setopt completion-styles '(basic orderless))
-  ;; While we can override only the categories we care about, the presence of
-  ;; those `completion-category-defaults' will surprise us in some cases because
-  ;; we will not be using what was specified in the `completion-styles'. As
-  ;; such, I set `completion-category-defaults' to nil, to always fall back to
-  ;; my preferred `completion-styles' and then I further configure overrides
-  ;; where those make sense to me.
-  (setopt completion-category-defaults nil)
-  ;; We can opt for per-category styles by configuring the user option
-  ;; `completion-category-overrides'.
-  (setq completion-category-overrides
-        ;; In order to narrow our Citar searches not only using citation keys
-        ;; (i.e. using authors, titles, etc.), we need a completion style that
-        ;; is order independent.
-        '((citar-candidate (styles . (orderless basic))))))
+      (orderless-regexp (format "\\.%s\\'" component)))))
 
 (use-package vertico
   :config
