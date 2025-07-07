@@ -1215,7 +1215,8 @@ If no selection — delete COUNT chars before point."
                   +fundamental-mode-hook
                   hexl-mode-hook
                   comint-mode-hook
-                  compilation-mode-hook))
+                  compilation-mode-hook
+                  grep-mode))
     (add-hook mode #'+truncate-lines-silently)))
 
 (use-package fill
