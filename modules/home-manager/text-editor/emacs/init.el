@@ -3553,6 +3553,9 @@ end of the buffer.")
    :map occur-mode-map
    ("t" . toggle-truncate-lines)))
 
+(defvar +ripgrep (or (executable-find "rg") (executable-find "ripgrep"))
+  "Store path to ripgrep executable, else nil.")
+
 (use-package grep
   ;; `grep' is a wrapper for the Unix program of the same name. Not much to add
   ;; there. Note the use of the `let' to decide wether I use the `grep' or `rg'
@@ -3567,16 +3570,11 @@ end of the buffer.")
 
   :config
   (setopt grep-save-buffers nil
-          grep-use-headings t) ; Emacs 30
-
-  (let ((executable (or (executable-find "rg") "grep"))
-        (rgp (string-match-p "rg" grep-program)))
-    (setopt grep-program executable
-            grep-template (if rgp
-                              "rg -nH --null -e <R> <F>"
-                            "grep <X> <C> -nH --null -e <R> <F>"))
-    (with-eval-after-load 'xref
-      (setopt xref-search-program (if rgp 'ripgrep 'grep)))))
+          grep-use-headings t ; Emacs 30
+          grep-program (or +ripgrep (executable-find "grep"))
+          grep-template (if +ripgrep
+                            "rg -nH --null -e <R> <F>"
+                          "grep <X> <C> -nH --null -e <R> <F>")))
 
 ;; TODO recursive project search https://www.youtube.com/watch?v=1jBbVUnNbDU
 
@@ -3586,10 +3584,13 @@ end of the buffer.")
   ;; example, with point over a function, call `xref-find-definitions' will jump
   ;; to the file where the function is defined or provide an option to pick one
   ;; among multiple definitions, where applicable.
-  ;;
+
+  (setopt xref-search-program (if +ripgrep 'ripgrep 'grep))
+
   ;; Use Consult to select xref locations with preview.
-  (setopt xref-show-xrefs-function #'consult-xref
-          xref-show-definitions-function #'consult-xref)
+  (with-eval-after-load 'consult
+    (setopt xref-show-xrefs-function #'consult-xref
+            xref-show-definitions-function #'consult-xref))
 
   (with-eval-after-load 'pulsar
     (dolist (func '(xref-go-back
