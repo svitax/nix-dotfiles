@@ -965,7 +965,7 @@ If no selection — delete COUNT chars before point."
   ;; We use the `enable-theme-functions' hook to ensure that these values are
   ;; updated after we switch themes. This special hook available in Emacs 29+
   ;; works with anything that uses the basic `enable-theme' function.
-  (defun +customize-theme-faces (&rest _)
+  (defun +modus-themes-customize-faces (&rest _)
     (modus-themes-with-colors
       (custom-set-faces
        ;; By default, the background of the `region' face extends from the end
@@ -982,7 +982,7 @@ If no selection — delete COUNT chars before point."
        `(git-gutter-fr:modified ((,c :foreground ,bg-changed-fringe :background ,fringe)))
        `(keycast-key ((,c :inherit bold :foreground ,fg-mode-line-active :background ,bg-mode-line-active)))
        `(keycast-command ((,c :inherit mode-line :foreground ,fg-mode-line-active :background ,bg-mode-line-active))))))
-  (add-hook 'enable-theme-functions #'+customize-theme-faces)
+  (add-hook 'enable-theme-functions #'+modus-themes-customize-faces)
 
   (modus-themes-select 'modus-vivendi))
 
