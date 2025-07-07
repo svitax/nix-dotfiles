@@ -3502,8 +3502,9 @@ end of the buffer.")
     (setopt grep-program executable
             grep-template (if rgp
                               "rg -nH --null -e <R> <F>"
-                            "grep <X> <C> -nH --null -e <R> <F>")
-            xref-search-program (if rgp 'ripgrep 'grep))))
+                            "grep <X> <C> -nH --null -e <R> <F>"))
+    (with-eval-after-load 'xref
+      (setopt xref-search-program (if rgp 'ripgrep 'grep)))))
 
 ;; TODO recursive project search https://www.youtube.com/watch?v=1jBbVUnNbDU
 
