@@ -772,13 +772,6 @@ writeable."
   (setopt helix-normal-state-cursor '(box "#fec43f")
           helix-insert-state-cursor '(bar "#fec43f"))
 
-  ;; BUG use helix-local-mode because helix-mode makes my window/cursor jump
-  ;; around when using vertico
-  (dolist (mode-hook '(prog-mode-hook text-mode-hook comint-mode-hook
-                       bibtex-mode-hook dired-mode-hook magit-section-mode-hook
-                       special-mode-hook messages-buffer-mode-hook))
-    (add-hook mode-hook (lambda () (helix-local-mode))))
-
   ;; Modes to start in insert state.
   (dolist (mode-hook '(shell-mode-hook comint-mode-hook git-commit-mode-hook))
     (add-hook mode-hook (lambda () (helix-insert-state))))
@@ -808,8 +801,8 @@ If no selection — delete COUNT chars after point."
     (cond ((use-region-p)
            ;; If selection is a whole line then add newline character (for logical
            ;; line) or space (for visual line) after into selection.
-           (when (and (not (helix-blank-line-p))
-                      (helix-line-selected-p))
+           (when (and (not (helix-empty-line-p))
+                      (helix-linewise-selection-p))
              (when (< (helix-region-direction) 0)
                (helix-exchange-point-and-mark))
              (forward-char))
@@ -826,8 +819,8 @@ If no selection — delete COUNT chars after point."
 If no selection — delete COUNT chars before point."
   (interactive "p")
   (cond ((use-region-p)
-         (when (and (not (helix-blank-line-p))
-                    (helix-line-selected-p))
+         (when (and (not (helix-empty-line-p))
+                    (helix-linewise-selection-p))
            (when (< (helix-region-direction) 0)
              (helix-exchange-point-and-mark))
            (forward-char))
@@ -839,7 +832,25 @@ If no selection — delete COUNT chars before point."
         (append helix-default-commands-to-run-for-all-cursors
                 '(+helix-delete)))
 
-  (bind-keys :map helix-normal-state-map
+  (defun +lookup ()
+    (interactive)
+    (cond ((derived-mode-p 'emacs-lisp-mode)
+           (call-interactively #'helpful-at-point)
+           (t
+            (call-interactively #'eldoc)))))
+
+  (bind-keys :map mode-specific-map
+             ("a" . +lookup)
+             ("b" . consult-buffer)
+             ("d" . consult-flymake)
+             ("f" . find-file)
+             ("j" . dired-jump)
+             ("J" . consult-dir)
+             ("p" . +project-prefix-map)
+             ("s" . +search-prefix-map)
+             ("'" . vertico-repeat)
+             ("/" . +consult-ripgrep-dwim)
+             :map helix-normal-state-map
              ;; Motions
              ("y" . helix-backward-char) ("<left>" . helix-backward-char)
              ("h" . helix-next-line) ("<down>" . helix-next-line)
@@ -871,16 +882,13 @@ If no selection — delete COUNT chars before point."
              ("M-s" . nil)
 
              ;; Scrolling
-             ("C-d" . nil)
-             ("C-u" . universal-argument)
+             ("C-d" . +golden-ratio-scroll-screen-down)
+             ("C-u" . +golden-ratio-scroll-screen-up)
 
              ;; Misc
              ("gd" . xref-find-definitions)
              ("gr" . xref-find-references)
              ("C-t" . xref-go-back))
-
-  (helix-keymap-set special-mode-map 'motion
-    "q" #'quit-window)
 
   (with-eval-after-load 'org
     (helix-keymap-set org-mode-map 'normal
