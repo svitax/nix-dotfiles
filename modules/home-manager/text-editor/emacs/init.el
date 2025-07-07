@@ -938,7 +938,10 @@ If no selection — delete COUNT chars before point."
 (use-package modus-themes
   :config
   (setopt modus-themes-common-palette-overrides
-          `(;; With `modus-themes-preset-overrides-faint' the grays are toned
+          `(;; Hide the border around the active and inactive mode lines.
+            (border-mode-line-active unspecified)
+            (border-mode-line-inactive unspecified)
+            ;; With `modus-themes-preset-overrides-faint' the grays are toned
             ;; down, gray backgrounds are removed from some contexts, and almost
             ;; all accent colors are desaturated. It makes the themes less
             ;; attention-grabbing.
