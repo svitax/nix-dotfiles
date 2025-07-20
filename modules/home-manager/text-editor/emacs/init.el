@@ -653,7 +653,7 @@ writeable."
       (cond (mark (set-mark mark))
             ((not helix--extend-selection)
              (set-mark (point))))
-    (avy-goto-char-timer)))
+      (avy-goto-char-timer)))
 
   ;; When calling 'd' on non-regions, I like for it to kill the char forward.
   ;; By default 'D' does that, but it deletes regions. Let's swap this
@@ -742,53 +742,53 @@ If no selection — delete COUNT chars before point."
 
   (with-eval-after-load 'org
     (helix-keymap-set org-mode-map 'normal
-      "<tab>" #'org-cycle))
+                      "<tab>" #'org-cycle))
 
   ;; NOTE dired starts out in motion state and I don't know why
   (with-eval-after-load 'dired
     (helix-keymap-set dired-mode-map 'motion
-    "h" #'dired-next-line     ; overrides `describe-mode'
-    "a" #'dired-previous-line ; overrides `dired-find-alternate-file'
-    "y" #'dired-up-directory  ; overrides `dired-show-file-type'
-    ))
+                      "h" #'dired-next-line     ; overrides `describe-mode'
+                      "a" #'dired-previous-line ; overrides `dired-find-alternate-file'
+                      "y" #'dired-up-directory  ; overrides `dired-show-file-type'
+                      ))
 
   ;; NOTE magit-status starts out in motion state and I don't know why
   (with-eval-after-load 'magit
     (helix-keymap-set magit-section-mode-map 'motion
-      "y" #'helix-backward-char ; overrides `magit-show-refs'
-      "h" #'magit-next-line ; overrides `magit-dispatch'
-      "a" #'magit-previous-line ; overrides `magit-cherry-apply'
-      "e" #'helix-forward-char ; overrides `magit-ediff-dwim'
-      "<left>" #'helix-backward-char
-      "<down>" #'magit-next-line
-      "<up>" #'magit-previous-line
-      "<right>" #'helix-forward-char
-      "v" #'set-mark-command ; overrides `magit-revert-no-commit'
-      ;; "-" #'magit-revert-no-commit ; overrides `magit-diff-less-context'
-      ;; "_" #'magit-revert
-      "E" #'magit-ediff-dwim
-      "g g" #'helix-goto-first-line
-      "G" #'helix-goto-last-line
-      "g r" #'magit-refresh
-      "g R" #'magit-refresh-all
-      "g ESC" #'keyboard-quit
-      ":" #'execute-extended-command
-      ))
+                      "y" #'helix-backward-char ; overrides `magit-show-refs'
+                      "h" #'magit-next-line ; overrides `magit-dispatch'
+                      "a" #'magit-previous-line ; overrides `magit-cherry-apply'
+                      "e" #'helix-forward-char ; overrides `magit-ediff-dwim'
+                      "<left>" #'helix-backward-char
+                      "<down>" #'magit-next-line
+                      "<up>" #'magit-previous-line
+                      "<right>" #'helix-forward-char
+                      "v" #'set-mark-command ; overrides `magit-revert-no-commit'
+                      ;; "-" #'magit-revert-no-commit ; overrides `magit-diff-less-context'
+                      ;; "_" #'magit-revert
+                      "E" #'magit-ediff-dwim
+                      "g g" #'helix-goto-first-line
+                      "G" #'helix-goto-last-line
+                      "g r" #'magit-refresh
+                      "g R" #'magit-refresh-all
+                      "g ESC" #'keyboard-quit
+                      ":" #'execute-extended-command
+                      ))
 
   (with-eval-after-load 'nov
     (helix-keymap-set nov-mode-map 'motion
-      "y" #'helix-backward-char
-      "h" #'next-line ; overrides `describe-mode'
-      "a" #'previous-line ; overrides `nov-reopen-as-archive'
-      "e" #'helix-forward-char
+                      "y" #'helix-backward-char
+                      "h" #'next-line ; overrides `describe-mode'
+                      "a" #'previous-line ; overrides `nov-reopen-as-archive'
+                      "e" #'helix-forward-char
 
-      "<escape>" #'helix-normal-state-escape
-      "v" #'helix-extend-selection ; overrides `nov-view-source'
+                      "<escape>" #'helix-normal-state-escape
+                      "v" #'helix-extend-selection ; overrides `nov-view-source'
 
-      "q" #'quit-window
-      "g r" #'nov-render-document
-      "C-d" #'nov-scroll-up
-      "C-u" #'nov-scroll-down)))
+                      "q" #'quit-window
+                      "g r" #'nov-render-document
+                      "C-d" #'nov-scroll-up
+                      "C-u" #'nov-scroll-down)))
 
 ;;;;;;;;;;;;;;;;
 ;;;; themes ;;;;
@@ -6582,9 +6582,9 @@ written in lower case and ignore casing while spell-checking."
           ((and (boundp 'ef-themes-collection)
                 (+in-list-p (car custom-enabled-themes) ef-themes-collection))
            (ef-themes-with-colors
-             (face-remap-add-relative
-              'default
-              `(:background ,bg-dim))))
+            (face-remap-add-relative
+             'default
+             `(:background ,bg-dim))))
           ;; FIX `doric-themes-with-colors' doesn't exist in doric-themes v0.1
           ;; ((+in-list-p (car custom-enabled-themes) doric-themes-collection)
           ;;  (doric-themes-with-colors
