@@ -6443,6 +6443,12 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
 ;;    is it worth the added complexity of switching over to lsp-mode from eglot?
 ;; (use-package web)
 
+(use-package json-ts-mode
+  :config
+  (add-to-list 'major-mode-remap-alist '(js-json-mode . json-ts-mode))
+
+  (setopt json-ts-mode-indent-offset tab-width))
+
 ;; TODO transer my overleaf resumes to local
 ;; (use-package latex)
 
@@ -9173,6 +9179,17 @@ manually to first get the icon files."
     (add-to-list 'nerd-icons-mode-icon-alist
                  '(nix-ts-mode nerd-icons-devicon "nf-dev-nixos" :face
                    nerd-icons-blue)))
+
+  (with-eval-after-load 'json-ts-mode
+    (dolist (ext '("json" "jsonl"))
+      (+alist-set ext '(nerd-icons-codicon "nf-cod-json" :face
+                        nerd-icons-yellow)
+                  'nerd-icons-extension-icon-alist))
+
+    (dolist (mode '(js-json-mode json-ts-mode))
+      (add-to-list 'nerd-icons-mode-icon-alist
+                   `(,mode nerd-icons-codicon "nf-cod-json" :face
+                     nerd-icons-yellow))))
 
   (with-eval-after-load 'nov
     (add-to-list 'nerd-icons-mode-icon-alist
