@@ -9350,4 +9350,5 @@ manually to first get the icon files."
 (use-package nerd-icons-grep
   :if +emacs-load-icons
   :config
-  (nerd-icons-grep-mode))
+  (when grep-use-headings
+    (nerd-icons-grep-mode)))
