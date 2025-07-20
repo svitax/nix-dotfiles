@@ -9,8 +9,8 @@ epkgs.melpaBuild {
   src = pkgs.fetchFromGitHub {
     owner = "anuvyklack";
     repo = "helix.el";
-    rev = "8e4db3865b881efc0b5e1490810fae60d7e2169f";
-    hash = "sha256-+9j0Ap22WBAFmfWmGnFB3jQM+TQa8FvvY0Nf0b/HkJI=";
+    rev = "8619a79340a9cabc31de2b19714bdf4aa8fe5233";
+    hash = "sha256-6DwQCJelHgA6oXSyxgXcxQFVYGyMEa0K+fCZJvjz7m8=";
   };
   recipe = pkgs.writeText "recipe" ''
     (helix :repo "anuvyklack/helix.el" :fetcher github)
