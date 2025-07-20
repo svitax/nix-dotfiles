@@ -6406,7 +6406,7 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
                 (:plysp . (:hoverKind "None")))
   :config
   (define-derived-mode go-mode go-ts-mode "Go")
-  (setopt go-ts-mode-indent-offset 4))
+  (setopt go-ts-mode-indent-offset tab-width))
 
 (use-package templ-ts-mode)
 
