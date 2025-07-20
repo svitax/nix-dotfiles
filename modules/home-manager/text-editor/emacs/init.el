@@ -6413,7 +6413,14 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
 ;; TODO https://sr.ht/~p00f/hare-ts-mode/
 ;; (use-package hare-ts-mode)
 
-;; (use-package cc)
+(use-package c-ts-mode
+  :lsp-hook (c-ts-mode c++-ts-mode)
+  :config
+  (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+  (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+
+  (setopt c-ts-mode-indent-style 'k&r
+          c-ts-mode-indent-offset tab-width))
 
 ;; (use-package geiser)
 
