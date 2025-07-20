@@ -794,42 +794,28 @@ writeable."
   ;; When calling 'd' on non-regions, I like for it to kill the char forward.
   ;; By default 'D' does that, but it deletes regions. Let's swap this
   ;; behaviour.
-  (defun +helix-kill (count)
+  (defun +helix-cut (count)
     "Kill (cut) text in region. I.e. delete text and put it in the `kill-ring'.
 If no selection — delete COUNT chars after point."
     (interactive "p")
-    (cond ((use-region-p)
-           ;; If selection is a whole line then add newline character (for logical
-           ;; line) or space (for visual line) after into selection.
-           (when (and (not (helix-empty-line-p))
-                      (helix-linewise-selection-p))
-             (when (< (helix-region-direction) 0)
-               (helix-exchange-point-and-mark))
-             (forward-char))
-           (kill-region nil nil t))
-          (t
-           (delete-char count)))
+    (if (use-region-p)
+        (kill-region nil nil t)
+      (delete-char count))
     (helix-extend-selection -1))
-  (setq helix-default-commands-to-run-for-all-cursors
-        (append helix-default-commands-to-run-for-all-cursors
-                '(+helix-kill)))
+  (setq helix-commands-to-run-for-all-cursors
+        (append helix-commands-to-run-for-all-cursors
+                '(+helix-cut)))
 
   (defun +helix-delete (count)
-  "Delete text in region, without modifying the `kill-ring'.
+    "Delete text in region, without modifying the `kill-ring'.
 If no selection — delete COUNT chars before point."
-  (interactive "p")
-  (cond ((use-region-p)
-         (when (and (not (helix-empty-line-p))
-                    (helix-linewise-selection-p))
-           (when (< (helix-region-direction) 0)
-             (helix-exchange-point-and-mark))
-           (forward-char))
-         (delete-region (region-beginning) (region-end)))
-        (t
-         (delete-char (- count))))
-  (helix-extend-selection -1))
-  (setq helix-default-commands-to-run-for-all-cursors
-        (append helix-default-commands-to-run-for-all-cursors
+    (interactive "p")
+    (if (use-region-p)
+        (delete-region (region-beginning) (region-end))
+      (delete-char (- count)))
+    (helix-extend-selection -1))
+  (setq helix-commands-to-run-for-all-cursors
+        (append helix-commands-to-run-for-all-cursors
                 '(+helix-delete)))
 
   (defun +lookup ()
@@ -872,7 +858,7 @@ If no selection — delete COUNT chars before point."
              ;; Changes
              ("l" . helix-append)
              ("L" . helix-append-line)
-             ("d" . +helix-kill)
+             ("d" . +helix-cut)
              ("D" . +helix-delete)
              ("k" . helix-yank)
              ("H" . helix-join-line)
