@@ -6709,12 +6709,14 @@ written in lower case and ignore casing while spell-checking."
   ;; time being. We must thus employ the face remapping technique to change the
   ;; buffer-local value of the "default" face.
   (defun +pdf-tools-backdrop (&rest _)
-    (cond ((+in-list-p (car custom-enabled-themes) modus-themes-collection)
+    (cond ((and (boundp 'modus-themes-collection)
+                (+in-list-p (car custom-enabled-themes) modus-themes-collection))
            (modus-themes-with-colors
              (face-remap-add-relative
               'default
               `(:background ,bg-dim))))
-          ((+in-list-p (car custom-enabled-themes) ef-themes-collection)
+          ((and (boundp 'ef-themes-collection)
+                (+in-list-p (car custom-enabled-themes) ef-themes-collection))
            (ef-themes-with-colors
              (face-remap-add-relative
               'default
@@ -6744,12 +6746,16 @@ written in lower case and ignore casing while spell-checking."
 
   (defun +pdf-tools-themed-mode-toggle (&rest _)
     (when (derived-mode-p 'pdf-view-mode)
-      (if (+in-list-p (car custom-enabled-themes)
-                      (append ef-themes-collection
-                              modus-themes-collection
-                              doric-themes-collection))
-          (pdf-view-themed-minor-mode 1)
-        (pdf-view-themed-minor-mode -1))
+      (let* ((collections (append
+                           (when (bound-and-true-p ef-themes-collection)
+                             ef-themes-collection)
+                           (when (bound-and-true-p modus-themes-collection)
+                             modus-themes-collection)
+                           (when (bound-and-true-p doric-themes-collection)
+                             doric-themes-collection))))
+        (if (+in-list-p (car custom-enabled-themes) collections)
+            (pdf-view-themed-minor-mode 1)
+          (pdf-view-themed-minor-mode -1)))
       (+pdf-tools-backdrop)))
 
   (defun +pdf-tools-themes-toggle (&rest _)
