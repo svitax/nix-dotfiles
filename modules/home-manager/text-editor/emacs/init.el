@@ -94,6 +94,14 @@
 (use-package common
   :no-require
   :config
+  (defun +alist-set (key val alist-symbol)
+    "Set KEY to VAL in the alist stored in ALIST-SYMBOL.
+If KEY exists, update its value. If not, add a new entry."
+    (let ((entry (assoc key (symbol-value alist-symbol))))
+      (if entry
+          (setf (cdr entry) val)
+        (set alist-symbol (cons (cons key val) (symbol-value alist-symbol))))))
+
   (defun +common-empty-buffer-p ()
     "Test whether the buffer is empty."
     (or (= (point-min) (point-max))
