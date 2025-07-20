@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -18,5 +19,8 @@ in
       enable = true;
       generateCaches = true;
     };
+    home.packages = with pkgs; [
+      man-pages
+    ];
   };
 }
