@@ -9171,6 +9171,10 @@ manually to first get the icon files."
   (with-eval-after-load 'magit
     (setopt magit-format-file-function #'magit-format-file-nerd-icons))
 
+  (+alist-set "lock" '(nerd-icons-faicon "nf-fa-lock" :face
+                       nerd-icons-orange)
+              'nerd-icons-extension-icon-alist)
+
   ;; This fixes the missing Nix icon when using `consult-buffer'
   (with-eval-after-load 'nix-ts-mode
     (add-to-list 'nerd-icons-mode-icon-alist
