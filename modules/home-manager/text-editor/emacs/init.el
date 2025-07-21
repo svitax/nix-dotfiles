@@ -4351,8 +4351,8 @@ for the given MAJOR-MODE, any text is appended to it."
 
   (bind-keys
    :map global-map
-   ("M-<up>" . move-text-up)
-   ("M-<down>" . move-text-down)))
+   ("M-p" . move-text-up)
+   ("M-n" . move-text-down)))
 
 (use-package tabs
   :no-require
