@@ -2463,14 +2463,42 @@ first one. Else do `vertico-exit'."
                               embark-highlight-indicator
                               embark-isearch-highlight-indicator))
 
+  (defun +embark-isearch-backward ()
+    "Prompt for string in the minibuffer and start isearch backwards.
+Unlike isearch, this command reads the string from the
+minibuffer, which means it can be used as an Embark action."
+    (interactive)
+    (isearch-mode nil)
+    (isearch-edit-string)
+    ;; Make sure isearch-lazy-count is updated on first invocation of
+    ;; embark-isearch commands
+    (when isearch-lazy-count
+      (run-at-time 0 nil #'isearch-update)))
+
+  (defun +embark-isearch-forward ()
+    "Prompt for string in the minibuffer and start isearch forwards.
+Unlike isearch, this command reads the string from the
+minibuffer, which means it can be used as an Embark action."
+    (interactive)
+    (isearch-mode t)
+    (isearch-edit-string)
+    ;; Make sure isearch-lazy-count is updated on first invocation of
+    ;; embark-isearch commands
+    (when isearch-lazy-count
+      (run-at-time 0 nil #'isearch-update)))
+
   (bind-keys :map global-map
-             ("C-c C-." . embark-act)
-             :map minibuffer-local-map
              ("C-." . embark-act)
+             :map minibuffer-local-map
              ("C-c C-a" . embark-act-all)
              ("C-c C-c" . embark-collect)
              ("C-c C-e" . embark-export)
-             ("C-c C-i" . embark-select)))
+             ("C-c C-i" . embark-select)
+             :map help-map
+             ("b" . embark-bindings)
+             :map embark-general-map
+             ("C-s" . +embark-isearch-forward)
+             ("C-r" . +embark-isearch-backward)))
 
 ;; Needed for correct exporting while using Embark with Consult commands.
 (use-package embark-consult)
@@ -3395,8 +3423,6 @@ With numeric ARG, move to ARGth occurrence counting from the
 end of the buffer.")
 
   (bind-keys
-   :map global-map
-   ("C-." . isearch-forward-thing-at-point)
    :map +search-prefix-map
    ("o" . occur)
    ("M-o" . multi-occur)
