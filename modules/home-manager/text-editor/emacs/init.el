@@ -6423,7 +6423,8 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
   :mode "\\.nix\\'"
   :lsp-hook nix-ts-mode
   :config
-  (define-derived-mode nix-mode nix-ts-mode "Nix"))
+  ;; Make sure packages that try to use nix-mode are redirected to nix-ts-mode
+  (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode)))
 
 ;; TODO document go-ts-mode
 ;; TODO add C-c C-a `go-import-add' from `go-mode'
@@ -6439,7 +6440,7 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
                            :hoverKind "FullDocumentation"))
                 (:plysp . (:hoverKind "None")))
   :config
-  (define-derived-mode go-mode go-ts-mode "Go")
+  (add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode))
   (setopt go-ts-mode-indent-offset tab-width))
 
 (use-package templ-ts-mode)
