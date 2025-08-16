@@ -9257,7 +9257,11 @@ manually to first get the icon files."
   :if +emacs-load-icons
   :config
   (nerd-icons-completion-mode)
-  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
+
+  ;; I find icons for filetypes to be incredibly useful in `find-file', but
+  ;; icons in other completion categories are too noisy.
+  (setopt nerd-icons-completion-category-icons nil))
 
 (use-package nerd-icons-corfu
   :if +emacs-load-icons
