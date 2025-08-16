@@ -2663,9 +2663,9 @@ together."
   ;; `project-switch-commands' and are activated by an assigned key.
   (setopt project-switch-commands '((project-switch-to-buffer "Buffer" ?b)
                                     (project-dired "Dired" ?d)
-                                    (project-eshell "Eshell" ?e)
                                     (project-find-file "File" ?f)
                                     (+project-consult-grep "Grep" ?g)
+                                    (+shell-pop-to-buffer "Shell" ?s)
                                     (magit-project-status "VC" ?v)
                                     (project-compile "Compile" ?,)
                                     (project-async-shell-command "Async Command" ?&)
