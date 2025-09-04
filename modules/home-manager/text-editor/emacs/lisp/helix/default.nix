@@ -5,12 +5,12 @@
 }:
 epkgs.melpaBuild {
   pname = "helix";
-  version = "20250702.1106";
+  version = "20250903.0835";
   src = pkgs.fetchFromGitHub {
     owner = "anuvyklack";
     repo = "helix.el";
-    rev = "8619a79340a9cabc31de2b19714bdf4aa8fe5233";
-    hash = "sha256-6DwQCJelHgA6oXSyxgXcxQFVYGyMEa0K+fCZJvjz7m8=";
+    rev = "164da93b1439e7c2eaa34a1bf9760d7173611d29";
+    hash = "sha256-WoMZ6XicDlMDpytGafm0cqyPoHsCB4ny3N4ytg18Zrw=";
   };
   recipe = pkgs.writeText "recipe" ''
     (helix :repo "anuvyklack/helix.el" :fetcher github)
@@ -23,7 +23,7 @@ epkgs.melpaBuild {
     evil-matchit
   ];
   meta = {
-    homepage = "";
+    homepage = "https://github.com/anuvyklack/helix.el";
     license = lib.licenses.gpl3Plus;
   };
 }
