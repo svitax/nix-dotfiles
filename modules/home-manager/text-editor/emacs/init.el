@@ -641,12 +641,14 @@ writeable."
 (use-package helix
   :disabled t
   :config
+  (helix-mode)
+
   (setopt helix-normal-state-cursor '(box "#fec43f")
           helix-insert-state-cursor '(bar "#fec43f"))
 
   ;; Modes to start in insert state.
-  (dolist (mode-hook '(shell-mode-hook comint-mode-hook git-commit-mode-hook))
-    (add-hook mode-hook (lambda () (helix-insert-state))))
+  (dolist (mode '(shell-mode comint-mode git-commit-mode))
+    (helix-set-initial-state mode 'insert))
 
   (defun +helix-avy-char-timer ()
     "Move to the beginning of one or many consecutive chars, choosing it with Avy."
@@ -690,50 +692,27 @@ If no selection — delete COUNT chars before point."
         (append helix-commands-to-run-for-all-cursors
                 '(+helix-delete)))
 
-  (defun +lookup ()
+  (defun +helix-lookup ()
     (interactive)
     (cond ((derived-mode-p 'emacs-lisp-mode)
            (call-interactively #'helpful-at-point)
            (t
             (call-interactively #'eldoc)))))
 
-  (bind-keys :map mode-specific-map
-             ("a" . +lookup)
-             ("b" . consult-buffer)
-             ("d" . consult-flymake)
-             ("f" . find-file)
-             ("j" . dired-jump)
-             ("J" . consult-dir)
-             ("p" . +project-prefix-map)
-             ("s" . +search-prefix-map)
-             ("'" . vertico-repeat)
-             ("/" . +consult-ripgrep-dwim)
-             :map helix-normal-state-map
+
+  ;; TODO: put all the ctl-x-map binds back to default
+  (bind-keys :map helix-normal-state-map
              ;; Motions
-             ("y" . helix-backward-char) ("<left>" . helix-backward-char)
-             ("h" . helix-next-line) ("<down>" . helix-next-line)
-             ("a" . helix-previous-line) ("<up>" . helix-previous-line)
-             ("e" . helix-forward-char) ("<right>" . helix-forward-char)
-             ("j" . helix-forward-word-end)
-             ("J" . helix-forward-WORD-end)
-             ("gs" . helix-first-non-blank)
-             ("gy" . helix-beginning-of-line)
-             ("ge" . helix-end-of-line)
              ("gn" . next-buffer)
              ("gp" . previous-buffer)
+             ("ge" . helix-goto-last-line)
 
              ;; Easymotion / Avy
-             ("gh" . helix-avy-next-line)
-             ("ga" . helix-avy-previous-line)
              ("gj" . +helix-avy-char-timer)
 
              ;; Changes
-             ("l" . helix-append)
-             ("L" . helix-append-line)
              ("d" . +helix-cut)
              ("D" . +helix-delete)
-             ("k" . helix-yank)
-             ("H" . helix-join-line)
              ("gc" . +comment-line-dwim)
 
              ;; Selections
@@ -746,57 +725,294 @@ If no selection — delete COUNT chars before point."
              ;; Misc
              ("gd" . xref-find-definitions)
              ("gr" . xref-find-references)
-             ("C-t" . xref-go-back))
+             ("C-t" . xref-go-back)
+
+             :map mode-specific-map
+             ;; +mail-prefix-map
+             ;; +guix-prefix-map
+             ;; +toggle-prefix-map
+             ;; consult-flymake (d/D in helix)
+             ;; +rename-symbol (r in helix)
+             ;; +code-action (a in helix)
+             ("a" . +org-agenda-custom)
+             ("b" . consult-buffer)
+             ;; ("c" . nil) ; C-
+             ("d" . dired)
+             ("e" . eval-last-sexp) ; do i need this in mode-specific?
+             ("f" . find-file)
+             ;; ("g" . nil) ; C-M-
+             ("h" . help-command) ; do i need this in mode-specific if C-h stays free?
+             ("i" . +org-capture-inbox)
+             ("j" . +better-jumper-jumplist)
+             ("k" . +kill-this-buffer)
+             ("l" . nil) ; lib-prefix-map?
+             ;; ("m" . nil) ; M-
+             ("n" . +notes-prefix-map)
+             ("o" . nil)
+             ("p" . +project-prefix-map)
+             ("q" . nil) ; kbd-macro-prefix-map?
+             ("r" . +registers-prefix-map)
+             ("s" . +search-prefix-map)
+             ("t" . +tab-prefix-map)
+             ("u" . nil)
+             ("v" . magit-status)
+             ("w" . +window-prefix-map)
+             ;; ("x" . nil) ; C-x
+             ("y" . nil) ; +dap-prefix-map? "why" mnemonic
+             ("z" . nil)
+             ("," . +compile)
+             ("." . recompile)
+             ("'" . vertico-repeat)))
+
+(use-package helix-collection
+  :disabled t
+  :no-require
+  :config
+  (with-eval-after-load 'comint
+    (helix-keymap-set comint-mode-map 'insert
+      "C-n" #'comint-next-input
+      "C-p" #'comint-previous-input))
+
+  ;; (with-eval-after-load 'compile)
+  ;; (with-eval-after-load 'corfu)
+  ;; (with-eval-after-load 'devdocs)
+  ;; (with-eval-after-load 'diff-mode)
+
+  (with-eval-after-load 'dired
+    (helix-set-initial-state 'dired-mode 'motion)
+    (helix-keymap-set dired-mode-map 'motion
+      "~" #'dired-flag-backup-files
+      "j" #'dired-next-line     ; overrides `dired-goto-file'
+      "k" #'dired-previous-line ; overrides `dired-do-kill-lines'
+      "-" #'dired-up-directory
+      ;; "u" #'dired-hist-go-back
+      ;; "U" #'dired-hist-go-forward
+      "E" #'dired-do-open
+      "g f" #'find-file-at-point
+      "g r" #'revert-buffer
+      "C-i" #'+dired-insert-subdir
+      "i" #'wdired-change-to-wdired-mode
+      "J" #'dired-goto-file
+      "K" #'dired-do-kill-lines
+      "y" #'dired-copy-filename-as-kill
+      "g y" #'dired-show-file-type
+      "s" #'+dired-limit-regexp))
+
+  ;; (with-eval-after-load 'ediff)
+  ;; (with-eval-after-load 'eshell)
+  ;; (with-eval-after-load 'eww)
+  ;; (with-eval-after-load 'grep)
+
+  (with-eval-after-load 'help
+    (helix-keymap-set help-mode-map 'normal
+      "C-f" #'scroll-up-command
+      "C-b" #'scroll-down-command
+      "C-d" #'scroll-up-command
+      "C-u" #'scroll-down-command
+
+      "C-o" #'help-go-back
+      "C-i" #'help-go-forward
+
+      "g r" #'revert-buffer))
+
+  (with-eval-after-load 'helpful
+    (helix-keymap-set helpful-mode-map 'normal
+      "C-f" #'scroll-up-command
+      "C-b" #'scroll-down-command
+      "C-d" #'scroll-up-command
+      "C-u" #'scroll-down-command
+
+      "g r" #'helpful-update))
+
+  ;; (with-eval-after-load 'ibuffer)
+  ;; (with-eval-after-load 'info)
+
+  (with-eval-after-load 'magit
+    (define-key magit-file-section-map "\C-j" nil)
+    (define-key magit-hunk-section-map "\C-j" nil)
+    (helix-keymap-set magit-mode-map 'motion
+      "h" #'helix-backward-char ; overrides `magit-dispatch'
+      "j" #'magit-next-line ; overrides `magit-status-jump'
+      "k" #'magit-previous-line ; overrides `magit-delete-thing'
+      "l" #'helix-forward-char ; overrides `magit-log'
+      "<left>" #'helix-backward-char
+      "<down>" #'magit-next-line
+      "<up>" #'magit-previous-line
+      "<right>" #'helix-forward-char
+
+      "C-j" #'magit-section-forward
+      "C-k" #'magit-section-backward
+      "]" #'magit-section-forward-sibling
+      "[" #'magit-section-backward-sibling
+
+      "g r" #'magit-refresh
+      "g R" #'magit-refresh-all
+
+      "g g" #'helix-goto-first-line
+      "g e" #'helix-goto-last-line
+      "H" #'magit-dispatch ; overrides `magit-describe-section'
+      "L" #'magit-log ; overrides `magit-log-refresh'
+      "C-l" #'magit-log-refresh
+
+      "x" #'helix-expand-line-selection ; overrides `magit-reset-quickly'
+      "X" #'helix-expand-line-selection-backward ; overrides `magit-reset'
+      "g x" #'magit-reset-quickly
+      "g X" #'magit-reset
+
+      "d" #'magit-delete-thing ; overrides `magit-diff'
+      "D" #'magit-file-untrack ; overrides `magit-diff-refresh'
+      "o" #'magit-diff ; overrides `magit-submodule'
+      "O" #'magit-diff-refresh ; overrides `magit-subtree'
+      "'" #'magit-submodule
+      "\\" #'magit-subtree
+
+      "v" #'helix-extend-selection ; overrides `magit-revert-no-commit'
+      "-" #'magit-revert-no-commit ; overrides `magit-diff-less-context'
+      "_" #'magit-revert
+      "=" #'magit-diff-less-context
+
+      "y" #'magit-copy-section-value ; overrides `magit-show-refs'
+      "C-y" #'magit-show-refs
+
+      "C-d" #'scroll-up-command
+      "C-u" #'scroll-down-command
+
+      "E" #'magit-ediff-dwim
+
+      ":" #'execute-extended-command
+      "ESC" #'keyboard-quit
+      "g ESC" #'keyboard-quit)
+
+    (defvar helix-collection-magit-dispatch-popup-backup
+      (copy-tree (get 'magit-dispatch 'transient--layout) t))
+    (defvar helix-collection-magit-popup-keys-changed nil)
+
+    (defvar helix-collection-magit-popup-changes
+      '((magit-dispatch "L" "C-l" magit-log-refresh)
+        (magit-dispatch "l" "L" magit-log)
+        (magit-dispatch "o" "'" magit-submodule)
+        (magit-dispatch "O" "\\" magit-subtree)
+        (magit-dispatch "V" "_" magit-revert)
+        (magit-dispatch "v" "-" magit-reverse)
+        (magit-dispatch "h" "H" magit-info)
+        (magit-dispatch "d" "o" magit-diff)
+        (magit-dispatch "D" "O" magit-diff-refresh)
+        (magit-dispatch "k" "d" magit-discard)
+        (magit-dispatch "K" "D" magit-file-untrack)
+        (magit-dispatch "x" "g x" magit-reset-quickly)
+        (magit-dispatch "X" "g X" magit-reset)
+        (magit-remote "k" "d" magit-remote-remove)
+        (magit-revert "V" "_" magit-revert-and-commit)
+        (magit-revert "V" "_" magit-sequencer-continue)
+        (magit-tag "k" "d" magit-tag-delete))
+      "Changes to popup keys")
+
+    (defun helix-collection-magit-change-popup-key (popup from to &rest _args)
+      "Wrap `transient-suffix-put'."
+      (transient-suffix-put popup from :key to))
+
+    (defun helix-collection-magit-adjust-popups ()
+      "Adjust popup keys to match helix-collection-magit."
+      (unless helix-collection-magit-popup-keys-changed
+        (dolist (change helix-collection-magit-popup-changes)
+          (apply #'helix-collection-magit-change-popup-key change))
+        (setq helix-collection-magit-popup-keys-changed t)))
+
+    (defun helix-collection-magit-revert-popups ()
+      "Revert popup keys changed by helix-collection-magit."
+      (put 'magit-dispatch 'transient--layout helix-collection-magit-dispatch-popup-backup)
+      (setq helix-collection-magit-popup-keys-changed nil))
+
+    (helix-collection-magit-adjust-popups))
+
+  ;; (with-eval-after-load 'man)
+  ;; (with-eval-after-load 'minibuffer)
+  ;; (with-eval-after-load 'notmuch)
+
+  (with-eval-after-load 'nov
+    (helix-set-initial-state 'nov-mode 'normal)
+    (helix-keymap-set nov-mode-map 'normal
+      "h" #'helix-backward-char ; overrides `describe-mode'
+      "j" #'helix-next-line
+      "k" #'helix-previous-line
+      "l" #'helix-forward-char
+
+      "C-j" #'nov-next-document
+      "C-k" #'nov-previous-document
+
+      "v" #'helix-extend-selection ; overrides `nov-view-source'
+      "g r" #'nov-render-document
+
+      "C-f" #'nov-scroll-up
+      "C-b" #'nov-scroll-down
+      "C-d" #'nov-scroll-up
+      "C-u" #'nov-scroll-down))
 
   (with-eval-after-load 'org
     (helix-keymap-set org-mode-map 'normal
-                      "<tab>" #'org-cycle))
+      "<tab>" #'org-cycle
+      "S-<tab>" #'org-shifttab))
 
-  ;; NOTE dired starts out in motion state and I don't know why
-  (with-eval-after-load 'dired
-    (helix-keymap-set dired-mode-map 'motion
-                      "h" #'dired-next-line     ; overrides `describe-mode'
-                      "a" #'dired-previous-line ; overrides `dired-find-alternate-file'
-                      "y" #'dired-up-directory  ; overrides `dired-show-file-type'
-                      ))
+  (with-eval-after-load 'pdf-tools
+    (helix-keymap-set pdf-view-mode-map 'normal
+      "j" #'pdf-view-next-line-or-next-page
+      "k" #'pdf-view-previous-line-or-previous-page
 
-  ;; NOTE magit-status starts out in motion state and I don't know why
-  (with-eval-after-load 'magit
-    (helix-keymap-set magit-section-mode-map 'motion
-                      "y" #'helix-backward-char ; overrides `magit-show-refs'
-                      "h" #'magit-next-line ; overrides `magit-dispatch'
-                      "a" #'magit-previous-line ; overrides `magit-cherry-apply'
-                      "e" #'helix-forward-char ; overrides `magit-ediff-dwim'
-                      "<left>" #'helix-backward-char
-                      "<down>" #'magit-next-line
-                      "<up>" #'magit-previous-line
-                      "<right>" #'helix-forward-char
-                      "v" #'set-mark-command ; overrides `magit-revert-no-commit'
-                      ;; "-" #'magit-revert-no-commit ; overrides `magit-diff-less-context'
-                      ;; "_" #'magit-revert
-                      "E" #'magit-ediff-dwim
-                      "g g" #'helix-goto-first-line
-                      "G" #'helix-goto-last-line
-                      "g r" #'magit-refresh
-                      "g R" #'magit-refresh-all
-                      "g ESC" #'keyboard-quit
-                      ":" #'execute-extended-command
-                      ))
+      "C-f" #'pdf-view-scroll-up-or-next-page
+      "C-b" #'pdf-view-scroll-down-or-previous-page
+      "C-d" #'pdf-view-scroll-up-or-next-page
+      "C-u" #'pdf-view-scroll-down-or-previous-page
 
-  (with-eval-after-load 'nov
-    (helix-keymap-set nov-mode-map 'motion
-                      "y" #'helix-backward-char
-                      "h" #'next-line ; overrides `describe-mode'
-                      "a" #'previous-line ; overrides `nov-reopen-as-archive'
-                      "e" #'helix-forward-char
+      "C-j" #'pdf-view-next-page-command
+      "C-k" #'pdf-view-previous-page-command
 
-                      "<escape>" #'helix-normal-state-escape
-                      "v" #'helix-extend-selection ; overrides `nov-view-source'
+      "g g" #'pdf-view-first-page
+      "g e" #'pdf-view-last-page
 
-                      "q" #'quit-window
-                      "g r" #'nov-render-document
-                      "C-d" #'nov-scroll-up
-                      "C-u" #'nov-scroll-down)))
+      "h" #'image-backward-hscroll
+      "l" #'image-forward-hscroll
+      "g h" #'image-bol
+      "g l" #'image-eol
+
+      "g r" #'revert-buffer
+
+      "o" #'pdf-outline
+
+      "/" #'isearch-forward
+      "?" #'isearch-backward
+      "n" #'isearch-repeat-forward
+      "N" #'isearch-repeat-backward
+
+      "y" #'pdf-view-kill-ring-save
+      ))
+
+  ;; (with-eval-after-load 'proced)
+  ;; (with-eval-after-load 'occur/replace)
+  ;; (with-eval-after-load 'tar)
+  ;; (with-eval-after-load 'unimpaired)
+
+  (with-eval-after-load 'vertico
+    (helix-keymap-set vertico-map 'normal
+      "C-u" #'vertico-scroll-down
+      "C-d" #'vertico-scroll-up
+
+      "g g" #'vertico-first
+      "g e" #'vertico-last
+      "j" #'vertico-next
+      "k" #'vertico-previous
+
+      "g j" #'vertico-next-group
+      "g k" #'vertico-previous-group)
+    (helix-keymap-set vertico-map 'insert
+      "C-u" #'vertico-scroll-down
+      "C-d" #'vertico-scroll-up
+
+      "C-j" #'vertico-next
+      "C-k" #'vertico-previous))
+
+  ;; (with-eval-after-load 'vterm/mistty)
+  ;; (with-eval-after-load 'xref/eglot)
+  )
 
 ;;;;;;;;;;;;;;;;
 ;;;; themes ;;;;
