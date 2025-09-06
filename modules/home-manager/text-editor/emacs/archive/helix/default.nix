@@ -5,7 +5,7 @@
 }:
 epkgs.melpaBuild {
   pname = "helix";
-  version = "20250903.0835";
+  version = "20250903.1042";
   src = pkgs.fetchFromGitHub {
     owner = "anuvyklack";
     repo = "helix.el";
