@@ -379,7 +379,9 @@ other characters."
    (cond (name name)
          ((derived-mode-p '(shell-mode)) "*shell*")
          ((derived-mode-p '(eshell-mode)) "*eshell*")
+         ((derived-mode-p '(term-mode)) "*term*")
          ((derived-mode-p '(vterm-mode)) "*vterm*")
+         ((derived-mode-p '(mistty-mode)) "*mistty*")
          (t (buffer-name)))
    'face (druid-modeline-face 'name)))
 
