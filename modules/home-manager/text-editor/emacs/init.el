@@ -5280,6 +5280,7 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
   ;; While I understand wanting to isolate the INFOPATH for example when you're
   ;; hacking on an Info manual for a package, I almost never need to do that.
   (defun +info ()
+    "Enter Info, the documentation browser."
     (interactive)
     (let ((default-directory (getenv "HOME")))
       (call-interactively #'info)))
