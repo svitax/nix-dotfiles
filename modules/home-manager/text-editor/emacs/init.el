@@ -3245,6 +3245,8 @@ Limit list of buffers to those matching the current
      "^\\*vterm.*\\*$"
      "^\\*mistty.*\\*$"
      "^\\*jupyter-repl.*\\*$"
+     "^\\*jupyter-output.*\\*$"
+     "^\\*jupyter-trace.*\\*$"
      ;; VC buffers
      ;; "^magit-diff:.*$"
      ;; "^magit-process:.*$"
