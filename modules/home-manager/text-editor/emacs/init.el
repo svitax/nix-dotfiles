@@ -8242,39 +8242,59 @@ continue, per `org-agenda-skip-function'."
 When the current buffer is visiting a file, the name of the
 marginal notes file will be \"DATE==SIGNATURE--TITLE__literature.org\"
 in your `denote-directory'."
-    (if-let* ((source-filename (cond ((eq major-mode 'nov-mode)
-                                      (file-name-nondirectory nov-file-name))
-                                     ((eq major-mode 'pdf-view-mode)
-                                      (file-name-nondirectory buffer-file-name))
-                                     (t
-                                      (org-remark-source-find-file-name))))
-              (is-source-denote (if source-filename
-                                    (denote-file-has-denoted-filename-p source-filename)
-                                  nil))
-              (literature-note (+org-remark-denote--note source-filename)))
-        (cond (literature-note literature-note)
-              (t
-               (denote-format-file-name
-                (denote-directory)
-                (denote--find-first-unused-id (denote-get-identifier (current-time)))
-                (if-let* (is-source-denote
-                          (denote-keywords (denote-retrieve-filename-keywords source-filename)))
-                    (remove
-                     "reference"
-                     (append (split-string denote-keywords "_") '("literature")))
-                  '("literature"))
-                (if-let* (is-source-denote
-                          (denote-title (denote-retrieve-filename-title source-filename)))
-                    denote-title
-                  (file-name-sans-extension (file-name-nondirectory source-filename)))
-                (or denote-file-type ".org")
-                (if-let* (is-source-denote
-                          (denote-signature (denote-retrieve-filename-signature source-filename)))
-                    denote-signature
-                  ""))))
-      "marginalia.org"))
+    (let* ((source-filename (cond ((eq major-mode 'nov-mode)
+                                   (file-name-nondirectory nov-file-name))
+                                  ((eq major-mode 'pdf-view-mode)
+                                   (file-name-nondirectory buffer-file-name))
+                                  ;; TODO +org-remark-denote support for Info-mode
+                                  ;; ((eq major-mode 'Info-mode))
+                                  (t
+                                   (org-remark-source-find-file-name))))
+           (is-source-denote (if source-filename
+                                 (denote-file-has-denoted-filename-p source-filename)
+                               nil)))
+      (if (not is-source-denote)
+          "marginalia.org"
+        (let ((literature-note (+org-remark-denote--note source-filename)))
+          (cond (literature-note literature-note)
+                (t
+                 (denote-format-file-name
+                  (denote-directory)
+                  (denote--find-first-unused-id (denote-get-identifier (current-time)))
+                  (if-let* (is-source-denote
+                            (denote-keywords (denote-retrieve-filename-keywords source-filename)))
+                      (remove
+                       "reference"
+                       (append (split-string denote-keywords "_") '("literature")))
+                    '("literature"))
+                  (if-let* (is-source-denote
+                            (denote-title (denote-retrieve-filename-title source-filename)))
+                      denote-title
+                    (file-name-sans-extension (file-name-nondirectory source-filename)))
+                  (or denote-file-type ".org")
+                  (if-let* (is-source-denote
+                            (denote-signature (denote-retrieve-filename-signature source-filename)))
+                      denote-signature
+                    ""))))))))
 
   (setopt org-remark-notes-file-name #'+org-remark-denote-file-name-function)
+
+  (defun +org-remark-denote-prepend-front-matter ()
+    "Insert Denote front matter into emply org-remark marginalia files."
+    (when-let ((file-name buffer-file-name))
+      (when (and (denote-file-has-denoted-filename-p file-name)
+                 (member "literature" (denote-extract-keywords-from-path file-name))
+                 (= (point-min) (point-max)))
+        (with-current-buffer (current-buffer)
+          (denote-rename-file file-name
+                              (denote-retrieve-filename-title file-name)
+                              (denote-extract-keywords-from-path file-name)
+                              (denote-retrieve-filename-signature file-name)
+                              (denote-retrieve-filename-identifier file-name))
+          (when (buffer-modified-p)
+            (save-buffer))))))
+
+  (add-hook 'org-remark-open-hook #'+org-remark-denote-prepend-front-matter)
 
   (bind-keys
    :map org-remark-mode-map
