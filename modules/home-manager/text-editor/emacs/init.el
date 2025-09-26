@@ -6585,6 +6585,8 @@ region is active."
 ;; TODO look into using `jupyter-completion-at-point' and `eglot' with `cape'
 (use-package jupyter
   :config
+  (setopt jupyter-eval-use-overlays t)
+
   (with-eval-after-load 'inheritenv
     (inheritenv-add-advice 'jupyter-run-repl)
     (inheritenv-add-advice 'jupyter-connect-repl))
@@ -6645,7 +6647,6 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
                  (call-interactively '+jupyter-run-repl))))
       (+jupyter--maybe-remember-buffer (or buffer origin))))
 
-  (setopt jupyter-eval-use-overlays t)
   (bind-keys :map python-mode-map
              ("C-c C-b" . jupyter-repl-interrupt-kernel)
              ("C-c C-c" . jupyter-eval-defun)
