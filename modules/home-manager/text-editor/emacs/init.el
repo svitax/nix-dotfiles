@@ -6273,10 +6273,9 @@ if one already exists."
   :config
 
   (defun +mistty (&optional prompt)
-    "Start an Mistty term in the specified directory.
+    "Start a MisTTY buffer in the specified directory.
 
-If PROMPT is nil, don't prompt for a directory and use
-`default-directory'."
+If PROMPT is nil, don't prompt and use `default-directory'."
     (interactive "P")
     (if prompt
         (let ((default-directory (read-directory-name "Directory: " default-directory)))
