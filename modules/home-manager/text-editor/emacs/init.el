@@ -4648,14 +4648,7 @@ for the given MAJOR-MODE, any text is appended to it."
     (+electric-pair-add-fn '((?* . ?*)
                              (?_ . ?_)
                              (?` . ?`))))
-  (add-hook 'markdown-mode-hook #'+electric-pair-markdown-h)
-
-  (defun +electric-pair-org-h ()
-    (+electric-pair-add-fn '((?/ . ?/)
-                             (?= . ?=)
-                             (?~ . ?~)
-                             (?_ . ?_))))
-  (add-hook 'org-mode-hook #'+electric-pair-org-h))
+  (add-hook 'markdown-mode-hook #'+electric-pair-markdown-h))
 
 ;; (use-package insert-pair)
 
