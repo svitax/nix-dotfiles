@@ -1207,6 +1207,7 @@ If no selection — delete COUNT chars before point."
   (add-hook 'org-agenda-mode-hook #'druid-modeline-org-agenda-mode)
   (add-hook 'gptel-mode-hook #'druid-modeline-gptel-mode)
   (add-hook 'shell-mode-hook #'druid-modeline-shell-mode)
+  (add-hook 'eshell-mode-hook #'druid-modeline-shell-mode)
   (add-hook 'term-mode-hook #'druid-modeline-shell-mode)
   (add-hook 'vterm-mode-hook #'druid-modeline-shell-mode)
   (add-hook 'mistty-mode-hook #'druid-modeline-shell-mode)

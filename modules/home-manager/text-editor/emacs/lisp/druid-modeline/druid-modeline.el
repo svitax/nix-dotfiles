@@ -455,9 +455,11 @@ other characters."
                            (eat--char-mode "char")
                            (eat--line-mode "line")))
                     (t nil)))
-        (shell (if druid-modeline-trim-shell-file-name
-                   (file-name-base shell-file-name)
-                 shell-file-name)))
+        (shell (cond ((derived-mode-p 'eshell-mode)
+                      "eshell")
+                     (druid-modeline-trim-shell-file-name
+                      (file-name-base shell-file-name))
+                     (t shell-file-name))))
     (propertize
      (cond (name name)
            (mode (format "(%s, %s mode)" shell mode))
