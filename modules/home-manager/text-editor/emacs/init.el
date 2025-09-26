@@ -9428,6 +9428,7 @@ manually to first get the icon files."
                  '(nix-ts-mode nerd-icons-devicon "nf-dev-nixos" :face
                    nerd-icons-blue)))
 
+  ;; This fixes the missing JSON icon when using `consult-buffer'
   (with-eval-after-load 'json-ts-mode
     (dolist (ext '("json" "jsonl"))
       (+alist-set ext '(nerd-icons-codicon "nf-cod-json" :face
@@ -9439,6 +9440,7 @@ manually to first get the icon files."
                    `(,mode nerd-icons-codicon "nf-cod-json" :face
                      nerd-icons-yellow))))
 
+  ;; This fixes the missing EPUB icon when using `consult-buffer'
   (with-eval-after-load 'nov
     (add-to-list 'nerd-icons-mode-icon-alist
                  '(nov-mode nerd-icons-mdicon "nf-md-book_open" :face
