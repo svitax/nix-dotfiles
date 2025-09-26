@@ -9457,6 +9457,12 @@ manually to first get the icon files."
                  '(nov-mode nerd-icons-mdicon "nf-md-book_open" :face
                    nerd-icons-green)))
 
+  ;; This fixes the missing .bib icon when using `consult-buffer'
+  (with-eval-after-load 'bibtex
+    (add-to-list 'nerd-icons-mode-icon-alist
+                 '(bibtex-mode nerd-icons-mdicon "nf-md-book"
+                   :face nerd-icons-lblue)))
+
   (with-eval-after-load 'citar
     (defvar citar-indicator-files-icons
       (citar-indicator-create
