@@ -6647,10 +6647,78 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
                  (call-interactively '+jupyter-run-repl))))
       (+jupyter--maybe-remember-buffer (or buffer origin))))
 
-  (bind-keys :map python-mode-map
-             ("C-c C-b" . jupyter-repl-interrupt-kernel)
-             ("C-c C-c" . jupyter-eval-defun)
-             ("C-c C-d" . nil) ; unmap `python-describe-at-point'
+  (defun +jupyter-eval-dwim (&optional arg msg)
+    "Evaluate the block or statement at point.
+The block is delimited by `python-nav-beginning-of-block' and
+`python-nav-end-of-block'. If not in a block, evaluates the statement
+delimited by `python-nav-beginning-of-statement' and
+`python-nav-end-of-statement'."
+    (interactive)
+    (let ((beg (save-excursion
+                 (or (python-nav-beginning-of-block)
+                     (python-nav-beginning-of-statement))
+                 (point-marker)))
+          (end (save-excursion
+                 (or (python-nav-end-of-block)
+                     (python-nav-end-of-statement))
+                 (point-marker)))
+          (python-indent-guess-indent-offset-verbose nil))
+      (if (and beg end)
+          (jupyter-eval-region nil beg end)
+        (user-error "Can't get code block from current position"))))
+
+  ;; Remove `:company-doc-buffer' property from `jupyter-completion-at-point'.
+  ;; The `jupyter-completion--company-doc-buffer' function requires
+  ;; `company-doc-buffer' which I don't have because I don't use `company'.
+  ;; TODO: do `jupyter-org-completion-at-point' too
+  (defun jupyter-completion-at-point ()
+    "Function to add to `completion-at-point-functions'."
+    (let ((prefix (jupyter-completion-prefix)))
+      (when (and
+             prefix jupyter-current-client
+             ;; Don't try to send completion requests when the kernel is busy
+             ;; since it doesn't appear that kernels respond to these requests
+             ;; when the kernel is busy, at least the Julia kernel doesn't.
+             ;;
+             ;; FIXME: Maybe this is kernel dependent
+             (not (jupyter-kernel-busy-p jupyter-current-client)))
+        (when (consp prefix)
+          (setq prefix (car prefix))
+          (when (and (bound-and-true-p company-mode)
+                     (< (length prefix) company-minimum-prefix-length))
+            (jupyter-completion--company-idle-begin)))
+        (when (jupyter-completion-prefetch-p prefix)
+          (setq jupyter-completion-cache nil)
+          (jupyter-completion-prefetch
+           (lambda (msg) (setq jupyter-completion-cache
+                               (list 'fetched prefix msg)))))
+        (list
+         (- (point) (length prefix)) (point)
+         (completion-table-dynamic
+          (lambda (_)
+            (when (null jupyter-completion-cache)
+              (sit-for 0.1))
+            (when (eq (car jupyter-completion-cache) 'fetched)
+              (jupyter-with-message-content (nth 2 jupyter-completion-cache)
+                  (status matches metadata)
+                (setq jupyter-completion-cache
+                      (cons (nth 1 jupyter-completion-cache)
+                            (when (equal status "ok")
+                              (jupyter-completion-construct-candidates
+                               matches metadata))))))
+            (cdr jupyter-completion-cache)))
+         :exit-function
+         #'jupyter-completion--post-completion
+         :company-location
+         (lambda (arg) (get-text-property 0 'location arg))
+         :annotation-function
+         (lambda (arg) (get-text-property 0 'annot arg))
+         :company-docsig
+         (lambda (arg) (get-text-property 0 'docsig arg))))))
+
+  ;; TODO https://github.com/emacs-jupyter/jupyter/pull/554
+  (bind-keys :map python-ts-mode-map
+             ("C-c C-c" . +jupyter-eval-dwim)
              ("C-c C-k" . jupyter-eval-buffer)
              ("C-c C-l" . jupyter-load-file)
              ("C-c C-q" . jupyter-repl-shutdown-kernel)
@@ -6659,7 +6727,15 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
              ("C-c C-z" . +jupyter-repl-pop-to-buffer)
              :map jupyter-repl-mode-map
              ("C-c C-z" . +jupyter-repl-pop-to-buffer)
+             ("C-c C-d" . jupyter-inspect-at-point)
              :map jupyter-repl-interaction-mode-map
+             ("C-c C-b" . jupyter-repl-interrupt-kernel)
+             ("C-c C-c" . +jupyter-eval-dwim)
+             ("C-c C-k" . jupyter-eval-buffer)
+             ("C-c C-l" . jupyter-load-file)
+             ("C-c C-q" . jupyter-repl-shutdown-kernel)
+             ("C-c C-r" . jupyter-eval-region)
+             ("C-c M-r" . jupyter-repl-restart-kernel)
              ("C-c C-z" . +jupyter-repl-pop-to-buffer)))
 
 (use-package nix-ts-mode
