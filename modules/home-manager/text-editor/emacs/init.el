@@ -9463,6 +9463,11 @@ manually to first get the icon files."
                  '(bibtex-mode nerd-icons-mdicon "nf-md-book"
                    :face nerd-icons-lblue)))
 
+  (with-eval-after-load 'mistty
+    (add-to-list 'nerd-icons-mode-icon-alist
+                 '(mistty-mode nerd-icons-devicon "nf-dev-terminal"
+                   :face nerd-icons-green)))
+
   (with-eval-after-load 'citar
     (defvar citar-indicator-files-icons
       (citar-indicator-create
