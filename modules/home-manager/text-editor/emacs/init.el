@@ -6547,6 +6547,10 @@ region is active."
 (use-package python
   :lsp-hook (python-mode python-ts-mode)
   :config
+  ;; Make sure packages that try to use python-mode are redirected to
+  ;; python-ts-mode
+  (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
+
   (with-eval-after-load 'inheritenv
     (inheritenv-add-advice 'run-python)
     (inheritenv-add-advice 'run-python-internal))
@@ -6657,6 +6661,7 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
                            :hoverKind "FullDocumentation"))
                 (:plysp . (:hoverKind "None")))
   :config
+  ;; Make sure packages that try to use go-mode are redirected to go-ts-mode
   (add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode))
   (setopt go-ts-mode-indent-offset tab-width))
 
@@ -6668,6 +6673,8 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
 (use-package c-ts-mode
   :lsp-hook (c-ts-mode c++-ts-mode)
   :config
+  ;; Make sure packages that try to use c-mode or c++-mode are redirected to
+  ;; c-ts-mode or c++-ts-mode
   (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
   (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
 
@@ -6689,6 +6696,8 @@ If no REPL is running, execute `jupyter-run-repl' to start a fresh one."
 
 (use-package json-ts-mode
   :config
+  ;; Make sure packages that try to use js-json-mode are redirected to
+  ;; json-ts-mode
   (add-to-list 'major-mode-remap-alist '(js-json-mode . json-ts-mode))
 
   (setopt json-ts-mode-indent-offset tab-width))
