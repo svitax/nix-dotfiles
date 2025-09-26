@@ -5738,8 +5738,8 @@ Interactively also sends a terminating newline."
   ;; the targets from a Makefile and generates actions for them. This allows us
   ;; to construct rich command interfaces.
   (bind-keys
-   :map +prefix-map
-   ("/" . compile-multi)))
+   :map mode-specific-map
+   ("C-," . compile-multi)))
 
 ;; TODO create compile-multi-use-package that adds to compile-multi-config
 ;; Adds :compile keyword to use-package forms
@@ -5770,8 +5770,8 @@ Interactively also sends a terminating newline."
   ;; following project types: projection (simply presents available projection
   ;; commands for the matching project types), CMake, Make, Poetry Poe, and Tox.
   (bind-keys
-   :map +prefix-map
-   ("/" . projection-multi-compile)))
+   :map mode-specific-map
+   ("C-," . projection-multi-compile)))
 
 ;;;;;;;;;;;;;;;
 ;;;; shell ;;;;
