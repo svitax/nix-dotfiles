@@ -6567,6 +6567,20 @@ region is active."
           python-indent-guess-indent-offset nil
           python-indent-offset 4))
 
+(use-package pydoc
+  :config
+  (with-eval-after-load 'inheritenv
+    (inheritenv-add-advice 'shell-command-to-string))
+
+  (defun +pydoc-eglot-override ()
+    (when (derived-mode-p 'python-base-mode)
+      (set (make-local-variable 'minor-mode-overriding-map-alist)
+           `((eglot--managed-mode
+              . ,(let ((map (copy-keymap eglot-mode-map)))
+                  (define-key map (kbd "C-c C-d") #'pydoc-at-point)
+                  map))))))
+  (add-hook 'python-ts-mode-hook #'+pydoc-eglot-override))
+
 ;; TODO look into using `jupyter-completion-at-point' and `eglot' with `cape'
 (use-package jupyter
   :config

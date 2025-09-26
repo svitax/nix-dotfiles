@@ -156,6 +156,7 @@ in
               # vterm
               mistty
               jupyter
+              pydoc
               nix-ts-mode
               # templ-ts-mode
               dts-mode
