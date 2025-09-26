@@ -6279,7 +6279,42 @@ If PROMPT is nil, don't prompt and use `default-directory'."
     (if prompt
         (let ((default-directory (read-directory-name "Directory: " default-directory)))
           (mistty))
-      (mistty-in-project)))
+      (+mistty-in-project)))
+
+  ;; HACK: Duplicating `mistty-in-project' so I can change the way
+  ;; `mistty-buffer-name' is assembled. If mistty's upstream internal API
+  ;; changes someday, this may break.
+  (defun +mistty-in-project (&optional other-window)
+    "Start or go to a MisTTY buffer in the project's root directory.
+
+If a MisTTY buffer already exists for running a shell in the
+project's root, switch to it. If we're already on that buffer,
+create a new buffer in that project, like `mistty' does.
+
+Otherwise, create a new MisTTY shell buffer. With
+\\[universal-argument] prefix arg, create a new shell buffer even
+if one already exists.
+
+If OTHER-WINDOW is nil, execute the default action configured by
+`display-comint-buffer-action' to pop to the existing or newly-created
+buffer. If OTHER-WINDOW is a function, it is passed to `pop-to-buffer`
+to be used as a `display-buffer' action. Otherwise, display the buffer
+in another window.
+
+    You might prefer configuring `display-buffer-alist' for
+    comint category buffers to get the exact behavior you want
+    instead of passing OTHER-WINDOW."
+    (interactive)
+    (let* ((pr (project-current t))
+           (bufs (project-buffers pr)))
+      (mistty-cycle-or-create
+       (lambda (buf) (memq buf bufs))
+       (lambda (other-window)
+         (let ((default-directory (project-root pr))
+               (mistty-buffer-name
+                (append mistty-buffer-name (list (concat " in " (project-root pr))))))
+           (mistty-create nil other-window)))
+       other-window)))
 
   (bind-keys :map +prefix-map
              ("C-<return>" . +mistty)
