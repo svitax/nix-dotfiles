@@ -3287,6 +3287,8 @@ Limit list of buffers to those matching the current
      ;; magit-process-mode
      ;; difftastic-mode
      ))
+
+  ;; Left side window configurations
   (auto-side-windows-left-buffer-names
    '("^\\*marginal notes\\*$"))
 
@@ -3296,6 +3298,7 @@ Limit list of buffers to those matching the current
   (auto-side-windows-common-window-parameters '())
   (auto-side-windows-right-alist '((window-width . .50)))
   (auto-side-windows-top-alist '((window-height . .25)))
+  (auto-side-windows-bottom-alist '((window-height . .50)))
   (auto-side-windows-common-alist '((body-function . +select-window)))
 
   ;; Maximum number of side windows on the left, top, right and bottom
