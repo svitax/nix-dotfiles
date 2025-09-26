@@ -6284,7 +6284,10 @@ If PROMPT is nil, don't prompt for a directory and use
       (mistty-in-project)))
 
   (bind-keys :map +prefix-map
-             ("C-<return>" . +mistty)))
+             ("C-<return>" . +mistty)
+             :map mistty-mode-map
+             ("C-c C-n" . mistty-next-input)
+             ("C-c C-p" . mistty-previous-input)))
 
 ;;;;;;;;;;;;;;
 ;;;; prog ;;;;
