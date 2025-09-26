@@ -4586,6 +4586,7 @@ for the given MAJOR-MODE, any text is appended to it."
    ("C-c s" . +scratch-buffer)))
 
 ;; TODO document move-text
+;; TODO M-n/M-p in org-mode is org-metadown/org-metaup on org elements
 (use-package move-text
   :config
   ;; Re-indent the text in and around a text move.
