@@ -3235,6 +3235,7 @@ Limit list of buffers to those matching the current
    '(;; Doc buffers
      "^\\*eldoc.*\\*$"
      "^\\*info\\*$"
+     "^\\*Help\\*$"
      "^\\*Metahelp\\*$"
      "^\\*Man.*\\*$"
      "^\\*woman.*\\*$"
