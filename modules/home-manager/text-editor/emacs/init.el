@@ -6003,7 +6003,10 @@ Push `shell-last-dir' to `+shell-cd-directories'."
                       (mapcar #'buffer-name
                        (seq-filter (lambda (buf)
                                      (with-current-buffer buf
-                                      (derived-mode-p 'shell-mode)))
+                                      (derived-mode-p
+                                       'shell-mode
+                                       'eshell-mode
+                                       'mistty-mode)))
                         (buffer-list))))))
     (add-to-list 'consult-buffer-sources '+consult--source-shell-buffer :append))
 
