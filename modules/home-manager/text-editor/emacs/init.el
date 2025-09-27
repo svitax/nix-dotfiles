@@ -3626,6 +3626,17 @@ search started."
       (ignore-errors (isearch-done t t)))
     (call-interactively #'isearch-occur))
 
+  ;; Do a project search out of the current search word.
+  (defun +isearch-project-grep ()
+    (interactive)
+    (let ((query (if isearch-regexp
+                     isearch-string
+                   (regexp-quote isearch-string))))
+      (isearch-update-ring isearch-string isearch-regexp)
+      (let (search-nonincremental-instead)
+        (ignore-errors (isearch-done t t)))
+      (project-find-regexp query)))
+
   ;; Type `M-s M-<' (`+isearch-beginning-of-buffer') or `M-s M->'
   ;; (`+isearch-end-of-buffer') to search for the symbol at point starting from
   ;; the beginning/end of the buffer.
@@ -3675,6 +3686,7 @@ end of the buffer.")
    ("<C-return>" . +isearch-other-end)
    ("M-/" . isearch-complete)
    ("M-s o" . +isearch-occur)
+   ("M-s M-g" . +isearch-project-grep)
    :map minibuffer-local-isearch-map
    ("M-/" . isearch-complete-edit)
    :map occur-mode-map
