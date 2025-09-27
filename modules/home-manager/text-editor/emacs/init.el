@@ -3618,6 +3618,14 @@ search started."
         (isearch-pop-state)))
     (isearch-update))
 
+  ;; Exit `isearch-mode' once I run `isearch-occur'.
+  (defun +isearch-occur ()
+    (interactive)
+    (isearch-update-ring isearch-string isearch-regexp)
+    (let (search-nonincremental-instead)
+      (ignore-errors (isearch-done t t)))
+    (call-interactively #'isearch-occur))
+
   ;; Type `M-s M-<' (`+isearch-beginning-of-buffer') or `M-s M->'
   ;; (`+isearch-end-of-buffer') to search for the symbol at point starting from
   ;; the beginning/end of the buffer.
@@ -3666,6 +3674,7 @@ end of the buffer.")
    ("<M-backspace>" . +isearch-abort-dwim)
    ("<C-return>" . +isearch-other-end)
    ("M-/" . isearch-complete)
+   ("M-s o" . +isearch-occur)
    :map minibuffer-local-isearch-map
    ("M-/" . isearch-complete-edit)
    :map occur-mode-map
