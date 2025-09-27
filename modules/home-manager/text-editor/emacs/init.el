@@ -3435,6 +3435,54 @@ split."
            (let ((split-height-threshold 0))
              (window--try-vertical-split window)))))))
 
+;;;;;;;;;;;;;;
+;;;; tabs ;;;;
+
+(use-package tab-bar
+  ;; Emacs comes with two distinct built-in notions of "tabs": (i) standalone
+  ;; window+buffer layouts which we may also call "workspaces", and (ii) buffers
+  ;; as buttons for a visual representation and navigation tool to switch
+  ;; between buffers. The latter is provided by the `tab-line-mode', which I
+  ;; have no use for. I rely on `switch-to-buffer' and to a lesser extent
+  ;; `previous-buffer' and `next-buffer' (the latter two move back and forth in
+  ;; the given window's history of visible buffers).
+  ;;
+  ;; The `tab-bar-mode', however, fills a special niche. It is useful when I
+  ;; cannot rely on separate frames to keep a sense of context or order to what
+  ;; I am working on. For me, the most efficient workflow involves a singular
+  ;; maximised frame, rather than many frames distributed across the desktop[s].
+  ;; (That is until I decide to further integrate my window manager with Emacs
+  ;; and have every Emacs window as a separate frame managed by the window
+  ;; manager, but tab-bar-mode will still be useful).
+  ;; TODO: <https://sqrtminusone.xyz/posts/2021-10-04-emacs-i3/> and
+  ;; <https://github.com/davidshepherd7/frames-only-mode>
+  ;;
+  ;; I enforce each tab holding its own project with `otpp'. I enforce
+  ;; separation between tabs such that each tab operates on its own distinct
+  ;; list of buffers with `bufferlo'. The same also offers lightweight Emacs
+  ;; bookmarks-based persistence for these sets of tabs.
+  :config
+  (setopt tab-bar-new-button nil
+          tab-bar-close-button-show nil))
+
+;; TODO: document modern-tab-bar. this can probably just live under tab-bar
+;; <https://github.com/aaronjensen/emacs-modern-tab-bar>
+;; (use-package modern-tab-bar
+;;   :config
+;;   (modern-tab-bar-mode))
+
+;; TODO: document one-tab-per-project
+;; <https://github.com/abougouffa/one-tab-per-project>
+;; (use-package otpp
+;;   :config
+;;   (otpp-mode 1)
+;;   ;; I want to advice the commands in `otpp-override-commands' to be run in the
+;;   ;; current tab's root directory.
+;;   (otpp-override-mode 1))
+
+;; TODO: document bufferlo <https://github.com/florommel/bufferlo>
+;; (use-package bufferlo)
+
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; navigation ;;;;
 
