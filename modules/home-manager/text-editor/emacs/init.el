@@ -9736,8 +9736,11 @@ manually to first get the icon files."
   (nerd-icons-completion-mode)
   (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup)
 
-  ;; I find icons for filetypes to be incredibly useful in `find-file', but
-  ;; icons in other completion categories are too noisy.
+  ;; By default, icons are shown in all sorts of completion prompts. When those
+  ;; have different kinds of candidates, like files in `find-file' and buffers
+  ;; in `consult-buffer', the icons are super helpful. If all the candidates
+  ;; have the same icon though, it becomes too noisy so I prefer not to see any
+  ;; icon.
   (setopt nerd-icons-completion-category-icons nil))
 
 (use-package nerd-icons-corfu
