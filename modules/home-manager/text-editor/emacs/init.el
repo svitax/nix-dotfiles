@@ -2154,28 +2154,26 @@ Add this to `dired-mode-hook'."
   ;; of a better value). In the section about completion styles, I explain how I
   ;; use `orderless' and why its power does not result in lots of false
   ;; positives.
-  :init
+  ;;
   ;; With orderless we can also define so-called "style-dispatchers". These are
-  ;; characters attached to the input which instruct orderless to use a specific
+  ;; characters attached to the input which instruct `orderless' to use a specific
   ;; pattern for that component.
   ;;
-  ;; I define such style dispatchers as postfix operators: they are added to the
-  ;; end of the input. The dot interprets the input as a file type extension,
-  ;; while the tilde means to match the input either at the beginning or the
-  ;; end. Granted, these are overkill most of the time. It is easier to just
-  ;; continue typing to narrow the list of candidates.
-  ;; NOTE these dispatchers aren't particularly useful but I leave this here as
-  ;; an example of how to write and use them.
-  ;; (setf (alist-get ?` orderless-affix-dispatch-alist) #'orderless-flex)
-  ;; (setf (alist-get ?~ orderless-affix-dispatch-alist) #'+orderless-beg-or-end)
-  ;; (setf (alist-get ?. orderless-affix-dispatch-alist) #'+orderless-file-ext)
-  (defun +orderless-beg-or-end (component)
-    "Match COMPONENT as a prefix or suffix string."
-    (orderless-regexp (format "\\(^%s\\|%s$\\)" component component)))
-  (defun +orderless-file-ext (component)
-    "Match COMPONENT to a file suffix when completing file names."
-    (when minibuffer-completing-file-name
-      (orderless-regexp (format "\\.%s\\'" component)))))
+  ;; I used to have my own style dispatchers, but realised that I was not using
+  ;; them enough. The default method has also updated since I did my
+  ;; configuration to support an affixation method (prefix OR suffix) for style
+  ;; dispatching. This method reads the `orderless-affix-dispatch-alist' to
+  ;; determine how to interpret the input. From that list, the most obvious
+  ;; advantage to me is he `!', which is a logical `NOT': it is a very easy way
+  ;; to remove something from the list of candidates while typing in the
+  ;; minibuffer. The `&' is potentially useful because it matches the
+  ;; annotations displayed by `marginalia'. The remaining dispatch characters
+  ;; affect how the input is treated as a literal string, initialism, etc.,
+  ;; which is not as useful to me.
+  ;;
+  ;; Remember to check my `completion-styles' and the
+  ;; `completion-category-overrides'.
+  )
 
 (use-package vertico
   :config
