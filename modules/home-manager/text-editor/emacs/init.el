@@ -4390,6 +4390,9 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    ("C-M-;" . +comment-sexp-dwim)
    ("s-;" . +comment-sexp-dwim)
 
+   ;; Continue comment on next line
+   ("S-<return>" . comment-indent-new-line)
+
    :map +prefix-map
    ("C-c" . +kill-terminal-or-restart)
    ("h" . mark-whole-buffer)))
