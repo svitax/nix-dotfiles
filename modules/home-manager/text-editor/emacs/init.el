@@ -3567,6 +3567,9 @@ split."
   (add-hook 'occur-mode-hook #'+truncate-lines-silently)
   (add-hook 'occur-mode-hook #'hl-line-mode)
 
+  ;; Scrolling shouldn't cancel search
+  (setopt isearch-allow-scroll 'unlimited)
+
   ;; Move to the next/previous match in Isearch with the down/up arrow
   ;; keys. (`C-s' and `C-r' still work though).
   (defun +isearch-repeat-forward (&optional arg)
