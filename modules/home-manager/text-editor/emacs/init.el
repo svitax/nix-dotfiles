@@ -2922,6 +2922,12 @@ together."
              :map +search-prefix-map
              ("M-p" . project-switch-project)))
 
+;; TODO <https://github.com/MatthewTromp/list-projects>
+;; (use-package list-projects
+;;   :config
+;;   (bind-keys :map +project-prefix-map
+;;              ("l" . list-projects)))
+
 (use-package projection
   :disabled t
   :config
