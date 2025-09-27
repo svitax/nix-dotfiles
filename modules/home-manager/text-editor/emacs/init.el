@@ -3871,7 +3871,8 @@ end of the buffer.")
         (dired-previous-line 1))
       (when +golden-ratio-scroll-recenter
         (recenter (+ scroll-line-count (/ (- (window-text-height) scroll-line-count) 2)))))
-    (setq this-command 'scroll-down-command))
+    (setq this-command 'scroll-up-command))
+  (put '+golden-ratio-scroll-screen-down 'isearch-scroll t)
   (defun +golden-ratio-scroll-screen-up ()
     "Scroll half screen up."
     (interactive)
@@ -3890,6 +3891,7 @@ end of the buffer.")
       (when +golden-ratio-scroll-recenter
         (recenter (/ (- (window-text-height) scroll-line-count) 2))))
     (setq this-command 'scroll-down-command))
+  (put '+golden-ratio-scroll-screen-up 'isearch-scroll t)
 
   (with-eval-after-load 'pulsar
     (dolist (func '(+golden-ratio-scroll-screen-up
