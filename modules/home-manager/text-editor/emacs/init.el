@@ -1394,7 +1394,10 @@ to produce the opposite effect of `fill-paragraph' and `fill-region'."
   :config
   ;; Buffer-local "direnv" integration for Emacs
   (setopt envrc-show-summary-in-minibuffer nil)
-  (envrc-global-mode))
+  (envrc-global-mode)
+
+  (bind-keys :map global-map
+             ("C-c e" . envrc-command-map)))
 
 (use-package inheritenv
   :config
