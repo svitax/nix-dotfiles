@@ -5430,9 +5430,10 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
     (goto-char (gethash topic +man-index-index )))
 
   (bind-keys :map help-map
-             ("C-m" . man)
+             ("M" . man)
              :map Man-mode-map
              ("i" . +man-index)
+             ("q" . Man-kill)
              ("w" . +man-copy-name-as-kill)))
 
 (use-package devdocs
