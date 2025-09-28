@@ -5367,8 +5367,57 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
 ;; TODO document man
 (use-package man
   :config
+  ;; Provide a `+man-index' command to quickly navigate to keywords within man
+  ;; pages. The index is automatically built when needed. A piece of text is
+  ;; considered a keyword if all of the following are true:
+  ;; 1. At the beginning of the line with 2-8 spaces in front
+  ;; 2. Uses the Man-overstrike face
+  (defvar-local +man-index-index nil)
+  ;; (defvar +man-index-kw-regexp "^ \\{2,8\\}")
+  (defvar +man-index-kw-regexp
+    "\\(?:^ \\{2,8\\}\\|, \\)\\(\\(?:\\S-\\|[[:punct:]]\\)+\\)")
+  (defvar +man-index-kw-face 'Man-overstrike)
+  (defun +man-index-build ()
+    "Builds the +man-index-index hashtable."
+    (unless (eq major-mode 'Man-mode)
+      (error "Unsupported mode for +man-index-build"))
+    (if (get-buffer-process (current-buffer))
+        (error "man page still rendering, try again when done"))
+    (setq-local +man-index-index (make-hash-table :test 'equal))
+    (save-excursion
+      (goto-char (point-min))
+      (while (not (eobp))
+        (let ((line-end (line-end-position)))
+          ;; Only consider lines starting with 2-8 spaces
+          (when (looking-at "^ \\{2,8\\}")
+            (let ((pos (point)))
+              ;; Scan the whole line for Man-overstrike faces
+              (while (< pos line-end)
+                (let ((face (get-text-property pos 'face)))
+                  (when (eq face +man-index-kw-face)
+                    (let* ((start pos)
+                           (end (next-single-property-change start 'face nil line-end))
+                           (kw (string-trim
+                                (buffer-substring-no-properties start end))))
+                      (unless (gethash kw +man-index-index)
+                        (puthash kw start +man-index-index)))
+                    (setq pos (next-single-property-change pos 'face nil line-end)))
+                  (setq pos (1+ pos))))))
+          (forward-line 1)))))
+  (defun +man-index-topics ()
+    "Return a list of index topics."
+    (unless +man-index-index
+      (+man-index-build))
+    (hash-table-keys +man-index-index))
+  (defun +man-index (topic)
+    "Go to TOPIC in the current man page."
+    (interactive (list (completing-read "Topic: " (+man-index-topics) nil t)))
+    (goto-char (gethash topic +man-index-index )))
+
   (bind-keys :map help-map
-             ("C-m" . man)))
+             ("C-m" . man)
+             :map Man-mode-map
+             ("i" . +man-index)))
 
 (use-package devdocs
   :config
