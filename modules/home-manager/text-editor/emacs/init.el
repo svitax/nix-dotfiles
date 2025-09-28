@@ -3848,19 +3848,22 @@ end of the buffer.")
 
   (bind-keys :map global-map
              ("C-c j" . link-hint-open-link)
-             ("C-j" . +link-hint-jump-link))
+             ("C-j" . +link-hint-jump-link)
+             :map Info-mode-map
+             ("f" . link-hint-open-link)
+             ("j" . +link-hint-jump-link))
   (with-eval-after-load 'eww
     (bind-keys :map eww-mode-map
                ("f" . link-hint-open-link)
-               ("m" . +link-hint-jump-link)))
+               ("j" . +link-hint-jump-link)))
   (with-eval-after-load 'nov
     (bind-keys :map nov-mode-map
                ("f" . link-hint-open-link)
-               ("m" . +link-hint-jump-link)))
+               ("j" . +link-hint-jump-link)))
   (with-eval-after-load 'elpher
     (bind-keys :map elpher-mode-map
                ("f" . link-hint-open-link)
-               ("m" . +link-hint-jump-link))))
+               ("j" . +link-hint-jump-link))))
 
 ;; TODO document paragraphs
 (use-package paragraphs
@@ -9329,7 +9332,7 @@ instead of the current one."
    ("b" . +buffers-major-mode)
    ;; ("B" . +consult-bookmark-elpher) ; overrides `elpher-open-bookmarks' (narrow elpher G)
    ;; ("d" . +elpher-download) ; link at point or current page
-   ("f" . elpher-jump)
+   ;; ("f" . link-hint-open-link) ; or `elpher-jump' if no link-hint
    ("g" . elpher-reload) ; overrides `elpher-go'
    ("l" . elpher-back)
    ;; ("L" . +elpher-list-histories)
