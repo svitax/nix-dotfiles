@@ -3256,6 +3256,7 @@ Limit list of buffers to those matching the current
      "^\\*jupyter-repl.*\\*$"
      "^\\*jupyter-output.*\\*$"
      "^\\*jupyter-trace.*\\*$"
+     "^\\*Nix-REPL.*\\*$"
      ;; VC buffers
      ;; "^magit-diff:.*$"
      ;; "^magit-process:.*$"
@@ -6842,12 +6843,26 @@ delimited by `python-nav-beginning-of-statement' and
              ("C-c M-r" . jupyter-repl-restart-kernel)
              ("C-c C-z" . +jupyter-repl-pop-to-buffer)))
 
+(use-package nix-mode
+  :interpreter (("nix-shell" . nix-shebang-mode)
+                ("nix" . nix-shebang-mode)))
+
 (use-package nix-ts-mode
+  ;; `nix-ts-mode' is better for syntax highlighting of files, but `nix-mode'
+  ;; provides a bunch of other niceties like shebang detection, nix-build and
+  ;; nix-repl comint support, store path and log introspection, and interactive
+  ;; flake commands.
+  ;;
+  ;; Luckily for us, `nix-ts-mode' adds `nix-mode' as its parent, so we get the
+  ;; best of both worlds when both are loaded.
   :mode "\\.nix\\'"
   :lsp-hook nix-ts-mode
   :config
   ;; Make sure packages that try to use nix-mode are redirected to nix-ts-mode
-  (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode)))
+  (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode))
+
+  (bind-keys :map nix-ts-mode-map
+             ("C-c C-z" . nix-repl)))
 
 ;; TODO document go-ts-mode
 ;; TODO add C-c C-a `go-import-add' from `go-mode'

@@ -157,6 +157,7 @@ in
               mistty
               jupyter
               pydoc
+              nix-mode
               nix-ts-mode
               # templ-ts-mode
               dts-mode
