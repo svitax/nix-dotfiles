@@ -723,7 +723,7 @@ other characters."
   "Elpher protocol"
   (let* ((protocol (elpher-address-protocol (elpher-page-address elpher-current-page)))
          (symbol (cond ((equal protocol "gemini") "GEM")
-                       ((equal protocol "gopher") "/")
+                       ((equal protocol "gopher") "GOP")
                        ((equal protocol "about") "/"))))
     (druid-modeline-buffer-status symbol)))
 
