@@ -5438,9 +5438,56 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
 
 (use-package devdocs
   :config
+  (defun +devdocs-lookup (&optional ask-docs initial-input)
+    "Look up a DevDocs documentation entry.
+
+Display entries in the documents `devdocs-current-docs' for
+selection. With a prefix argument (or, from Lisp, if ASK-DOCS is
+non-nil), first read the name of one or more installed documents and set
+`devdocs-current-docs' for this buffer.
+
+If INITIAL-INPUT is not nil, insert it into the minibuffer history. By
+default, it is the symbol at point."
+    (interactive "P")
+    (let* ((initial-input (or initial-input (thing-at-point 'symbol t)))
+           (docs (devdocs--relevant-docs ask-docs))
+           (prompt "Go to documentation: "))
+      ;; Clean up empty strings
+      (when (and (stringp initial-input)
+                 (string-match-p "\\`[[:space:]\n\r]*\\'" initial-input))
+        (setq initial-input nil))
+      ;; If we have a default, modify the prompt to show "(default: ...): "
+      (when initial-input
+        (setq prompt
+              (replace-regexp-in-string
+               (rx ": " eos)
+               (format " (default: %s): " initial-input)
+               prompt)))
+      ;; Temporarily add the default to minibuffer-history so M-n can pick it.
+      (let ((minibuffer-history (if initial-input
+                                    (cons initial-input minibuffer-history)
+                                  minibuffer-history)))
+        ;; Use devdocs--read-entry directly (same as devdocs-lookup does).
+        (let* ((entry (devdocs--read-entry prompt docs nil))
+               (buffer (devdocs--render entry))
+               (window (display-buffer buffer)))
+          (when window
+            (with-selected-window window
+              (devdocs-goto-target)
+              (recenter 0))
+            (when devdocs-window-select
+              (select-window window)))))))
+
+  (defun +devdocs-visit ()
+    "Visit the current devdocs page with a web browser."
+    (interactive)
+    (devdocs-copy-url)
+    (browse-url-generic (current-kill 0)))
+
   (bind-keys :map help-map
-             ("C-d" . devdocs-lookup)
-             ("d" . devdocs-peruse)))
+             ("D" . +devdocs-lookup)
+             :map devdocs-mode-map
+             ("v" . +devdocs-visit)))
 
 ;; (use-package rfc-mode)
 
