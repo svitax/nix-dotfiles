@@ -6847,6 +6847,8 @@ delimited by `python-nav-beginning-of-statement' and
   :interpreter (("nix-shell" . nix-shebang-mode)
                 ("nix" . nix-shebang-mode)))
 
+(use-package nix-update)
+
 (use-package nix-ts-mode
   ;; `nix-ts-mode' is better for syntax highlighting of files, but `nix-mode'
   ;; provides a bunch of other niceties like shebang detection, nix-build and
@@ -6862,6 +6864,7 @@ delimited by `python-nav-beginning-of-statement' and
   (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode))
 
   (bind-keys :map nix-ts-mode-map
+             ("C-c u" . nix-update-fetch)
              ("C-c C-z" . nix-repl)))
 
 ;; TODO document go-ts-mode

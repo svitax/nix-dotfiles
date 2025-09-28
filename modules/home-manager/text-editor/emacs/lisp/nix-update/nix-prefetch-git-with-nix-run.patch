@@ -1,0 +1,99 @@
+diff --git a/nix-update.el b/nix-update.el
+index 195f6d8..01e17c4 100644
+--- a/nix-update.el
++++ b/nix-update.el
+@@ -54,6 +54,11 @@
+   :type 'regexp
+   :group 'nix-update)
+ 
++(defcustom nix-update-prefetch-command "nix run nixpkgs#nix-prefetch-git --"
++  "Command used by `nix-update' to prefetch repositories."
++  :type 'string
++  :group 'nix-update)
++
+ (defun nix-update--definition (update-rev)
+   "Update the nix fetch expression at point.
+ If UPDATE-REV is non-nil, update REV and SHA, otherwise only SHA is
+@@ -115,7 +120,8 @@ updated."
+                         (shell-command
+                          (format
+                           (concat
+-                           "nix-prefetch-git --no-deepClone"
++                           nix-update-prefetch-command
++                           " --no-deepClone"
+                            (if submodules " --fetch-submodules" "")
+                            " --quiet https://github.com/%s/%s.git %s")
+                           owner repo rev)
+@@ -137,7 +143,8 @@ updated."
+                         (shell-command
+                          (format
+                           (concat
+-                           "nix-prefetch-git --no-deepClone"
++                           nix-update-prefetch-command
++                           " --no-deepClone"
+                            " --quiet https://gitlab.com/%s/%s.git %s")
+                           owner repo rev)
+                          (current-buffer))
+@@ -155,7 +162,8 @@ updated."
+                       (let ((inhibit-redisplay t))
+                         (shell-command
+                          (format (concat
+-                                  "nix-prefetch-git --no-deepClone"
++                                  nix-update-prefetch-command
++                                  " --no-deepClone"
+                                   " --quiet '%s' %s")
+                                  url rev)
+                          (current-buffer))
+@@ -167,8 +175,12 @@ updated."
+                     (with-temp-buffer
+                       (message "Fetching URL %s: ..." url)
+                       (let ((inhibit-redisplay t))
+-                        (shell-command (format "nix-prefetch-url '%s'" url)
+-                                       (current-buffer))
++                        (shell-command
++                         (format (concat
++                                  nix-update-prefetch-command
++                                  " '%s'")
++                                 url)
++                         (current-buffer))
+                         (message "Fetching URL %s: ...done" url))
+                       (goto-char (point-min))
+                       (while (looking-at "^\\(path is\\|warning\\)")
+@@ -185,8 +197,12 @@ updated."
+                     (with-temp-buffer
+                       (message "Fetching URL %s: ..." url)
+                       (let ((inhibit-redisplay t))
+-                        (shell-command (format "nix-prefetch-url --unpack '%s'" url)
+-                                       (current-buffer))
++                        (shell-command
++                         (format (concat
++                                  nix-update-prefetch-command
++                                  " --unpack '%s'")
++                                 url)
++                         (current-buffer))
+                         (message "Fetching URL %s: ...done" url))
+                       (goto-char (point-min))
+                       (while (looking-at "^\\(path is\\|warning\\)")
+@@ -205,7 +221,10 @@ updated."
+                       (let ((inhibit-redisplay t))
+                         (shell-command
+                          (format
+-                          "nix-prefetch-url 'https://www.emacswiki.org/emacs/download/%s'" name)
++                          (concat
++                           nix-update-prefetch-command
++                           " 'https://www.emacswiki.org/emacs/download/%s'")
++                          name)
+                          (current-buffer))
+                         (message "Fetching EmacsWiki file %s: ...done" name))
+                       (goto-char (point-min))
+@@ -227,7 +246,9 @@ updated."
+                       (let ((inhibit-redisplay t))
+                         (shell-command
+                          (format
+-                          "nix-prefetch-url mirror://pypi/%s/%s/%s-%s.tar.gz"
++                          (concat
++                           nix-update-prefetch-command
++                           " mirror://pypi/%s/%s/%s-%s.tar.gz")
+                           (substring pname 0 1)
+                           pname
+                           pname
