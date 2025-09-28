@@ -5367,6 +5367,21 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
 ;; TODO document man
 (use-package man
   :config
+  (defun +man-copy-name-as-kill ()
+    "Copy name of current man page into the kill ring."
+    (interactive nil Man-mode)
+    (when-let ((str
+                (save-excursion
+                  (goto-char (point-min))
+                  (and (looking-at (rx bol )))))))
+    (setq str
+          (if (string-match " " Man-arguments)
+              (let ((args (string-split Man-arguments " ")))
+                (apply #'format "%s(%s)" (reverse args)))
+            Man-arguments))
+    (kill-new str)
+    (message str))
+
   ;; Provide a `+man-index' command to quickly navigate to keywords within man
   ;; pages. The index is automatically built when needed. A piece of text is
   ;; considered a keyword if all of the following are true:
@@ -5417,7 +5432,8 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
   (bind-keys :map help-map
              ("C-m" . man)
              :map Man-mode-map
-             ("i" . +man-index)))
+             ("i" . +man-index)
+             ("w" . +man-copy-name-as-kill)))
 
 (use-package devdocs
   :config
