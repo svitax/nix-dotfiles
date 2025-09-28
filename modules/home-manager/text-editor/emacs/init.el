@@ -5484,6 +5484,30 @@ default, it is the symbol at point."
     (devdocs-copy-url)
     (browse-url-generic (current-kill 0)))
 
+  (defmacro +devdocs-setup (feature hooks docs)
+    "Define a devdocs setup function for FEATURE, adding DOCS in HOOKS."
+    `(with-eval-after-load ',feature
+      (defun ,(intern (format "+devdocs-%s-setup" feature)) ()
+       (setq-local devdocs-current-docs ',docs))
+      ,@(mapcar (lambda (hook)
+                  `(add-hook ',hook #',(intern (format "+devdocs-%s-setup" feature))))
+         hooks)))
+
+  (+devdocs-setup python (python-mode-hook python-ts-mode-hook)
+                  ("python~3.14" "numpy~2.2" "pandas~2" "statsmodels" "scikit_learn"
+                   "scikit_image" "pytorch~2.7" "tensorflow" "matplotlib"))
+  (+devdocs-setup js (js-mode-hook js-ts-mode-hook)
+                  ("javascript" "dom" "node" "express" "npm" "http"))
+  (+devdocs-setup json-ts-mode (json-ts-mode-hook js-json-mode-hook) ("npm" "jq"))
+  (+devdocs-setup sgml (html-mode-hook) ("html" "htmx" "http"))
+  (+devdocs-setup css-mode (css-base-mode-hook) ("css"))
+  (+devdocs-setup cc-mode (c-mode-hook) ("c"))
+  (+devdocs-setup go-ts-mode (go-ts-mode-hook) ("go" "http"))
+  (+devdocs-setup nix-ts-mode (nix-ts-mode-hook) ("nix"))
+  (+devdocs-setup sh-script (sh-base-mode-hook) ("bash"))
+  (+devdocs-setup make-mode (makefile-gmake-mode-hook) ("gnu_make"))
+  (+devdocs-setup magit (magit-mode-hook) ("git"))
+
   (bind-keys :map help-map
              ("D" . +devdocs-lookup)
              :map devdocs-mode-map
