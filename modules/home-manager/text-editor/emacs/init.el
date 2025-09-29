@@ -3012,7 +3012,24 @@ Limit list of buffers to those matching the current
              ;; ("v" . +buffers-vc-root) ; (prot) if i can filter in consult-buffer by vc root i don't need this
              ))
 
-;; (use-package uniquify)
+(use-package uniquify
+  ;; When a buffer name is reserved, Emacs tries to produce the new buffer by
+  ;; finding a suitable variant of the original name. The doc string of the
+  ;; variable `uniquify-buffer-name-style' does a good job at explaining the
+  ;; various patterns:
+  ;;
+  ;; For example, the files /foo/bar/mumble/name and /baz/quux/mumble/name would
+  ;; have the following buffer names in the various styles:
+  ;;
+  ;;   forward                       bar/mumble/name    quux/mumble/name
+  ;;   reverse                       name\mumble\bar    name\mumble\quux
+  ;;   post-forward                  name|bar/mumble    name|quux/mumble
+  ;;   post-forward-angle-brackets   name<bar/mumble>   name<quux/mumble>
+  ;;   nil                           name               name<2>
+  ;;
+  ;; I use the forward style, which is the closest to the actual file name.
+  :config
+  (setopt uniquify-buffer-name-style 'forward))
 
 ;;;;;;;;;;;;;;;;;
 ;;;; windows ;;;;
