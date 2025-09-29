@@ -5363,6 +5363,12 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
    ("l" . +helpful-previous)
    ("r" . +helpful-next)))
 
+;; TODO: document democratize
+;; <https://flandrew.srht.site/listful/sw-emacs-democratize.html>
+;; (use-package democratize
+;;   :config
+;;   (democratize-examples-in-helpful)
+;;   (democratize-examples-in-help))
 
 ;; TODO document man
 (use-package man
@@ -5435,6 +5441,14 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
              ("i" . +man-index)
              ("q" . Man-kill)
              ("w" . +man-copy-name-as-kill)))
+
+;; TODO: document iman <https://github.com/emacsattic/iman/tree/master>
+;; `iman' merges `man' and `info', and also stores an index.  this is a great
+;; concept. merging in devdocs would be cool, but probably not worth the effort
+;; (use-package iman
+;;   :config
+;;   (bind-keys :map help-map
+;;              ("i" . iman)))
 
 (use-package devdocs
   :config
