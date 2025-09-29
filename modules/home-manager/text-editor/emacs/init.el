@@ -5442,6 +5442,20 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
              ("q" . Man-kill)
              ("w" . +man-copy-name-as-kill)))
 
+(use-package info
+  :config
+  (defun +Info-copy-current-node-name (arg)
+    "Put the name of the current Info node into the kill ring.
+The name of the Info file is prepended to the node name in parentheses.
+With a prefix argument, put the name inside a function call to `info'."
+    (interactive "P")
+    (if arg
+        (Info-copy-current-node-name 0)
+      (Info-copy-current-node-name)))
+
+  (bind-keys :map Info-mode-map
+             ("w" . +Info-copy-current-node-name)))
+
 ;; TODO: document iman <https://github.com/emacsattic/iman/tree/master>
 ;; `iman' merges `man' and `info', and also stores an index.  this is a great
 ;; concept. merging in devdocs would be cool, but probably not worth the effort
