@@ -7717,16 +7717,18 @@ When SEARCH-BACKWARD is non-nil, move backward."
         (while (funcall search-fun org-link-any-re nil t)
           (let* ((begin (match-beginning 0)))
             (unless (org-fold-core-folded-p begin)
-              (let ((context (save-excursion
-                               (goto-char begin)
-                               (org-element-context))))
-                (pcase (org-element-lineage context '(link node-property) t)
-                  ;; (node-property
-                  ;;  (goto-char begin)
-                  ;;  (throw :found t))
-                  ('link
-                   (goto-char (org-element-property :begin link))
-                   (throw :found t)))))))
+              (let* ((context (save-excursion
+                                (goto-char begin)
+                                (org-element-context)))
+                     (etype (org-element-type context)))
+                (pcase etype
+                  (`node-property
+                   (goto-char begin)
+                   (throw :found t))
+                  (`link
+                   (goto-char (org-element-property :begin context))
+                   (throw :found t)))
+                ))))
         (goto-char pos)
         ;; No further link found
         nil)))
