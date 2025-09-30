@@ -160,7 +160,6 @@ in
               # templ-ts-mode
               dts-mode
               jinx
-              anki-editor
               biblio
               # biblio-openlibrary
               # biblio-gbooks
@@ -171,6 +170,7 @@ in
               citar-denote
               org-remark
               org-noter
+              anki-editor
               markdown-mode
               pdf-tools
               saveplace-pdf-view

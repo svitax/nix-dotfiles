@@ -7566,117 +7566,6 @@ continue, per `org-agenda-skip-function'."
 
 ;;   )
 
-;; NOTE Multi-Line Type Answer Box plugin?
-;; NOTE Straight Reward plugin
-(use-package anki-editor
-  ;; Flashcards can be a very effective and useful tool. They trigger active
-  ;; retrieval of knowledge, make spaced repetition convenient, and facilitate
-  ;; micro-learning. They are only useful for lower-order learning like simple
-  ;; memorisation, not higher-order learning.
-
-  ;; `anki-editor' enables us to use all the Org constructs for writing Anki
-  ;; notes, allowing us to maintain flashcards as part of our Org notes. Doing
-  ;; so helps mitigate the risk of fragmented learning by making memorization
-  ;; remain contextual rather than isolated. To accomplish this we need (i) an
-  ;; `Anki' client, (ii) the `AnkiConnect' plugin which allows us to communicate
-  ;; with Anki over a simple HTTP API, and (iii) `curl'.
-
-  ;; An Anki note is represented as an Org entry with property
-  ;; `:ANKI_NOTE_TYPE:'. Each subheading of a note entry corresponds to a field
-  ;; in Anki. If one field is missing, for the given note type, `anki-editor'
-  ;; will use the Org entry as that missing field. If no fields are given, it
-  ;; will use the Org entry as the first field and the body below the heading as
-  ;; the second field.
-
-  ;; The destination Anki deck is provided by the `ANKI_DECK' property either at
-  ;; the top of an Org file `#+ANKI_DECK: my-target-deck' or within the
-  ;; properties drawer of an individual entry `:ANKI_DECK: my-target-deck'.
-
-  ;; The `ANKI_NOTE_TYPE' property is used to specify the Anki note type and is
-  ;; required.
-
-  ;; Tags can be provided with a `ANKI_TAGS' property, where multiple tags are
-  ;; separeted by spaces. Or with Org tags, which can be turned off if you would
-  ;; like to keep Org tags separated from Anki.
-
-  ;; The `ANKI_NOTE_ID' property is used to synchronize an Org entry and its
-  ;; corresponding Anki note.
-
-  ;; A note entry might look like this:
-  ;;
-  ;; * Example flashcard
-  ;;   :PROPERTIES:
-  ;;   :ANKI_DECK: English
-  ;;   :ANKI_NOTE_TYPE: Basic (and reversed card)
-  ;;   :END:
-  ;;   This is the content of the flashcard.
-  ;;
-  ;; Or this:
-  ;;
-  ;; * Raining                                                      :vocab:idioms:
-  ;;   :PROPERTIES:
-  ;;   :ANKI_DECK: English
-  ;;   :ANKI_NOTE_TYPE: Basic (and reversed card)
-  ;;   :ANKI_TAGS: vocab idioms
-  ;;   :END:
-  ;; ** Front
-  ;;    (it's) raining cats and dogs
-  ;; ** Back
-  ;;    it's raining very hard
-
-  ;; Upon pushing to Anki with `anki-editor-push-notes' or
-  ;; `+anki-editor-push-tree', `anki-editor' will export the Org tree as
-  ;; Anki-compatible HTML. However, without a proper CSS file it will still look
-  ;; plain. So we replace it with https://github.com/gongzhitaao/orgcss, a
-  ;; simple sytlesheet for Org-exported HTML, to obtain a proper styling for
-  ;; source code blocks, lists, tables, etc.
-
-  :config
-  ;; By default, `anki-editor-cloze-*' always asks for hints and requires card
-  ;; number input. I don't use hints much, and usually want the card number to
-  ;; increase so I provide two helper functions:
-  ;; `+anki-editor-cloze-region-auto-incr' and
-  ;; `+anki-editor-cloze-region-dont-incr'.
-  (defun +anki-editor-cloze-region-auto-incr (&optional arg)
-    "Cloze region without hints and increase the card number."
-    (interactive)
-    (anki-editor-cloze-region +anki-editor--cloze-number "")
-    (setq +anki-editor--cloze-number (1+ +anki-editor--cloze-number))
-    (forward-sexp))
-
-  (defun +anki-editor-cloze-region-dont-incr (&optional arg)
-    "Cloze region without hints using the previous card number."
-    (interactive)
-    (anki-editor-cloze-region (1- +anki-editor--cloze-number) "")
-    (forward-sexp))
-
-  ;; We need to initialize `+anki-editor--cloze-number'.
-  (defun +anki-editor-reset-cloze-number (&optional arg)
-    "Reset cloze number to ARG or 1."
-    (interactive)
-    (setq +anki-editor--cloze-number (or arg 1)))
-
-  ;; Reset the cloze number after each capture.
-  (add-hook 'org-capture-after-finalize-hook #'+anki-editor-reset-cloze-number)
-
-  ;; By default `anki-editor-push-notes' will push the whole file. This is slow
-  ;; when the file contains many old entries that didn't really need to
-  ;; change. `+anki-editor-push-tree' is provided for this purpose.
-  (defun +anki-editor-push-tree ()
-    "Push all notes under a tree."
-    (interactive)
-    (anki-editor-push-notes 'tree)
-    (+anki-editor-reset-cloze-number))
-
-  (bind-keys
-   :map org-mode-map
-   ("C-c a a" . anki-editor-insert-note)
-   ("C-c a c" . +anki-editor-cloze-region-auto-incr)
-   ("C-c a C" . +anki-editor-cloze-region-dont-incr)
-   ("C-c a d" . anki-editor-delete-notes)
-   ("C-c a p" . +anki-editor-push-tree)
-   ("C-c a r" . +anki-editor-reset-cloze-number)))
-
 ;;;;;;;;;;;;;;;
 ;;;; notes ;;;;
 
@@ -7981,8 +7870,8 @@ in your `denote-directory'."
    ("C-c m r" . org-remark-remove)
    ("C-c m v" . org-remark-view)))
 
-;; TODO i really with i could fully replace org-noter with org-remark because of
-;; all the annoying bugs and sloppy code
+;; TODO i really wish i could fully replace org-noter with org-remark because of
+;; all the annoying bugs
 (use-package org-noter
   :init
   ;; i don't have djvu-read-mode but org-noter keeps trying to load in org-noter-djvu.
@@ -8011,6 +7900,117 @@ in your `denote-directory'."
              ("C-M-n" . org-noter-sync-next-page-or-chapter)
              ("C-M-p" . org-noter-sync-prev-page-or-chapter)
              ("C-M-." . org-noter-sync-current-page-or-chapter)))
+
+;; NOTE Multi-Line Type Answer Box plugin?
+;; NOTE Straight Reward plugin
+(use-package anki-editor
+  ;; Flashcards can be a very effective and useful tool. They trigger active
+  ;; retrieval of knowledge, make spaced repetition convenient, and facilitate
+  ;; micro-learning. They are only useful for lower-order learning like simple
+  ;; memorisation, not higher-order learning.
+
+  ;; `anki-editor' enables us to use all the Org constructs for writing Anki
+  ;; notes, allowing us to maintain flashcards as part of our Org notes. Doing
+  ;; so helps mitigate the risk of fragmented learning by making memorization
+  ;; remain contextual rather than isolated. To accomplish this we need (i) an
+  ;; `Anki' client, (ii) the `AnkiConnect' plugin which allows us to communicate
+  ;; with Anki over a simple HTTP API, and (iii) `curl'.
+
+  ;; An Anki note is represented as an Org entry with property
+  ;; `:ANKI_NOTE_TYPE:'. Each subheading of a note entry corresponds to a field
+  ;; in Anki. If one field is missing, for the given note type, `anki-editor'
+  ;; will use the Org entry as that missing field. If no fields are given, it
+  ;; will use the Org entry as the first field and the body below the heading as
+  ;; the second field.
+
+  ;; The destination Anki deck is provided by the `ANKI_DECK' property either at
+  ;; the top of an Org file `#+ANKI_DECK: my-target-deck' or within the
+  ;; properties drawer of an individual entry `:ANKI_DECK: my-target-deck'.
+
+  ;; The `ANKI_NOTE_TYPE' property is used to specify the Anki note type and is
+  ;; required.
+
+  ;; Tags can be provided with a `ANKI_TAGS' property, where multiple tags are
+  ;; separeted by spaces. Or with Org tags, which can be turned off if you would
+  ;; like to keep Org tags separated from Anki.
+
+  ;; The `ANKI_NOTE_ID' property is used to synchronize an Org entry and its
+  ;; corresponding Anki note.
+
+  ;; A note entry might look like this:
+  ;;
+  ;; * Example flashcard
+  ;;   :PROPERTIES:
+  ;;   :ANKI_DECK: English
+  ;;   :ANKI_NOTE_TYPE: Basic (and reversed card)
+  ;;   :END:
+  ;;   This is the content of the flashcard.
+  ;;
+  ;; Or this:
+  ;;
+  ;; * Raining                                                      :vocab:idioms:
+  ;;   :PROPERTIES:
+  ;;   :ANKI_DECK: English
+  ;;   :ANKI_NOTE_TYPE: Basic (and reversed card)
+  ;;   :ANKI_TAGS: vocab idioms
+  ;;   :END:
+  ;; ** Front
+  ;;    (it's) raining cats and dogs
+  ;; ** Back
+  ;;    it's raining very hard
+
+  ;; Upon pushing to Anki with `anki-editor-push-notes' or
+  ;; `+anki-editor-push-tree', `anki-editor' will export the Org tree as
+  ;; Anki-compatible HTML. However, without a proper CSS file it will still look
+  ;; plain. So we replace it with https://github.com/gongzhitaao/orgcss, a
+  ;; simple sytlesheet for Org-exported HTML, to obtain a proper styling for
+  ;; source code blocks, lists, tables, etc.
+
+  :config
+  ;; By default, `anki-editor-cloze-*' always asks for hints and requires card
+  ;; number input. I don't use hints much, and usually want the card number to
+  ;; increase so I provide two helper functions:
+  ;; `+anki-editor-cloze-region-auto-incr' and
+  ;; `+anki-editor-cloze-region-dont-incr'.
+  (defun +anki-editor-cloze-region-auto-incr (&optional arg)
+    "Cloze region without hints and increase the card number."
+    (interactive)
+    (anki-editor-cloze-region +anki-editor--cloze-number "")
+    (setq +anki-editor--cloze-number (1+ +anki-editor--cloze-number))
+    (forward-sexp))
+
+  (defun +anki-editor-cloze-region-dont-incr (&optional arg)
+    "Cloze region without hints using the previous card number."
+    (interactive)
+    (anki-editor-cloze-region (1- +anki-editor--cloze-number) "")
+    (forward-sexp))
+
+  ;; We need to initialize `+anki-editor--cloze-number'.
+  (defun +anki-editor-reset-cloze-number (&optional arg)
+    "Reset cloze number to ARG or 1."
+    (interactive)
+    (setq +anki-editor--cloze-number (or arg 1)))
+
+  ;; Reset the cloze number after each capture.
+  (add-hook 'org-capture-after-finalize-hook #'+anki-editor-reset-cloze-number)
+
+  ;; By default `anki-editor-push-notes' will push the whole file. This is slow
+  ;; when the file contains many old entries that didn't really need to
+  ;; change. `+anki-editor-push-tree' is provided for this purpose.
+  (defun +anki-editor-push-tree ()
+    "Push all notes under a tree."
+    (interactive)
+    (anki-editor-push-notes 'tree)
+    (+anki-editor-reset-cloze-number))
+
+  (bind-keys
+   :map org-mode-map
+   ("C-c a a" . anki-editor-insert-note)
+   ("C-c a c" . +anki-editor-cloze-region-auto-incr)
+   ("C-c a C" . +anki-editor-cloze-region-dont-incr)
+   ("C-c a d" . anki-editor-delete-notes)
+   ("C-c a p" . +anki-editor-push-tree)
+   ("C-c a r" . +anki-editor-reset-cloze-number)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;;;; bibliography ;;;;
