@@ -7205,6 +7205,8 @@ When inside a table, re-align the table and move to the next field."
   ;;                 (in-mode . "notmuch-tree-mode")))))
 
   (defun +org-capture-inbox ()
+    "Capture something to the inbox and store a link to the current location
+if possible."
     (interactive)
     (ignore-errors (call-interactively #'org-store-link))
     (org-capture nil "i"))
