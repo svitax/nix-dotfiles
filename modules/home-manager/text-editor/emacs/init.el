@@ -2486,6 +2486,11 @@ Limit list of buffers to those matching the current
              display-buffer-in-previous-window
              display-buffer-use-some-window)))
 
+  (add-to-list 'display-buffer-alist
+               '("^\\*Org Links\\*$"
+                 (display-buffer-no-window)
+                 (allow-no-window . t)))
+
   ;; The following settings are relevant for the `display-buffer-alist' we saw
   ;; right above. Notice, in particular, the `split-height-threshold' and
   ;; `split-width-threshold' which determine when to split the frame by height
