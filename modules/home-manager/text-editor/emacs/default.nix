@@ -105,7 +105,6 @@ in
             _:
             with epkgs;
             [
-              # meow
               fontaine
               modus-themes
               # ef-themes
