@@ -7199,10 +7199,9 @@ When inside a table, re-align the table and move to the next field."
   ;;                 (in-mode . "notmuch-show-mode")
   ;;                 (in-mode . "notmuch-tree-mode")))))
 
-  ;; TODO org-store-link doesn't work with some modes like shell-mode
   (defun +org-capture-inbox ()
     (interactive)
-    (call-interactively 'org-store-link)
+    (ignore-errors (call-interactively #'org-store-link))
     (org-capture nil "i"))
 
   ;; I want to directly capture Notmuch links - for example, to add e-mail
