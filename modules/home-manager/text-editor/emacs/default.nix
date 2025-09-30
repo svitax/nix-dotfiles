@@ -105,7 +105,6 @@ in
             _:
             with epkgs;
             [
-              # evil
               # meow
               fontaine
               modus-themes
