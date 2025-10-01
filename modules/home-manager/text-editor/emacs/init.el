@@ -675,8 +675,25 @@ to produce the opposite effect of `fill-paragraph' and `fill-region'."
 
 ;; TODO document envrc
 (use-package envrc
-  :config
   ;; Buffer-local "direnv" integration for Emacs
+  :config
+  ;; By default, when I call `project-compile', `project-shell-command', or
+  ;; `project-async-shell-command' and select another project that has a .envrc
+  ;; file, the environment does not get applied.  This happens because there is
+  ;; no buffer in the destination ("other") project in which `envrc-mode' could
+  ;; be activated before the process is started.  See the discussion in
+  ;; <https://github.com/purcell/envrc/issues/59> for why the following advice
+  ;; is necessary to work around this:
+  (defun +envrc-ensure-current-project (fn &rest args)
+    (let ((default-directory (project-root (project-current t))))
+      (with-temp-buffer
+        (envrc-mode 1)
+        (apply fn args))))
+  (advice-add 'project-compile :around #'+envrc-ensure-current-project)
+  (advice-add 'project-shell-command :around #'+envrc-ensure-current-project)
+  (advice-add 'project-async-shell-command
+              :around #'+envrc-ensure-current-project)
+
   (setopt envrc-show-summary-in-minibuffer nil)
   (envrc-global-mode)
 
@@ -5128,7 +5145,6 @@ default, it is the symbol at point."
 ;;;;;;;;;;;;;;;;;;;;;
 ;;;; compilation ;;;;
 
-;; TODO running project-compile doesn't inherit environment defined by guix and envrc
 (use-package compile
   ;; Similar to the `comint' library, Emacs comes with a built-in interface for
   ;; running compilation-related commands. In principle, any shell command will
