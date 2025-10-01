@@ -12,13 +12,15 @@ epkgs.melpaBuild {
     rev = "d461116428c26edd68b8cda361dc31a39b6ad7e8";
     hash = "sha256-GqibKikPH+dEzrR1LjrjZLGdTBsIg1YNnfHphoX/CuY=";
   };
+  patches = [
+    ./auto-side-windows-managed-predicate.patch
+  ];
   recipe = pkgs.writeText "recipe" ''
     (auto-side-windows
      :repo "MArpogaus/auto-side-windows"
      :fetcher github)
   '';
-  packageRequires = with epkgs; [
-  ];
+  packageRequires = with epkgs; [ ];
   meta = {
     homepage = "https://github.com/MArpogaus/auto-side-windows";
     license = lib.licenses.gpl3;

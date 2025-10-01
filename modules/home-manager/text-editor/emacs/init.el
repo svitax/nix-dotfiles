@@ -35,7 +35,17 @@
   ;; lines with red spots everywhere, as if we have totally broken Emacs.
   (when (native-comp-available-p)
     (setq native-comp-async-report-warnings-errors nil)
-    (setq native-compile-prune-cache t))
+    ;; HACK: see <https://emacs.stackexchange.com/a/82011>. Bug still exists in
+    ;; Emacs 30.2. Remove this hack when fixed.
+    (defun +native--compile-async-skip-p
+        (native--compile-async-skip-p file load selector)
+      (let* ((naive-elc-file (file-name-with-extension file "elc"))
+             (elc-file       (replace-regexp-in-string
+                              "\\.el\\.elc$" ".elc" naive-elc-file)))
+        (or (gethash elc-file comp--no-native-compile)
+            (funcall native--compile-async-skip-p file load selector))))
+    (advice-add 'native--compile-async-skip-p
+                :around '+native--compile-async-skip-p))
 
   ;; I like starting with a scratch buffer. I know that a lot of users specify a
   ;; dashboard or an Org agenda view, but I prefer to keep things generic in
@@ -2503,6 +2513,11 @@ Limit list of buffers to those matching the current
              display-buffer-in-previous-window
              display-buffer-use-some-window)))
 
+  (add-to-list 'display-buffer-alist
+               '("^\\*Org Links\\*$"
+                 (display-buffer-no-window)
+                 (allow-no-window . t)))
+
   ;; The following settings are relevant for the `display-buffer-alist' we saw
   ;; right above. Notice, in particular, the `split-height-threshold' and
   ;; `split-width-threshold' which determine when to split the frame by height
@@ -2614,11 +2629,6 @@ Limit list of buffers to those matching the current
      ;; difftastic-mode
      ))
 
-  ;; Bottom side window configurations (I use this for buffers I don't want to
-  ;; show in a window)
-  (auto-side-windows-bottom-buffer-names
-   '("^\\*Org Links\\*$"))
-
   ;; Left side window configurations
   (auto-side-windows-left-buffer-names
    '("^\\*marginal notes\\*$"))
@@ -2631,9 +2641,6 @@ Limit list of buffers to those matching the current
                                    (body-function . +select-window)))
   (auto-side-windows-top-alist '((window-height . .25)
                                  (body-function . +select-window)))
-  (auto-side-windows-bottom-alist '((allow-no-window . t)
-                                    (display-buffer-no-window)))
-
   ;; Maximum number of side windows on the left, top, right and bottom
   (window-sides-slots '(1 1 1 1)) ; Example: Allow one window per side
 
