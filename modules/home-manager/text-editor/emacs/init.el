@@ -3713,22 +3713,6 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
         (+escape-url-region (region-beginning) (region-end))
       (+escape-url-line (line-beginning-position))))
 
-  ;; Make Emacs repeat the C-u C-SPC command (`pop-to-mark-command') by
-  ;; following it up with another C-SPC. It is faster to type C-u
-  ;; C-SPC, C-SPC, C-SPC, than C-u C-SPC, C-u C-SPC, C-u C-SPC...
-  (setopt set-mark-command-repeat-pop t)
-
-  ;; Do the reverse of C-u C-SPC (`pop-to-mark-command')
-  (defun +unpop-to-mark-command ()
-    "Unpop off mark ring. Does nothing if mark ring is empty."
-    (interactive)
-    (when mark-ring
-      (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
-      (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
-      (when (null (mark t)) (ding))
-      (setq mark-ring (nbutlast mark-ring))
-      (goto-char (marker-position (car (last mark-ring))))))
-
   ;; C-x C-c does the usual killing, whereas C-u C-x C-c restarts the Emacs
   ;; systemd service. This will come in handy when I switch Home Manager
   ;; profiles because I tend to restart Emacs after that and being able to do it
@@ -3785,13 +3769,6 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    ("C-Z" . +zap-up-to-char-backward)
    ("M-Z" . +zap-to-char-backward)
 
-   ;; TODO I would rather replace this with something like dogears or
-   ;; better-jumper
-   ;;
-   ;; Pop and unpop to mark command.
-   ("C-{" . pop-to-mark-command)
-   ("C-}" . +unpop-to-mark-command)
-
    ;; Escape urls and insert dates
    ("C-<" . +escape-url-dwim)
    ("C-=" . +insert-date)
@@ -3808,6 +3785,58 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    :map +prefix-map
    ("C-c" . +kill-terminal-or-restart)
    ("h" . mark-whole-buffer)))
+
+;; TODO I would rather replace this with something like dogears or better-jumper
+(use-package mark-command
+  :no-require
+  :config
+  ;; Make Emacs repeat the `pop-to-mark-command' and `pop-global-mark' commands.
+
+  ;; Do the reverse of `pop-to-mark-command' (C-u C-SPC)
+  (defun +unpop-to-mark-command ()
+    "Unpop off `mark-ring.' Does nothing if ring is empty."
+    (interactive)
+    (when mark-ring
+      (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+      (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
+      (when (null (mark t)) (ding))
+      (setq mark-ring (nbutlast mark-ring))
+      (goto-char (marker-position (car (last mark-ring))))))
+
+  ;; Do the reverse of `pop-global-mark' (C-x C-SPC)
+  (defun +unpop-global-mark ()
+    "Unpop off `global-mark-ring'. Does nothing if ring is empty."
+    (interactive)
+    (when global-mark-ring
+      (setq global-mark-ring (cons (copy-marker (mark-marker)) global-mark-ring))
+      (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
+      (when (null (mark t)) (ding))
+      (setq global-mark-ring (nbutlast mark-ring))
+      (goto-char (marker-position (car (last global-mark-ring))))))
+
+  ;; Pulsar integration
+  (with-eval-after-load 'pulsar
+    (dolist (func '(pop-global-mark
+                    +unpop-global-mark
+                    pop-to-mark-command
+                    +unpop-to-mark-command))
+      (add-to-list 'pulsar-pulse-functions func)))
+
+  (bind-keys :map +prefix-map
+             ("C-SPC" . pop-global-mark)
+             :repeat-map pop-global-mark-repeat-map
+             ("C-SPC" . pop-global-mark)
+             ("SPC" . +unpop-global-mark)
+             :repeat-map pop-to-mark-command-repeat-map
+             ("C-SPC" . pop-to-mark-command)
+             ("SPC" . +unpop-to-mark-command))
+  ;; BUG: can't add repeat hints to commands bound to C-SPC.
+  ;; too lazy to file an issue in core Emacs
+  ;; (put 'pop-to-mark-command 'repeat-hint "pop")
+  ;; (put 'pop-global-mark 'repeat-hint "pop")
+
+  (put '+unpop-to-mark-command 'repeat-hint "unpop")
+  (put '+unpop-global-mark 'repeat-hint "unpop"))
 
 (use-package substitute
   :disabled t ; NOTE disabled 2025-06-26
