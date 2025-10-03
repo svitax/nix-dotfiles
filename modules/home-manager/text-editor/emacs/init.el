@@ -3173,9 +3173,9 @@ end of the buffer.")
           avy-all-windows-alt nil ; only the current window with C-u
           )
   (bind-keys :map global-map
-             ("M-j" . avy-goto-char-timer)
+             ("C-j" . avy-goto-char-timer)
              :map isearch-mode-map
-             ("M-j" . avy-isearch)))
+             ("C-j" . avy-isearch)))
 
 ;; TODO document link-hint
 (use-package link-hint
@@ -3198,7 +3198,7 @@ end of the buffer.")
 
   (bind-keys :map global-map
              ("C-c j" . link-hint-open-link)
-             ("C-j" . +link-hint-jump-link)
+             ("C-c C-j" . +link-hint-jump-link)
              :map Info-mode-map
              ("f" . link-hint-open-link)
              ("j" . +link-hint-jump-link))
@@ -3796,9 +3796,6 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    ("M-;" . +comment-line-dwim)
    ("C-M-;" . +comment-sexp-dwim)
    ("s-;" . +comment-sexp-dwim)
-
-   ;; Continue comment on next line
-   ("S-<return>" . comment-indent-new-line)
 
    :map +prefix-map
    ("C-c" . +kill-terminal-or-restart)
