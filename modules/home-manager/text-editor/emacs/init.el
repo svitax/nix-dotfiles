@@ -1758,10 +1758,28 @@ first one. Else do `vertico-exit'."
 
   ;; Add a `consult' command to visualize `xref' history, adaptation of
   ;; `consult-mark'
+  (defvar +consult--xref-history nil
+    "History for the `+consult-xref-history' results.")
   (defun +consult-xref-history ()
-    "Jump to Xref history elements (using `xref--history')."
+    "Jump to a marker in `xref--history'.
+
+The command supports preview of the currently selected marker position.
+The symbol at point is added to the future history."
     (interactive)
-    (consult-global-mark (flatten-list xref--history)))
+    (consult--read
+     (consult--global-mark-candidates
+      (flatten-list xref--history))
+     :prompt "Go to Xref: "
+     ;; Despite `+consult-xref-history' formatting the candidates in grep-like
+     ;; style, we are not using the `consult-grep' category, since the
+     ;; candidates have location markers attached.
+     :category 'consult-location
+     :sort nil
+     :require-match t
+     :lookup #'consult--lookup-location
+     :history '(:input +consult--xref-history)
+     :add-history (thing-at-point 'symbol)
+     :state (consult--jump-state)))
 
   ;; Start `consult-line' search with active region, if available.
   (defalias '+consult-line-dwim 'consult-line)
