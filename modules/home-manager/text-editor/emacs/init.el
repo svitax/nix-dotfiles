@@ -3806,25 +3806,22 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
 
 ;; TODO document mark-command
 (use-package mark-command
-  ;; Make Emacs repeat the `pop-to-mark-command' and `pop-global-mark' commands.
   :no-require
   :config
+  (defun +marker-is-point-p (marker)
+    "Test if MARKER is current point."
+    (and (eq (marker-buffer marker) (current-buffer))
+         (= (marker-position marker) (point))))
+
+  (defun +push-mark-maybe (ring)
+    "Push mark into RING if its head is not the current point."
+    (if (not ring)
+        (error (format "mark ring is empty"))
+      (unless (or (+marker-is-point-p (car ring))
+                  (+marker-is-point-p (car (reverse ring))))
+        (push-mark))))
+
   ;; Do the reverse of `pop-to-mark-command' (C-u C-SPC)
-  (defun +unpop-to-mark-command ()
-    "Unpop off `mark-ring'. Does not set point and does nothing if ring is
-empty."
-    (interactive)
-    (let ((num-times (if (equal last-command 'pop-to-mark-command)
-                         2
-                       1)))
-      (dotimes (x num-times)
-        (when mark-ring
-          (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
-          (set-marker (mark-marker) (+ 0 (car (last mark-ring))))
-          (when (null (mark t)) (ding))
-          (setq mark-ring (nbutlast mark-ring))
-          (goto-char (mark t)))
-        (deactivate-mark))))
 
   (defun +set-mark-command (arg)
     "Set the mark where point is, and activate it; or jump to the mark.
@@ -3857,16 +3854,10 @@ Novice Emacs Lisp programmers often try to use the mark for the wrong
 purposes.  See the documentation of `set-mark' for more information."
     (interactive "P")
     (let (do-it)
-      (cond ((eq last-command '+unpop-to-mark-command)
-             (if (consp arg)
-                 (progn
-                   (pop-to-mark-command)
-                   (setq do-it t))
-               (unpop-to-mark-command)))
-            ((and (equal arg '(4))
+      (cond ((and (equal arg '(4))
                   (not (eq this-command real-last-command)))
-             (push-mark nil t)
-             (pop-mark)
+             (+push-mark-maybe mark-ring)
+             (call-interactively 'pop-to-mark-command)
              (setq do-it t))
             (t
              (setq do-it t)))
@@ -3877,16 +3868,18 @@ purposes.  See the documentation of `set-mark' for more information."
           (setq this-command set-mark-cmd)
           (funcall set-mark-cmd arg)))))
 
+  (defun +unpop-to-mark-command ()
+    "Unpop off mark ring. Does nothing if mark ring is empty."
+    (interactive)
+    (when mark-ring
+      (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+      (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
+      (when (null (mark t)) (ding))
+      (setq mark-ring (nbutlast mark-ring))
+      (goto-char (marker-position (car (last mark-ring))))))
+
   ;; Do the reverse of `pop-global-mark' (C-x C-SPC)
-  (defun +marker-is-point-p (marker)
-    (and (eq (marker-buffer marker) (current-buffer))
-         (= (marker-position marker) (point))))
-  (defun +push-mark-maybe (ring)
-    (if (not ring)
-        (error (format "mark ring is empty"))
-      (unless (or (+marker-is-point-p (car ring))
-                  (+marker-is-point-p (car (reverse ring))))
-        (push-mark))))
+
   (defun +pop-global-mark ()
     "Pop off global mark ring and jump to the top location."
     (interactive)
@@ -3917,6 +3910,8 @@ purposes.  See the documentation of `set-mark' for more information."
              ("C-SPC" . +set-mark-command)
              :map +prefix-map
              ("C-SPC" . +pop-global-mark)
+             ;; Make Emacs repeat the `pop-to-mark-command' and
+             ;; `pop-global-mark' commands.
              :repeat-map pop-global-mark-repeat-map
              ("C-SPC" . +pop-global-mark)
              ("SPC" . +unpop-global-mark)
