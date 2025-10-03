@@ -7243,11 +7243,6 @@ When inside a table, re-align the table and move to the next field."
    :map org-mode-map
    ("<tab>" . +org-tab)
    ("<backtab>" . +org-shifttab)
-   ;; TODO how do i include org-shiftmeta* bindings with this npbf scheme?
-   ("M-P" . org-metaup)
-   ("M-N" . org-metadown)
-   ("M-B" . org-metaleft)
-   ("M-F" . org-metaright)
    ("C-'" . nil)
    ("C-," . nil)
    ("C-<return>" . nil)
