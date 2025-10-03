@@ -6479,13 +6479,18 @@ delimited by `python-nav-beginning-of-statement' and
              ("C-c M-r" . jupyter-repl-restart-kernel)
              ("C-c C-z" . +jupyter-repl-pop-to-buffer)
              :map jupyter-repl-mode-map
-             ("C-c C-z" . +jupyter-repl-pop-to-buffer)
              ("C-c C-d" . jupyter-inspect-at-point)
+             ;; ("C-c C-o" . +jupyter-repl-clear-output)
+             ("C-c C-z" . +jupyter-repl-pop-to-buffer)
              :map jupyter-repl-interaction-mode-map
              ("C-c C-b" . jupyter-repl-interrupt-kernel)
              ("C-c C-c" . +jupyter-eval-dwim)
              ("C-c C-k" . jupyter-eval-buffer)
              ("C-c C-l" . jupyter-load-file)
+             ;; TODO: create `+jupyter-repl-clear-output', based off of
+             ;; cider-find-and-clear-repl-output, cider-clear-repl-output,
+             ;; slime-repl-clear-output
+             ;; ("C-c C-o" . +jupyter-repl-clear-output)
              ("C-c C-q" . jupyter-repl-shutdown-kernel)
              ("C-c C-r" . jupyter-eval-region)
              ("C-c M-r" . jupyter-repl-restart-kernel)
