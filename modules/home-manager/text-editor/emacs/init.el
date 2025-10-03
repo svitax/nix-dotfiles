@@ -3786,33 +3786,106 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    ("C-c" . +kill-terminal-or-restart)
    ("h" . mark-whole-buffer)))
 
-;; TODO I would rather replace this with something like dogears or better-jumper
+;; TODO document mark-command
 (use-package mark-command
+  ;; Make Emacs repeat the `pop-to-mark-command' and `pop-global-mark' commands.
   :no-require
   :config
-  ;; Make Emacs repeat the `pop-to-mark-command' and `pop-global-mark' commands.
-
   ;; Do the reverse of `pop-to-mark-command' (C-u C-SPC)
   (defun +unpop-to-mark-command ()
-    "Unpop off `mark-ring.' Does nothing if ring is empty."
+    "Unpop off `mark-ring'. Does not set point and does nothing if ring is
+empty."
     (interactive)
-    (when mark-ring
-      (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
-      (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
-      (when (null (mark t)) (ding))
-      (setq mark-ring (nbutlast mark-ring))
-      (goto-char (marker-position (car (last mark-ring))))))
+    (let ((num-times (if (equal last-command 'pop-to-mark-command)
+                         2
+                       1)))
+      (dotimes (x num-times)
+        (when mark-ring
+          (setq mark-ring (cons (copy-marker (mark-marker)) mark-ring))
+          (set-marker (mark-marker) (+ 0 (car (last mark-ring))))
+          (when (null (mark t)) (ding))
+          (setq mark-ring (nbutlast mark-ring))
+          (goto-char (mark t)))
+        (deactivate-mark))))
+
+  (defun +set-mark-command (arg)
+    "Set the mark where point is, and activate it; or jump to the mark.
+Setting the mark also alters the region, which is the text
+between point and mark; this is the closest equivalent in
+Emacs to what some editors call the \"selection\".
+
+With no prefix argument, set the mark at point, and push the
+old mark position on local mark ring.  Also push the new mark on
+global mark ring, if the previous mark was set in another buffer.
+
+When Transient Mark Mode is off, immediately repeating this
+command activates `transient-mark-mode' temporarily.
+
+With prefix argument (e.g., \\[universal-argument] \\[set-mark-command]), \
+jump to the mark, and set the mark from
+position popped off the local mark ring (this does not affect the global
+mark ring).  Use \\[pop-global-mark] to jump to a mark popped off the global
+mark ring (see `pop-global-mark').
+
+If `set-mark-command-repeat-pop' is non-nil, repeating
+the \\[set-mark-command] command with no prefix argument pops the next position
+off the local (or global) mark ring and jumps there.
+
+With \\[universal-argument] \\[universal-argument] as prefix
+argument, unconditionally set mark where point is, even if
+`set-mark-command-repeat-pop' is non-nil.
+
+Novice Emacs Lisp programmers often try to use the mark for the wrong
+purposes.  See the documentation of `set-mark' for more information."
+    (interactive "P")
+    (let (do-it)
+      (cond ((eq last-command '+unpop-to-mark-command)
+             (if (consp arg)
+                 (progn
+                   (pop-to-mark-command)
+                   (setq do-it t))
+               (unpop-to-mark-command)))
+            ((and (equal arg '(4))
+                  (not (eq this-command real-last-command)))
+             (push-mark nil t)
+             (pop-mark)
+             (setq do-it t))
+            (t
+             (setq do-it t)))
+      (when do-it
+        (let ((set-mark-cmd (if cua-mode
+                                'cua-set-mark
+                              'set-mark-command)))
+          (setq this-command set-mark-cmd)
+          (funcall set-mark-cmd arg)))))
 
   ;; Do the reverse of `pop-global-mark' (C-x C-SPC)
-  (defun +unpop-global-mark ()
-    "Unpop off `global-mark-ring'. Does nothing if ring is empty."
+  (defun +marker-is-point-p (marker)
+    (and (eq (marker-buffer marker) (current-buffer))
+         (= (marker-position marker) (point))))
+  (defun +push-mark-maybe (ring)
+    (if (not ring)
+        (error (format "mark ring is empty"))
+      (unless (or (+marker-is-point-p (car ring))
+                  (+marker-is-point-p (car (reverse ring))))
+        (push-mark))))
+  (defun +pop-global-mark ()
+    "Pop off global mark ring and jump to the top location."
     (interactive)
-    (when global-mark-ring
-      (setq global-mark-ring (cons (copy-marker (mark-marker)) global-mark-ring))
-      (set-marker (mark-marker) (car (last mark-ring)) (current-buffer))
-      (when (null (mark t)) (ding))
-      (setq global-mark-ring (nbutlast mark-ring))
-      (goto-char (marker-position (car (last global-mark-ring))))))
+    (+push-mark-maybe global-mark-ring)
+    (when (+marker-is-point-p (car global-mark-ring))
+      (call-interactively 'pop-global-mark))
+    (call-interactively 'pop-global-mark))
+
+  (defun +unpop-global-mark ()
+    "Unpop off `global-mark-ring'."
+    (interactive)
+    (+push-mark-maybe global-mark-ring)
+    (setq global-mark-ring (nreverse global-mark-ring))
+    (when (+marker-is-point-p (car global-mark-ring))
+      (call-interactively 'pop-global-mark))
+    (call-interactively 'pop-global-mark)
+    (setq global-mark-ring (nreverse global-mark-ring)))
 
   ;; Pulsar integration
   (with-eval-after-load 'pulsar
@@ -3822,10 +3895,12 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
                     +unpop-to-mark-command))
       (add-to-list 'pulsar-pulse-functions func)))
 
-  (bind-keys :map +prefix-map
-             ("C-SPC" . pop-global-mark)
+  (bind-keys :map global-map
+             ("C-SPC" . +set-mark-command)
+             :map +prefix-map
+             ("C-SPC" . +pop-global-mark)
              :repeat-map pop-global-mark-repeat-map
-             ("C-SPC" . pop-global-mark)
+             ("C-SPC" . +pop-global-mark)
              ("SPC" . +unpop-global-mark)
              :repeat-map pop-to-mark-command-repeat-map
              ("C-SPC" . pop-to-mark-command)
