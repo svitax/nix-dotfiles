@@ -4426,7 +4426,7 @@ through the edits."
   ;; docstring for more details.
   :config
   (bind-keys :map global-map
-             ("C-c f" . apheleia-format-buffer)))
+             ("C-c C-f" . apheleia-format-buffer)))
 
 (use-package apheleia-use-package
   ;; Adds :format keyword for use-package forms
@@ -4541,9 +4541,12 @@ The parameter NAME, ARGS, REST, and STATE are explained in the
 
   (bind-keys
    :map eglot-mode-map
+   ("C-c C-a" . eglot-code-actions)
    ("C-c C-i" . eglot-find-implementation)
-   ("C-c C-t" . eglot-find-typeDefinition)
-   ("C-c C-l" . eglot-find-declaration)))
+   ;; TODO: make a `+refactor-map' and put `eglot-rename' under it
+   ("C-c C-r" . eglot-rename)
+   ("C-c C-w" . eglot-find-declaration)
+   ("C-c C-y" . eglot-find-typeDefinition)))
 
 (use-package eglot-use-package
   ;; Adds :lsp-hook, :lsp-server, and :lsp-config keywords for use-package forms
