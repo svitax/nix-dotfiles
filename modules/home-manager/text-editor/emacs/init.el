@@ -4175,6 +4175,18 @@ for the given MAJOR-MODE, any text is appended to it."
                              (?` . ?`))))
   (add-hook 'markdown-mode-hook #'+electric-pair-markdown-h))
 
+(use-package paren
+  ;; The built-in `show-paren-mode' highlights the parenthesis on the opposite
+  ;; end of the current symbolic expression. It also highligts matching terms of
+  ;; control flow in programming languages that are not using parentheses like
+  ;; Lisp: for instance, in a `bash' shell script it highlights the `if' and
+  ;; `fi' keywords. This mode also works for prose and I use it globally. Simple
+  ;; and effective!
+  :config
+  (show-paren-mode 1)
+  (setopt show-paren-context-when-offscreen 'overlay
+          show-paren-when-point-in-periphery t))
+
 ;; (use-package insert-pair)
 
 (use-package delsel
