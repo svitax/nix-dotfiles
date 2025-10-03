@@ -3808,6 +3808,20 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
 (use-package mark-command
   :no-require
   :config
+  ;; A problem with the `mark-ring' is that sometimes it gets filled with
+  ;; repeated entries, so I find myself hitting `C-u C-SPC' 2 to 4 times in the
+  ;; same place. The following advice tries to make `pop-to-mark-command' and
+  ;; `+unpop-to-mark-command' pop multiple times until it moves the point.
+  (defun +mark-pop-until-move (orig-fun &rest args)
+    "Call ORIG-FUN until the point moves.
+Try the repeated popping up to 10 times."
+    (let ((p (point)))
+      (dotimes (i 10)
+        (when (= p (point))
+          (apply orig-fun args)))))
+  (advice-add 'pop-to-mark-command :around #'+mark-pop-until-move)
+  (advice-add '+unpop-to-mark-command :around #'+mark-pop-until-move)
+
   (defun +marker-is-point-p (marker)
     "Test if MARKER is current point."
     (and (eq (marker-buffer marker) (current-buffer))
