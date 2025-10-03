@@ -1184,8 +1184,8 @@ Add this to `dired-mode-hook'."
           dired-do-revert-buffer (lambda (dir) (not (file-remote-p dir))))
 
   (bind-keys :map dired-mode-map
-             ("C-+" . dired-create-empty-file) ; mirror `dired-create-directory'
              ("C-<return>" . dired-do-open) ; Emacs 30
+             ("F" . dired-create-empty-file) ; mirror `dired-find-file'
              ("M-s f" . nil)))
 
 (use-package dired-preview
