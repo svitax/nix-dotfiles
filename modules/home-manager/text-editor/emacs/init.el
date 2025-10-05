@@ -7211,8 +7211,9 @@ move to the previous field."
   (defun +org-tab (&optional arg)
     "Move to the next visible heading or link.
 When inside a table, re-align the table and move to the next field."
-    (interactive)
+    (interactive "P")
     (cond
+     ((org-at-drawer-p) (call-interactively #'org-cycle))
      ((org-at-table-p) (org-table-justify-field-maybe)
       (call-interactively #'org-table-next-field))
      (t (call-interactively #'+org-next-visible-heading-or-link))))
