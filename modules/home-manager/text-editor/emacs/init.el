@@ -2247,9 +2247,7 @@ together."
              ("r" . project-query-replace-regexp)
              ("," . project-compile)
              ("&" . project-async-shell-command)
-             ("!" . project-shell-command)
-             :map +search-prefix-map
-             ("M-p" . project-switch-project)))
+             ("!" . project-shell-command)))
 
 ;; TODO <https://github.com/MatthewTromp/list-projects>
 ;; (use-package list-projects
