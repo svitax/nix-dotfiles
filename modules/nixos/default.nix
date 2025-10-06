@@ -70,6 +70,7 @@ rec {
     # NOTE: blocky https://nixos.wiki/wiki/Blocky and https://github.com/0xERR0R/blocky
     # NOTE: pi-hole https://github.com/pi-hole/pi-hole
     # NOTE: wireguard or tailscale
+    stevenblack = ./network/stevenblack;
   };
 
   nixos = ./nixos;
@@ -130,6 +131,8 @@ rec {
 
       # style.stylix
       style.fonts
+
+      network.stevenblack
 
       nixos
 
