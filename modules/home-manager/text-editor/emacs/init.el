@@ -7917,7 +7917,7 @@ continue, per `org-agenda-skip-function'."
   ;; Luhmann had a habit of taking literature notes while reading. Each literature
   ;; was essentially an index of the material. He only excerpted the original text
   ;; from the book when absolutely necessary. Literature notes are an efficient
-  ;; and in-depth method that records key points and inspirations, faciliting
+  ;; and in-depth method that records key points and inspirations, facilitating
   ;; quick review and deep reading, while also helping distinguish between
   ;; existing and new information.
   :config
@@ -7958,36 +7958,37 @@ continue, per `org-agenda-skip-function'."
   ;; Create a Denote-compatible marginal note
   (defun +org-remark-denote--note (filename)
     "Find the Denote filename similar to FILENAME but with the 'literature' keyword."
-    (if-let* ((source-title (denote-retrieve-filename-title filename))
-              (source-signature (denote-retrieve-filename-signature filename))
-              (source-keywords (denote-retrieve-filename-keywords filename))
-              (source-keywords (if source-keywords
-                                   (split-string source-keywords "_")
-                                 nil))
-              (buffer-files (mapcar
-                             (lambda (buffer)
-                               (buffer-file-name buffer))
-                             (buffer-list)))
-              (buffer-files (cl-remove nil buffer-files))
-              (files (cl-union (denote-directory-files) buffer-files)))
-        (cl-find-if (lambda (file)
-                      (let* ((file-title (denote-retrieve-filename-title file))
-                             (file-signature (denote-retrieve-filename-signature file))
-                             (file-keywords (denote-retrieve-filename-keywords file))
-                             (file-keywords
-                              (if (and source-keywords file-keywords)
-                                  (split-string file-keywords "_")
-                                nil)))
-                        (and (string= file-title source-title)
-                             (string= file-signature source-signature)
-                             (member "literature" file-keywords)
-                             (seq-set-equal-p
-                              (seq-remove (lambda (elt) (member elt '("literature" "reference")))
-                                          source-keywords)
-                              (seq-remove (lambda (elt) (member elt '("literature" "reference")))
-                                          file-keywords)))))
-                    files)
-      nil))
+    (let* ((is-file (and filename (file-exists-p filename)))
+           (source-title (if is-file
+                             (denote-retrieve-filename-title filename)
+                           filename))
+           (source-signature (when is-file
+                               (denote-retrieve-filename-signature filename)))
+           (source-keywords (when is-file
+                              (let ((kw (denote-retrieve-filename-keywords filename)))
+                                (when kw (split-string kw "_")))))
+           (buffer-files (cl-remove nil (mapcar #'buffer-file-name (buffer-list))))
+           (files (cl-union (denote-directory-files) buffer-files)))
+      (cl-find-if
+       (lambda (file)
+         (let* ((file-title (denote-retrieve-filename-title file))
+                (file-signature (denote-retrieve-filename-signature file))
+                (file-keywords
+                 (let ((kw (denote-retrieve-filename-keywords file)))
+                   (when kw (split-string kw "_")))))
+           (and (string= file-title source-title)
+                (member "literature" file-keywords)
+                (if source-signature
+                    (string= file-signature source-signature)
+                  t)
+                (if (and source-keywords file-keywords)
+                    (seq-set-equal-p
+                     (seq-remove (lambda (elt) (member elt '("literature" "reference")))
+                                 source-keywords)
+                     (seq-remove (lambda (elt) (member elt '("literature" "reference")))
+                                 file-keywords))
+                  t))))
+       files)))
 
   (defun +org-remark-denote-file-name-function ()
     "Return a Denote-compatible file name for the current buffer.
@@ -7995,45 +7996,59 @@ continue, per `org-agenda-skip-function'."
 When the current buffer is visiting a file, the name of the
 marginal notes file will be \"DATE==SIGNATURE--TITLE__literature.org\"
 in your `denote-directory'."
+    ;; TODO: find a cleaner way to override the
+    ;; `org-remark-source-find-file-name-functions' that get added by the
+    ;; different `org-remark-*' minor modes instead of having a cond clause for
+    ;; source-filename
     (let* ((source-filename (cond ((eq major-mode 'nov-mode)
                                    (file-name-nondirectory nov-file-name))
                                   ((eq major-mode 'pdf-view-mode)
                                    (file-name-nondirectory buffer-file-name))
-                                  ;; TODO +org-remark-denote support for Info-mode
-                                  ;; ((eq major-mode 'Info-mode))
+                                  ((eq major-mode 'Info-mode)
+                                   (concat
+                                    "info-"
+                                    (denote-sluggify
+                                     'title
+                                     (file-name-nondirectory
+                                      Info-current-file))))
+                                  ((and (eq major-mode 'eww-mode)
+                                        (stringp (plist-get eww-data :url)))
+                                   (let* ((url (plist-get eww-data :url))
+                                          (is-url-denote (denote-file-has-denoted-filename-p url))
+                                          (filename (or (denote-retrieve-filename-title url)
+                                                        url)))
+                                     (+eww-denote-slug-hyphenate filename)))
                                   (t
                                    (org-remark-source-find-file-name))))
            (is-source-denote (if source-filename
                                  (denote-file-has-denoted-filename-p source-filename)
                                nil)))
-      (if (not is-source-denote)
-          "marginalia.org"
-        (let ((literature-note (+org-remark-denote--note source-filename)))
-          (cond (literature-note literature-note)
-                (t
-                 (denote-format-file-name
-                  (denote-directory)
-                  (denote--find-first-unused-id (denote-get-identifier (current-time)))
-                  (if-let* (is-source-denote
-                            (denote-keywords (denote-retrieve-filename-keywords source-filename)))
-                      (remove
-                       "reference"
-                       (append (split-string denote-keywords "_") '("literature")))
-                    '("literature"))
-                  (if-let* (is-source-denote
-                            (denote-title (denote-retrieve-filename-title source-filename)))
-                      denote-title
-                    (file-name-sans-extension (file-name-nondirectory source-filename)))
-                  (or denote-file-type ".org")
-                  (if-let* (is-source-denote
-                            (denote-signature (denote-retrieve-filename-signature source-filename)))
-                      denote-signature
-                    ""))))))))
+      (let ((literature-note (+org-remark-denote--note source-filename)))
+        (cond (literature-note literature-note)
+              (t
+               (denote-format-file-name
+                (denote-directory)
+                (denote--find-first-unused-id (denote-get-identifier (current-time)))
+                (if-let* (is-source-denote
+                          (denote-keywords (denote-retrieve-filename-keywords source-filename)))
+                    (remove
+                     "reference"
+                     (append (split-string denote-keywords "_") '("literature")))
+                  '("literature"))
+                (if-let* (is-source-denote
+                          (denote-title (denote-retrieve-filename-title source-filename)))
+                    denote-title
+                  (file-name-sans-extension (file-name-nondirectory source-filename)))
+                (or denote-file-type ".org")
+                (if-let* (is-source-denote
+                          (denote-signature (denote-retrieve-filename-signature source-filename)))
+                    denote-signature
+                  "")))))))
 
   (setopt org-remark-notes-file-name #'+org-remark-denote-file-name-function)
 
   (defun +org-remark-denote-prepend-front-matter ()
-    "Insert Denote front matter into emply org-remark marginalia files."
+    "Insert Denote front matter into empty org-remark marginalia files."
     (when-let ((file-name buffer-file-name))
       (when (and (denote-file-has-denoted-filename-p file-name)
                  (member "literature" (denote-extract-keywords-from-path file-name))
