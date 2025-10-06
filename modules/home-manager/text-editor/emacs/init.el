@@ -1161,8 +1161,10 @@ Add this to `dired-mode-hook'."
    ("C-c C-n" . +dired-subdirectory-next)
    ("C-c C-p" . +dired-subdirectory-previous)
    ("C-c C-l" . +dired-limit-regexp)
-   ("C-c C-s" . +dired-search-flat-list)
-   ("M-s g" . +dired-grep-marked-files) ; M-s M-g is `consult-grep'
+   ("M-s f" . +dired-search-flat-list) ; alt. `consult-find'
+   ("M-s M-f" . +dired-search-flat-list) ; alt. `consult-find'
+   ("M-s g" . +dired-grep-marked-files) ; alt. `consult-grep'
+   ("M-s M-g" . +dired-grep-marked-files) ; alt. `consult-grep'
    ))
 
 (use-package dired-aux
@@ -1639,7 +1641,7 @@ first one. Else do `vertico-exit'."
              ("<down>" . +vertico-minimal-next)
              ("<up>" . +vertico-minimal-previous)
              ("C-l" . vertico-multiform-vertical)
-             ("M-r" . vertico-multiform-buffer)
+             ("M-g" . vertico-multiform-buffer)
              ("RET" . +vertico-minimal-exit)
              ("<return>" . +vertico-minimal-exit)
              ("M-a" . vertico-previous-group)
@@ -1811,28 +1813,39 @@ The symbol at point is added to the future history."
   (bind-keys :map global-map
              ("M-y" . consult-yank-pop)
              :map +prefix-map
-             ("b" . consult-buffer)
-             :map +goto-prefix-map
-             ("M-g" . consult-goto-line)
-             ("g" . consult-goto-line)
-             :map +search-prefix-map
-             ("M-b" . consult-bookmark)
-             ("c" . count-matches)
-             ("M-f" . consult-fd)
-             ("f" . consult-focus-lines) ; C-u to unfocus
-             ("M-g" . +consult-ripgrep-dwim)
-             ("M-h" . consult-history)
-             ("M-i" . consult-imenu)
-             ("M-k" . consult-kmacro)
-             ("k" . consult-keep-lines)
-             ("M-l" . +consult-line-dwim)
-             ("M-m" . consult-mark)
-             ("M-r" . consult-register)
-             ("M-s" . consult-outline)
-             ("M-t" . +consult-tab)
-             ("M-," . +consult-xref-history)
+             ("b" . consult-buffer) ; orig. `switch-to-buffer'
+             :map ctl-x-4-map
+             ("b" . consult-buffer-other-window) ; orig. `switch-to-buffer-other-window'
+             :map ctl-x-5-map
+             ("b" . consult-buffer-other-frame) ; orig. `switch-to-buffer-other-frame'
+             :map +project-prefix-map
+             ("b" . consult-project-buffer) ; orig. `project-switch-to-buffer'
              :map +registers-prefix-map
-             ("b" . consult-bookmark)
+             ("b" . consult-bookmark) ; orig. `bookmark-jump'
+             :map +tab-prefix-map
+             ("b" . consult-buffer-other-tab) ; orig. `switch-to-buffer-other-tab'
+             :map +goto-prefix-map
+             ("b" . consult-bookmark) ("M-b" . consult-bookmark)
+             ("e" . consult-compile-error) ("M-e" . consult-compile-error)
+             ("f" . consult-flymake) ("M-f" . consult-flymake)
+             ("g" . consult-goto-line) ("M-g" . consult-goto-line) ; orig. `goto-line'
+             ("i" . consult-imenu) ("M-i" . consult-imenu)
+             ("I" . consult-imenu-multi)
+             ("k" . consult-kmacro) ("M-k" . consult-kmacro)
+             ("m" . consult-mark) ("M-m" . consult-mark)
+             ("M" . consult-global-mark)
+             ("o" . consult-outline) ("M-o" . consult-outline) ; alt. `consult-org-heading'
+             ("r" . consult-register) ("M-r" . consult-register)
+             ("t" . consult-tab) ("M-t" . +consult-tab)
+             ("," . +consult-xref-history) ("M-," . +consult-xref-history)
+             :map +search-prefix-map
+             ("e" . consult-isearch-history)
+             ("f" . consult-fd) ("M-f" . consult-fd)
+             ("g" . +consult-ripgrep-dwim) ("M-g" . +consult-ripgrep-dwim)
+             ("k" . consult-keep-lines) ("M-k" . consult-keep-lines)
+             ("l" . +consult-line-dwim) ("M-l" . +consult-line-dwim)
+             ("L" . consult-line-multi)
+             ("u" . consult-focus-lines) ("M-u" . consult-focus-lines) ; C-u to unfocus
              :map +toggle-prefix-map
              ("t" . consult-theme)
              :map consult-narrow-map
@@ -1842,8 +1855,14 @@ The symbol at point is added to the future history."
              :map help-map
              ("C-i" . consult-info)
              :map isearch-mode-map
-             ("M-s M-l" . consult-line) ; needed by consult-line to detect Isearch
-             ("M-s M-h" . consult-isearch-history)))
+             ("M-s l" . consult-line) ("M-s M-l" . consult-line) ; needed by consult-line to detect Isearch
+             ("M-s L" . consult-line-multi) ; needed by consult-line to detect Isearch
+             ("M-e" . consult-isearch-history) ; orig. `isearch-edit-string'
+             ("M-s e" . consult-isearch-history) ; orig. `isearch-edit-string'
+             :map minibuffer-local-map
+             ("M-s" . consult-history) ; orig. `next-matching-history-element'
+             ("M-r" . consult-history) ; orig. `previous-matching-history-element'
+             ))
 
 ;; (use-package consult-omni
 ;;   :config
@@ -1938,9 +1957,9 @@ The symbol at point is added to the future history."
              ("C-d" . consult-dir)
              :map minibuffer-local-completion-map
              ("C-x C-d" . consult-dir)
-             ("M-s M-f" . consult-dir-jump-file)
+             ("C-x C-j" . consult-dir-jump-file)
              :map vertico-map
-             ("M-s M-f" . consult-dir-jump-file)))
+             ("C-x C-j" . consult-dir-jump-file)))
 
 (use-package embark
   ;; The `embark' package by Omar Antolin Camarena provides a mechanism to
@@ -2237,7 +2256,7 @@ together."
       (consult-grep dir initial)))
 
   (bind-keys :map +project-prefix-map
-             ("b" . project-switch-to-buffer)
+             ;; ("b" . project-switch-to-buffer) ; alt. `consult-project-buffer'
              ("d" . project-dired)
              ("e" . project-eshell)
              ("f" . project-find-file)
@@ -3073,6 +3092,7 @@ end of the buffer.")
 
   (bind-keys
    :map +search-prefix-map
+   ("c" . count-matches)
    ("o" . occur)
    ("M-o" . multi-occur)
    ("." . isearch-forward-thing-at-point)
@@ -3090,6 +3110,7 @@ end of the buffer.")
    ("<C-return>" . +isearch-other-end)
    ("M-/" . isearch-complete)
    ("M-s o" . +isearch-occur)
+   ("M-s g" . +isearch-project-grep)
    ("M-s M-g" . +isearch-project-grep)
    :map minibuffer-local-isearch-map
    ("M-/" . isearch-complete-edit)
@@ -5426,7 +5447,7 @@ Interactively also sends a terminating newline."
    :map compilation-shell-minor-mode-map
    ("C-x C-q" . +compile-toggle-comint)
    :map minibuffer-local-shell-command-map
-   ("M-s M-h" . +compile-input-from-history)
+   ("M-r" . +compile-input-from-history)
    :map +goto-prefix-map
    ("n" . next-error)
    ("M-n" . next-error)
@@ -5919,7 +5940,6 @@ Add a bookmark handler for shell buffer and activate the
              :map +project-prefix-map
              ("z" . +project-shell)
              :map shell-mode-map
-             ("M-s M-h" . +consult-history-comint-send)
              ("M-r" . +consult-history-comint-send)
              ("C-c C-k" . comint-clear-buffer)
              ("C-c C-w" . comint-write-output)
@@ -7282,7 +7302,8 @@ When inside a table, re-align the table and move to the next field."
    ("C-c M-l" . org-insert-last-stored-link)
    ("C-c C-M-l" . org-toggle-link-display)
    ("M-." . org-edit-special) ; mnemonic is global M-. that goes to source (alias for C-c ')
-   ("M-s M-o" . consult-org-heading)
+   ("M-g o" . consult-org-heading) ; alt. `consult-outline'
+   ("M-g M-o" . consult-org-heading) ; alt. `consult-outline'
    :map org-src-mode-map
    ("M-," . org-edit-src-exit) ; see M-. above
    ))
@@ -8938,7 +8959,7 @@ instead of the current one."
    ("d" . +web-archive-url)
    ("F" . +eww-follow-link-on-page)
    ("g" . eww-reload)
-   ("M-s M-h" . +consult-history-eww)
+   ("C-c C-r" . +consult-history-eww)
    ("H" . +consult-history-eww) ; unmap `eww-list-histories'
    ("l" . eww-back-url)
    ("M" . +eww-jump-to-link-on-page)
