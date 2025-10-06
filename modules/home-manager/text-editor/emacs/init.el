@@ -1753,7 +1753,7 @@ first one. Else do `vertico-exit'."
                                (cdr (assq 'name tab)))
                              (tab-bar-tabs))))
          (list (consult--read tabs :prompt "Tabs: " :category 'tab))
-       (user-error "No tabs found.")))
+       (user-error "No tabs found")))
     (tab-bar-select-tab-by-name tab))
 
   ;; Add a `consult' command to visualize `xref' history, adaptation of
