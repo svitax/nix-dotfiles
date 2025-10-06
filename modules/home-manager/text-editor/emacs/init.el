@@ -1015,26 +1015,22 @@ Perform the search recursively from the current directory."
   (defun +dired-grep-marked-files (files regexp)
     "Run `find' with `grep' for REGEXP on marked FILES."
     (interactive
-     (if-let* ((marks (dired-get-marked-files 'no-dir))
-               (_ (> (length marks) 1)))
-         (list
-          marks
-          (+dired-grep-marked-files-prompt))
-       (user-error "Mark multiple files"))
-     dired-mode)
-    (let ((buffer-name (format "*+dired-grep-marked for `%s'*" regexp)))
-      (compilation-start
-       (concat
-        "find . -not " (shell-quote-argument "(")
-        " -wholename " (shell-quote-argument "*/.git*")
-        " -prune " (shell-quote-argument ")")
-        " -type f"
-        " -exec grep -nHER --color=auto " regexp " "
-        (shell-quote-argument "{}")
-        " " (shell-quote-argument ";") " ")
-       'grep-mode
-       (lambda (_mode) buffer-name)
-       t)))
+     (if-let* ((marks (dired-get-marked-files 'no-dir)))
+         (list marks (+dired-grep-marked-files-prompt))
+       (user-error "No files marked")))
+    (let* ((buffer-name (format "*+dired-grep-marked for `%s'*" regexp))
+           (quoted-files (mapconcat #'shell-quote-argument files " "))
+           (cmd (concat
+                 "find " quoted-files
+                 " -not " (shell-quote-argument "(")
+                 " -wholename " (shell-quote-argument "*/.git*")
+                 " -prune " (shell-quote-argument ")")
+                 " -type f"
+                 " -exec grep -nHER --color=auto "
+                 (shell-quote-argument regexp) " "
+                 (shell-quote-argument "{}") " "
+                 (shell-quote-argument ";"))))
+      (compilation-start cmd 'grep-mode (lambda (_mode) buffer-name) t)))
 
   ;; Jump to next and previous subdirectories headings.
   (defvar +dired--directory-header-regexp "^ +\\(.+\\):\n"
