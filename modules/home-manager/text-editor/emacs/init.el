@@ -3270,10 +3270,10 @@ end of the buffer.")
    ("<next>" . +golden-ratio-scroll-screen-down)
    ("<prior>" . +golden-ratio-scroll-screen-up))
 
-  (setq-default scroll-preserve-screen-position t
-                scroll-conservatively 1
-                scroll-margin 0
-                next-screen-context-lines 0)
+  (setq scroll-preserve-screen-position t
+        scroll-conservatively 1
+        scroll-margin 0
+        next-screen-context-lines 0)
 
   (defcustom +golden-ratio-scroll-recenter nil
     "Recenter or not after scroll"
