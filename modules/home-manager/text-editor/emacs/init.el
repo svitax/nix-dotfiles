@@ -2095,16 +2095,10 @@ minibuffer, which means it can be used as an Embark action."
           corfu-min-width 20
           corfu-popupinfo-delay '(0.25 . 0.25))
 
-  ;; TODO I'm not sure if corfu-history-mode is actually working
   ;; Sort by input history
-  ;; (with-eval-after-load 'savehist
-  ;;   (corfu-history-mode 1)
-  ;;   (add-to-list 'savehist-additional-variables 'corfu-history))
-  ;; Ensure `savehist-mode' is on and add `corfu-history' to the saved variables
-  (unless (bound-and-true-p savehist-mode)
-    (savehist-mode 1)
-    (corfu-history-mode 1))
-  (add-to-list 'savehist-additional-variables 'corfu-history)
+  (with-eval-after-load 'savehist
+    (cl-pushnew 'corfu-history savehist-additional-variables))
+  (corfu-history-mode 1)
 
   (defun +corfu-quit-and-newline ()
     "Quit Corfu completion and insert newline or submit input."
