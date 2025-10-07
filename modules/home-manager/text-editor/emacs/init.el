@@ -2343,8 +2343,8 @@ Limit list of buffers to those matching the current
              :map +prefix-map
              ("k" . +kill-this-buffer)
              ("C-b" . ibuffer)
-             ("C-n" . next-buffer)
-             ("C-p" . previous-buffer)
+             ("<right>" . next-buffer)
+             ("<left>" . next-buffer)
              ;; :map +buffer-prefix-map
              ;; ("c" . clone-indirect-buffer-other-window)
              ;; ("g" . revert-buffer-quick)
