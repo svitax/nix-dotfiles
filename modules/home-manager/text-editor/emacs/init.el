@@ -3270,9 +3270,9 @@ end of the buffer.")
   (add-hook 'logos-page-motion-hook #'+logos--recenter-top)
 
   (bind-keys
-   :map global-map
-   ("M-e" . logos-forward-page-dwim)
-   ("M-a" . logos-backward-page-dwim)
+   :map +prefix-map
+   ("]" . logos-forward-page-dwim)
+   ("[" . logos-backward-page-dwim)
    :map +narrow-prefix-map
    ("p" . logos-narrow-dwim)))
 
