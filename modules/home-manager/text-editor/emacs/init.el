@@ -261,16 +261,16 @@ Like `+common-completion-table' but also disable sorting."
              ;; ("i" . +org-capture-inbox) ; insert-file ("C-i" . indent-rigidly)
              ;; ("j" . ) ; ("C-j" . dired-jump)
              ;; ("k" . +kill-this-buffer) ("C-k" . kmacro-keymap)
-             ("l" . +bib-prefix-map) ; "lib" mnemonic ; ("C-l" . ) ; downcase-region
+             ;; ("l" . ) ; count-lines-page  ; ("C-l" . ) ; downcase-region
              ("m" . +mail-prefix-map) ; ("C-m" . ) ; mule-keymap
-             ("n" . +notes-prefix-map) ; ("C-n" . next-buffer) ; set-goal-column
-             ("p" . +project-prefix-map) ; ("C-p" . previous-buffer) ; mark-page
+             ("n" . +narrow-prefix-map) ; ("C-n" . +narrow-or-widen-dwim) ; set-goal-column
              ;; ("o" . other-window) ("C-o" . guix) ; delete-blank-lines ; "os" mnemonic
+             ("p" . +project-prefix-map) ; ("C-p" . ) ; mark-page
              ("q" . kbd-macro-query) ("C-q" . read-only-mode)
              ("r" . +registers-prefix-map) ("C-r" . find-file-read-only)
              ("s" . save-some-buffers) ("C-s" . save-buffer)
              ("t" . +tab-prefix-map) ("C-t" . transpose-lines)
-             ;; ("u" . ) ; undo ("C-u" . vundo) ; upcase-region ; "undo" mnemonic?
+             ("u" . undo) ; vundo? ("C-u" . ) ; upcase-region ; "undo" mnemonic?
              ;; ("v" . magit-status) ; vc-prefix-map ("C-v" . find-alternate-file)
              ("w" . +window-prefix-map) ("C-w" . write-file)
              ("x" . +toggle-prefix-map) ("C-x" . exchange-point-and-mark)
@@ -363,7 +363,7 @@ Like `+common-completion-table' but also disable sorting."
        `(keycast-command ((,c :inherit mode-line :foreground ,fg-mode-line-active :background ,bg-mode-line-active))))))
   (add-hook 'enable-theme-functions #'+modus-themes-customize-faces)
 
-  (modus-themes-select 'modus-vivendi))
+  (modus-themes-select 'modus-operandi))
 
 (use-package ef-themes :disabled t)
 
@@ -3376,27 +3376,28 @@ narrowed."
 
   (put 'narrow-to-page 'disabled nil)
 
-  (bind-keys
-   :map global-map
-   ("C-c n" . +narrow-prefix-map)
-   :map +narrow-prefix-map
-   ("d" . narrow-to-defun)
-   ;; ("g" . goto-line-relative) ; if narrowed, make "M-g g" do goto-line-relative instead
-   ("r" . narrow-to-region)
-   ("l" . +narrow-to-sexp) ; alias for Org mode
-   ("n" . +narrow-or-widen-dwim)
-   ("p" . narrow-to-page)
-   ("s" . +narrow-to-sexp)
-   ("w" . widen))
+  (bind-keys :map +prefix-map
+             ("n" . +narrow-prefix-map)
+             ("C-n" . +narrow-or-widen-dwim)
+             :map +narrow-prefix-map
+             ("d" . narrow-to-defun)
+             ;; ("g" . goto-line-relative) ; if narrowed, make "M-g g" do goto-line-relative instead
+             ("r" . narrow-to-region)
+             ("l" . +narrow-to-sexp) ; alias for Org mode
+             ("n" . +narrow-or-widen-dwim)
+             ("p" . narrow-to-page)
+             ("s" . +narrow-to-sexp)
+             ("w" . widen))
 
   (with-eval-after-load 'org
-    (bind-keys :map org-mode-map
-               ("C-c n" . +narrow-prefix-map)
-               ("C-c C-n" . +narrow-or-widen-dwim)
-               :map +narrow-prefix-map
-               ("b" . org-narrow-to-block)
-               ("e" . org-narrow-to-element)
-               ("s" . org-narrow-to-subtree))))
+    (bind-keys
+     ;; :map org-mode-map
+     ;; ("C-c n" . +narrow-prefix-map)
+     ;; ("C-c C-n" . +narrow-or-widen-dwim)
+     :map +narrow-prefix-map
+     ("b" . org-narrow-to-block)
+     ("e" . org-narrow-to-element)
+     ("s" . org-narrow-to-subtree))))
 
 (use-package goto-chg
   ;; The `goto-chg' package, authored by David Andersson and maintained by
@@ -7811,33 +7812,34 @@ continue, per `org-agenda-skip-function'."
   ;; buffer of a Denote file upon visiting the file.
   (denote-rename-buffer-mode 1)
 
-  (bind-keys
-   :map +notes-prefix-map
-   ("n" . denote)
-   ("N" . denote-type)
-   ("o" . denote-sort-dired) ; "order" mnemonic
-   ;; Note that `denote-rename-file' can work from any context, not just Dired
-   ;; buffers. That is why we bind it globally.
-   ("r" . denote-rename-file)
-   :map text-mode-map
-   ("C-x n b" . denote-backlinks)
-   ("C-x n i" . denote-link) ; "insert" mnemonic
-   ("C-x n I" . denote-add-links)
-   ("C-x n r" . denote-rename-file)
-   ("C-x n R" . denote-rename-file-using-front-matter)
-   :map org-mode-map
-   ("C-x n d b" . denote-org-extras-dblock-insert-backlinks)
-   ("C-x n d l" . denote-org-extras-dblock-insert-links)
-   ("C-x n b" . denote-backlinks)
-   ("C-x n i" . denote-link) ; "insert" mnemonic
-   ("C-x n I" . denote-add-links)
-   ("C-x n r" . denote-rename-file)
-   ("C-x n R" . denote-rename-file-using-front-matter)
-   :map dired-mode-map
-   ("C-x n i" . denote-dired-link-marked-notes)
-   ("C-x n r" . denote-dired-rename-marked-files)
-   ("C-x n R" . denote-dired-rename-marked-files-using-front-matter)
-   ("C-x n t" . denote-dired-rename-marked-files-with-keywords)))
+  (bind-keys :map global-map
+             ("C-c n" . +notes-prefix-map)
+             :map +notes-prefix-map
+             ("n" . denote)
+             ("N" . denote-type)
+             ("o" . denote-sort-dired) ; "order" mnemonic
+             ;; Note that `denote-rename-file' can work from any context, not
+             ;; just Dired buffers. That is why we bind it globally.
+             ("r" . denote-rename-file)
+             :map text-mode-map
+             ("C-c n b" . denote-backlinks)
+             ("C-c n i" . denote-link) ; "insert" mnemonic
+             ("C-c n I" . denote-add-links)
+             ("C-c n r" . denote-rename-file)
+             ("C-c n R" . denote-rename-file-using-front-matter)
+             :map org-mode-map
+             ("C-c n d b" . denote-org-extras-dblock-insert-backlinks)
+             ("C-c n d l" . denote-org-extras-dblock-insert-links)
+             ("C-c n b" . denote-backlinks)
+             ("C-c n i" . denote-link) ; "insert" mnemonic
+             ("C-c n I" . denote-add-links)
+             ("C-c n r" . denote-rename-file)
+             ("C-c n R" . denote-rename-file-using-front-matter)
+             :map dired-mode-map
+             ("C-c n i" . denote-dired-link-marked-notes)
+             ("C-c n r" . denote-dired-rename-marked-files)
+             ("C-c n R" . denote-dired-rename-marked-files-using-front-matter)
+             ("C-c n t" . denote-dired-rename-marked-files-with-keywords)))
 
 ;; With `denote-org', users have Org-specific extensions such as dynamic blocks,
 ;; links to headings, and splitting an Org subtree into its own standalone file.
@@ -7896,13 +7898,12 @@ continue, per `org-agenda-skip-function'."
     (let ((default-directory denote-directory))
       (call-interactively #'find-file)))
 
-  (bind-keys
-   :map +notes-prefix-map
-   ("f" . +denote-find-file)
-   ("g" . consult-denote-grep)
-   :map +search-prefix-map
-   ("M-n" . consult-denote-find)
-   ("n" . consult-denote-grep)))
+  (bind-keys :map +notes-prefix-map
+             ("f" . +denote-find-file)
+             ("g" . consult-denote-grep)
+             :map +search-prefix-map
+             ("M-n" . +denote-find-file)
+             ("n" . consult-denote-grep)))
 
 (use-package org-remark
   ;; Simply saving, excerpting, or copying materials is not enough; information
@@ -8401,7 +8402,9 @@ BibTeX file."
           citar-library-paths (list (concat (denote-directory) "reference/"))
           citar-notes-paths (list (denote-directory)))
 
-  (bind-keys :map +bib-prefix-map
+  (bind-keys :map global-map
+             ("C-c l" . +bib-prefix-map) ; "lib" mnemonic
+             :map +bib-prefix-map
              ("f" . citar-open) ; "find" mnemonic
              :map org-mode-map
              ("C-c i" . org-cite-insert)))
