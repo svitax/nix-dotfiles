@@ -554,6 +554,8 @@ Like `+common-completion-table' but also disable sorting."
   (advice-add 'avy-goto-char-timer :filter-return #'store-action-key+cmd)
   (advice-add 'avy-handler-default :before #'keycast-capture-avy-dispatch)
 
+  (druid-modeline-keycast-mode +1)
+
   (bind-keys :map +toggle-prefix-map
              ("k" . druid-modeline-keycast-mode)))
 
