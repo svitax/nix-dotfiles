@@ -264,8 +264,8 @@ Like `+common-completion-table' but also disable sorting."
              ("l" . +bib-prefix-map) ; "lib" mnemonic ; ("C-l" . ) ; downcase-region
              ("m" . +mail-prefix-map) ; ("C-m" . ) ; mule-keymap
              ("n" . +notes-prefix-map) ; ("C-n" . next-buffer) ; set-goal-column
-             ;; ("o" . ) ; other-window ("C-o" . guix) ; delete-blank-lines ; "os" mnemonic
              ("p" . +project-prefix-map) ; ("C-p" . previous-buffer) ; mark-page
+             ;; ("o" . other-window) ("C-o" . guix) ; delete-blank-lines ; "os" mnemonic
              ("q" . kbd-macro-query) ("C-q" . read-only-mode)
              ("r" . +registers-prefix-map) ("C-r" . find-file-read-only)
              ("s" . save-some-buffers) ("C-s" . save-buffer)
