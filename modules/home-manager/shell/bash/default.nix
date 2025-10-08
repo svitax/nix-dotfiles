@@ -36,12 +36,6 @@ in
             alias less="cat"
             TERM=dumb-emacs-ansi
             COLORTERM=1
-            # I always enable 'server-mode' from inside Emacs, so this
-            # connects to an existing frame. It creates a new frame if the
-            # current one is too small. It starts a new Emacs instance if
-            # there is no server running.
-            EDITOR="emacsclient -a emacs -t -r"
-            VISUAL="emacsclient -a emacs -t -r"
         else
             # Quit once you try to scroll past the end of the file.
             export PAGER="less --quit-at-eof"
