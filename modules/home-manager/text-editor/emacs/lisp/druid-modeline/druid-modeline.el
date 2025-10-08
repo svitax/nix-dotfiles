@@ -251,6 +251,8 @@ made DEFAULT."
       (setq-default header-line-format (druid-modeline--make left right))
     (setq-local header-line-format (druid-modeline--make left right)))
   ;; (face-remap-set-base 'header-line 'druid-modeline--empty-face)
+  (add-hook 'window-selection-change-functions
+            (lambda (_win) (druid-modeline--update-selected-window)))
   (add-hook 'post-command-hook #'druid-modeline--update-selected-window))
 
 (defun druid-modeline-footer (left &optional right default)
@@ -263,6 +265,8 @@ made DEFAULT."
       (setq-default mode-line-format (druid-modeline--make left right 'footer))
     (setq-local mode-line-format (druid-modeline--make left right 'footer)))
   ;; (face-remap-set-base 'mode-line 'druid-modeline--empty-face)
+  (add-hook 'window-selection-change-functions
+            (lambda (_win) (druid-modeline--update-selected-window)))
   (add-hook 'post-command-hook #'druid-modeline--update-selected-window))
 
 ;;;; Segments
