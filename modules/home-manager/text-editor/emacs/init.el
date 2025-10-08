@@ -8030,7 +8030,8 @@ in your `denote-directory'."
                                  (denote-file-has-denoted-filename-p source-filename)
                                nil)))
       (let ((literature-note (+org-remark-denote--note source-filename)))
-        (cond (literature-note literature-note)
+        (cond ((not source-filename) "marginalia.org")
+              (literature-note literature-note)
               (t
                (denote-format-file-name
                 (denote-directory)
