@@ -2411,6 +2411,7 @@ Limit list of buffers to those matching the current
    ("s-y" . windmove-left)
    ("s-Y" . windmove-swap-states-left)
    :map +prefix-map
+   ("o" . other-window)
    ("0" . delete-window) ; `s-k' or `s-0'
    ("1" . delete-other-windows) ; `s-K' or `s-1'
    ("!" . delete-other-windows-vertically) ; `s-!'
