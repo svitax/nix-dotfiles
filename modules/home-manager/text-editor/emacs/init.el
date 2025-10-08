@@ -7296,6 +7296,7 @@ When inside a table, re-align the table and move to the next field."
    ("C-," . nil)
    ("C-<return>" . nil)
    ("C-M-<return>" . nil)
+   ("C-j" . nil)
    ("C-c l" . org-store-link)
    ("C-c M-l" . org-insert-last-stored-link)
    ("C-c C-M-l" . org-toggle-link-display)
