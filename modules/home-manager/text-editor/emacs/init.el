@@ -328,6 +328,7 @@ Like `+common-completion-table' but also disable sorting."
   (setopt modus-operandi-palette-overrides
           `(;; (bg-mode-line-active bg-blue-intense)
             ;; (fg-mode-line-active fg-main)
+            (cursor yellow-warmer)
             (bg-region bg-sage)))
 
   (setopt modus-vivendi-palette-overrides
