@@ -58,6 +58,21 @@
 
   # window-manager.sway.enable = true;
 
+  # TODO: extract maestral module
+  systemd.user.services.maestral = {
+    Unit = {
+      Description = "Maestral daemon";
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.maestral}/bin/maestral start --foreground";
+      ExecStop = "${pkgs.maestral}/bin/maestral stop";
+      Restart = "on-failure";
+    };
+  };
+
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
   home.username = "evermind";
@@ -80,6 +95,8 @@
     # pkgs.hello
     # TODO extract home.packages into modules
     runelite
+    maestral
+    maestral-gui
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the
