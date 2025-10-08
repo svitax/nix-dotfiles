@@ -3761,6 +3761,11 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
 
   (bind-keys
    :map global-map
+   ("M-c" . capitalize-dwim)
+   ("M-l" . downcase-dwim)
+   ("M-u" . upcase-dwim)
+   ("M-=" . count-words)
+
    ("C-w" . +kill-region)
    ("M-w" . +kill-ring-save)
    ("M-k" . +kill-line-backward)
