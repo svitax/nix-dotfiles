@@ -6595,8 +6595,7 @@ delimited by `python-nav-beginning-of-statement' and
 
   (bind-keys
    :map sh-mode-map
-   ("C-c C-c" . executable-interpret)
-   ("C-h C-." . man)))
+   ("C-c C-c" . executable-interpret)))
 
 ;; (use-package conf-mode)
 
