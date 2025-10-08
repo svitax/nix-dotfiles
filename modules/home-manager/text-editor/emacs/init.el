@@ -7757,10 +7757,7 @@ continue, per `org-agenda-skip-function'."
 ;;           org-modern-internal-target nil
 ;;           org-modern-radio-target nil)
 ;;   (add-hook 'org-mode-hook #'org-modern-mode)
-;;   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
-
-
-;;   )
+;;   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda))
 
 ;;;;;;;;;;;;;;;
 ;;;; notes ;;;;
