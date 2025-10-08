@@ -317,6 +317,8 @@ Like `+common-completion-table' but also disable sorting."
           `(;; Hide the border around the active and inactive mode lines.
             (border-mode-line-active unspecified)
             (border-mode-line-inactive unspecified)
+            ;; Leave foreground color intact when region is highlighted.
+            (fg-region unspecified)
             ;; With `modus-themes-preset-overrides-faint' the grays are toned
             ;; down, gray backgrounds are removed from some contexts, and almost
             ;; all accent colors are desaturated. It makes the themes less
