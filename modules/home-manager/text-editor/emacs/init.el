@@ -8392,13 +8392,10 @@ BibTeX file."
           citar-library-paths (list (concat (denote-directory) "reference/"))
           citar-notes-paths (list (denote-directory)))
 
-  (bind-keys
-   :map +search-prefix-map
-   ("l" . citar-open)
-   :map +bib-prefix-map
-   ("f" . citar-open) ; "find" mnemonic
-   :map org-mode-map
-   ("C-c i" . org-cite-insert)))
+  (bind-keys :map +bib-prefix-map
+             ("f" . citar-open) ; "find" mnemonic
+             :map org-mode-map
+             ("C-c i" . org-cite-insert)))
 
 (use-package citar-denote
   :config
