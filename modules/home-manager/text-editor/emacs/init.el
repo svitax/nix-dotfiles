@@ -6806,6 +6806,8 @@ written in lower case and ignore casing while spell-checking."
 
   (bind-keys
    :map pdf-view-mode-map
+   ("C-w" . pdf-view-kill-ring-save)
+   ("M-w" . pdf-view-kill-ring-save)
    ("i" . consult-imenu)
    ("d" . pdf-view-themed-minor-mode)))
 
