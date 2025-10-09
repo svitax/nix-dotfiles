@@ -261,7 +261,7 @@ Like `+common-completion-table' but also disable sorting."
              ;; ("i" . +org-capture-inbox) ; insert-file ("C-i" . indent-rigidly)
              ;; ("j" . ) ; ("C-j" . dired-jump)
              ;; ("k" . +kill-this-buffer) ("C-k" . kmacro-keymap)
-             ;; ("l" . ) ; count-lines-page  ; ("C-l" . ) ; downcase-region
+             ("l" . +bib-prefix-map) ; count-lines-page ; ("C-l" . ) ; downcase-region ; "lib" mnemonic
              ("m" . +mail-prefix-map) ; ("C-m" . ) ; mule-keymap
              ("n" . +narrow-prefix-map) ; ("C-n" . +narrow-or-widen-dwim) ; set-goal-column
              ;; ("o" . other-window) ("C-o" . guix) ; delete-blank-lines ; "os" mnemonic
@@ -8402,9 +8402,7 @@ BibTeX file."
           citar-library-paths (list (concat (denote-directory) "reference/"))
           citar-notes-paths (list (denote-directory)))
 
-  (bind-keys :map global-map
-             ("C-c l" . +bib-prefix-map) ; "lib" mnemonic
-             :map +bib-prefix-map
+  (bind-keys :map +bib-prefix-map
              ("f" . citar-open) ; "find" mnemonic
              :map org-mode-map
              ("C-c i" . org-cite-insert)))
