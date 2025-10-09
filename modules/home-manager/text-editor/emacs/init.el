@@ -3805,8 +3805,8 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
 
    ;; Kills up to a char similar to Vim's dt command.
    ("C-z" . zap-up-to-char) ; Complements `M-z' for zap-to-char
-   ("C-Z" . +zap-up-to-char-backward)
-   ("M-Z" . +zap-to-char-backward)
+   ("C-S-z" . +zap-up-to-char-backward)
+   ("M-S-z" . +zap-to-char-backward)
 
    ;; Escape urls and insert dates
    ("C-<" . +escape-url-dwim)
