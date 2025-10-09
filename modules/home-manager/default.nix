@@ -21,6 +21,7 @@ rec {
     # pandoc = ./command-line/pandoc;
     # poppler = ./command-line/poppler;
     ripgrep = ./command-line/ripgrep;
+    timewarrior = ./command-line/timewarrior;
     yt-dlp = ./command-line/yt-dlp;
     zoxide = ./command-line/zoxide;
   };
@@ -127,6 +128,7 @@ rec {
       # command-line.pandoc
       # command-line.poppler
       command-line.ripgrep
+      command-line.timewarrior
       command-line.yt-dlp
       command-line.zoxide
 

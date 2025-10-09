@@ -24,6 +24,7 @@
     # pandoc.enable = true;
     # poppler.enable = true;
     ripgrep.enable = true;
+    timewarrior.enable = true;
     yt-dlp.enable = true;
     zoxide.enable = true;
   };
