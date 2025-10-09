@@ -7278,6 +7278,19 @@ When inside a table, re-align the table and move to the next field."
             ("Misc")
             ("?" . org-speed-command-help)))
 
+  ;; By default, `org-cycle' moves through three visibility states when toggling
+  ;; a headline: folded -> children -> subtree -> folded. Personally, I rarely
+  ;; want to expand an entire subtree. My preference is to only toggle between a
+  ;; folded headline and its immediate children. If I ever want to see deeper
+  ;; levels, I'll expand those manually. The hook below makes it so org-cycle
+  ;; skips the subtree step entirely, preventing that brief but distracting
+  ;; "flash" of the full subtree before folding again.
+  (defun +org-cycle-skip-subtree (state)
+    "Skip subtree after a visibility state change."
+    (when (eq state 'children)
+      (setq org-cycle-subtree-status 'subtree)))
+  (add-hook 'org-cycle-hook #'+org-cycle-skip-subtree)
+
   ;; Open Org links in current window. Default is `'find-file-other-window'
   ;;
   ;; HACK: Can I replace this hack with some `display-buffer-alist'
