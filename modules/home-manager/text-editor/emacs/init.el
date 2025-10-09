@@ -8451,6 +8451,11 @@ BibTeX file."
    ("T" . citar-denote-remove-citekey)))
 
 ;;;;;;;;;;;;;;;
+;;;; timer ;;;;
+
+(use-package tmr)
+
+;;;;;;;;;;;;;;;
 ;;;; email ;;;;
 
 ;; TODO consult-notmuch <https://codeberg.org/jao/consult-notmuch>

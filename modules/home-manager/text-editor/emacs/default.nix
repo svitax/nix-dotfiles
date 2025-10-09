@@ -175,6 +175,7 @@ in
               pdf-tools
               saveplace-pdf-view
               nov
+              tmr
               # empv
               mpv
               shr-tag-pre-highlight
