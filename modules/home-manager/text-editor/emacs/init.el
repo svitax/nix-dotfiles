@@ -8070,18 +8070,29 @@ in your `denote-directory'."
     "Insert Denote front matter into empty org-remark marginalia files."
     (when-let ((file-name buffer-file-name))
       (when (and (denote-file-has-denoted-filename-p file-name)
-                 (member "literature" (denote-extract-keywords-from-path file-name))
+                 (member "literature"
+                         (denote-extract-keywords-from-path file-name))
                  (= (point-min) (point-max)))
         (with-current-buffer (current-buffer)
-          (denote-rename-file file-name
-                              (denote-retrieve-filename-title file-name)
-                              (denote-extract-keywords-from-path file-name)
-                              (denote-retrieve-filename-signature file-name)
-                              (denote-retrieve-filename-identifier file-name))
-          (when (buffer-modified-p)
-            (save-buffer))))))
+          (denote-rename-file
+           file-name
+           (denote-retrieve-filename-title file-name)
+           (denote-extract-keywords-from-path file-name)
+           (denote-retrieve-filename-signature file-name)
+           (denote-retrieve-filename-identifier file-name))
+          (save-excursion
+            (goto-char (point-max))
+            (while (and (not (bobp))
+                        (looking-back "\n" 1))
+              (delete-char -1)))
+          (insert
+           (format
+            "\n#+reference: %s\n\n"
+            (replace-regexp-in-string
+             "=" "_"
+             (denote-retrieve-filename-signature file-name))))))))
 
-  (add-hook 'org-remark-open-hook #'+org-remark-denote-prepend-front-matter)
+  (add-hook 'find-file-hook #'+org-remark-denote-prepend-front-matter)
 
   (bind-keys
    :map org-remark-mode-map
