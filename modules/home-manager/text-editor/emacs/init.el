@@ -8104,8 +8104,6 @@ in your `denote-directory'."
              "=" "_"
              (denote-retrieve-filename-signature file-name))))))))
 
-  (add-hook 'find-file-hook #'+org-remark-denote-prepend-front-matter)
-
   (bind-keys
    :map org-remark-mode-map
    ("M-n" . org-remark-view-next)
