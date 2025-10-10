@@ -2570,7 +2570,7 @@ Limit list of buffers to those matching the current
   ;; Respects display actions when switching buffers
   (switch-to-buffer-obey-display-actions t)
 
-  ;; Ensure Org src buffers are opend using display-buffer
+  ;; Ensure Org src buffers are opened using display-buffer
   (org-src-window-setup 'plain)
 
   (transient-display-buffer-action
