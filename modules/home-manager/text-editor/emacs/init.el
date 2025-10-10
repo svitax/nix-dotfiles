@@ -6806,15 +6806,27 @@ written in lower case and ignore casing while spell-checking."
 
   (bind-keys
    :map pdf-view-mode-map
+   ("a" . pdf-annot-add-text-annotation)
+   ("d" . pdf-annot-delete)
+   ("D" . pdf-view-themed-minor-mode)
+   ("M-g g" . pdf-view-goto-page)
+   ("M-g M-g" . pdf-view-goto-page)
+   ("h" . pdf-annot-add-highlight-markup-annotation)
+   ("i" . consult-imenu)
+   ("s" . pdf-annot-add-strikeout-markup-annotation)
+   ("u" . pdf-annot-add-underline-markup-annotation)
    ("C-w" . pdf-view-kill-ring-save)
    ("M-w" . pdf-view-kill-ring-save)
-   ("i" . consult-imenu)
-   ("d" . pdf-view-themed-minor-mode)))
+   ("~" . pdf-annot-add-squiggly-markup-annotation)))
 
 ;; This package extends the built-in `save-place-mode' by adding support for PDF
 ;; buffers under PDFView or DocView mode. Revisiting PDF files will restore the
 ;; saved place (i.e. the current page and zoom.)
 (use-package saveplace-pdf-view)
+
+;; TODO document pdf-meta-edit
+;; <https://github.com/krisbalintona/pdf-meta-edit>
+;; (use-package pdf-meta-edit)
 
 ;; NOTE document nov
 (use-package nov
