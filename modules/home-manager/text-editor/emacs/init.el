@@ -6799,6 +6799,15 @@ written in lower case and ignore casing while spell-checking."
   ;; buffers with major-mode as `pdf-view-mode' automatically switches to dark
   ;; mode when `modus-themes-toggle' is called.
 
+  ;; TODO: pdf-avy-highlight needs pdf-util-convert-program
+  ;; I can use `avy' to create highlights in `pdf-view-mode' buffers. The
+  ;; workflow is straightforward: call `+pdf-avy-highlight', type an initial
+  ;; pattern to select where the highlight should start, then type the label to
+  ;; confirm. Repeat the process to mark the end of the highlighted region. This
+  ;; approach works fine, but using the mouse can sometimes be the simpler
+  ;; choice.
+  ;; <https://github.com/dalanicolai/dala-emacs-lisp/blob/master/pdf-avy-highlight.el>
+
   (setopt pdf-view-display-size 'fit-height
           pdf-view-use-dedicated-register nil
           pdf-outline-imenu-use-flat-menus t
