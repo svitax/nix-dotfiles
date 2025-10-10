@@ -8080,6 +8080,7 @@ in your `denote-directory'."
 
   (defun +org-remark-denote-prepend-front-matter ()
     "Insert Denote front matter into empty org-remark marginalia files."
+    (interactive)
     (when-let ((file-name buffer-file-name))
       (when (and (denote-file-has-denoted-filename-p file-name)
                  (member "literature"
