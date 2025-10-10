@@ -8031,9 +8031,9 @@ in your `denote-directory'."
     ;; different `org-remark-*' minor modes instead of having a cond clause for
     ;; source-filename
     (let* ((source-filename (cond ((eq major-mode 'nov-mode)
-                                   (file-name-nondirectory nov-file-name))
+                                   nov-file-name)
                                   ((eq major-mode 'pdf-view-mode)
-                                   (file-name-nondirectory buffer-file-name))
+                                   buffer-file-name)
                                   ((eq major-mode 'Info-mode)
                                    (concat
                                     "info-"
