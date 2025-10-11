@@ -2397,6 +2397,13 @@ Limit list of buffers to those matching the current
                  for window in windows
                  do (set-window-buffer window buffer)))))
 
+  ;; Make `other-window' split the frame when there's only one window, giving
+  ;; the command a use when it has none.
+  (advice-add 'other-window :before
+              (defun +other-window-split-if-single (&rest _)
+                "Split the frame if there is a single window."
+                (when (one-window-p) (split-window-sensibly))))
+
   (bind-keys
    :map global-map
    ("M-o" . other-window)
