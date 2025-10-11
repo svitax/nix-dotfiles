@@ -5705,7 +5705,9 @@ If PROMPT is nil, don't prompt for a directory and use
                     default-directory
                   (read-directory-name "Directory: " default-directory)))
            (default-directory dir)
-           (shell (shell (format "*shell in %s*" default-directory))))
+           (shell (get-buffer-create (format "*shell in %s*" default-directory))))
+      (switch-to-buffer-other-window shell)
+      (shell shell)
       (setq +shell--last-buffer origin)
       (with-current-buffer shell
         (add-hook 'comint-output-filter-functions
