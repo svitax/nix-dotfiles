@@ -388,7 +388,7 @@ Like `+common-completion-table' but also disable sorting."
                              (t
                               :default-family "Aporetic Sans Mono"
                               ;; font height is 1/10pt.
-                              :default-height 150
+                              :default-height 140
                               :fixed-pitch-family "Aporetic Sans Mono"
                               :variable-pitch-family "Aporetic Sans")))
   ;; Themes re-apply face definitions when they are loaded. This is necessary to
