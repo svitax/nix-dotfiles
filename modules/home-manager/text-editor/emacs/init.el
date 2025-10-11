@@ -2508,6 +2508,14 @@ Limit list of buffers to those matching the current
   ;;  `display-buffer-no-window': Do not display the buffer at all and return
   ;;     nil immediately.
 
+  (defun +display-buffer-use-some-other-window (buffer alist)
+    "Display BUFFER in some other existing window.
+
+Like `display-buffer-use-some-window', but never reuse the selected
+window if it's the only one."
+    (when (cdr (window-list))
+      (display-buffer-use-some-window buffer alist)))
+
   ;; Here are some commonly used `OTHER-PARAMETERS' (non-exhaustive):
   ;;
   ;;  `inhibit-same-window': A non-nil value prevents the same
@@ -2546,11 +2554,14 @@ Limit list of buffers to those matching the current
   ;;  `allow-no-window': A non-nil value means that `display-buffer'
   ;;     may not display the buffer and return nil immediately.
 
-  (setopt display-buffer-base-action
-          '((display-buffer-reuse-window
-             display-buffer-same-window
-             display-buffer-in-previous-window
-             display-buffer-use-some-window)))
+  (setq display-buffer-base-action
+        '((display-buffer-reuse-mode-window
+           display-buffer-reuse-window
+           display-buffer-in-previous-window
+           +display-buffer-use-some-other-window
+           display-buffer-pop-up-window)
+          (some-window . mru)
+          (reusable-frames . nil)))
 
   (add-to-list 'display-buffer-alist
                '("^\\*Org Links\\*$"
