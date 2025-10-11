@@ -2399,6 +2399,7 @@ Limit list of buffers to those matching the current
 
   (bind-keys
    :map global-map
+   ("M-o" . other-window)
    ;; TODO put all s-* keybinds into sxhkd
    ("s-a" . windmove-up)
    ("s-A" . windmove-swap-states-up)
@@ -3797,9 +3798,6 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    ;; Open new lines similar to Vim's o command.
    ("C-o" . +open-line-below)
 
-   ;; Easier key for `delete-blank-lines'.
-   ("M-o" . delete-blank-lines)
-
    ;; Join the current line with the line below it similar to Vim's J command.
    ("C-^" . +delete-indentation-below) ; Complements `M-^' for delete-indentation
 
@@ -3820,7 +3818,8 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
 
    :map +prefix-map
    ("C-c" . +kill-terminal-or-restart)
-   ("h" . mark-whole-buffer)))
+   ("h" . mark-whole-buffer)
+   ("C-o" . delete-blank-lines)))
 
 ;; TODO document mark-command
 (use-package mark-command
