@@ -577,7 +577,10 @@ Like `+common-completion-table' but also disable sorting."
                   special-mode-hook
                   Custom-mode-hook
                   epa-info-mode-hook))
-    (add-hook mode #'visual-line-mode)))
+    (add-hook mode #'visual-line-mode))
+
+  (bind-keys :map +toggle-prefix-map
+             ("Q" . visual-line-mode)))
 
 (use-package truncate-lines
   :no-require
