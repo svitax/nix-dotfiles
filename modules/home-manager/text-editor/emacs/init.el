@@ -3674,6 +3674,8 @@ There is no dragging the character forward. This is the behavior of
    ;; Make `transpose-chars' always act like when point is at end of the line.
    ("C-t" . +transpose-chars)
 
+   ;; Make `kill-region' and `kill-ring-save' act on symbol at point if no
+   ;; active region.
    ("C-w" . +kill-region)
    ("M-w" . +kill-ring-save)
    ("M-k" . +kill-line-backward)
