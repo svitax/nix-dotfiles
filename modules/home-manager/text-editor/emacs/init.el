@@ -3652,6 +3652,16 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
         (+restart-emacs)
       (save-buffers-kill-terminal)))
 
+  (defun +transpose-chars ()
+    "Always transposes the two chars before point.
+There is no dragging the character forward. This is the behavior of
+`transpose-chars' when point is at the end of the line."
+    (interactive)
+    (if (eq (point) (line-end-position))
+        (transpose-chars 1)
+      (transpose-chars -1)
+      (forward-char)))
+
   (setopt kill-whole-line t)
 
   (bind-keys
@@ -3660,6 +3670,9 @@ Call the commands `+escape-url-line' and `+escape-url-region'."
    ("M-l" . downcase-dwim)
    ("M-u" . upcase-dwim)
    ("M-=" . count-words)
+
+   ;; Make `transpose-chars' always act like when point is at end of the line.
+   ("C-t" . +transpose-chars)
 
    ("C-w" . +kill-region)
    ("M-w" . +kill-ring-save)
