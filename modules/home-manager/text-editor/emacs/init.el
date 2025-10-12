@@ -2072,7 +2072,9 @@ minibuffer, which means it can be used as an Embark action."
              ("b" . embark-bindings)
              :map embark-general-map
              ("C-s" . +embark-isearch-forward)
-             ("C-r" . +embark-isearch-backward)))
+             ("C-r" . +embark-isearch-backward)
+             :map embark-collect-mode-map
+             ("m" . +embark-select-next-line)))
 
 ;; Needed for correct exporting while using Embark with Consult commands.
 (use-package embark-consult)
