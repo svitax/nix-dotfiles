@@ -2054,6 +2054,12 @@ minibuffer, which means it can be used as an Embark action."
     (when isearch-lazy-count
       (run-at-time 0 nil #'isearch-update)))
 
+  (defun +embark-select-next-line ()
+    "Like `embark-select' but also moves to next line."
+    (interactive)
+    (embark-select)
+    (next-line))
+
   (bind-keys :map global-map
              ("C-." . embark-act)
              ("C-*" . embark-act-all)
