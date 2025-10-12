@@ -2056,8 +2056,9 @@ minibuffer, which means it can be used as an Embark action."
 
   (bind-keys :map global-map
              ("C-." . embark-act)
+             ("C-*" . embark-act-all)
              :map minibuffer-local-map
-             ("C-c C-a" . embark-act-all)
+             ("C-*" . embark-act-all)
              ("C-c C-c" . embark-collect)
              ("C-c C-e" . embark-export)
              ("C-c C-i" . embark-select)
