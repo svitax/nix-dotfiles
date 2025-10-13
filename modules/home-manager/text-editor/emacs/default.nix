@@ -153,7 +153,6 @@ in
               # native-complete
               # vterm
               mistty
-              jupyter
               pydoc
               nix-mode
               nix-ts-mode
