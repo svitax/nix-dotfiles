@@ -6329,16 +6329,15 @@ delimited by `python-nav-beginning-of-statement' and
              ("C-c C-j" . nil) ; unmap `imenu'
              ("C-c C-k" . python-shell-send-buffer)
              ("C-c C-l" . python-shell-send-file)
-             ;; ("C-c C-o" . +python-shell-clear-output)
+             ;; TODO: create `+python-shell-find-and-clear-output', based off of
+             ;; cider-find-and-clear-repl-output, cider-clear-repl-output,
+             ;; slime-repl-clear-output
+             ;; ("C-c C-o" . +python-shell-find-and-clear-output)
              ("C-c C-q" . +kill-this-buffer)
              ("C-c M-r" . python-shell-restart)
              ("C-c C-v" . nil) ; unmap `python-check'
              ("C-c C-z" . +python-shell-pop-to-buffer)
              :map inferior-python-mode-map
-             ;; TODO: create `+python-shell-clear-output', based off of
-             ;; cider-find-and-clear-repl-output, cider-clear-repl-output,
-             ;; slime-repl-clear-output
-             ;; ("C-c C-o" . +python-shell-clear-output)
              ("C-c C-z" . +python-shell-pop-to-buffer)))
 
 (use-package pydoc
