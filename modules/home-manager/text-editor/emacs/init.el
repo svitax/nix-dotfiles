@@ -4347,7 +4347,8 @@ through the edits."
    ("l" . flymake-mode)))
 
 ;; TODO document flymake-collection
-(use-package flymake-collection)
+(use-package flymake-collection
+  :config (add-hook 'after-init-hook #'flymake-collection-hook-setup))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; formatting ;;;;
@@ -6242,6 +6243,9 @@ region is active."
 
 (use-package python
   :lsp-hook (python-mode python-ts-mode)
+  :flymake-hook ((python-mode python-ts-mode)
+                 flymake-collection-ruff
+                 (flymake-collection-pycodestyle :disabled t))
   :config
   ;; Make sure packages that try to use python-mode are redirected to
   ;; python-ts-mode
