@@ -3348,27 +3348,17 @@ If region is active, extend selection downward by line. If
         (forward-line 1))))
 
   (defun +keyboard-quit-dwim ()
-    "Do-What-I-Mean for a general `keyboard-quit'.
+    "Smarter version of the built-in `keyboard-quit'.
+
 The generic `keyboard-quit' does not do the expected thing when the
 minibuffer is open. Whereas we want it to close the minibuffer, even
-without explicitly focusing it.
-
-The DWIM behaviour of this command is as follows:
-
-- When the region is active, disable it.
-- When a minibuffer is open, but not focused, close the minibuffer.
-- When the Completions buffer is selected, close it.
-- In every other case use the regular 'keyboard-quit'."
+without explicitly focusing it."
     (interactive)
-    (cond
-     ((region-active-p)
-      (keyboard-quit))
-     ((derived-mode-p 'completion-list-mode)
-      (delete-completion-window))
-     ((> (minibuffer-depth) 0)
-      (abort-recursive-edit))
-     (t
-      (keyboard-quit))))
+    (if (active-minibuffer-window)
+        (if (minibufferp)
+            (minibuffer-keyboard-quit)
+          (abort-recursive-edit))
+      (keyboard-quit)))
 
   (defun +duplicate--buffer-substring (boundaries)
     "Duplicate buffer substring between BOUNDARIES.
