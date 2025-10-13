@@ -6247,15 +6247,91 @@ region is active."
   ;; python-ts-mode
   (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 
-  (with-eval-after-load 'inheritenv
-    (inheritenv-add-advice 'run-python)
-    (inheritenv-add-advice 'run-python-internal))
+  (defvar-local +python-shell--last-buffer nil)
+  (defcustom +python-shell-kill-buffer-on-exit t
+    "Kill an inferior Python process buffer after the process terminates."
+    :type 'boolean)
+  (defun +python-shell-pop-to-buffer (&optional arg)
+    "Switch to inferior Python process buffer.
 
-  (setopt python-shell-interpreter "ipython"
-          python-shell-interpreter-args "-i --simple-prompt"
-          python-shell-completion-native-enable nil
-          python-indent-guess-indent-offset nil
-          python-indent-offset 4))
+If no inferior Python process for current buffer exists, `run-python' is
+called an interactively."
+    (interactive "P")
+    (let* ((in-repl (eq major-mode 'inferior-python-mode))
+           (repl (python-shell-get-buffer))
+           (origin (current-buffer)))
+      (cond (in-repl
+             (switch-to-buffer-other-window +python-shell--last-buffer))
+            (repl
+             (switch-to-buffer-other-window repl))
+            (t
+             (call-interactively 'run-python)
+             (python-shell-with-shell-buffer
+               (setq-local +python-shell--last-buffer origin)
+               ;; Force envrc to update in the inferior Python process buffer,
+               ;; otherwise envrc's environment variables don't seem to apply.
+               (envrc--update))))
+      ;; TODO: should this be an :after advice on `run-python'?
+      (when +python-shell-kill-buffer-on-exit
+        (let* ((buffer (python-shell-get-buffer))
+               (process (python-shell-get-process))
+               (sentinel (process-sentinel process)))
+          (set-process-sentinel
+           process
+           (lambda (proc event)
+             (when sentinel
+               (funcall sentinel proc event))
+             (unless (buffer-live-p proc)
+               (kill-buffer buffer))))))))
+
+  (defun +python-shell-send-dwim (&optional arg msg)
+    "Send the block or statement at point to inferior Python process.
+The block is delimited by `python-nav-beginning-of-block' and
+`python-nav-end-of-block'. If not in a block, evaluates the statement
+delimited by `python-nav-beginning-of-statement' and
+`python-nav-end-of-statement'."
+    (interactive)
+    (let ((beg (save-excursion
+                 (or (python-nav-beginning-of-block)
+                     (python-nav-beginning-of-statement))
+                 (point-marker)))
+          (end (save-excursion
+                 (or (python-nav-end-of-block)
+                     (python-nav-end-of-statement))
+                 (point-marker)))
+          (python-indent-guess-indent-offset-verbose nil))
+      (if (and beg end)
+          (python-shell-send-region beg end)
+        (user-error "Can't get code block from current position"))))
+
+  (setopt python-shell-interpreter "python"
+          python-shell-interpreter-args "-i"
+          python-shell-dedicated 'project
+          ;; python-shell-completion-native-enable nil
+          python-shell-completion-native-disabled-interpreters '("ipython"
+                                                                 "jupyter")
+          python-indent-guess-indent-offset t
+          python-indent-guess-indent-offset-verbose nil
+          python-indent-offset 4)
+
+  (bind-keys :map python-ts-mode-map
+             ("C-c C-c". +python-shell-send-dwim)
+             ("C-c C-d" . nil) ; unmap `python-describe-at-point'
+             ("C-c C-f" . nil) ; unmap `python-eldoc-at-point'
+             ("C-c C-j" . nil) ; unmap `imenu'
+             ("C-c C-k" . python-shell-send-buffer)
+             ("C-c C-l" . python-shell-send-file)
+             ;; ("C-c C-o" . +python-shell-clear-output)
+             ("C-c C-q" . +kill-this-buffer)
+             ("C-c M-r" . python-shell-restart)
+             ("C-c C-v" . nil) ; unmap `python-check'
+             ("C-c C-z" . +python-shell-pop-to-buffer)
+             :map inferior-python-mode-map
+             ;; TODO: create `+python-shell-clear-output', based off of
+             ;; cider-find-and-clear-repl-output, cider-clear-repl-output,
+             ;; slime-repl-clear-output
+             ;; ("C-c C-o" . +python-shell-clear-output)
+             ("C-c C-z" . +python-shell-pop-to-buffer)))
 
 (use-package pydoc
   :config
