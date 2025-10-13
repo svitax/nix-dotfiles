@@ -4339,12 +4339,25 @@ through the edits."
           flymake-start-on-save-buffer t
           flymake-start-on-flymake-mode t)
 
-  (bind-keys
-   :map flymake-mode-map
-   ("M-g M-n" . flymake-goto-next-error)
-   ("M-g M-p" . flymake-goto-prev-error)
-   :map +toggle-prefix-map
-   ("l" . flymake-mode)))
+  ;; By default, `flymake-mode' doesn’t override the `next-error' and related
+  ;; navigation commands. When Flymake is active, though, I prefer `M-g n' and
+  ;; similar bindings to move among diagnostics annotated in the buffer.
+  ;;
+  ;; I achieves this with the following bindings, but it overrides regular
+  ;; compilation mechanisms which I still rely on frequently. That trade-off is
+  ;; acceptable for me: I can always disable Flymake temporarily and return to
+  ;; the usual next-error workflow.
+  (bind-keys :map flymake-mode-map
+             ("M-g n" . flymake-goto-next-error)
+             ("M-g M-n" . flymake-goto-next-error)
+             ("M-g p" . flymake-goto-prev-error)
+             ("M-g M-p" . flymake-goto-prev-error)
+             :repeat-map flymake-goto-error-repeat-map
+             ("n" . flymake-goto-next-error)
+             ("p" . flymake-goto-prev-error))
+
+  (bind-keys :map global-map
+             ("C-c C-v" . flymake-mode)))
 
 ;; TODO document flymake-collection
 (use-package flymake-collection
