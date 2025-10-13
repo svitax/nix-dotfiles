@@ -463,6 +463,8 @@ other characters."
                     (t nil)))
         (shell (cond ((derived-mode-p 'eshell-mode)
                       "eshell")
+                     ((derived-mode-p 'inferior-python-mode)
+                      python-shell-interpreter)
                      (druid-modeline-trim-shell-file-name
                       (file-name-base shell-file-name))
                      (t shell-file-name))))
