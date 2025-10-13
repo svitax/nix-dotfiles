@@ -8317,7 +8317,9 @@ BibTeX file."
    citar-open-always-create-notes nil
    ;; Change the default keyword for bibliographic notes. I'm using these like
    ;; the literature notes in my zettelkasten.
-   citar-denote-keyword "literature")
+   citar-denote-keyword "literature"
+   ;; Use citation key as signature when creating new notes.
+   citar-denote-signature 'citekey)
 
   (bind-keys
    :map +bib-prefix-map
