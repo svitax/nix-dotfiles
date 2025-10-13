@@ -6269,10 +6269,14 @@ region is active."
               . ,(let ((map (copy-keymap eglot-mode-map)))
                   (define-key map (kbd "C-c C-d") #'pydoc-at-point)
                   map))))))
-  (add-hook 'python-ts-mode-hook #'+pydoc-eglot-override))
+  (add-hook 'python-ts-mode-hook #'+pydoc-eglot-override)
+
+  (bind-keys :map inferior-python-mode-map
+             ("C-c C-d" . pydoc-at-point)))
 
 ;; TODO look into using `jupyter-completion-at-point' and `eglot' with `cape'
 (use-package jupyter
+  :disabled t
   :config
   (setopt jupyter-eval-use-overlays t)
 
