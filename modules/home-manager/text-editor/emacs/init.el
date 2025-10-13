@@ -5031,7 +5031,7 @@ default, it is the symbol at point."
         git-commit-style-convention-checks '(non-empty-second-line))
 
   (setopt magit-diff-refine-hunk t
-          magit-display-buffer-function #'magit-display-buffer-traditional
+          magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
           magit-commit-diff-inhibit-same-window nil)
 
   ;; When 'C-c C-c' or 'C-c C-k' are pressed in the Magit commit message buffer,
