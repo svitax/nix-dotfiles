@@ -6507,6 +6507,10 @@ delimited by `python-nav-beginning-of-statement' and
 ;;    is it worth the added complexity of switching over to lsp-mode from eglot?
 ;; (use-package web)
 
+(use-package sgml-mode
+  :config
+  (add-hook 'sgml-mode-hook #'sgml-electric-tag-pair-mode))
+
 (use-package json-ts-mode
   :config
   ;; Make sure packages that try to use js-json-mode are redirected to
