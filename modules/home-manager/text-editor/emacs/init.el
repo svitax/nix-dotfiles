@@ -6321,18 +6321,74 @@ region is active."
              ("C-c C-m" . emacs-lisp-macroexpand)
              ("C-c M-m" . +elisp-pp-last-sexp)
              ("C-c C-r" . eval-region)
-             ("C-c C-l" . load-file)
-             ("C-c C-z" . ielm)))
+             ("C-c C-l" . load-file)))
+
+(use-package ielm
+  :config
+  ;; Toggle between Ielm and Elisp buffers.
+  (defvar-local +ielm--last-buffer nil)
+  (defvar-local +ielm--working-buffer nil)
+
+  (defcustom +ielm-kill-buffer-on-exit t
+    "Kill an Ielm buffer after the process terminates."
+    :type 'boolean)
+
+  (defun +ielm (&optional buf-name)
+    "Interactively evaluate Emacs Lisp expressions.
+Creates a buffer named BUF-NAME if provided (`*ielm*' by default),
+See `inferior-emacs-lisp-mode' for details."
+    (interactive)
+    (let* (old-point
+           (buf-name (or buf-name "*ielm*"))
+           (buf (get-buffer-create buf-name)))
+      (with-current-buffer buf
+        (unless (zerop (buffer-size)) (setq old-point (point)))
+        (inferior-emacs-lisp-mode)
+        (setq-local trusted-content :all)
+
+        (when +ielm-kill-buffer-on-exit
+          (let* ((process (get-buffer-process buf))
+                 (sentinel (process-sentinel process)))
+            (set-process-sentinel
+             process
+             (lambda (proc event)
+               (when sentinel
+                 (funcall sentinel proc event))
+               (unless (buffer-live-p proc)
+                 (kill-buffer-and-window)))))))
+      (switch-to-buffer-other-window buf)
+      (when old-point (push-mark old-point))
+      buf))
+
+  (defun +ielm-pop-to-buffer (&optional arg)
+    "Switch to an Ielm process buffer.
+
+If no Ielm process for current buffer exists, `+ielm' is called
+interactively."
+    (interactive "P")
+    (let* ((in-repl (eq major-mode 'inferior-emacs-lisp-mode))
+           (repl (and (buffer-live-p +ielm--working-buffer)
+                      +ielm--working-buffer))
+           (origin (current-buffer)))
+      (cond (in-repl
+             (switch-to-buffer-other-window +ielm--last-buffer))
+            (repl
+             (switch-to-buffer-other-window repl))
+            (t
+             (setq repl (call-interactively '+ielm))
+             (setq-local +ielm--working-buffer repl)
+             (with-current-buffer repl
+               (setq-local +ielm--last-buffer origin))))))
+
+  (bind-keys :map emacs-lisp-mode-map
+             ("C-c C-z" . +ielm-pop-to-buffer)
+             :map ielm-map
+             ("C-c C-z" . +ielm-pop-to-buffer)))
 
 ;; (use-package beardbolt
 ;;   :config
 ;;   (bind-keys :map global-map
 ;;              ("C-c M-d" . beardbolt-starter)))
-
-(use-package ielm
-  :config
-  (bind-keys :map ielm-map
-             ("C-c C-q" . +kill-this-buffer)))
 
 (use-package python
   :lsp-hook (python-mode python-ts-mode)
