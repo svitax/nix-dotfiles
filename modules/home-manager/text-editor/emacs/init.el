@@ -61,7 +61,7 @@
   (setopt initial-buffer-choice t
           initial-major-mode 'lisp-interaction-mode
           initial-scratch-message
-          (format ";; This is `%s'. Use `%s' to evaluate and print results.\n\n"
+          (format ";; This is `%s'. Type `%s' to evaluate and print results.\n\n"
                   'lisp-interaction-mode
                   (propertize
                    (substitute-command-keys
