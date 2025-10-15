@@ -1761,6 +1761,24 @@ first one. Else do `vertico-exit'."
     (dolist (fn '(pulsar-recenter-center pulsar-reveal-entry))
       (add-hook 'consult-after-jump-hook fn)))
 
+  ;; Consult source for shell-related buffers.
+  (defvar +consult--source-shell-buffer
+    `( :name "Shells"
+       :narrow   ?s
+       :category buffer
+       :state    ,#'consult--buffer-state
+       :items    ,(lambda ()
+                    (mapcar #'buffer-name
+                     (seq-filter (lambda (buf)
+                                   (with-current-buffer buf
+                                    (derived-mode-p
+                                     'shell-mode
+                                     'eshell-mode
+                                     'mistty-mode
+                                     'comint-mode)))
+                      (buffer-list))))))
+  (add-to-list 'consult-buffer-sources '+consult--source-shell-buffer :append)
+
   (defun +consult-tab (tab)
     "Switch to TAB by name."
     (interactive
@@ -5663,25 +5681,6 @@ Push `shell-last-dir' to `+shell-cd-directories'."
       (shell (get-buffer-create (car bookmark)))))
 
   (put '+shell-bookmark-jump 'bookmark-handler-type "Shell")
-
-  ;;;; Consult support
-
-  (with-eval-after-load 'consult
-    (defvar +consult--source-shell-buffer
-      `( :name "Shell"
-         :narrow   ?s
-         :category buffer
-         :state    ,#'consult--buffer-state
-         :items    ,(lambda ()
-                      (mapcar #'buffer-name
-                       (seq-filter (lambda (buf)
-                                     (with-current-buffer buf
-                                      (derived-mode-p
-                                       'shell-mode
-                                       'eshell-mode
-                                       'mistty-mode)))
-                        (buffer-list))))))
-    (add-to-list 'consult-buffer-sources '+consult--source-shell-buffer :append))
 
   ;;;; General commands
 
