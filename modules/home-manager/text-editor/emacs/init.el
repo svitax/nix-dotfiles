@@ -3126,7 +3126,7 @@ end of the buffer.")
 
   (bind-keys :map global-map
              ("C-c j" . link-hint-open-link)
-             ("C-c C-j" . +link-hint-jump-link)
+             ("C-c J" . +link-hint-jump-link)
              :map Info-mode-map
              ("f" . link-hint-open-link)
              ("j" . +link-hint-jump-link))
