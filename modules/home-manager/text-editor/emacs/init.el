@@ -1654,7 +1654,7 @@ first one. Else do `vertico-exit'."
              ("<down>" . +vertico-minimal-next)
              ("<up>" . +vertico-minimal-previous)
              ("C-l" . vertico-multiform-vertical)
-             ("M-g" . vertico-multiform-buffer)
+             ("C-M-l" . vertico-multiform-buffer)
              ("RET" . +vertico-minimal-exit)
              ("<return>" . +vertico-minimal-exit)
              ("M-a" . vertico-previous-group)
