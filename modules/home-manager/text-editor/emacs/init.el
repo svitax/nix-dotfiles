@@ -6004,6 +6004,8 @@ in another window.
 (use-package elisp
   :no-require
   :init
+  ;; The `emacs-lisp-mode' is the major mode for programming in Emacs Lisp and
+  ;; `lisp-interaction-mode' is its derivative for use in the *scratch* buffer.
   (defgroup +elisp nil
     "Better Emacs Lisp code viewing.")
 
@@ -6238,8 +6240,13 @@ region is active."
 
   (bind-keys :map +prefix-map
              ("C-e" . eval-last-sexp)
+             :map lisp-interaction-mode-map
+             ("C-c C-b" . nil) ; unmap `elisp-byte-compile-buffer'
+             ("C-c C-f" . nil) ; unmap `elisp-byte-compile-file'
              :map emacs-lisp-mode-map
              ("C-M-x" . eval-defun)
+             ("C-c C-b" . nil) ; unmap `elisp-byte-compile-buffer'
+             ("C-c C-f" . nil) ; unmap `elisp-byte-compile-file'
              ("C-c C-c" . eval-defun)
              ("C-c C-e" . eval-last-sexp)
              ("C-x C-e" . eval-last-sexp)
