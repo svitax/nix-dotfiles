@@ -6629,6 +6629,20 @@ delimited by `python-nav-beginning-of-statement' and
 
   (setopt json-ts-mode-indent-offset tab-width))
 
+(use-package toml-ts-mode
+  :lsp-hook (toml-ts-mode conf-toml-mode)
+  :lsp-server ((toml-ts-mode conf-toml-mode) . ("taplo" "lsp" "stdio"))
+  :format
+  (taplo-fmt . ("taplo" "format" "-" file))
+  toml-ts-mode conf-toml-mode)
+
+  :config
+  ;; Make sure packages that try to use conf-toml-mode are redirected to
+  ;; toml-ts-mode
+  (add-to-list 'major-mode-remap-alist '(conf-toml-mode . toml-ts-mode))
+
+  (setopt toml-ts-mode-indent-offset tab-width))
+
 ;; TODO transer my overleaf resumes to local
 ;; (use-package latex)
 
