@@ -6435,7 +6435,7 @@ called an interactively."
              (when sentinel
                (funcall sentinel proc event))
              (unless (buffer-live-p proc)
-               (kill-buffer buffer))))))))
+               (kill-buffer-and-window))))))))
 
   (defun +python-shell-send-dwim (&optional arg msg)
     "Send the block or statement at point to inferior Python process.
