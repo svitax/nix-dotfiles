@@ -468,6 +468,8 @@ other characters."
                       "eshell")
                      ((derived-mode-p 'inferior-python-mode)
                       python-shell-interpreter)
+                     ((derived-mode-p 'inferior-emacs-lisp-mode)
+                      "elisp")
                      (druid-modeline-trim-shell-file-name
                       (file-name-base shell-file-name))
                      (t shell-file-name))))

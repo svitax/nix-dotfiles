@@ -517,6 +517,7 @@ Like `+common-completion-table' but also disable sorting."
   (add-hook 'vterm-mode-hook #'druid-modeline-shell-mode)
   (add-hook 'mistty-mode-hook #'druid-modeline-shell-mode)
   (add-hook 'inferior-python-mode-hook #'druid-modeline-shell-mode)
+  (add-hook 'inferior-emacs-lisp-mode-hook #'druid-modeline-shell-mode)
   (add-hook 'pdf-view-mode-hook #'druid-modeline-pdf-mode)
   (add-hook 'nov-mode-hook #'druid-modeline-nov-mode)
   (add-hook 'eww-mode-hook #'druid-modeline-eww-mode)
