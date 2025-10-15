@@ -1,0 +1,14 @@
+[project]
+name = "hello-python"
+version = "0.0.1"
+description = "A minimal pyproject.toml"
+authors = []
+
+dependencies = ["flask"]
+
+# We define the entry point to be the 'main()' function in the module 'app/main.py'
+[project.scripts]
+cli = "app.main:main"
+
+[tool.ruff.lint]
+select = ["ALL"]
