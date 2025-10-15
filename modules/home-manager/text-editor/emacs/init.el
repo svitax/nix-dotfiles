@@ -5999,8 +5999,6 @@ in another window.
 ;;;;;;;;;;;;;;
 ;;;; prog ;;;;
 
-;; NOTE should eval-prefix be in C-c instead so these can be mode-specific?
-;; scheme, common lisp, jupyter?
 (use-package elisp
   :no-require
   :init
@@ -6227,6 +6225,74 @@ Functions are differentiated into \"special forms\", \"built-in functions\" and
   (+elisp-mode 1)
 
   :config
+  ;; Then I define a few commands that streamline certain tasks I do
+  ;; frequently. These are variations of buit-in commands with tweaks that meet
+  ;; my expectations.
+
+  ;; Concretely, the generic `eval-print-last-sexp' evaluates and prints the
+  ;; return value of a form without also commenting it out. This can be useful,
+  ;; though I generally find that I keep prepending a comment to prevent
+  ;; `eval-buffer' from evaluating code I had not intended to evaluate further.
+  (defun +elisp-eval-and-print-last-sexp ()
+    "Evaluate and print expression before point like `eval-print-last-sexp'.
+Prepend a comment to the return value. If there is no expression before
+point, prompt for one, print it at point, and then prepare its return as
+mentioned.
+
+At all times, copy the return value to the `kill-ring'."
+    (declare (interactive-only t))
+    (interactive)
+    (let* ((string (thing-at-point 'sexp :no-properties))
+           (comment-p (string-prefix-p ";" string))
+           (expression (if comment-p
+                           (read--expression "Nothing at point; read expression:")
+                         (read string))))
+      (when comment-p
+        (insert (format "%S" expression)))
+      (let ((start (point))
+            (return-value (eval expression)))
+        (kill-new (format "%s" return-value))
+        (message "Copied: `%S'" return-value)
+        (insert (format "\n;; => %s\n" return-value))
+        (indent-region start (point)))))
+
+  ;; The `+elisp-pp-last-sexp' is a variant of `pp-macroexpand-last-sexp', whose
+  ;; primary goal is to conform with the `display-buffer-alist'. I can thus
+  ;; macroexpand with the confidence that the resulting buffer will not mess up
+  ;; with my work.
+  (define-derived-mode +elisp-macroexpand-mode emacs-lisp-mode "MacroExpand"
+    "Like `emacs-lisp-mode' but for macroexpanded forms."
+    :interactive nil
+    (read-only-mode 1)
+    (display-line-numbers-mode 1)
+    (bind-keys :map +elisp-macroexpand-mode-map ("q" . quit-window)))
+
+  (add-to-list 'display-buffer-alist
+               '("*elisp-macroexpand*"
+                 (display-buffer-below-selected)
+                 (window-height . 0.3)
+                 (dedicated . t)
+                 (preserve-size . (t . t))
+                 (body-function . select-window)))
+
+  (defun +elisp-pp-last-sexp ()
+    "Like `pp-macroexpand-last-sexp', but with a generic `display-buffer'.
+Now use `display-buffer-alist' like the Lisp gods intended."
+    (declare (interactive-only t))
+    (interactive)
+    (if-let* ((thing (thing-at-point 'sexp :no-properties))
+              (expression (read thing))
+              (buffer (get-buffer-create "*elisp-macroexpand*"))
+              (inhibit-read-only t))
+        (progn
+          (with-current-buffer buffer
+            (erase-buffer)
+            (insert (format "%s" (macroexpand-1 expression)))
+            (+elisp-macroexpand-mode)
+            (pp-buffer))
+          (display-buffer buffer))
+      (user-error "No expression to macroexpand")))
+
   ;; Advise eval commands to use region if active
   (defun +eval-region-if-active (arg)
     "Advice for evaluation commands to have them call `eval-region' when the
@@ -6242,17 +6308,19 @@ region is active."
              ("C-e" . eval-last-sexp)
              :map lisp-interaction-mode-map
              ("C-c C-b" . nil) ; unmap `elisp-byte-compile-buffer'
+             ("C-c C-j" . +elisp-eval-and-print-last-sexp)
              ("C-c C-f" . nil) ; unmap `elisp-byte-compile-file'
              :map emacs-lisp-mode-map
              ("C-M-x" . eval-defun)
              ("C-c C-b" . nil) ; unmap `elisp-byte-compile-buffer'
-             ("C-c C-f" . nil) ; unmap `elisp-byte-compile-file'
              ("C-c C-c" . eval-defun)
              ("C-c C-e" . eval-last-sexp)
              ("C-x C-e" . eval-last-sexp)
+             ("C-c C-f" . nil) ; unmap `elisp-byte-compile-file'
              ("C-c C-k" . eval-buffer)
+             ("C-c C-j" . +elisp-eval-and-print-last-sexp)
              ("C-c C-m" . emacs-lisp-macroexpand)
-             ("C-c M-m" . pp-macroexpand-last-sexp)
+             ("C-c M-m" . +elisp-pp-last-sexp)
              ("C-c C-r" . eval-region)
              ("C-c C-l" . load-file)
              ("C-c C-z" . ielm)))
