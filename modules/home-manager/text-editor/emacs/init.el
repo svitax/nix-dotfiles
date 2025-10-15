@@ -3673,6 +3673,17 @@ There is no dragging the character forward. This is the behavior of
       (transpose-chars -1)
       (forward-char)))
 
+  (defun +indent-dwim ()
+    "Indent the current defun in `prog-mode' or paragraph in `text-mode'."
+    (interactive)
+    (save-excursion
+      (cond ((derived-mode-p 'prog-mode)
+             (mark-defun))
+            ((derived-mode-p 'text-mode)
+             (mark-paragraph)))
+      (indent-for-tab-command)
+      (deactivate-mark)))
+
   (setopt kill-whole-line t)
 
   (bind-keys
@@ -3732,6 +3743,9 @@ There is no dragging the character forward. This is the behavior of
    ("M-;" . +comment-line-dwim)
    ("C-M-;" . +comment-sexp-dwim)
    ("s-;" . +comment-sexp-dwim)
+
+   ;; `+indent-dwim' will indent the current defun or paragraph.
+   ("C-M-\\" . +indent-dwim)
 
    :map +prefix-map
    ("C-c" . +kill-terminal-or-restart)
