@@ -5961,6 +5961,30 @@ if one already exists."
 (use-package mistty
   :config
 
+  (defvar-local +mistty--last-buffer nil)
+  (defvar-local +mistty--buffer nil)
+
+  (defun +mistty-pop-to-buffer (&optional prompt)
+    "Switch to a MisTTY buffer or create one if it doesn't exist.
+
+With \\[universal-argument] prefix arg, specify directory to create new
+MisTTY buffer."
+    (interactive "P")
+    (let* ((in-mistty (eq major-mode 'mistty-mode))
+           (mistty-buf (and (buffer-live-p +mistty--buffer)
+                            +mistty--buffer))
+           (origin (current-buffer)))
+      (cond (in-mistty
+             (switch-to-buffer-other-window +mistty--last-buffer))
+            (mistty-buf
+             (switch-to-buffer-other-window mistty-buf))
+            (t
+             (setq mistty-buf (call-interactively '+mistty))
+             (with-current-buffer origin
+               (setq-local +mistty--buffer mistty-buf))
+             (with-current-buffer mistty-buf
+               (setq-local +mistty--last-buffer origin))))))
+
   (defun +mistty (&optional prompt)
     "Start a MisTTY buffer in the specified directory.
 
@@ -6007,7 +6031,7 @@ in another window.
        other-window)))
 
   (bind-keys :map +prefix-map
-             ("C-<return>" . +mistty)
+             ("C-<return>" . +mistty-pop-to-buffer)
              :map mistty-mode-map
              ("C-c C-n" . mistty-next-input)
              ("C-c C-p" . mistty-previous-input)))
