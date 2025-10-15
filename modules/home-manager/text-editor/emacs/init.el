@@ -5262,6 +5262,9 @@ default, it is the symbol at point."
   ;; are any obvious advantages/disadvantages.
   (add-hook 'comint-output-filter-functions #'comint-osc-process-output)
 
+  ;; Mirror `display-buffer-base-action' into `display-comint-buffer-action'.
+  (setopt display-comint-buffer-action display-buffer-base-action)
+
   (setq-default comint-scroll-to-bottom-on-input t
                 comint-scroll-to-bottom-on-output nil
                 comint-input-autoexpand 'input)
