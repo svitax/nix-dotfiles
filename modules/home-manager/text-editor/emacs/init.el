@@ -4455,13 +4455,6 @@ The parameter NAME, ARGS, REST, and STATE are explained in the
 ;; NOTE document eglot
 (use-package eglot
   :init
-  ;; Ask Eglot to stay away from completely taking over Flymake. Just add it as
-  ;; another item.
-  ;; (add-to-list 'eglot-stay-out-of 'flymake)
-  ;; (add-hook 'eglot-managed-mode-hook
-  ;;           (lambda ()
-  ;;             (add-hook 'flymake-diagnostic-functions #'eglot-flymake-backend nil t)))
-
   (with-eval-after-load 'pulsar
     (dolist (func '(eglot-find-typeDefinition
                     eglot-find-declaration
