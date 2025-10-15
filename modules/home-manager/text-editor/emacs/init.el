@@ -5739,6 +5739,10 @@ input, otherwise perform buffer motion."
   (defvar-local +shell--shell nil)
   (defvar-local +shell--last-buffer nil)
 
+  (defcustom +shell-kill-buffer-on-exit t
+    "Kill a +shell process buffer after the process terminates."
+    :type 'boolean)
+
   (defun +shell--maybe-remember-buffer (buffer)
     (when (and buffer
                (eq major-mode 'shell-mode))
@@ -5769,6 +5773,17 @@ If PROMPT is nil, don't prompt for a directory and use
       (with-current-buffer shell
         (add-hook 'comint-output-filter-functions
                   #'+shell-update-name-on-cd nil :local)
+        (when +shell-kill-buffer-on-exit
+          (let* ((buffer (current-buffer))
+                 (process (get-buffer-process buffer))
+                 (sentinel (process-sentinel process)))
+            (set-process-sentinel
+             process
+             (lambda (proc event)
+               (when sentinel
+                 (funcall sentinel proc event))
+               (unless (buffer-live-p proc)
+                 (kill-buffer-and-window))))))
         (+shell--set-this-buffer-shell (current-buffer) origin)
         (+shell--set-this-buffer-shell (current-buffer)))))
 
@@ -5864,7 +5879,8 @@ Add a bookmark handler for shell buffer and activate the
   (setopt shell-command-prompt-show-cwd t ; Emacs 27.1
           shell-input-autoexpand 'input
           shell-highlight-undef-enable t ; Emacs 29.1
-          shell-kill-buffer-on-exit t ; Emacs 29.1
+          ;; shell-kill-buffer-on-exit t ; Emacs 29.1
+          +shell-kill-buffer-on-exit t ; also kills window
           shell-completion-fignore '("~" "#" "%"))
 
   (setopt shell-font-lock-keywords
