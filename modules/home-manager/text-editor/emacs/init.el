@@ -49,7 +49,15 @@
 
   ;; I like starting with a scratch buffer. I know that a lot of users specify a
   ;; dashboard or an Org agenda view, but I prefer to keep things generic in
-  ;; this regard.
+  ;; this regard. Besides, I would rather not accidentally divulge any potential
+  ;; sensitive informatifn if I am sharing my screen.
+  ;;
+  ;; I keep the `initial-major-mode' to its default `lisp-interaction-mode' even
+  ;; though my configurations for `emacs-lisp-mode' make that mode surplus to
+  ;; its requirements. Those who aren't familiar with `lisp-interaction-mode'
+  ;; will quickly learn that they can type "C-j" (M-x `eval-print-last-sexp') to
+  ;; evaluate and print the return value of the form before point. When
+  ;; programming in Elisp, this comes in handy quite frequently.
   (setopt initial-buffer-choice t
           initial-major-mode 'lisp-interaction-mode
           initial-scratch-message
