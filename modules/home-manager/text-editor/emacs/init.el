@@ -6703,9 +6703,8 @@ delimited by `python-nav-beginning-of-statement' and
   :lsp-hook (toml-ts-mode conf-toml-mode)
   :lsp-server ((toml-ts-mode conf-toml-mode) . ("taplo" "lsp" "stdio"))
   :format
-  (taplo-fmt . ("taplo" "format" "-" file))
-  toml-ts-mode conf-toml-mode)
-
+  (taplo-fmt . ("taplo" "format" "-"))
+  toml-ts-mode conf-toml-mode
   :config
   ;; Make sure packages that try to use conf-toml-mode are redirected to
   ;; toml-ts-mode
