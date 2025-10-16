@@ -2193,12 +2193,10 @@ minibuffer, which means it can be used as an Embark action."
   ;; of the `run-hooks' function, see the section "Running Hooks" it the Elisp
   ;; manual for further information.
   :config
-  (add-hook 'completion-at-point-functions #'cape-file)
-
   ;; In order to merge capfs you can try the functions `cape-capf-super'. It is
   ;; only necessary if you want to combine multiple capfs, such that the
   ;; candidates from multiple sources appear together in the completion list at
-  ;; the same time. `cape-capf-super' is not needed of multiple capfs should be
+  ;; the same time. `cape-capf-super' is not needed if multiple capfs should be
   ;; tried one after the other, for example you can use `cape-file' together
   ;; with programming capfs by adding `cape-file' to the
   ;; `completion-at-point-functions' list. File completion will then be
@@ -2246,15 +2244,63 @@ together."
   ;; This is yet another nimble package from Daniel Mendler. It lets us define a
   ;; template which we can insert at any point and fill in the empty fields with
   ;; whatever values we want.
+
+  ;; I integrate `tempel-complete' with my completion setup through `cape' so
+  ;; that templates appear in the same interface as other completions and expand
+  ;; with the same key. Having a single entry point for snippet expansion and
+  ;; context-based completion makes the overall experience more coherent. Even
+  ;; though snippet expansion takes priority in this arrangement, the trade-off
+  ;; feels worthwile.
+  ;;
+  ;; By contrast, I keep `dabbrev' outside of this system. I use it as a
+  ;; complementary mechanism, not as another source within the completion
+  ;; pipeline. Including all of its candidates in the main completion list would
+  ;; drown out more relevant suggestions and make the interface noisy.
   :config
-  ;; TODO i want tempel-complete to appear with eglot-completion-at-point
-  ;; https://github.com/eryg-kai/emacs-config/blob/master/config/completion.el#L225C1-L265C20
-  ;; (cape-super-capf #'eglot-completion-at-point #'tempel-complete)
-  ;; (cape-super-capf #'elisp-completion-at-point #'tempel-complete)
+  (defalias '+capf-eglot-tempel
+    (cape-capf-super #'tempel-complete #'eglot-completion-at-point))
+  (defalias '+capf-elisp-tempel
+    (cape-capf-super #'tempel-complete #'elisp-completion-at-point))
+
+  (defun +capf-setup-eglot (&optional global)
+    "Add capfs to GLOBAL hook if non-nil, else local."
+    (when (eglot-managed-p)
+      (let ((local (not global)))
+        (add-hook 'completion-at-point-functions
+                  #'+capf-eglot-tempel -10 'local)
+        (add-hook 'completion-at-point-functions
+                  #'cape-file -10 'local)
+        (when local
+          ;; Do not run the global hook; everything is already added locally.
+          (delq t completion-at-point-functions)))))
+  (add-hook 'eglot-managed-mode-hook #'+capf-setup-eglot)
+
+  (defun +capf-setup-elisp (&optional global)
+    "Add capfs to GLOBAL hook if non-nil, else local."
+    (let ((local (not global)))
+      (add-hook 'completion-at-point-functions
+                #'+capf-elisp-tempel -10 'local)
+      (add-hook 'completion-at-point-functions
+                #'cape-file -10 'local)
+      (when local
+        ;; Do not run the global hook; everything is already added locally.
+        (delq t completion-at-point-functions))))
+  (add-hook 'emacs-lisp-mode-hook #'+capf-setup-elisp)
+
+  (defun +capf-setup (&optional global)
+    "Add capfs to GLOBAL hook if non-nil, else local."
+    (let ((local (not global)))
+      (add-hook 'completion-at-point-functions #'tempel-complete -10 'local)
+      (add-hook 'completion-at-point-functions #'cape-file -10 'local)
+      (when local
+        ;; Do not run the global hook; everything is already added locally.
+        (delq t completion-at-point-functions))))
+  (+capf-setup t)
+
   (bind-keys :map tempel-map
              ("C-g" . tempel-done)
-             ("M-e" . tempel-next)
-             ("M-a" . tempel-previous)))
+             ("M-n" . tempel-next)
+             ("M-p" . tempel-previous)))
 
 ;; TODO document tempel-collection
 (use-package tempel-collection)
