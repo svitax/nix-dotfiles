@@ -2516,43 +2516,48 @@ Limit list of buffers to those matching the current
   (bind-keys
    :map global-map
    ("M-o" . other-window)
-   ;; TODO put all s-* keybinds into sxhkd
-   ("s-a" . windmove-up)
-   ("s-A" . windmove-swap-states-up)
-   ("s-e" . windmove-right)
-   ("s-E" . windmove-swap-states-right)
-   ("s-h" . windmove-down)
-   ("s-H" . windmove-swap-states-down)
-   ("s-o" . other-window)
-   ("s-r" . +window-toggle-split)
-   ;; ("s-r" . window-layout-transpose) ; Emacs 31 override `move-to-window-line-top-bottom'
-   ;; ("s-R" . rotate-windows-back) ; Emacs 31
-   ("s-y" . windmove-left)
-   ("s-Y" . windmove-swap-states-left)
    :map +prefix-map
    ("o" . other-window)
    ("0" . delete-window) ; `s-k' or `s-0'
    ("1" . delete-other-windows) ; `s-K' or `s-1'
-   ("!" . delete-other-windows-vertically) ; `s-!'
    ("2" . split-window-below) ; `s-s' or `s-2'
-   ("@" . split-root-window-below) ; `s-S' or `s-@'
    ;; ("M-2" . +split-window-below-and-focus) ; lambda emacs
    ("3" . split-window-right) ; `s-v' or `s-3'
-   ("#" . split-root-window-right) ; `s-V' or `s-\#'
    ;; ("M-3" . +split-window-right-and-focus) ; lambda emacs
    ("4" . ctl-x-4-prefix)
-   ("$" . window-toggle-side-windows)
    ("5" . ctl-x-5-prefix)
-   ("%" . toggle-window-dedicated)
    ;; ("6" . )
-   ;; ("^" . tear-off-window) ; ^ should be tear or detach
    ;; ("7" . )
-   ("+" . balance-windows-area) ; `s-+'
    ;; ("8" . )
-   ;; ("*" . )
    ;; ("9" . )
+   ;; ("*" . )
    ;; ("&" . )
-   ))
+   ("+" . balance-windows-area) ; `s-+'
+   ("#" . server-edit) ; `s-#'
+   :map +window-prefix-map
+   ;; TODO make all these into s-* keybinds with sxhkd
+   ("-" . fit-window-to-buffer) ; `s--'
+   ("^" . tear-off-window) ; ^ should be tear or detach
+   ("0" . delete-windows-on)
+   ("1" . delete-other-windows-vertically) ; `s-!'
+   ("2" . split-root-window-below) ; `s-S' or `s-@'
+   ("3" . split-root-window-right) ; `s-V' or `s-\#'
+   ("d" . toggle-window-dedicated)
+   ("q" . quit-window)
+   ("s" . window-toggle-side-windows)
+   ;; windmove
+   ("a" . windmove-up)
+   ("A" . windmove-swap-states-up)
+   ("e" . windmove-right)
+   ("E" . windmove-swap-states-right)
+   ("h" . windmove-down)
+   ("H" . windmove-swap-states-down)
+   ("o" . other-window)
+   ("r" . +window-toggle-split)
+   ;; ("r" . window-layout-transpose) ; Emacs 31
+   ;; ("R" . rotate-windows-back) ; Emacs 31
+   ("y" . windmove-left)
+   ("Y" . windmove-swap-states-left)))
 
 (use-package too-wide-minibuffer-mode
   :disabled t ; NOTE disabled 2025-06-26 (local)
