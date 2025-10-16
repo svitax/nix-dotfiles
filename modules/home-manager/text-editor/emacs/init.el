@@ -6438,12 +6438,13 @@ region is active."
              ("C-c C-e" . eval-last-sexp)
              ("C-x C-e" . eval-last-sexp)
              ("C-c C-f" . nil) ; unmap `elisp-byte-compile-file'
-             ("C-c C-k" . eval-buffer)
              ("C-c C-j" . +elisp-eval-and-print-last-sexp)
+             ("C-c C-k" . eval-buffer)
+             ("C-c C-l" . load-file)
              ("C-c C-m" . emacs-lisp-macroexpand)
              ("C-c M-m" . +elisp-pp-last-sexp)
-             ("C-c C-r" . eval-region)
-             ("C-c C-l" . load-file)))
+             ("C-M-q" . nil) ; unmap `indent-pp-sexp'
+             ("C-c C-r" . eval-region)))
 
 (use-package ielm
   :config
