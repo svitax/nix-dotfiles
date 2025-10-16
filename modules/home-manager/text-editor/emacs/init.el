@@ -3832,6 +3832,7 @@ There is no dragging the character forward. This is the behavior of
    ("s-;" . +comment-sexp-dwim)
 
    ;; `+indent-dwim' will indent the current defun or paragraph.
+   ("C-M-q" . +indent-dwim)
    ("C-M-\\" . +indent-dwim)
 
    :map +prefix-map
@@ -6421,6 +6422,7 @@ region is active."
              ("C-c C-b" . nil) ; unmap `elisp-byte-compile-buffer'
              ("C-c C-j" . +elisp-eval-and-print-last-sexp)
              ("C-c C-f" . nil) ; unmap `elisp-byte-compile-file'
+             ("C-M-q" . nil) ; unmap `indent-pp-sexp'
              :map emacs-lisp-mode-map
              ("C-M-x" . eval-defun)
              ("C-c C-b" . nil) ; unmap `elisp-byte-compile-buffer'
