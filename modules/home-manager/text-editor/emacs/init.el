@@ -2214,9 +2214,30 @@ together."
 ;; TODO https://protesilaos.com/emacs/dotemacs#h:fd84b79a-351e-40f0-b383-bf520d77834b
 ;; (use-package abbrev)
 
-;; TODO https://protesilaos.com/emacs/dotemacs#h:567bb00f-1d82-4746-93e5-e0f60721728a
-;; i want dabbrev to be separate from tab completion and snippets
-;; (use-package dabbrev)
+(use-package dabbrev
+  :config
+  ;; The built-in `dabbrev' package provides a text completion method that reads
+  ;; the contents of a buffer and expands the text before the cursor to match
+  ;; possible candidates. This is done with `M-/' (`dabbrev-expand') which is
+  ;; what I use most of the time to perform in-buffer completions.
+  ;;
+  ;; I like `dabbrev' because it is minimal. It does not produce any popup or
+  ;; affect the window layout so it is keeping me focused on what I am doing. I
+  ;; wish it had a behaviour where we could initial it and at any point demand a
+  ;; fully fledged minibuffer presentation of what it is trying to match,
+  ;; instead of cycling through the candidates with repeated `M-/'. Granted, I
+  ;; normally do not cycle in that way, as I typically type out enough to get an
+  ;; exact match or be one `M-/' away from it.
+  ;;
+  ;; Apart from the `dabbrev-expand' command, we have `dabbrev-completion'. I do
+  ;; not use it because it does not feel natural while typing prose to stop,
+  ;; check the minibuffer for some text, select it, and go back to typing.
+
+  (setopt dabbrev-abbrev-skip-leading-regexp "[$*/=~']"
+          dabbrev-case-fold-search nil
+          dabbrev-upcase-means-case-search t
+          dabbrev-ignored-buffer-modes
+          '(archive-mode image-mode docview-mode pdf-view-mode)))
 
 ;;;;;;;;;;;;;;;;;;
 ;;;; snippets ;;;;
