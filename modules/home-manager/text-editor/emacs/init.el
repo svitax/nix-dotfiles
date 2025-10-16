@@ -430,7 +430,8 @@ Like `+common-completion-table' but also disable sorting."
   ;; from text-mode): these are excluded in the function
   ;; `+enable-variable-pitch'.
   (defun +enable-variable-pitch ()
-    (unless (derived-mode-p 'mhtml-mode 'nxml-mode 'yaml-mode)
+    (unless (derived-mode-p 'mhtml-mode 'nxml-mode 'yaml-mode 'yaml-ts-mode
+                            'toml-ts-mode 'conf-toml-mode)
       (variable-pitch-mode 1)))
   (add-hook 'text-mode-hook #'+enable-variable-pitch)
   (add-hook 'notmuch-show-mode-hook #'+enable-variable-pitch)
