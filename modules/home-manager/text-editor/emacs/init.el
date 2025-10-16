@@ -6608,6 +6608,8 @@ delimited by `python-nav-beginning-of-statement' and
              :map inferior-python-mode-map
              ("C-c C-z" . +python-shell-pop-to-buffer)))
 
+(use-package ess)
+
 (use-package pydoc
   :config
   (with-eval-after-load 'inheritenv
@@ -9569,6 +9571,14 @@ manually to first get the icon files."
     (add-to-list 'nerd-icons-mode-icon-alist
                  '(mistty-mode nerd-icons-devicon "nf-dev-terminal"
                    :face nerd-icons-green)))
+
+  (with-eval-after-load 'ess
+    (add-to-list 'nerd-icons-mode-icon-alist
+                 '(ess-r-mode nerd-icons-devicon "nf-dev-r"
+                   :face nerd-icons-blue))
+    (add-to-list 'nerd-icons-mode-icon-alist
+                 '(inferior-ess-mode nerd-icons-devicon "nf-dev-terminal"
+                   :face nerd-icons-blue)))
 
   (with-eval-after-load 'citar
     (defvar citar-indicator-files-icons

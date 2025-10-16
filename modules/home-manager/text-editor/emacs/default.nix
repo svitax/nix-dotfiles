@@ -153,6 +153,7 @@ in
               # native-complete
               # vterm
               mistty
+              ess
               pydoc
               nix-mode
               nix-ts-mode
