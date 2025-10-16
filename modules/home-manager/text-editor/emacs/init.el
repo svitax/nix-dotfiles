@@ -2676,6 +2676,14 @@ window if it's the only one."
                  (display-buffer-no-window)
                  (allow-no-window . t)))
 
+  (add-to-list 'display-buffer-alist
+               '("\\*\\(Org \\(Select\\|Note\\)\\|Agenda Commands\\)\\*\\'"
+                 (display-buffer-in-side-window)
+                 (window-height . 0.3)
+                 (dedicated . t)
+                 (side . bottom)
+                 (slot . 0)))
+
   ;; The following settings are relevant for the `display-buffer-alist' we saw
   ;; right above. Notice, in particular, the `split-height-threshold' and
   ;; `split-width-threshold' which determine when to split the frame by height
