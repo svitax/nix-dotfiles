@@ -5870,7 +5870,9 @@ If PROMPT is nil, don't prompt for a directory and use
                (when sentinel
                  (funcall sentinel proc event))
                (unless (buffer-live-p proc)
-                 (kill-buffer-and-window))))))
+                 (if (and arg (not (one-window-p)))
+                     (kill-buffer-and-window))
+                 (kill-this-buffer))))))
         (+shell--set-this-buffer-shell (current-buffer) origin)
         (+shell--set-this-buffer-shell (current-buffer)))))
 
@@ -6484,7 +6486,9 @@ See `inferior-emacs-lisp-mode' for details."
                (when sentinel
                  (funcall sentinel proc event))
                (unless (buffer-live-p proc)
-                 (kill-buffer-and-window)))))))
+                 (if (and arg (not (one-window-p)))
+                     (kill-buffer-and-window))
+                 (kill-this-buffer)))))))
       (switch-to-buffer-other-window buf)
       (when old-point (push-mark old-point))
       buf))
@@ -6564,7 +6568,9 @@ called an interactively."
              (when sentinel
                (funcall sentinel proc event))
              (unless (buffer-live-p proc)
-               (kill-buffer-and-window))))))))
+               (if (and arg (not (one-window-p)))
+                   (kill-buffer-and-window))
+               (kill-this-buffer))))))))
 
   (defun +python-shell-send-dwim (&optional arg msg)
     "Send the block or statement at point to inferior Python process.
