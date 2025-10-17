@@ -1870,7 +1870,7 @@ The symbol at point is added to the future history."
              ("M" . consult-global-mark)
              ("o" . consult-outline) ("M-o" . consult-outline) ; alt. `consult-org-heading'
              ("r" . consult-register) ("M-r" . consult-register)
-             ("t" . consult-tab) ("M-t" . +consult-tab)
+             ("t" . +consult-tab) ("M-t" . +consult-tab)
              ("," . +consult-xref-history) ("M-," . +consult-xref-history)
              :map +search-prefix-map
              ("e" . consult-isearch-history)
