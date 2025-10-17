@@ -4628,12 +4628,12 @@ The parameter NAME, ARGS, REST, and STATE are explained in the
 
   (bind-keys
    :map eglot-mode-map
+   ("C-c M-." . eglot-find-declaration)
+   ("C-c C-." . eglot-find-typeDefinition)
+   ("C-c M-?" . eglot-find-implementation)
    ("C-c C-a" . eglot-code-actions)
-   ("C-c C-i" . eglot-find-implementation)
    ;; TODO: make a `+refactor-map' and put `eglot-rename' under it
-   ("C-c C-r" . eglot-rename)
-   ("C-c C-w" . eglot-find-declaration)
-   ("C-c C-y" . eglot-find-typeDefinition)))
+   ("C-c C-r" . eglot-rename)))
 
 (use-package eglot-use-package
   ;; Adds :lsp-hook, :lsp-server, and :lsp-config keywords for use-package forms
