@@ -5900,9 +5900,9 @@ If PROMPT is nil, don't prompt for a directory and use
                (when sentinel
                  (funcall sentinel proc event))
                (unless (buffer-live-p proc)
-                 (if (and arg (not (one-window-p)))
+                 (if (not (one-window-p))
                      (kill-buffer-and-window))
-                 (kill-this-buffer))))))
+                 (kill-buffer buffer))))))
         (+shell--set-this-buffer-shell (current-buffer) origin)
         (+shell--set-this-buffer-shell (current-buffer)))))
 
@@ -6508,7 +6508,8 @@ See `inferior-emacs-lisp-mode' for details."
         (setq-local trusted-content :all)
 
         (when +ielm-kill-buffer-on-exit
-          (let* ((process (get-buffer-process buf))
+          (let* ((buffer (current-buffer))
+                 (process (get-buffer-process buffer))
                  (sentinel (process-sentinel process)))
             (set-process-sentinel
              process
@@ -6516,9 +6517,9 @@ See `inferior-emacs-lisp-mode' for details."
                (when sentinel
                  (funcall sentinel proc event))
                (unless (buffer-live-p proc)
-                 (if (and arg (not (one-window-p)))
+                 (if (not (one-window-p))
                      (kill-buffer-and-window))
-                 (kill-this-buffer)))))))
+                 (kill-buffer buffer)))))))
       (switch-to-buffer-other-window buf)
       (when old-point (push-mark old-point))
       buf))
@@ -6586,21 +6587,21 @@ called an interactively."
                (setq-local +python-shell--last-buffer origin)
                ;; Force envrc to update in the inferior Python process buffer,
                ;; otherwise envrc's environment variables don't seem to apply.
-               (envrc--update))))
-      ;; TODO: should this be an :after advice on `run-python'?
-      (when +python-shell-kill-buffer-on-exit
-        (let* ((buffer (python-shell-get-buffer))
-               (process (python-shell-get-process))
-               (sentinel (process-sentinel process)))
-          (set-process-sentinel
-           process
-           (lambda (proc event)
-             (when sentinel
-               (funcall sentinel proc event))
-             (unless (buffer-live-p proc)
-               (if (and arg (not (one-window-p)))
-                   (kill-buffer-and-window))
-               (kill-this-buffer))))))))
+               (envrc--update)
+               ;; TODO: should this be an :after advice on `run-python'?
+               (when +python-shell-kill-buffer-on-exit
+                 (let* ((buffer (python-shell-get-buffer))
+                        (process (python-shell-get-process))
+                        (sentinel (process-sentinel process)))
+                   (set-process-sentinel
+                    process
+                    (lambda (proc event)
+                      (when sentinel
+                        (funcall sentinel proc event))
+                      (unless (buffer-live-p proc)
+                        (if (not (one-window-p))
+                            (kill-buffer-and-window))
+                        (kill-buffer buffer)))))))))))
 
   (defun +python-shell-send-dwim (&optional arg msg)
     "Send the block or statement at point to inferior Python process.
