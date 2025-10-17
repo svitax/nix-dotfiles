@@ -8659,7 +8659,25 @@ BibTeX file."
 ;;;;;;;;;;;;;;;
 ;;;; timer ;;;;
 
-(use-package tmr)
+(use-package tmr
+  :config
+  ;; With `tmr' we can set timers using a convenient notation. The point of
+  ;; entry is the `tmr' command (or `tmr-with-details' if you want to describe
+  ;; what the timer is about).
+  ;;
+  ;; Set a timer by specifying one of these:
+  ;;
+  ;; Input  Meaning
+  ;; 5      5 minutes from now
+  ;; 5m     Same as above
+  ;; 1h     1 hour from now
+  ;; 06:35  From now until 06:35
+  ;;
+  ;; To view the running timers in a tabulated list, invoke the command
+  ;; `tmr-tabulated-view'. From there, type `C-h m' (or M-x `describe-mode') to
+  ;; learn about all the available commands and their respective key bindings.
+  (bind-keys :map global-map
+             ("C-c t" . tmr-prefix-map)))
 
 ;;;;;;;;;;;;;;;
 ;;;; email ;;;;
