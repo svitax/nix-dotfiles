@@ -5551,34 +5551,184 @@ Interactively also sends a terminating newline."
 ;; (use-package compile-use-package)
 
 (use-package compile-multi
-  :disabled t
   :config
-  ;; `compile-multi' is a multi-target interface to `compile'. It allows you to
-  ;; configure and interactively select compilation targets based on arbitrary
+  ;; `compile-multi' is a multi-target interface to `compile'. It lets you
+  ;; configure and interactively select compilation commands based on arbitrary
   ;; project types, build frameworks, or test tools.
   ;;
-  ;; In simplified terms, `compile-multi' provides a framework for associating
-  ;; actions with triggers. A trigger is any predicate that applies to the
-  ;; current file, project, or directory. An action is a shell command or
-  ;; interactive function or anything that can be invoked when the associated
-  ;; trigger is set. For example, we can write a function that parses out all
-  ;; the targets from a Makefile and generates actions for them. This allows us
-  ;; to construct rich command interfaces.
-  (bind-keys
-   :map mode-specific-map
-   ("C-," . compile-multi)))
+  ;; Conceptually, it defines a framework of triggers and actions. A trigger is
+  ;; any predicate that applies to the current file, project, or directory. An
+  ;; action is something that runs in response, such as a shell command or an
+  ;; interactive function. For example, we might define a trigger that detects a
+  ;; Makefile and then automatically parses its targets into a list of
+  ;; selectable actions.
+  ;;
+  ;; The result is a flexible interface for building context-aware compilation
+  ;; menus, which allows us to invoke the right command without needing to
+  ;; hardcode it in advance.
+
+  ;; I do not rely on the `prefix-argument' to run `compile' commands in
+  ;; `compilation-shell-minor-mode', because I have "C-x C-q" bound to
+  ;; `+compile-toggle-comint' in the relevant modes. For that reason, I redefine
+  ;; `compile-multi' to ignore the prefix argument behavior. The trade-off is
+  ;; that I cannot preemptively run a compile command in
+  ;; compilation-shell-minor-mode, but I like using "C-u" to be able to edit
+  ;; compile-multi targets before running them.
+  (defun compile-multi (&optional query command)
+    "Multi-target interface to compile.
+With optional argument QUERY allow user to modify compilation command before
+running. COMMAND when set will be used instead of prompting the user for a
+compile-multi command."
+    (interactive "P")
+    (let* ((default-directory (or (and compile-multi-default-directory
+                                       (funcall compile-multi-default-directory))
+                                  default-directory))
+           (compile-cmd
+            (or command
+                (plist-get (cdr (or (compile-multi--get-task)
+                                    (user-error "compile-multi: Invalid task read from user")))
+                           :command))))
+      (cond
+       ((stringp compile-cmd)
+        (when query
+          (setq compile-cmd
+                (compilation-read-command compile-cmd)))
+        (compile compile-cmd))
+       ((and (functionp compile-cmd)
+
+             (if query
+                 (eval-expression
+                  (read--expression "Eval: " (format "(%s)" `(call-interactively ,compile-cmd))))
+               (call-interactively compile-cmd)))
+        ((functionp compile-cmd)
+         (if query
+             (eval-expression
+              (read--expression "Eval: " (format "(%s)" compile-cmd)))
+           (funcall compile-cmd)))
+        (t (error "Don't know how to run the command %s" compile-cmd))))))
+
+  ;; Integration with Makefile projects.
+  ;;
+  ;; It detects existing Makefiles, parses their build targets, and generates
+  ;; entries in `compile-multi' for them. It also provides configurable parallel
+  ;; build support.
+  (defconst +compile-multi-makefile-names '("Makefile" "makefile" "GNUmakefile")
+    "List of Makefile names recognized by various make implementations.")
+
+  (defun +compile-multi-make--targets-from-file (makefile)
+    "Read makefile targets from MAKEFILE."
+    (let (targets)
+      (if (not makefile)
+          (error "No build file found for project %s" (project-root (project-current))))
+      (with-temp-buffer
+        (insert-file-contents makefile)
+        (goto-char (point-min))
+        (while (re-search-forward "^\\([^: \n]+\\) *:\\(?: \\|$\\)" nil t)
+          (let ((str (match-string 1)))
+            (unless (string-match "^\\." str)
+              (push str targets)))))
+      (nreverse targets)))
+
+  (defun +compile-multi--join-shell-command (argv)
+    "Join quoted arguments from ARGV into a shell command."
+    (string-join (mapcar #'shell-quote-argument argv) " "))
+
+  (defconst +compile-multi-build-jobs--type
+    '(optional
+      (choice
+       (const ninja :tag
+        "Match ninja https://github.com/ninja-build/ninja/blob/fd7067652cae480190bf13b2ee5475efdf09ac7d/src/ninja.cc#L239")
+       (const -1 :tag "Use `num-processors'.")
+       (const -2 :tag "Use half of `num-processors'.")
+       (integer :tag "Use this value as the number of jobs."))))
+
+  (defcustom +compile-multi-build-jobs 'ninja
+    "Number of jobs to use for building a project (when applicable)."
+    :type +compile-multi-build-jobs--type
+    :group 'compile-multi)
+
+  (defun +compile-multi--guess-parallelism (jobs)
+    "Query the available CPU cores respecting JOBS.
+See `+compile-multi-build-jobs' for supported values for JOBS."
+    (when jobs
+      (pcase jobs
+        ('ninja
+         (pcase (num-processors)
+           ((or 0 1) 1)
+           (2 3)
+           (_ (+ (num-processors) 2))))
+        (-1 (num-processors))
+        (-2 (/ (num-processors) 2))
+        (0 nil)
+        ((cl-type integer) jobs)
+        (_ (projection--log :warning "Unsupported `jobs' argument: %S." jobs)
+           nil))))
+
+  (defun +compile-multi-make-run-build (&optional target)
+    "Build command generator for Make projects.
+Set TARGET as the TARGET to build when set."
+    (+compile-multi--join-shell-command
+     `("make"
+       ,@(when-let* ((jobs (+compile-multi--guess-parallelism +compile-multi-build-jobs)))
+          (list "-j" (number-to-string jobs)))
+       ,@(when target (list target)))))
+
+  (defun +compile-multi-make-targets (&optional project-type makefile)
+    "`compile-multi' target generator function for Makefile projects."
+    (setq project-type (or project-type "make"))
+    (setq makefile
+          (or makefile
+              (cl-find-if #'file-exists-p +compile-multi-makefile-names)))
+    (when makefile
+      (cl-loop
+       for target in (+compile-multi-make--targets-from-file makefile)
+       collect (cons (concat project-type ":" target)
+                     (+compile-multi-make-run-build target)))))
+
+  (push `((file-exists-p "Makefile")
+          ,#'+compile-multi-make-targets)
+        compile-multi-config)
+
+  ;; TODO +compile-multi-nix-flake-targets
+  ;; nix flake show --json
+  (push `((file-exists-p "flake.nix")
+          (,(concat "nix" ":" "build")
+           :command "nix build ."
+           :annotation "nix build .")
+          (,(concat "nix" ":" "check")
+           :command "nix flake check"
+           :annotation "nix flake check")
+          (,(concat "nix" ":" "run")
+           :command "nix run ."
+           :annotation "nix run .")
+          (,(concat "nix" ":" "format")
+           :command "nix fmt"
+           :annotation "nix fmt"))
+        compile-multi-config)
+
+  ;; Set the default directory resolver to the current project root.
+  (setopt compile-multi-default-directory
+          (defun +project-current-root ()
+            (project-root (project-current))))
+
+  (bind-keys :map global-map
+             ("C-c C-," . compile-multi)))
 
 ;; TODO create compile-multi-use-package that adds to compile-multi-config
 ;; Adds :compile keyword to use-package forms
 ;; (use-package compile-multi-use-package)
 
 (use-package consult-compile-multi
-  :disabled t
   :config
   ;; `consult-compile-multi' is an extension for `compile-multi' that runs the
   ;; interactive selection of targets through `consult' instead of
   ;; `completing-read', which enhances it with some useful consult features such
   ;; as narrowing.
+
+  (setopt consult-compile-multi-narrow
+          '((?m "Make" make)
+            (?n "Nix Flake" nix)))
+
   (consult-compile-multi-mode))
 
 (use-package projection-multi
@@ -9787,3 +9937,9 @@ manually to first get the icon files."
   :config
   (when grep-use-headings
     (nerd-icons-grep-mode)))
+
+(use-package compile-multi-nerd-icons
+  :config
+  (setq compile-multi-nerd-icons-alist
+        '((make nerd-icons-devicon "nf-dev-gnu" :face nerd-icons-red-alt)
+          (nix nerd-icons-devicon "nf-dev-nixos" :face nerd-icons-blue-alt))))

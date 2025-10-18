@@ -152,6 +152,8 @@ in
               git-gutter
               git-gutter-fringe
               eldoc-diffstat
+              compile-multi
+              consult-compile-multi
               # native-complete
               # vterm
               mistty
@@ -191,6 +193,7 @@ in
               nerd-icons-dired
               nerd-icons-ibuffer
               nerd-icons-grep
+              compile-multi-nerd-icons
             ]
             ++ lispPackages;
         };
