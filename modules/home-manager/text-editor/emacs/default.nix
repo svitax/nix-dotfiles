@@ -129,6 +129,7 @@ in
               tempel
               tempel-collection
               eglot-tempel
+              consult-eglot
               # projection
               # substitute
               goto-chg

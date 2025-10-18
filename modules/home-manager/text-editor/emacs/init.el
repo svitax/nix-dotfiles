@@ -4746,16 +4746,30 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
 ;;   :config
 ;;   (eglot-booster-mode))
 
-;; (use-package consult-eglot
-;;   :config
-;;   ;; Eglot exposes the lsp `document/symbols' call through
-;;   ;; Imenu. `consult-eglot' exposes the `workspace/symbols' call which can
-;;   ;; present symbols from multiple open files or even files not directly loaded
-;;   ;; by an open file but still used by your project.
-;;   (bind-keys
-;;    :map eglot-mode-map
-;;    ("M-s M-i" . +consult-imenu) ;; C-u M-s M-i calls consult-eglot-symbols instead
-;;    ("C-M-." . consult-eglot-symbols)))
+(use-package consult-eglot
+  :config
+  ;; Eglot exposes the LSP `textDocument/documentSymbol' request through Imenu
+  ;; and `workspace/symbol' through Xref by `xref-find-apropos' (when
+  ;; `eglot-extend-to-xref' is non-nil). `consult-eglot' runs the interactive
+  ;; selection of the targets from `workspace/symbols' through Consult instead
+  ;; of completing-read, which enhances it with some useful Consult features
+  ;; such as narrowing.
+  ;;
+  ;; The `workspace/symbols' call presents symbols from any file known to the
+  ;; language server that belong to the same project.
+
+  ;; Start `consult-eglot-symbols' search with active region, if available.
+  (defalias '+consult-eglot-symbols-dwim 'consult-eglot-symbols)
+  (consult-customize
+   +consult-eglot-symbols-dwim
+   :initial (when (use-region-p)
+              (deactivate-mark)
+              (buffer-substring-no-properties
+               (region-beginning)
+               (region-end))))
+
+  (bind-keys :map eglot-mode-map
+             ("C-M-." . +consult-eglot-symbols-dwim)))
 
 ;;;;;;;;;;;;;
 ;;;; dap ;;;;
