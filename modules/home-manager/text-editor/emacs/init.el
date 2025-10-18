@@ -3181,6 +3181,7 @@ end of the buffer.")
                           "grep <X> <C> -nH --null -e <R> <F>")))
 
 ;; TODO recursive project search https://www.youtube.com/watch?v=1jBbVUnNbDU
+;; TODO +xref-find-apropos-documentation (searches doc string)
 
 (use-package xref
   :config
