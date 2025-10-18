@@ -6634,21 +6634,58 @@ delimited by `python-nav-beginning-of-statement' and
           python-indent-offset 4)
 
   (bind-keys :map python-ts-mode-map
+             ;; ("C-c C-a" . nil)
+             ;; ("C-c C-b" . nil)
              ("C-c C-c". +python-shell-send-dwim)
              ("C-c C-d" . nil) ; unmap `python-describe-at-point'
+             ;; ("C-c C-e" . eval-last-sexp)
              ("C-c C-f" . nil) ; unmap `python-eldoc-at-point'
-             ("C-c C-j" . nil) ; unmap `imenu'
+             ;; ("C-c C-i" . nil)
+             ("C-c C-j" . nil) ; unmap `imenu' ;; TODO: ("C-c C-j" . +python-shell-insert-commands-map)
              ("C-c C-k" . python-shell-send-buffer)
              ("C-c C-l" . python-shell-send-file)
-             ;; TODO: create `+python-shell-find-and-clear-output', based off of
-             ;; cider-find-and-clear-repl-output, cider-clear-repl-output,
-             ;; slime-repl-clear-output
-             ;; ("C-c C-o" . +python-shell-find-and-clear-output)
-             ("C-c C-q" . +kill-this-buffer)
+             ;; ("C-c C-m" . macroexpand)
+             ;; TODO: ("C-c C-n" . +python-shell-eval-dwim-and-next)
+             ;; TODO: ("C-c C-o" . +python-shell-find-and-clear-output) ; if prefix, clear entire buffer
+             ;; ("C-c C-p" . +python-shell-pprint-eval-last-sexp)
+             ("C-c C-q" . +kill-this-buffer) ;; ("C-c C-q" . +python-shell-quit)
+             ;; TODO: ("C-c C-r" . +python-refactor-map)
              ("C-c M-r" . python-shell-restart)
+             ;; ("C-c C-s" . nil)
+             ;; TODO: ("C-c C-t" . +python-test-commands-map)
+             ;; ("C-c C-u" . dape)
              ("C-c C-v" . nil) ; unmap `python-check'
+             ;; ("C-c C-w" . nil)
+             ;; TODO: ("C-c C-x" . run-python) ; +python-shell-start-map?
+             ;; ("C-c C-y" . nil)
              ("C-c C-z" . +python-shell-pop-to-buffer)
+             ;; ("C-c ," . +python-test-commands-map)
              :map inferior-python-mode-map
+             ;; TODO: ("M-j" . +comint-newline-and-indent) cider-repl-newline-and-indent
+             ;; ("C-<return>" . cider-repl-closing-return?)
+             ;; ("C-c C-a" . comint-bol-or-process-mark)
+             ;; ("C-c C-b" . nil)
+             ;; ("C-c C-c" . comint-interrupt-subjob)
+             ;; ("C-c C-d" . +pydoc)
+             ;; ("C-c C-e" . nil)
+             ;; ("C-c C-f" . apheleia-format-buffer)
+             ;; ("C-c C-i" . nil)
+             ;; ("C-c C-j" . +python-shell-insert-commands-map)
+             ;; ("C-c C-k" . nil)
+             ;; ("C-c C-l" . python-shell-send-file)
+             ;; ("C-c C-m" . macroexpand)
+             ;; ("C-c C-n" . comint-next-prompt)
+             ;; ("C-c C-o" . comint-delete-prompt)
+             ;; ("C-c C-p" . comint-previous-prompt)
+             ;; ("C-c C-q" . comint-send-eof)
+             ;; ("C-c C-r" . +python-refactor-map)
+             ;; ("C-c C-s" . nil)
+             ;; ("C-c C-t" . +python-test-commands-map)
+             ;; ("C-c C-u" . comint-kill-input)
+             ;; ("C-c C-v" . nil)
+             ;; ("C-c C-w" . comint-write-output)
+             ;; ("C-c C-x" . +python-shell-start-map)
+             ;; ("C-c C-y" . nil)
              ("C-c C-z" . +python-shell-pop-to-buffer)))
 
 (use-package ess)
