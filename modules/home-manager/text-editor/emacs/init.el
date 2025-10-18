@@ -6695,17 +6695,50 @@ delimited by `python-nav-beginning-of-statement' and
   (with-eval-after-load 'inheritenv
     (inheritenv-add-advice 'shell-command-to-string))
 
+  (defvar +pydoc--history nil
+    "Minibuffer history for `+pydoc'.")
+
+  (defun +pydoc (arg)
+    "Display pydoc information for object at point.
+
+When \\[prefix-argument] prefix ARG or no object is found at point,
+prompt for an object name.
+
+When double \\[prefix-argument] \\[prefix-argument] prefix ARG, reload
+the `pydoc' module list before prompting."
+    (interactive "P")
+    (let* ((symbol (thing-at-point 'symbol t))
+           (reload (equal arg '(16))))
+      (if (or arg (not symbol))
+          ;; NOTE `pydoc' reproduced here to change the completing-read prompt
+          ;; (call-interactively #'pydoc)
+          (let ((name (completing-read
+                       (format-prompt "Pydoc for function or module" symbol)
+                       (pydoc-all-modules reload)
+                       nil nil nil '+pydoc--history symbol)))
+            (pydoc-setup-xref (list #'pydoc name)
+                              (called-interactively-p 'interactive))
+            (pydoc-with-help-window (pydoc-buffer)
+              (call-process-shell-command (concat pydoc-command " " name)
+                                          nil standard-output)))
+        (pydoc-at-point))))
+
   (defun +pydoc-eglot-override ()
     (when (derived-mode-p 'python-base-mode)
       (set (make-local-variable 'minor-mode-overriding-map-alist)
            `((eglot--managed-mode
               . ,(let ((map (copy-keymap eglot-mode-map)))
-                  (define-key map (kbd "C-c C-d") #'pydoc-at-point)
+                  (define-key map (kbd "C-c C-d") #'+pydoc)
                   map))))))
+  (add-hook 'python-mode-hook #'+pydoc-eglot-override)
   (add-hook 'python-ts-mode-hook #'+pydoc-eglot-override)
 
-  (bind-keys :map inferior-python-mode-map
-             ("C-c C-d" . pydoc-at-point)))
+  (bind-keys :map python-mode-map
+             ("C-c C-d" . +pydoc)
+             :map python-ts-mode-map
+             ("C-c C-d" . +pydoc)
+             :map inferior-python-mode-map
+             ("C-c C-d" . +pydoc)))
 
 (use-package nix-mode
   :interpreter (("nix-shell" . nix-shebang-mode)
