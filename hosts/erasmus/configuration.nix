@@ -16,7 +16,8 @@
 
   boot.systemd-boot.enable = true;
 
-  desktop-environment.kde.enable = true;
+  desktop-manager.xfce.enable = true;
+  desktop-manager.kde.enable = true;
 
   nixos.enable = true;
 

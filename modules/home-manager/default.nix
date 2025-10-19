@@ -30,9 +30,8 @@ rec {
     # NOTE: picom (for animations)
   };
 
-  # NOTE: desktop-environment
-  desktop-environment = {
-    # NOTE: xfce
+  desktop-manager = {
+    xfce = ./desktop-manager/xfce;
     # NOTE: shinglify (for autotiling) https://gitlab.com/corthbandt/shinglify
     # NOTE: make retro/copland-esque themes
     # NOTE: kde
@@ -132,9 +131,7 @@ rec {
       command-line.yt-dlp
       command-line.zoxide
 
-      # desktop.firefox
-      # desktop.foot
-      # desktop.rofi
+      desktop-manager.xfce
 
       # editor.emacs
       # editor.neovim

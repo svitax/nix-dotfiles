@@ -4,10 +4,10 @@
   ...
 }:
 let
-  cfg = config.desktop-environment.kde;
+  cfg = config.desktop-manager.kde;
 in
 {
-  options.desktop-environment.kde = {
+  options.desktop-manager.kde = {
     enable = lib.mkEnableOption "Enables the KDE desktop environment";
   };
 

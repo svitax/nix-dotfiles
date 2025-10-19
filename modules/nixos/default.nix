@@ -9,11 +9,11 @@ rec {
     systemd-boot = ./boot/systemd-boot;
   };
 
-  desktop-environment = {
+  desktop-manager = {
     # NOTE: remove gnome completely
     # gnome = ./window-manager/gnome;
-    # NOTE: xfce
-    kde = ./desktop-environment/kde;
+    xfce = ./desktop-manager/xfce;
+    kde = ./desktop-manager/kde;
   };
 
   disk = {
@@ -117,7 +117,8 @@ rec {
     imports = [
       boot.systemd-boot
 
-      desktop-environment.kde
+      desktop-manager.xfce
+      desktop-manager.kde
 
       homelab.wallabag
       homelab.shiori

@@ -35,6 +35,8 @@
   # rofi.enable = true;
   # };
 
+  desktop-manager.xfce.enable = true;
+
   graphical = {
     anki.enable = true;
     discord.enable = true;

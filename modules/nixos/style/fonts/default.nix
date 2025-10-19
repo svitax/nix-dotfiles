@@ -42,6 +42,7 @@ in
         ];
         monospace = [ "Aporetic Sans Mono" ];
       };
+      antialias = true; # helped reduce font flickering in xfce
     };
     fonts.fontDir.enable = true;
   };
