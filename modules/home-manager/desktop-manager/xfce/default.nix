@@ -56,6 +56,10 @@ in
       xfce4-screensaver = {
         "lock/saver-activation-delay" = 10;
       };
+      keyboards = {
+        "Default/KeyRepeat/Delay" = 350;
+        "Default/KeyRepeat/Rate" = 35;
+      };
       thunar = {
         "last-view" = "ThunarCompactView";
       };
