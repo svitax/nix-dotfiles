@@ -1613,7 +1613,10 @@ This is dote to accommodate `+vertico-multiform-minimal'."
     (if (and vertico-unobtrusive-mode
              (> vertico--total 1))
         (progn
-          (minibuffer-complete)
+          ;; Override `completion-in-region-function' when completing in the
+          ;; minibuffer in case it was set to `consult-completion-in-region'.
+          (let ((completion-in-region-function 'completion--in-region))
+            (minibuffer-complete))
           (+vertico-minimal-next))
       (vertico-insert)))
 
@@ -1655,10 +1658,32 @@ first one. Else do `vertico-exit'."
                                          (t ,@+vertico-multiform-minimal))
           vertico-multiform-commands `(("consult-\\(.*\\)?\\(find\\|fd\\|grep\\|ripgrep\\)"
                                         ,@+vertico-multiform-maximal)
+                                       ("\\(indent-for-tab-command\\|completion-at-point\\)"
+                                        ,@+vertico-multiform-maximal)
                                        ("citar-\\(.*\\)"
                                         ,@+vertico-multiform-maximal))
           vertico-cycle t
           vertico-count 5)
+
+  ;; The `completion-in-region-function' handles in-buffer text completion using
+  ;; Emacs' underlying infrastructure for `completion-at-point-functions'. A
+  ;; popular interface for this is `corfu', which provides in-buffer popups. I
+  ;; find these too visually distracting, especially when they appear
+  ;; automatically. I don't want things eagerly popping in and out of my view. I
+  ;; want manual completion. Pop up only when I say so.
+  ;;
+  ;; Since I have already configured `vertico' to behave this way, it makes
+  ;; sense to leverage that interface here. When Vertico is active, use
+  ;; `consult-completion-in-region' to handle in-buffer completions through the
+  ;; minibuffer. Otherwise use the default `completion--in-region' function.
+  (setopt completion-in-region-function
+          (lambda (&rest args)
+            (apply (if (and (bound-and-true-p
+                             vertico-mode)
+                            (featurep 'consult))
+                       #'consult-completion-in-region
+                     #'completion--in-region)
+                   args)))
 
   (with-eval-after-load 'rfn-eshadow
     ;; This works with `file-name-shadow-mode' enabled. When you are in
