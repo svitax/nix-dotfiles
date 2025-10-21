@@ -6607,10 +6607,10 @@ At all times, copy the return value to the `kill-ring'."
         (insert (format "\n;; => %s\n" return-value))
         (indent-region start (point)))))
 
-  ;; The `+elisp-pp-last-sexp' is a variant of `pp-macroexpand-last-sexp', whose
-  ;; primary goal is to conform with the `display-buffer-alist'. I can thus
-  ;; macroexpand with the confidence that the resulting buffer will not mess up
-  ;; with my work.
+  ;; The `+elisp-pp-macroexpand-last-sexp' is a variant of
+  ;; `pp-macroexpand-last-sexp', whose primary goal is to conform with the
+  ;; `display-buffer-alist'. I can thus macroexpand with the confidence that the
+  ;; resulting buffer will not mess up with my work.
   (define-derived-mode +elisp-macroexpand-mode emacs-lisp-mode "MacroExpand"
     "Like `emacs-lisp-mode' but for macroexpanded forms."
     :interactive nil
@@ -6626,7 +6626,7 @@ At all times, copy the return value to the `kill-ring'."
                  (preserve-size . (t . t))
                  (body-function . select-window)))
 
-  (defun +elisp-pp-last-sexp ()
+  (defun +elisp-pp-macroexpand-last-sexp ()
     "Like `pp-macroexpand-last-sexp', but with a generic `display-buffer'.
 Now use `display-buffer-alist' like the Lisp gods intended."
     (declare (interactive-only t))
@@ -6638,7 +6638,7 @@ Now use `display-buffer-alist' like the Lisp gods intended."
         (progn
           (with-current-buffer buffer
             (erase-buffer)
-            (insert (format "%s" (macroexpand-1 expression)))
+            (insert (format "%S" (macroexpand-1 expression)))
             (+elisp-macroexpand-mode)
             (pp-buffer))
           (display-buffer buffer))
@@ -6673,7 +6673,7 @@ region is active."
              ("C-c C-k" . eval-buffer)
              ("C-c C-l" . load-file)
              ("C-c C-m" . emacs-lisp-macroexpand)
-             ("C-c M-m" . +elisp-pp-last-sexp)
+             ("C-c M-m" . +elisp-pp-macroexpand-last-sexp)
              ("C-M-q" . nil) ; unmap `indent-pp-sexp'
              ("C-c C-r" . eval-region)))
 
