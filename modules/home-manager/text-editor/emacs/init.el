@@ -6749,6 +6749,7 @@ interactively."
 
 (use-package python
   :lsp-hook (python-mode python-ts-mode)
+  :format ruff python-mode python-ts-mode
   :flymake-hook ((python-mode python-ts-mode)
                  flymake-collection-ruff
                  (flymake-collection-pycodestyle :disabled t))
