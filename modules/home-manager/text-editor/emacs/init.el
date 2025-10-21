@@ -6602,9 +6602,9 @@ At all times, copy the return value to the `kill-ring'."
         (insert (format "%S" expression)))
       (let ((start (point))
             (return-value (eval expression)))
-        (kill-new (format "%s" return-value))
+        (kill-new (format "%S" return-value))
         (message "Copied: `%S'" return-value)
-        (insert (format "\n;; => %s\n" return-value))
+        (insert (format "\n;; => %S\n" return-value))
         (indent-region start (point)))))
 
   ;; The `+elisp-pp-macroexpand-last-sexp' is a variant of
