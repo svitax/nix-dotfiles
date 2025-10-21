@@ -400,10 +400,10 @@ Like `+common-completion-table' but also disable sorting."
   ;; switch to a theme appropriate for the current period. To load one right
   ;; away, we call `theme-buffet-a-la-carte' before starting the timer.
   (setopt theme-buffet-menu 'end-user
-          theme-buffet-end-user '(:morning (modus-operandi)
+          theme-buffet-end-user '(:night (modus-vivendi)
+                                  :morning (modus-operandi)
                                   :afternoon (modus-operandi)
-                                  :evening (modus-vivendi)
-                                  :night (modus-vivendi)))
+                                  :evening (modus-vivendi)))
   (theme-buffet-a-la-carte)
   (theme-buffet-end-user))
 
