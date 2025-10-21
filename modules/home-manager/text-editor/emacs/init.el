@@ -2143,6 +2143,7 @@ minibuffer, which means it can be used as an Embark action."
 (use-package embark-consult)
 
 (use-package corfu
+  :disabled t
   :config
   ;; `corfu' handles in-buffer text completion splendidly using Emacs'
   ;; underlying infrastructure for `completion-at-point-functions'.
@@ -9919,6 +9920,7 @@ manually to first get the icon files."
 
 (use-package nerd-icons-corfu
   :if +emacs-load-icons
+  :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
