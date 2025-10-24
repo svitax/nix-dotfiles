@@ -6611,7 +6611,8 @@ return value."
           (kill-new (format "%S" return-value))
           (message "Copied: `%S'" return-value)
           (push-mark (point))
-          (insert (format "\n;; => %S\n" return-value))
+          (insert (format "\n%S\n" return-value))
+          (string-insert-rectangle (+ (mark) 1) (- (point) 1) ";; => ")
           (indent-region start (point)))
       (user-error "No expression at point")))
 
