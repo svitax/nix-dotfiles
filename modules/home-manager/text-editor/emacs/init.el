@@ -2160,7 +2160,6 @@ minibuffer, which means it can be used as an Embark action."
 (use-package embark-consult)
 
 (use-package corfu
-  :disabled t
   :config
   ;; `corfu' handles in-buffer text completion splendidly using Emacs'
   ;; underlying infrastructure for `completion-at-point-functions'.
@@ -2182,7 +2181,7 @@ minibuffer, which means it can be used as an Embark action."
   ;; `corfu-popupinfo-mode' will show a secondary documentation popup if we move
   ;; over a candidate but do not to anything with it.
 
-  (global-corfu-mode)
+  ;; (global-corfu-mode)
   (corfu-popupinfo-mode 1)
 
   (setopt corfu-cycle t
@@ -2210,6 +2209,24 @@ minibuffer, which means it can be used as an Embark action."
         (exit-minibuffer))
        (t
         (default-indent-new-line)))))
+
+  (defun +corfu-completion-at-point ()
+    "Perform completion on the text around point, using `corfu'.
+
+The completion method is determined by completion-at-point-functions."
+    (interactive)
+    (let ((completion-in-region-function #'corfu--in-region))
+      (completion-at-point)))
+  (bind-keys :map global-map
+             ("C-M-i" . +corfu-completion-at-point)
+             :map emacs-lisp-mode-map
+             ("C-M-i" . +corfu-completion-at-point)
+             :map ielm-map
+             ("C-M-i" . +corfu-completion-at-point)
+             :map read-expression-map
+             ("C-M-i" . +corfu-completion-at-point)
+             :map bibtex-mode-map
+             ("C-M-i" . +corfu-completion-at-point))
 
   (bind-keys :map corfu-map
              ("C-h" . corfu-info-documentation)
