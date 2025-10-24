@@ -371,7 +371,7 @@ Like `+common-completion-table' but also disable sorting."
        `(keycast-command ((,c :inherit mode-line :foreground ,fg-mode-line-active :background ,bg-mode-line-active))))))
   (add-hook 'enable-theme-functions #'+modus-themes-customize-faces)
 
-  (modus-themes-select 'modus-operandi))
+  (modus-themes-select 'modus-vivendi))
 
 (use-package ef-themes :disabled t)
 
