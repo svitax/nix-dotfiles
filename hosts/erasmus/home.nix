@@ -50,8 +50,6 @@
     # zsh.enable = true;
   };
 
-  # style.stylix.enable = true;
-
   text-editor = {
     emacs = {
       enable = true;

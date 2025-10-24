@@ -83,7 +83,6 @@ rec {
 
   style = {
     # fonts = ./style/fonts;
-    # stylix = ./style/stylix;
   };
 
   text-editor = {
@@ -146,7 +145,6 @@ rec {
       # shell.zsh
 
       # style.fonts
-      # style.stylix
 
       text-editor.emacs
 

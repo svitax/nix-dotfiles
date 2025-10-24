@@ -98,7 +98,6 @@ rec {
 
   style = {
     fonts = ./style/fonts;
-    # stylix = ./style/stylix;
   };
 
   virtualization = {
@@ -130,7 +129,6 @@ rec {
 
       storage.onedrive
 
-      # style.stylix
       style.fonts
 
       network.stevenblack
