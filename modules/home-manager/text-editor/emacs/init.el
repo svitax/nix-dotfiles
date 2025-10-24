@@ -1613,10 +1613,7 @@ This is dote to accommodate `+vertico-multiform-minimal'."
     (if (and vertico-unobtrusive-mode
              (> vertico--total 1))
         (progn
-          ;; Override `completion-in-region-function' when completing in the
-          ;; minibuffer in case it was set to `consult-completion-in-region'.
-          (let ((completion-in-region-function 'completion--in-region))
-            (minibuffer-complete))
+          (minibuffer-complete)
           (+vertico-minimal-next))
       (vertico-insert)))
 
@@ -1676,11 +1673,8 @@ first one. Else do `vertico-exit'."
   ;; minibuffer. Otherwise use the default `completion--in-region' function.
   (setopt completion-in-region-function
           (lambda (&rest args)
-            (apply (if (and (bound-and-true-p
-                             vertico-mode)
-                            (featurep 'consult))
-                       #'consult-completion-in-region
-                     #'completion--in-region)
+            (apply (if (minibufferp) #'completion--in-region
+                     #'consult-completion-in-region)
                    args)))
 
   (with-eval-after-load 'rfn-eshadow
