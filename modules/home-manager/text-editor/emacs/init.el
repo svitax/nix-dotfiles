@@ -6598,26 +6598,22 @@ Functions are differentiated into \"special forms\", \"built-in functions\" and
   ;; `eval-buffer' from evaluating code I had not intended to evaluate further.
   (defun +elisp-eval-and-print-last-sexp ()
     "Evaluate and print expression before point like `eval-print-last-sexp'.
-Prepend a comment to the return value. If there is no expression before
-point, prompt for one, print it at point, and then prepare its return as
-mentioned.
-
-At all times, copy the return value to the `kill-ring'."
+Prepend a comment to the return value. Also copy the return value to the
+`kill-ring' and set the mark to where point was before inserting the
+return value."
     (declare (interactive-only t))
     (interactive)
-    (let* ((string (thing-at-point 'sexp :no-properties))
-           (comment-p (string-prefix-p ";" string))
-           (expression (if comment-p
-                           (read--expression "Nothing at point; read expression:")
-                         (read string))))
-      (when comment-p
-        (insert (format "%S" expression)))
-      (let ((start (point))
-            (return-value (eval expression)))
-        (kill-new (format "%S" return-value))
-        (message "Copied: `%S'" return-value)
-        (insert (format "\n;; => %S\n" return-value))
-        (indent-region start (point)))))
+    (if-let* ((string (thing-at-point 'sexp :no-properties))
+              (_ (not (string-prefix-p ";" string)))
+              (expression (read string)))
+        (let ((start (point))
+              (return-value (eval expression)))
+          (kill-new (format "%S" return-value))
+          (message "Copied: `%S'" return-value)
+          (push-mark (point))
+          (insert (format "\n;; => %S\n" return-value))
+          (indent-region start (point)))
+      (user-error "No expression at point")))
 
   ;; The `+elisp-pp-macroexpand-last-sexp' is a variant of
   ;; `pp-macroexpand-last-sexp', whose primary goal is to conform with the
