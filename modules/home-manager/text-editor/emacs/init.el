@@ -1658,8 +1658,6 @@ first one. Else do `vertico-exit'."
                                          (t ,@+vertico-multiform-minimal))
           vertico-multiform-commands `(("consult-\\(.*\\)?\\(find\\|fd\\|grep\\|ripgrep\\)"
                                         ,@+vertico-multiform-maximal)
-                                       ("\\(indent-for-tab-command\\|completion-at-point\\)"
-                                        ,@+vertico-multiform-maximal)
                                        ("citar-\\(.*\\)"
                                         ,@+vertico-multiform-maximal))
           vertico-cycle t
