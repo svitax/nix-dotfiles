@@ -3516,6 +3516,9 @@ If region is active, extend selection downward by line. If
         (end-of-line)
         (forward-line 1))))
 
+  ;; BUG: this still creates fundamental mode copies of my buffers
+  ;; NOTE 2025-10-24 i've narrowed it down to happening when I spam
+  ;; keyboard-quit while doing `helpful-key'
   (defun +keyboard-quit-dwim ()
     "Smarter version of the built-in `keyboard-quit'.
 
