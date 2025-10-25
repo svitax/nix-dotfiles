@@ -149,6 +149,7 @@ in
               devdocs
               # difftastic
               magit
+              diff-hl
               # git-gutter
               # git-gutter-fringe
               eldoc-diffstat

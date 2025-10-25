@@ -373,6 +373,10 @@ Like `+common-completion-table' but also disable sorting."
        `(git-gutter-fr:added ((,c :foreground ,bg-added-fringe :background ,fringe)))
        `(git-gutter-fr:deleted ((,c :foreground ,bg-removed-fringe :background ,fringe)))
        `(git-gutter-fr:modified ((,c :foreground ,bg-changed-fringe :background ,fringe)))
+       ;; Same for `diff-hl'.
+       `(diff-hl-insert ((,c :foreground ,bg-added-fringe :background ,fringe)))
+       `(diff-hl-delete ((,c :foreground ,bg-removed-fringe :background ,fringe)))
+       `(diff-hl-change ((,c :foreground ,bg-changed-fringe :background ,fringe)))
        `(keycast-key ((,c :inherit bold :foreground ,fg-mode-line-active :background ,bg-mode-line-active)))
        `(keycast-command ((,c :inherit mode-line :foreground ,fg-mode-line-active :background ,bg-mode-line-active))))))
   (add-hook 'enable-theme-functions #'+modus-themes-customize-faces))
@@ -5353,6 +5357,97 @@ default, it is the symbol at point."
 ;;
 ;; Doom Emacs has a lot of configuration code for diff-hl that I might look into
 ;; incorporating someday. In the meantime I'll keep using git-gutter.
+
+(use-package diff-hl
+  :init
+  (setq-default diff-hl-command-prefix (kbd "C-c v"))
+  (global-diff-hl-mode)
+  :config
+  ;; Redefine fringe bitmaps to be sleeker by making them solid bars (with no
+  ;; border) that only take up up half the horizontal space in the fringe. This
+  ;; approach lets us avoid robbing fringe space from other packages/modes that
+  ;; may need to benefit from it (like magit, flymake, or flyspell).
+  (if (fboundp 'fringe-mode) (fringe-mode '8))
+  (setq-default fringes-outside-margins t)
+
+  (defun +diff-hl-define-thin-bitmaps-a (&rest _)
+    (let* ((scale (if (and (boundp 'text-scale-mode-amount)
+                           (numberp text-scale-mode-amount))
+                      (expt text-scale-mode-step text-scale-mode-amount)
+                    1))
+           (spacing (or (and (display-graphic-p) (default-value 'line-spacing)) 0))
+           (h (+ (ceiling (* (frame-char-height) scale))
+                 (if (floatp spacing)
+                     (truncate (* (frame-char-height) spacing))
+                   spacing)))
+           (w (min (frame-parameter nil (intern (format "%s-fringe" diff-hl-side)))
+                   diff-hl-bmp-max-width))
+           (_ (if (zerop w) (setq w diff-hl-bmp-max-width))))
+      (define-fringe-bitmap 'diff-hl-bmp-middle
+        (make-vector
+         h (string-to-number (let ((half-w (1- (/ w 2))))
+                               (concat (make-string half-w ?1)
+                                       (make-string (- w half-w) ?0)))
+                             2))
+        nil nil 'center)))
+
+  (advice-add 'diff-hl-define-bitmaps :after #'+diff-hl-define-thin-bitmaps-a)
+
+  (defun +diff-hl-type-at-pos-fn (type _pos)
+    (if (eq type 'delete)
+        'diff-hl-bmp-delete
+      'diff-hl-bmp-middle))
+  (setq diff-hl-fringe-bmp-function #'+diff-hl-type-at-pos-fn)
+  (setq diff-hl-dired-fringe-bmp-function #'+diff-hl-type-at-pos-fn)
+  (setq diff-hl-draw-borders nil)
+
+  (defun +diff-hl-make-diff-hl-faces-transparent-h ()
+    (mapc (lambda (face)
+            (set-face-background face nil))
+          '(diff-hl-insert
+            diff-hl-delete
+            diff-hl-change)))
+
+  (add-hook 'diff-hl-mode-hook #'+diff-hl-make-diff-hl-faces-transparent-h)
+
+  ;; FIX: To minimize overlap between flymake indicators and diff-hl indicators
+  ;;   in the left fringe.
+  (with-eval-after-load 'flymake
+    ;; Let diff-hl have left fringe, flymake can have right fringe
+    (setq flymake-fringe-indicator-position 'right-fringe)
+    ;; A non-descript, left-pointing arrow
+    (define-fringe-bitmap 'flymake-fringe-bitmap-double-arrow
+      [16 48 112 240 112 48 16] nil nil 'center)
+
+    (setq flymake-error-bitmap '(flymake-fringe-bitmap-double-arrow
+                                 compilation-error)
+          flymake-warning-bitmap '(flymake-fringe-bitmap-double-arrow
+                                   compilation-warning)
+          flymake-note-bitmap '(flymake-fringe-bitmap-double-arrow
+                                compilation-info)))
+
+  (setopt diff-hl-disable-on-remote t)
+  (defun +diff-hl-enable-maybe-h ()
+    "Conditionally enable `diff-hl-dired-mode' in Dired buffers.
+Respects `diff-hl-disable-on-remote'."
+    ;; Neither `diff-hl-dired-mode' or `diff-hl-dired-mode-unless-remote'
+    ;; respect `diff-hl-disable-on-remote', so...
+    (unless (and (bound-and-true-p diff-hl-disable-on-remote)
+                 (file-remote-p default-directory))
+      (diff-hl-dired-mode +1)))
+  (add-hook 'dired-mode-hook #'+diff-hl-enable-maybe-h)
+
+  ;; Update `diff-hl' when `magit' alters git state.
+  (with-eval-after-load 'magit
+    (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+
+  (setopt diff-hl-global-modes '(not image-mode pdf-view-mode))
+  ;; A slightly faster algorithm for diffing.
+  (setopt vc-git-diff-switches '("--histogram"))
+  ;; Don't block Emacs when updating `diff-hl'.
+  ;; (setopt diff-hl-update-async t)
+  ;; Get realtime feedback in diffs after staging/unstaging hunks.
+  (setopt diff-hl-show-staged-changes nil))
 
 (use-package git-gutter
   :disabled t
