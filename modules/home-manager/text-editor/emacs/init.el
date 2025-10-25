@@ -2774,7 +2774,7 @@ window if it's the only one."
           window-sides-vertical nil
           switch-to-buffer-in-dedicated-window 'pop
           split-height-threshold 40
-          split-width-threshold 145
+          split-width-threshold 155 ; should be above half of `window-width'
           window-min-height 4
           window-min-width 10)
 
