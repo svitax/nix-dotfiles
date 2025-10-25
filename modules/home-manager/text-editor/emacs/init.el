@@ -320,6 +320,8 @@ Like `+common-completion-table' but also disable sorting."
 ;;;; themes ;;;;
 
 (use-package modus-themes
+  :init
+  (load-theme 'modus-vivendi)
   :config
   (setopt modus-themes-common-palette-overrides
           `(;; Hide the border around the active and inactive mode lines.
@@ -349,6 +351,10 @@ Like `+common-completion-table' but also disable sorting."
 
   (set-fringe-bitmap-face 'right-arrow 'shadow)
 
+  ;; BUG 2025-10-25 `modus-themes-with-colors' was changed in commit
+  ;; https://github.com/protesilaos/modus-themes/commit/27558488efabc3cd164a6f7fee979de0bc9ed42b
+  ;; and the following configuration is broken as of version 5.0.0-dev
+
   ;; We use the `enable-theme-functions' hook to ensure that these values are
   ;; updated after we switch themes. This special hook available in Emacs 29+
   ;; works with anything that uses the basic `enable-theme' function.
@@ -369,9 +375,7 @@ Like `+common-completion-table' but also disable sorting."
        `(git-gutter-fr:modified ((,c :foreground ,bg-changed-fringe :background ,fringe)))
        `(keycast-key ((,c :inherit bold :foreground ,fg-mode-line-active :background ,bg-mode-line-active)))
        `(keycast-command ((,c :inherit mode-line :foreground ,fg-mode-line-active :background ,bg-mode-line-active))))))
-  (add-hook 'enable-theme-functions #'+modus-themes-customize-faces)
-
-  (modus-themes-select 'modus-vivendi))
+  (add-hook 'enable-theme-functions #'+modus-themes-customize-faces))
 
 (use-package ef-themes :disabled t)
 

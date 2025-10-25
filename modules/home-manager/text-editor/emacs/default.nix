@@ -106,7 +106,7 @@ in
             with epkgs;
             [
               fontaine
-              modus-themes
+              # modus-themes
               # ef-themes
               # doric-themes
               theme-buffet
