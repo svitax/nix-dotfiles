@@ -8613,7 +8613,7 @@ in your `denote-directory'."
               (t
                (denote-format-file-name
                 (denote-directory)
-                (denote--find-first-unused-id (denote-get-identifier (current-time)))
+                (denote-generate-identifier-as-date nil (current-time))
                 (if-let* (is-source-denote
                           (denote-keywords (denote-retrieve-filename-keywords source-filename)))
                     (remove
