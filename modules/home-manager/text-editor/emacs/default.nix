@@ -149,8 +149,8 @@ in
               devdocs
               # difftastic
               magit
-              git-gutter
-              git-gutter-fringe
+              # git-gutter
+              # git-gutter-fringe
               eldoc-diffstat
               compile-multi
               consult-compile-multi

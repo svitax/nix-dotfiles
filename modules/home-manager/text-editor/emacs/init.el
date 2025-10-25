@@ -5355,6 +5355,7 @@ default, it is the symbol at point."
 ;; incorporating someday. In the meantime I'll keep using git-gutter.
 
 (use-package git-gutter
+  :disabled t
   :config
   ;; `git-gutter' and `git-gutter-fringe' use the margins or fringes to
   ;; highlight changes in the current buffer. The indicators are colour-coded to
@@ -5375,6 +5376,7 @@ default, it is the symbol at point."
   (setopt git-gutter:update-interval 0.5))
 
 (use-package git-gutter-fringe
+  :disabled t
   :config
   (setopt git-gutter-fr:side 'left-fringe)
   ;; Redefine fringe bitmaps to present the diff in the fringe as solid bars
