@@ -4661,8 +4661,7 @@ The parameter NAME, ARGS, REST, and STATE are explained in the
   ;; I don't like that, so let's remove it.
   (defun +eglot-remove-mode-line-misc-info ()
     (setq mode-line-misc-info
-          (delete '(eglot--managed-mode (" [" eglot--mode-line-format "] "))
-                  mode-line-misc-info)))
+          (assoc-delete-all 'eglot--managed-mode mode-line-misc-info)))
   (add-hook 'eglot-managed-mode-hook #'+eglot-remove-mode-line-misc-info)
 
   (setopt eglot-extend-to-xref t)
