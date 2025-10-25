@@ -2229,12 +2229,6 @@ The completion method is determined by completion-at-point-functions."
   (bind-keys :map global-map
              ("C-M-i" . +corfu-completion-at-point)
              :map emacs-lisp-mode-map
-             ("C-M-i" . +corfu-completion-at-point)
-             :map ielm-map
-             ("C-M-i" . +corfu-completion-at-point)
-             :map read-expression-map
-             ("C-M-i" . +corfu-completion-at-point)
-             :map bibtex-mode-map
              ("C-M-i" . +corfu-completion-at-point))
 
   (bind-keys :map corfu-map
