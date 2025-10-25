@@ -1682,8 +1682,11 @@ first one. Else do `vertico-exit'."
   ;; minibuffer. Otherwise use the default `completion--in-region' function.
   (setopt completion-in-region-function
           (lambda (&rest args)
-            (apply (if (minibufferp) #'completion--in-region
-                     #'consult-completion-in-region)
+            (apply (cond ((and (minibufferp)
+                               minibuffer-completion-table)
+                          #'completion--in-region)
+                         (t
+                          #'consult-completion-in-region))
                    args)))
 
   (with-eval-after-load 'rfn-eshadow
