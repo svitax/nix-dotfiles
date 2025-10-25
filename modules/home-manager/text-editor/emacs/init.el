@@ -2330,11 +2330,11 @@ together."
   ;; drown out more relevant suggestions and make the interface noisy.
   :config
   (defalias '+capf-eglot-tempel
-    (cape-capf-super (cape-capf-prefix-length #'tempel-complete 2)
-                     #'eglot-completion-at-point))
+    (cape-capf-super #'eglot-completion-at-point
+                     :with (cape-capf-prefix-length #'tempel-complete 2)))
   (defalias '+capf-elisp-tempel
-    (cape-capf-super (cape-capf-prefix-length #'tempel-complete 2)
-                     #'elisp-completion-at-point))
+    (cape-capf-super #'elisp-completion-at-point
+                     :with (cape-capf-prefix-length #'tempel-complete 2)))
 
   (defun +capf-setup-eglot (&optional global)
     "Add capfs to GLOBAL hook if non-nil, else local."
