@@ -16,8 +16,10 @@ in
   config = lib.mkIf cfg.enable {
     programs.git = {
       enable = true;
-      userName = "svitax";
-      userEmail = "svitaxiom@gmail.com";
+      settings = {
+        user.name = "svitax";
+        user.email = "svitaxiom@gmail.com";
+      };
       ignores = [
         ".direnv/"
         "result"

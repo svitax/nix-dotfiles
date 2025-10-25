@@ -217,7 +217,7 @@ in
         programs.info.enable = true;
         programs.man.enable = true;
 
-        programs.git.extraConfig = {
+        programs.git.settings = {
           difftool.diff.cmd = ''
             ${emacsBin} --eval '(ediff-files "'$LOCAL'" "'$REMOTE'")'
           '';
@@ -233,7 +233,7 @@ in
         };
       }
       (lib.mkIf cfg.defaultEditor { services.emacs.defaultEditor = true; })
-      (lib.mkIf cfg.enableGitDiff { programs.git.extraConfig.diff.tool = "ediff"; })
+      (lib.mkIf cfg.enableGitDiff { programs.git.settings.diff.tool = "ediff"; })
     ]
   );
 }
