@@ -382,6 +382,7 @@ Like `+common-completion-table' but also disable sorting."
 (use-package doric-themes :disabled t)
 
 (use-package theme-buffet
+  :disabled t ; disabled 2025-10-25
   :config
   ;; The `theme-buffet' package arranges to automatically change themes during
   ;; specific times of the day or at fixed intervals. The collection of themes
