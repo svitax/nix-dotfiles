@@ -5339,24 +5339,15 @@ default, it is the symbol at point."
   ;;                                      (body-function . select-window)))
   )
 
-;; TODO diff-hl
-;; I would like to lean into native/built-in Emacs functionality where it's
-;; equal or better than the third-party alternatives. `diff-hl' relies on the
-;; built-in `vc.el' library instead of talking to git directly (thus expanding
-;; support to whatever VCs vc.el supports, and not git alone), which also means
-;; it can take advantage of its caching and other user configuration for
-;; vc.el. Overall, it should be faster and lighter.
-;;
-;; However, everytime I have tried to use diff-hl, it has been buggy or slow to
-;; refresh on changes. It still has issues with Magit altering the git state. It
-;; is also easier to redefine fringe bitmaps for git-gutter than it is for
-;; diff-hl.
-;;
-;; Doom Emacs has a lot of configuration code for diff-hl that I might look into
-;; incorporating someday. In the meantime I'll keep using git-gutter.
-
 (use-package diff-hl
   :init
+  ;; I like to lean into native/built-in Emacs functionality where it's equal or
+  ;; better than the third-party alternatives. `diff-hl' relies on the built-in
+  ;; `vc.el' library instead of talking to git directly (thus expanding support
+  ;; to whatever VCs vc.el supports, and not git alone), which also means it can
+  ;; take advantage of its caching and other user configuration for vc.el.
+  ;; Overall, it should be faster and lighter than something like `git-gutter'
+
   (setq-default diff-hl-command-prefix (kbd "C-c v"))
   (global-diff-hl-mode)
   :config
@@ -5423,6 +5414,9 @@ default, it is the symbol at point."
           flymake-note-bitmap '(flymake-fringe-bitmap-double-arrow
                                 compilation-info)))
 
+  ;; `diff-hl' should just work with Tramp. But slow or high latency connections
+  ;; can cause performance problems. The following configuration inhibits it in
+  ;; remote buffers.
   (setopt diff-hl-disable-on-remote t)
   (defun +diff-hl-enable-maybe-h ()
     "Conditionally enable `diff-hl-dired-mode' in Dired buffers.
