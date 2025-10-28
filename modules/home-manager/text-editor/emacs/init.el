@@ -5350,6 +5350,7 @@ default, it is the symbol at point."
 
   (setq-default diff-hl-command-prefix (kbd "C-c v"))
   (global-diff-hl-mode)
+  (diff-hl-flydiff-mode)
   :config
   ;; Redefine fringe bitmaps to be sleeker by making them solid bars (with no
   ;; border) that only take up up half the horizontal space in the fringe. This
@@ -5431,6 +5432,24 @@ Respects `diff-hl-disable-on-remote'."
   ;; Update `diff-hl' when `magit' alters git state.
   (with-eval-after-load 'magit
     (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+
+  ;; Don't delete the current hunk's indicators while we're editing.
+  (defvar +diff-hl--pending-update nil)
+
+  (defun +diff-hl--debounced-update ()
+    "Schedule a diff-hl update when Emacs becomes idle for a short time."
+    (unless +diff-hl--pending-update
+      (setq +diff-hl--pending-update
+            (run-with-idle-timer
+             2.0 nil
+             (lambda ()
+               (setq +diff-hl--pending-update nil)
+               (when diff-hl-flydiff-mode
+                 (diff-hl-flydiff-update)))))))
+
+  (add-hook 'after-change-functions
+            (defun +diff-hl--after-change (_beg _end _len)
+              (+diff-hl--debounced-update)))
 
   (setopt diff-hl-global-modes '(not image-mode pdf-view-mode))
   ;; A slightly faster algorithm for diffing.
