@@ -7443,6 +7443,7 @@ written in lower case and ignore casing while spell-checking."
    ("h" . pdf-annot-add-highlight-markup-annotation)
    ("i" . consult-imenu)
    ("s" . pdf-annot-add-strikeout-markup-annotation)
+   ("M" . pdf-annot-add-markup-annotation)
    ("u" . pdf-annot-add-underline-markup-annotation)
    ("C-w" . pdf-view-kill-ring-save)
    ("M-w" . pdf-view-kill-ring-save)
