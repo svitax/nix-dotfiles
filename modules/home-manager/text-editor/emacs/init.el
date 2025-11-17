@@ -8560,6 +8560,7 @@ continue, per `org-agenda-skip-function'."
              ("n" . consult-denote-grep)))
 
 (use-package org-remark
+  :disabled t
   ;; Simply saving, excerpting, or copying materials is not enough; information
   ;; needs to be processed to be transformed into useful knowledge. The reason is
   ;; that merely transporting material only increases the amount of information
