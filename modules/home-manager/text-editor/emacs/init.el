@@ -5497,6 +5497,7 @@ Respects `diff-hl-disable-on-remote'."
   ;; Don't delete the current hunk's indicators while we're editing.
   (defvar +diff-hl--pending-update nil)
 
+  ;; BUG: flydiff errors out when no there are no commits
   (defun +diff-hl--debounced-update ()
     "Schedule a diff-hl update when Emacs becomes idle for a short time."
     (unless +diff-hl--pending-update
