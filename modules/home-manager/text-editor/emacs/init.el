@@ -342,8 +342,8 @@ Like `+common-completion-table' but also disable sorting."
             (bg-region bg-sage)))
 
   (setopt modus-vivendi-palette-overrides
-          `((fg-main "#ebebeb")
-            (bg-main "#090909")
+          `((fg-main "#e4e4ef")
+            (bg-main "#181818")
             ;; (bg-mode-line-active bg-lavender)
             ;; (fg-mode-line-active fg-main)
             (cursor yellow-warmer)
