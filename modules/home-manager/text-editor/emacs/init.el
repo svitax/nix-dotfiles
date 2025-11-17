@@ -1202,6 +1202,66 @@ Add this to `dired-mode-hook'."
   ;; `dired-jump' doesn't need a repeat map.
   (put 'dired-jump 'repeat-map nil)
 
+  ;; `+dired-hist' is a minor mode that keeps track of visited Dired buffers and
+  ;; lets you go back and forward across them. This is similar to the facility
+  ;; provided in other Emacs major modes, such as Info and EWW.
+  (defvar +dired-hist-stack nil
+    "The stack of previously visited Dired buffers.")
+
+  (defvar +dired-hist-forward-stack nil
+    "Forward history of previously visited Dired buffers.")
+
+  (defun +dired-hist--match (stack)
+    (equal (cdr-safe (car-safe stack)) default-directory))
+
+  (defun +dired-hist-go-back ()
+    "Go backward in the visited Dired buffer history."
+    (interactive)
+    (+dired-hist--update)
+    (when-let ((_ (cdr-safe +dired-hist-stack))
+               (elm (pop +dired-hist-stack)))
+      (unless (+dired-hist--match +dired-hist-forward-stack)
+        (push elm +dired-hist-forward-stack))
+      (+dired-hist--visit (car +dired-hist-stack))))
+
+  (defun +dired-hist-go-forward ()
+    "Go forward in the visited Dired buffer history."
+    (interactive)
+    (when +dired-hist-forward-stack
+      (+dired-hist--visit (pop +dired-hist-forward-stack))
+      (+dired-hist--update)))
+
+  (defun +dired-hist--visit (item)
+    "Visit Dired buffer or directory specified in ITEM.
+
+ITEM is a cons cell of the form (marker . directory)."
+    (let* ((last-buffer (marker-buffer (car item)))
+           (alive-p (buffer-live-p last-buffer))
+           (win (and alive-p
+                     (get-buffer-window last-buffer))))
+      (cond
+       (win (select-window win))
+       (alive-p (switch-to-buffer last-buffer))
+       (t (dired--find-possibly-alternative-file (cdr item))))))
+
+  (defun +dired-hist--update ()
+    "Update the Dired buffer history stack."
+    (unless (+dired-hist--match +dired-hist-stack)
+      (push (cons (point-marker) default-directory) +dired-hist-stack)))
+
+  (define-minor-mode +dired-hist-mode
+    "Keep track of visited Dired buffers and switch between them."
+    :group '+dired-hist
+    :global t
+    :lighter nil
+    (if +dired-hist-mode
+        (add-hook 'dired-mode-hook #'+dired-hist--update)
+      (remove-hook 'dired-mode-hook #'+dired-hist--update)
+      (setq +dired-hist-stack nil
+            +dired-hist-forward-stack nil)))
+
+  (+dired-hist-mode 1)
+
   (bind-keys
    :map +prefix-map
    ("d" . dired)
@@ -1209,7 +1269,8 @@ Add this to `dired-mode-hook'."
    :map dired-mode-map
    ("e" . wdired-change-to-wdired-mode)
    ("i" . +dired-insert-subdir) ; override `dired-maybe-insert-subdir'
-   ("l" . dired-up-directory)
+   ("l" . +dired-hist-go-back)
+   ("r" . +dired-hist-go-forward)
    ("/" . +dired-limit-regexp)
    ("M-e" . +dired-subdirectory-next)
    ("M-a" . +dired-subdirectory-previous)
