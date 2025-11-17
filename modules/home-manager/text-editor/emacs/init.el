@@ -5671,7 +5671,15 @@ directory to run `compile'."
           (unwind-protect
               (call-interactively 'compile)
             (fset 'read-from-minibuffer orig)))
-      (call-interactively 'project-compile)))
+      ;; This ensures the ensuing interactive call to `compile' uses the buffer
+      ;; local value of `compile-command' of the buffer we called `+compile'
+      ;; from. Calling `project-compile' interactively doesn't seem to do that.
+      ;; (call-interactively 'project-compile)
+      (let ((default-directory (project-root (project-current t)))
+            (compilation-buffer-name-function
+             (or project-compilation-buffer-name-function
+                 compilation-buffer-name-function)))
+        (call-interactively 'compile))))
 
   (defun +compile-send-input (input &optional nl)
     "Send INPUT to the current process.
