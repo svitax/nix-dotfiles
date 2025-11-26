@@ -4592,6 +4592,9 @@ through the edits."
           flymake-start-on-save-buffer t
           flymake-start-on-flymake-mode t)
 
+  ;; Interesting feature but I do not want to use it.
+  (setopt flymake-show-diagnostics-at-end-of-line nil) ; Emacs 31
+
   ;; By default, `flymake-mode' doesn’t override the `next-error' and related
   ;; navigation commands. When Flymake is active, though, I prefer `M-g n' and
   ;; similar bindings to move among diagnostics annotated in the buffer.
