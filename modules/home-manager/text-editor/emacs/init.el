@@ -6808,6 +6808,10 @@ return value."
           (indent-region start (point)))
       (user-error "No expression at point")))
 
+  (defvar-keymap +elisp-macroexpand-mode-map
+    :doc "Key map for `+elisp-macroexpand-mode'."
+    :parent special-mode-map)
+
   ;; The `+elisp-pp-macroexpand-last-sexp' is a variant of
   ;; `pp-macroexpand-last-sexp', whose primary goal is to conform with the
   ;; `display-buffer-alist'. I can thus macroexpand with the confidence that the
@@ -6817,7 +6821,10 @@ return value."
     :interactive nil
     (read-only-mode 1)
     (display-line-numbers-mode 1)
-    (bind-keys :map +elisp-macroexpand-mode-map ("q" . quit-window)))
+    ;; NOTE: the following features are for Emacs 31
+    ;; (setq-local elisp-fontify-semantically t
+    ;;             elisp-add-help-echo t)
+    (cursor-sensor-mode))
 
   (add-to-list 'display-buffer-alist
                '("*elisp-macroexpand*"
