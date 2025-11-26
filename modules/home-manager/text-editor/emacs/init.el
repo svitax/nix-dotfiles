@@ -2824,13 +2824,6 @@ window if it's the only one."
                  (side . bottom)
                  (slot . 0)))
 
-  (add-to-list 'display-buffer-alist
-               '((derived-mode . magit-status-mode)
-                 (display-buffer-reuse-mode-window display-buffer-in-tab)
-                 (mode . magit-status-mode)
-                 (reusable-frames . :just-the-selected-frame)
-                 (inhibit-switch-frame . t)))
-
   ;; The following settings are relevant for the `display-buffer-alist' we saw
   ;; right above. Notice, in particular, the `split-height-threshold' and
   ;; `split-width-threshold' which determine when to split the frame by height
@@ -5311,7 +5304,7 @@ default, it is the symbol at point."
         git-commit-style-convention-checks '(non-empty-second-line))
 
   (setopt magit-diff-refine-hunk t
-          magit-display-buffer-function #'display-buffer
+          magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
           magit-commit-diff-inhibit-same-window nil)
 
   ;; When 'C-c C-c' or 'C-c C-k' are pressed in the Magit commit message buffer,
