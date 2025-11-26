@@ -500,7 +500,8 @@ Like `+common-completion-table' but also disable sorting."
   ;; those functions run a hook after they are called. The pulse effect is added
   ;; there (`pulsar-after-function-hook').
   (setopt pulsar-face 'pulsar-green
-          pulsar-region-face 'pulsar-cyan
+          pulsar-region-face 'pulsar-yellow
+          pulsar-region-change-face 'pulsar-yellow
           pulsar-highlight-face 'pulsar-magenta)
 
   ;; Pulse after `pulsar-pulse-region-functions'.
