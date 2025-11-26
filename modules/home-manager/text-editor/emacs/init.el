@@ -3956,7 +3956,7 @@ There is no dragging the character forward. This is the behavior of
 
    ;; `+mark-line' will mark the current line, or if region is active it will
    ;; move forward a line.
-   ("C-M-SPC" . +mark-line) ; overrides mark-sexp
+   ("C-M-h" . +mark-line) ; overrides mark-defun
 
    ;; The default `delete-char' doesn't respect the values of
    ;; `delete-active-region'. Make it so `C-d' deletes the region if active.
@@ -4436,8 +4436,7 @@ back to regular `er/expand-region'"
 
   (bind-keys
    :map global-map
-   ("C-," . +er/expand-region-dwim) ; overrides mark-paragraph
-   ("C-M-h" . er/contract-region) ; overrides mark-defun
+   ("C-M-SPC" . +er/expand-region-dwim) ; overrides mark-sexp
    )
 
   (setopt expand-region-fast-keys-enabled nil))
