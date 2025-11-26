@@ -7528,7 +7528,6 @@ written in lower case and ignore casing while spell-checking."
   ;; This being Emacs, everything is customizable and Org is a good example of
   ;; this. There are a lot of user options for us to tweak things to our liking.
   (setopt org-ellipsis "⤵"
-          org-startup-folded 'content
           org-M-RET-may-split-line '((default . nil))
           org-cycle-separator-lines 0
           org-loop-over-headlines-in-active-region 'start-level
@@ -7555,16 +7554,19 @@ written in lower case and ignore casing while spell-checking."
   ;; Whereas the purely visual `org-indent-mode' is a feature we can turn on and
   ;; off at will without worrying that something will change in our file.
 
-  ;; I do not set up this minor mode via a hook, as I do not really need it for
-  ;; small Org files. Instead, I set up the files I am interested in to have the
-  ;; following somewhere close to the top:
+  ;; We can set up this minor mode via a hook, so it takes effect in all Org
+  ;; buffers. An alterative is to enable on a per-file basis, by adding the
+  ;; "indent" keyword to the "#+startup" keyword somewhere close to the top of
+  ;; the file. For example:
   ;;
   ;; #+startup: content indent
   ;;
   ;; What this `#+startup' directive does is to (i) show all the headings while
   ;; folding their contents and (ii) activate `org-indent-mode'. If you add the
   ;; `#+startup' to an already open file, then you need to do `org-mode-restart'
-  ;; for changes to take effect.
+  ;; for changes to take effect, or move the cursor to that line and type "C-c
+  ;; C-c". Below I configure `org-startup-folded' which is the underlying
+  ;; variable for the "content" part shown in this example.
 
   ;; By default, `org-indent-mode' will hide the leading asterisks, leaving only
   ;; one at a time. This looks cleaner overall, though I find it harder to add a
@@ -7577,9 +7579,11 @@ written in lower case and ignore casing while spell-checking."
   ;; The other small tweak I make is to make the indentation a bit more
   ;; pronouced, by setting `org-indent-indentation-per-level' to `4' instead of
   ;; `2'.
+  (add-hook 'org-mode-hook #'org-indent-mode)
   (setopt org-adapt-indentation nil ; No, non, nein, όχι to literal indentation!
           org-indent-mode-turns-on-hiding-stars nil
-          org-indent-indentation-per-level 4)
+          org-indent-indentation-per-level 4
+          org-startup-folded 'content)
 
   ;; One of the many use-cases for Org is to maintain a plain text to-do list. A
   ;; heading that starts with a to-do keyword, such as "TODO", is treated as a
