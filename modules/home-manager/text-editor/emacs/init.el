@@ -5367,7 +5367,11 @@ default, it is the symbol at point."
   ;; diff hunk headings in Elisp and Org buffers. See what Prot wrote about it
   ;; here: https://protesilaos.com/codelog/2021-01-26-git-diff-hunk-elisp-org/.
 
-  (setopt diff-default-read-only t))
+  (setopt diff-default-read-only t)
+
+  (bind-keys :map diff-mode-map
+             ("M-o" . nil)) ; unmap `diff-goto-source'
+  )
 
 (use-package ediff
   ;; The built-in `ediff' provides several commands that let us compare files or
