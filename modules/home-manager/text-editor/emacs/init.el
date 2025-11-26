@@ -5235,6 +5235,81 @@ default, it is the symbol at point."
 ;;;;;;;;;;;;
 ;;;; vc ;;;;
 
+(use-package vc
+  ;; The concept of "version control" pertains to a system of versioning files,
+  ;; to track and visualise changes from record to record. These
+  ;; version-controlled files may be part of a project.
+
+  ;; There are many programs that fall in the category of Version Control
+  ;; Software (VCS). I only use `git', simply because it is ubiquitous though
+  ;; there are others which have technical merits as well.
+
+  ;; VCSs have some common features, such as how they record a unit of history,
+  ;; and how they handle the synchronisation of their state across
+  ;; computers. Because of these commonalities, Emacs is able to provide a layer
+  ;; of abstraction, known as "Version Control", else `vc.el' and its
+  ;; accoutrements.
+
+  ;; [Technically, the `vc.el' file is not the only one defining relevant
+  ;; functionality. There are VCS-specific variants, such as `vc-git.el', as
+  ;; well as complementary features like `vc-annotate.el'. All these hereinafter
+  ;; referred to as `vc'.]
+
+  ;; With `vc', we can carry out all the common actions related to version
+  ;; control, such as to commit (to make a record of) changes and pull/push them
+  ;; from/to the remote (i.e. the server with which we sync our
+  ;; project). Whatever VCS we use, the workflow is the same:
+  ;;
+  ;; - Make changes to a file
+  ;; - Type `C-x v v' (`vc-next-action')
+  ;;   - If the file is already under version control, `vc' will produce a "log
+  ;;     edit" buffer to let you commit the changes.
+  ;;   - If the file is not under version control, `vc' will use a minibuffer
+  ;;     prompt to ask which VCS to use. These are also known as backends and
+  ;;     are stored in the user option `vc-handled-backends'.
+  ;;   - If the file is not under version control but is in a directory which
+  ;;     itself is version controlled, then the file will be added to the list
+  ;;     of tracked files.
+  ;; - Type `C-x v v' again and `vc' will proceed to the next action, which is to
+  ;;   commit the changes to history. This is done in the next `log-edit'
+  ;;   buffer.
+  ;; - By convention, the message of each commit is separated into a summary and
+  ;;   the body of the message. An empty line divides them. The summary is the
+  ;;   first line of the message and should, as a matter of best practices, be
+  ;;   brief yet sufficiently descriptive. The rest is free form text. In the
+  ;;   `log-edit' buffer, the empty separator line between the summary and the
+  ;;   body is shown as a border, so there is no need to add another line there.
+  ;; - Once the message is ready, type `C-c C-c' (`log-edit-done') to confirm it
+  ;;   or `C-c C-k' (`log-edit-kill-buffer') to cancel the operation.
+  ;; - From the `log-edit' buffer, it is possible to see the underlying changes
+  ;;   in a diff buffer. Do it with `C-c C-d' (`log-edit-show-diff').
+  ;; - The record of commits to the history of the entire project is accessed
+  ;;   with the command `vc-print-root-log', while that of individual files is
+  ;;   handled by the command `vc-print-log'.
+  ;; - To pull from a remote, do `vc-update'. To push, invoke `vc-push'.
+  ;; - A Dired-like buffer is also available to perform these actions across
+  ;;   many edited files. Check the commands `vc-dir', `vc-root-dir', or even
+  ;;   `project-vc-dir'.
+  ;; - Merge conflicts are handled in the affected files with the help of the
+  ;;   built-in `smerge-mode'.
+
+  ;; There is more functionality, though this should already give you an
+  ;; overview of what is on offer. The gist is that `vc' provides a fast and
+  ;; minimalist way to accomplish the basic tasks related to version
+  ;; control. For more demanding operations, there is either the command-line or
+  ;; the wonderful `magit' Emacs package.
+
+  (setq vc-follow-symlinks t)
+
+  (add-hook 'log-edit-hook #'log-edit-maybe-show-diff 90)
+
+  (setopt vc-git-log-edit-summary-target-len 50
+          vc-git-log-edit-summary-max-len 70)
+
+  (bind-keys :map log-edit-mode-map
+             ("M-s" . nil)) ; unmap log-edit-comment-search-forward
+  )
+
 (use-package magit
   ;; The `magit' package, maintained by Jonas Bernoulli, is the best front-end
   ;; to `git' I have ever used. Not only is it excellent at getting the job
