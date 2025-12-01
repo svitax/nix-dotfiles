@@ -3515,6 +3515,8 @@ narrowed."
            (or (ignore-errors (org-edit-src-code))
                (ignore-errors (org-narrow-to-block))
                (org-narrow-to-subtree)))
+          ((derived-mode-p 'diff-mode)
+           (diff-restrict-view p))
           ((region-active-p)
            (narrow-to-region (region-beginning) (region-end)))
           (t (narrow-to-defun))))
