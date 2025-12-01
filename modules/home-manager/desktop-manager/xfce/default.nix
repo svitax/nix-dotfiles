@@ -16,6 +16,7 @@ in
     xfconf.settings = {
       xfce4-keyboard-shortcuts = {
         "commands/custom/<Super>d" = "xfce4-appfinder";
+        "xfwm4/custom/<Primary><Alt>d" = false; # unmap show_desktop_key
       };
       xsettings = {
         "Gtk/FontName" = "Aporetic Sans 14";
