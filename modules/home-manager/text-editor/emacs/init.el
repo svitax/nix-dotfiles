@@ -5640,6 +5640,7 @@ Respects `diff-hl-disable-on-remote'."
   (define-fringe-bitmap 'git-gutter-fr:deleted [#b11111000] nil nil '(center repeated)))
 
 (use-package eldoc-diffstat
+  :disabled t ; NOTE disabled 2025-12-01
   :config
   ;; I have `eldoc-echo-area-use-multiline-p' set to nil, so a lot of useful
   ;; information is truncated from the echo area like the number of files
