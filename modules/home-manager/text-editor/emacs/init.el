@@ -2503,6 +2503,7 @@ together."
              ("k" . project-kill-buffers)
              ("p" . project-switch-project)
              ("r" . project-query-replace-regexp)
+             ("v" . project-vc-dir)
              ("," . project-compile)
              ("&" . project-async-shell-command)
              ("!" . project-shell-command)))
