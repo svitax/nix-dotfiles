@@ -5697,7 +5697,19 @@ Respects `diff-hl-disable-on-remote'."
   ;; Don't block Emacs when updating `diff-hl'.
   ;; (setopt diff-hl-update-async t)
   ;; Get realtime feedback in diffs after staging/unstaging hunks.
-  (setopt diff-hl-show-staged-changes nil))
+  (setopt diff-hl-show-staged-changes nil)
+
+  (bind-keys :map vc-prefix-map
+             ("n" . diff-hl-next-hunk)
+             ("p" . diff-hl-previous-hunk)
+             :repeat-map diff-hl-repeat-map
+             ("n" . diff-hl-next-hunk)
+             ("p" . diff-hl-previous-hunk)
+             ("N" . diff-hl-show-hunk-next)
+             ("P" . diff-hl-show-hunk-previous)
+             ("*" . diff-hl-show-hunk)
+             ("r" . diff-hl-revert-hunk)
+             ("S" . diff-hl-stage-dwim)))
 
 (use-package git-gutter
   :disabled t
