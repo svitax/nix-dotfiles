@@ -377,6 +377,9 @@ Like `+common-completion-table' but also disable sorting."
        `(diff-hl-insert ((,c :foreground ,bg-added-fringe :background ,fringe)))
        `(diff-hl-delete ((,c :foreground ,bg-removed-fringe :background ,fringe)))
        `(diff-hl-change ((,c :foreground ,bg-changed-fringe :background ,fringe)))
+       ;; I don't need to be reminded by ignored items in version control.
+       `(diff-hl-dired-ignored ((,c :foreground ,bg-main)))
+       `(diff-hl-dired-unknown ((,c :foreground ,bg-main)))
        `(keycast-key ((,c :inherit bold :foreground ,fg-mode-line-active :background ,bg-mode-line-active)))
        `(keycast-command ((,c :inherit mode-line :foreground ,fg-mode-line-active :background ,bg-mode-line-active))))))
   (add-hook 'enable-theme-functions #'+modus-themes-customize-faces))
