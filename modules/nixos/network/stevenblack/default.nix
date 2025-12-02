@@ -20,15 +20,15 @@ in
     # root. Changes made to it in this way will be discarded when switching
     # configurations.
     environment.etc.hosts.mode = "0644";
-    # networking.stevenblack = {
-    #   enable = true;
-    #   block = [
-    #     "fakenews"
-    #     "gambling"
-    #     "porn"
-    #     "social"
-    #   ];
-    # };
+    networking.stevenblack = {
+      enable = true;
+      block = [
+        "fakenews"
+        "gambling"
+        "porn"
+        "social"
+      ];
+    };
     # If I don't mind having externally fetched resources, I could use a fixed
     # output derivation (FOD) to fetch the data directly
     # extrahostsfromsteve = pkgs.fetchurl {

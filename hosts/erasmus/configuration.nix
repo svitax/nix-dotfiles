@@ -32,6 +32,8 @@
     man.enable = true;
   };
 
+  network.stevenblack.enable = true;
+
   # TOOD refactor ollama config
   services.ollama = {
     enable = true;
