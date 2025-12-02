@@ -5300,17 +5300,87 @@ default, it is the symbol at point."
   ;; minimalist way to accomplish the basic tasks related to version
   ;; control. For more demanding operations, there is either the command-line or
   ;; the wonderful `magit' Emacs package.
+  :config
+  (require 'vc-dir)
+  (require 'vc-git)
+  (require 'log-view)
+  (require 'log-edit)
 
-  (setq vc-follow-symlinks t)
+  ;; I can see the files with "C-c C-f"
+  (remove-hook 'log-edit-hook #'log-edit-show-files)
 
-  (add-hook 'log-edit-hook #'log-edit-maybe-show-diff 90)
+  ;; The default `vc-git-expanded-log-entry' makes it hard to visually see where
+  ;; the commit message starts and ends. I redefine it here to add a newline at
+  ;; the top and indent it by 2 spaces.
+  (defun vc-git-expanded-log-entry (revision)
+    (with-temp-buffer
+      (apply #'vc-git-command t nil nil
+             `("log"
+               ,revision
+               "-1" "--no-color" ,@(ensure-list vc-git-log-switches)
+               "--"))
+      (goto-char (point-min))
+      (insert "\n")
+      (unless (eobp)
+        (while (re-search-forward "^  " nil t)
+          (replace-match "")
+          (forward-line))
+        ;; Indent the expanded log entry.
+        (indent-rigidly (point-min) (point-max) 2)
+        (buffer-string))))
 
-  (setopt vc-git-log-edit-summary-target-len 50
-          vc-git-log-edit-summary-max-len 70)
+  (setopt vc-follow-symlinks t
+          vc-find-revision-no-save t
+          vc-git-log-edit-summary-target-len 50
+          vc-git-log-edit-summary-max-len 70
+          vc-git-diff-switches '("--patch-with-stat" "--histogram")
+          vc-git-print-log-follow t
+          vc-git-log-switches "--stat"
+          vc-git-root-log-format
+          `("%d%h %ad %an: %s"
+            ;; The first shy group matches the characters drawn by --graph.
+            ;; We use numbered groups because `log-view-message-re' wants the
+            ;; revision number to be group 1.
+            "^\\(?:[*/\\|]+ \\)?\
+\\(?2: ([^)]+)\\)?\
+\\(?1:[0-9a-z]+\\) \
+\\(?3:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\)\
+\\(?4:.*?:\\)"
+            ((1 'log-view-message)
+             (2 'change-log-list nil lax)
+             (3 'change-log-name)
+             (4 'change-log-date)))
+          vc-git-revision-complete-only-branches t)
 
-  (bind-keys :map log-edit-mode-map
-             ("M-s" . nil)) ; unmap log-edit-comment-search-forward
-  )
+  (bind-keys :map +prefix-map
+             ("v" . vc-prefix-map)
+             :map vc-prefix-map
+             ("c" . vc-prepare-patch)
+             ("F" . vc-update) ; symmetric with P: `vc-push'
+             ("k" . vc-delete-file) ; 'k' for kill==>delete is more common
+             ("x" . nil) ; unmap `vc-delete-file'
+             :map vc-dir-mode-map
+             ("c" . vc-prepare-patch)
+             ("d" . vc-diff) ; orig `vc-dir-clean-files', parallel to D: `vc-root-diff'
+             ("F" . vc-update) ; symmetric with P: `vc-push'
+             ("k" . vc-dir-delete-file) ; 'k' for kill==>delete is more common
+             :map vc-git-stash-shared-map
+             ("k" . vc-git-stash-delete-at-point) ; symmetry with `vc-dir-delete-file'
+             :map log-edit-mode-map
+             ("M-s" . nil)  ; unmap `log-edit-comment-search-forward'
+             :map log-view-mode-map
+             ("RET" . log-view-find-revision) ; orig. `log-edit-toggle-entry-display'
+             ("<tab>" . log-view-toggle-entry-display) ; orig. `log-view-msg-next'
+             ("<backtab>" . nil) ; unmap `log-view-msg-prev'
+             ("c" . vc-prepare-patch)
+             ("F" . vc-update)
+             ("P" . vc-push)
+             ("s" . vc-log-search)
+             :map diff-mode-map
+             ("L" . vc-print-root-log)
+             ;; Emacs 29 can use "C-x v v" in diff buffers, which is great, but
+             ;; now I need quick access to it.
+             ("v" . vc-next-action)))
 
 (use-package magit
   ;; The `magit' package, maintained by Jonas Bernoulli, is the best front-end
@@ -5415,14 +5485,13 @@ default, it is the symbol at point."
       (magit-restore-window-configuration)
       (mapc #'kill-buffer buffers)))
 
-  (bind-keys
-   :map +prefix-map
-   ("v" . magit-status)
-   :map +project-prefix-map
-   ("v" . magit-project-status)
-   :map magit-status-mode-map
-   ;; Apply our +magit-kill-buffers command only in magit-status
-   ("q" . +magit-kill-buffers)))
+  (bind-keys :map vc-prefix-map
+             ("V" . magit-status)
+             :map +project-prefix-map
+             ("V" . magit-project-status)
+             :map magit-status-mode-map
+             ;; Apply our +magit-kill-buffers command only in magit-status
+             ("q" . +magit-kill-buffers)))
 
 (use-package diff
   :config
