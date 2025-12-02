@@ -130,6 +130,7 @@ in
               tempel-collection
               eglot-tempel
               consult-eglot
+              dape
               # projection
               # substitute
               goto-chg

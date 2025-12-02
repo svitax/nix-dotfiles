@@ -282,7 +282,7 @@ Like `+common-completion-table' but also disable sorting."
              ;; ("v" . magit-status) ; vc-prefix-map ("C-v" . find-alternate-file)
              ("w" . +window-prefix-map) ("C-w" . write-file)
              ("x" . +toggle-prefix-map) ("C-x" . exchange-point-and-mark)
-             ("y" . +dap-prefix-map) ; ("C-y" . ) ; "why" mnemonic
+             ;; ("y" . dape-global-map) ; ("C-y" . ) ; "why" mnemonic
              ;; ("z" . vertico-repeat) ("C-z" . +switch-to-shell-buffer)
              ("(" . kmacro-start-macro) (")" . kmacro-end-macro)
              ("TAB" . indent-rigidly)))
@@ -4886,7 +4886,27 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
 ;;;;;;;;;;;;;
 ;;;; dap ;;;;
 
-;; (use-package dape)
+;; TODO document dape
+(use-package dape
+  :config
+  (setopt dape-buffer-window-arrangement 'right
+          dape-inlay-hints nil)
+
+  (add-to-list 'dape-configs '(go-run-main
+                               modes (go-mode go-ts-mode)
+                               ensure dape-ensure-command
+                               command "dlv"
+                               command-args ("dap" "--listen" "127.0.0.1::autoport")
+                               command-cwd dape-command-cwd
+                               command-insert-stderr t
+                               port :autoport
+                               :name "Run main.go with --localtest"
+                               :request "launch"
+                               :type "go"
+                               :program "main.go"
+                               :args ["-localtest"]))
+
+  (bind-key "y" dape-global-map +prefix-map))
 
 ;; TODO Use apheleia-use-package and eglot-use-package as inspiration for
 ;; dape-use-package, add to local lisp directory
