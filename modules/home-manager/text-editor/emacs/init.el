@@ -5449,9 +5449,13 @@ default, it is the symbol at point."
 
   (setopt diff-default-read-only t)
 
+  (add-hook 'diff-mode-hook #'outline-minor-mode)
+
   (bind-keys :map diff-mode-map
-             ("M-o" . nil)) ; unmap `diff-goto-source'
-  )
+             ("TAB" . outline-cycle)
+             ("M-n" . diff-file-next)
+             ("M-o" . nil) ; unmap `diff-goto-source'
+             ("M-p" . diff-file-prev)))
 
 (use-package ediff
   ;; The built-in `ediff' provides several commands that let us compare files or
