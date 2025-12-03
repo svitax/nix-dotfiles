@@ -8663,6 +8663,33 @@ continue, per `org-agenda-skip-function'."
 ;;   (add-hook 'org-mode-hook #'org-modern-mode)
 ;;   (add-hook 'org-agenda-finalize-hook #'org-modern-agenda))
 
+(use-package outline
+  ;; The built-in `outline-minor-mode' defines folding and navigation commands
+  ;; for the file's outline. The "outline" is the document's discernible
+  ;; structure, defined by the local value of the variable `outline-regexp'.
+  ;; Simply put, it is about the headings in the document.
+  ;;
+  ;; Any file can have its own outline. For example, in Emacs Lisp any comment
+  ;; with three or more delimiters that starts at the beginning of the line
+  ;; counts as a heading. Three delimiters make it a level 1 heading, four
+  ;; delimiters for level 2, and so on. You will notice that I already use
+  ;; outlines in all my files. Sometimes I enable the `outline-minor-mode',
+  ;; though I do not really need the folding capabilities. Plus, I can navigate
+  ;; the file using minibuffer completion among outline entries without enabling
+  ;; `outline-minor-mode', courtesy of the command `consult-outline'.
+  :config
+  (add-hook 'prog-mode-hook #'outline-minor-mode)
+
+  (setopt outline-minor-mode-highlight t
+          outline-minor-mode-cycle t
+          outline-minor-mode-use-buttons nil)
+
+  (bind-keys :map outline-minor-mode-map
+             ("C-c C-n" . outline-next-visible-heading)
+             ("C-c C-p" . outline-previous-visible-heading)
+             :map +toggle-prefix-map
+             ("o" . outline-minor-mode)))
+
 ;;;;;;;;;;;;;;;
 ;;;; notes ;;;;
 
