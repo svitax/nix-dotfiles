@@ -8731,7 +8731,7 @@ continue, per `org-agenda-skip-function'."
   :config
   (add-hook 'prog-mode-hook #'outline-minor-mode)
 
-  (setopt outline-minor-mode-highlight t
+  (setopt outline-minor-mode-highlight nil
           outline-minor-mode-cycle t
           outline-minor-mode-use-buttons nil)
 
