@@ -8731,6 +8731,14 @@ continue, per `org-agenda-skip-function'."
   :config
   (add-hook 'prog-mode-hook #'outline-minor-mode)
 
+  ;; Set our own ellipsis icon.
+  (defvar +outline-display-table (make-display-table))
+  (set-display-table-slot +outline-display-table 'selective-display
+                          (vector (make-glyph-code ?⤵ 'escape-glyph)))
+  (defun +outline-set-display-table ()
+    (setf buffer-display-table +outline-display-table))
+  (add-hook 'outline-minor-mode-hook '+outline-set-display-table)
+
   (setopt outline-minor-mode-highlight nil
           outline-minor-mode-cycle t
           outline-minor-mode-use-buttons nil)
