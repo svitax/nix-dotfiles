@@ -4715,8 +4715,42 @@ The parameter NAME, ARGS, REST, and STATE are explained in the
 ;;;;;;;;;;;;;
 ;;;; lsp ;;;;
 
-;; NOTE document eglot
 (use-package eglot
+  ;; The built-in `eglot' feature, developed and maintained by João Távora, is
+  ;; Emacs' own client for the Language Server Protocol (LSP). The LSP
+  ;; technology is all about enhancing the ability of a text editor to work with
+  ;; a given programming language. This works by installing a so-called
+  ;; "language-server" on your computer, which the "LSP client" (i.e. `eglot')
+  ;; will plug into. A typical language server provides the following
+  ;; capabilities:
+  ;;
+  ;; Code completion
+  ;;     This can be visualized for in-buffer automatic expansion of function
+  ;;     calls, variables, and the like.
+  ;; Code linting
+  ;;     To display suggestions, warnings, or errors. These are highlighted in
+  ;;     the buffer, usually with an underline, and can also be displayed in a
+  ;;     standalone buffer with the commands `flymake-show-buffer-diagnostics',
+  ;;     `flymake-show-project-diagnostics'.
+  ;; Code navigation and cross-referencing
+  ;;     While over a symbol, use a command to jump directly to its definition.
+  ;;     The default key bindings for going forth and then back are `M-.'
+  ;;     (`xref-find-definitions') and `M-,' (`xref-go-back').
+  ;;     [Features such as the definition of the outline should, in principle,
+  ;;     be implemented by the major mode though I see no reason why a language
+  ;;     server cannot be involved in this task. You can use the built-in
+  ;;     `outline-minor-mode' to provide Org-like folding capabilities for
+  ;;     outline headings. I usually navigate the outline using minibuffer
+  ;;     completion, with the help of `consult-outline'.]
+  ;;
+  ;; Assuming the language server is installed, to start using the LSP client in
+  ;; a given file, do `M-x eglot'. To make this happen automatically for every
+  ;; newly visited file, add a hook like this:
+  ;;
+  ;; (add-hook 'SOME-MAJOR-MODE #'eglot-ensure)
+  ;;
+  ;; My `eglot-use-package' package adds the `:lsp-hook' keyword for use-package
+  ;; forms to simplify this.
   :init
   (with-eval-after-load 'pulsar
     (dolist (func '(eglot-find-typeDefinition
