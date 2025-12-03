@@ -4927,24 +4927,75 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
 ;; TODO document dape
 (use-package dape
   :config
+  (bind-key "y" dape-global-map +prefix-map)
+  (setopt dape-key-prefix "")
+
   (setopt dape-buffer-window-arrangement 'right
-          dape-inlay-hints nil)
+          dape-inlay-hints nil
+          dape-info-hide-mode-line t)
 
-  (add-to-list 'dape-configs '(go-run-main
-                               modes (go-mode go-ts-mode)
-                               ensure dape-ensure-command
-                               command "dlv"
-                               command-args ("dap" "--listen" "127.0.0.1::autoport")
-                               command-cwd dape-command-cwd
-                               command-insert-stderr t
-                               port :autoport
-                               :name "Run main.go with --localtest"
-                               :request "launch"
-                               :type "go"
-                               :program "main.go"
-                               :args ["-localtest"]))
+  ;; Add CGO_ENABLED=0 to dlv config otherwise it doesn't work on NixOS.
+  (setf (alist-get 'dlv dape-configs)
+        '(modes (go-mode go-ts-mode)
+          ensure dape-ensure-command
+          command "dlv"
+          command-args ("dap" "--listen" "127.0.0.1::autoport")
+          command-cwd dape-command-cwd
+          command-insert-stderr t
+          port :autoport
+          :request "launch"
+          :type "go"
+          :cwd "."
+          :program "."
+          :env (:CGO_ENABLED "0")))
 
-  (bind-key "y" dape-global-map +prefix-map))
+  ;; Dape's default configuration assumes `codelldb' is manually installed in
+  ;; `user-emacs-directory', which doesn't work with my NixOS setup. Here I
+  ;; configure Dape to use the appropriate path for codelldb.
+  (dolist (config '(codelldb-cc codelldb-rust))
+    (setf (alist-get config dape-configs)
+          (plist-put (alist-get config dape-configs)
+                     'command "codelldb")))
+
+  (add-to-list 'dape-configs
+               '(debugpy-pytest
+                 modes (python-mode python-ts-mode)
+                 ensure
+                 (lambda (config)
+                   (dape-ensure-command config)
+                   (let ((python (dape-config-get config 'command)))
+                    (unless
+                        (zerop
+                         (process-file-shell-command
+                          (format "%s -c \"import debugpy.adapter\"" python)))
+                      (user-error "%s module debugpy is not installed" python))))
+                 command "python"
+                 command-args ("-m" "debugpy.adapter" "--host" "0.0.0.0" "--port" :autoport)
+                 port :autoport
+                 :request "launch"
+                 :type "python"
+                 :cwd dape-cwd
+                 :module "pytest"
+                 :args [dape-buffer-default]
+                 :justMyCode nil
+                 :console "integratedTerminal"
+                 :showReturnValue t
+                 :stopOnEntry nil))
+
+  ;; Pulse source line.
+  (with-eval-after-load 'pulsar
+    (dolist (hook '(dape-display-source-hook))
+      (add-hook hook #'pulsar-pulse-line)))
+
+  ;; Dape automatically adds `global-mode-string' to `mode-line-misc-info'. I
+  ;; don't like that, so let's remove it.
+  (defun +dape-remove-mode-line-misc-info ()
+    (setq-local mode-line-misc-info
+                (assoc-delete-all 'global-mode-string mode-line-misc-info)))
+  (add-hook 'dape-active-mode-hook #'+dape-remove-mode-line-misc-info)
+
+  ;; Turn on global bindings for setting breakpoints with mouse.
+  (dape-breakpoint-global-mode))
 
 ;; TODO Use apheleia-use-package and eglot-use-package as inspiration for
 ;; dape-use-package, add to local lisp directory
