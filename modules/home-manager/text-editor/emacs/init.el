@@ -8736,6 +8736,7 @@ continue, per `org-agenda-skip-function'."
           outline-minor-mode-use-buttons nil)
 
   (bind-keys :map outline-minor-mode-map
+             ("M-RET" . outline-insert-heading)
              ("C-c C-n" . outline-next-visible-heading)
              ("C-c C-p" . outline-previous-visible-heading)
              :map +toggle-prefix-map
