@@ -5683,10 +5683,13 @@ default, it is the symbol at point."
   ;; to whatever VCs vc.el supports, and not git alone), which also means it can
   ;; take advantage of its caching and other user configuration for vc.el.
   ;; Overall, it should be faster and lighter than something like `git-gutter'
-
-  (setq-default diff-hl-command-prefix (kbd "C-c v"))
   (global-diff-hl-mode)
   (diff-hl-flydiff-mode)
+  ;; I hate it when packages hard-code global keybindings. Do not touch my
+  ;; global bindings unless I explicitly say so. And now trying to undo what the
+  ;; package author thought was helpful causes unnecessary errors. I cannot set
+  ;; `diff-hl-command-prefix' to nil or "" because then everything blows up.
+  (setq-default diff-hl-command-prefix (kbd "C-x v ,"))
   :config
   ;; Redefine fringe bitmaps to be sleeker by making them solid bars (with no
   ;; border) that only take up up half the horizontal space in the fringe. This
