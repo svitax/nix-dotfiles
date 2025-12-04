@@ -5547,10 +5547,7 @@ default, it is the symbol at point."
   ;; Windows but in the case I forced to a combination of `vc' and the
   ;; command-line will suffice.
   :init
-  (setq magit-define-global-key-bindings nil
-        magit-section-visibility-indicator (cons (if (char-displayable-p ?⤵)
-                                                     "⤵" "...")
-                                                 t))
+  (setq magit-define-global-key-bindings nil)
   :config
   (setq git-commit-summary-max-length 50
         ;; I used to also include `overlong-summary-line' in this list, but I
