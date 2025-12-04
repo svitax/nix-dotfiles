@@ -27,7 +27,7 @@
 
 ;;; Commentary:
 ;;
-;; Druid modeline is a an alternative to the GNU/Emacs modeline. There are
+;; Druid modeline is a an alternative to the GNU/Emacs modeline.  There are
 ;; several modelines that can be installed on a per-mode basis or as the default
 ;; one.
 ;;
@@ -63,25 +63,21 @@
 
 ;;;; Group
 
-(defgroup druid nil
-  "Druid"
-  :group 'convenience)
-
 (defgroup druid-modeline nil
   "Custom modeline that is stylistically close to the default."
-  :group 'druid)
+  :group 'convenience)
 
 ;;;; Custom
 
 (defcustom druid-modeline-padding '(0.20 . 0.25)
-  "Default vertical space adjustment (in fraction of character height)"
+  "Default vertical space adjustment (in fraction of character height)."
   :type '(cons
           (float :tag "Top spacing")
           (float :tag "Bottom spacing"))
   :group 'druid-modeline)
 
 (defcustom druid-modeline-position #'druid-modeline-footer
-  "Default position for the druid modeline"
+  "Default position for the druid modeline."
 
   :type '(choice
           (const :tag "Top"    druid-modeline-header)
@@ -89,7 +85,7 @@
   :group 'druid-modeline)
 
 (defcustom druid-modeline-window-dedicated-symbol '("◦ " . "")
-  "Pairs of strings showing a window is dedicated or not dedicated"
+  "Pairs of strings showing a window is dedicated or not dedicated."
   :type '(cons
           (string :tag "Window is dedicated")
           (string :tag "Window is not dedicated"))
@@ -99,32 +95,32 @@
 
 (defface druid-modeline-popout-i
   '((t (:inherit (eldoc-highlight-function-argument bold))))
-  "Face for when line is active"
+  "Face for when line is active."
   :group 'druid-modeline)
 
 (defface druid-modeline-interactive-i
   '((t (:inherit (shr-selected-link bold))))
-  "Face for interactive buffer"
+  "Face for interactive buffer."
   :group 'druid-modeline)
 
 (defface druid-modeline-faded
   '((t (:inherit (font-lock-comment-face mode-line-active))))
-  "Face for faded (active) elements"
+  "Face for faded (active) elements."
   :group 'druid-modeline)
 
 (defface druid-modeline-active
   '((t (:inherit (mode-line-active))))
-  "Face for when line is active"
+  "Face for when line is active."
   :group 'druid-modeline)
 
 (defface druid-modeline-inactive
   '((t (:inherit (font-lock-comment-face mode-line-inactive))))
-  "Face for when line is inactive"
+  "Face for when line is inactive."
   :group 'druid-modeline)
 
 (defface druid-modeline-status
   '((t (:inherit (tooltip bold))))
-  "Face for line status"
+  "Face for line status."
   :group 'druid-modeline)
 
 (defvar druid-modeline-base-face nil)
@@ -145,8 +141,8 @@
   "Druid line faces.
 
 Each face defined here is used by the modeline depending on the current
-state (active / inactive). It is ok to define a face for a single
-state. In such case, the alternative state will use defaults."
+state (active / inactive).  It is ok to define a face for a single
+state.  In such case, the alternative state will use defaults."
   :type '(alist
           :key-type (symbol :tag "Face")
           :value-type (repeat :tag "inherits" face)))
@@ -160,7 +156,7 @@ state. In such case, the alternative state will use defaults."
   "Selected window before mode-line was activated.")
 
 (defun druid-modeline--update-selected-window ()
-  "Update selected window (before mode-line is active)"
+  "Update selected window (before mode-line is active)."
   (unless (minibuffer-window-active-p (minibuffer-window))
     (setq druid-modeline--selected-window (selected-window))))
 
@@ -175,8 +171,8 @@ state. In such case, the alternative state will use defaults."
     face))
 
 (defun druid-modeline-face (&optional face-prefix)
-  "Return the face for FACE-PREFIX according to current active state and
-make it inherit the base face."
+  "Return the face for FACE-PREFIX according to current active state.
+Make it inherit the base face."
 
   (let* ((window (get-buffer-window (current-buffer)))
          (active (eq window druid-modeline--selected-window))
@@ -195,8 +191,8 @@ make it inherit the base face."
 (defvar-local druid-modeline-right-fringe-width 0)
 
 (defun druid-modeline--make (left right face-prefix)
-  "Build a dynamic mode/header line made of LEFT and RIGHT part,
-using the given FACE-PREFIX as the default."
+  "Build a dynamic mode/header line made of LEFT and RIGHT part.
+Uses the given FACE-PREFIX as the default."
 
   `(:eval
     (let* ((druid-modeline-base-face (druid-modeline--base-face ',face-prefix))
@@ -244,8 +240,8 @@ using the given FACE-PREFIX as the default."
        'display '(space :width (druid-modeline-right-fringe-width)))))))
 
 (defun druid-modeline-header (left &optional right default)
-  "Install a header line made of LEFT and RIGHT parts. Line can be
-made DEFAULT."
+  "Install a header line made of LEFT and RIGHT parts.
+Line can be made DEFAULT."
 
   (if default
       (setq-default header-line-format (druid-modeline--make left right))
@@ -256,8 +252,8 @@ made DEFAULT."
   (add-hook 'post-command-hook #'druid-modeline--update-selected-window))
 
 (defun druid-modeline-footer (left &optional right default)
-  "Install a footer line made of LEFT and RIGHT parts. Line can be
-made DEFAULT."
+  "Install a footer line made of LEFT and RIGHT parts.
+Line can be made DEFAULT."
   (face-remap-reset-base 'mode-line)
   (face-remap-reset-base 'mode-line-active)
   (face-remap-reset-base 'mode-line-inactive)
@@ -321,11 +317,11 @@ defined in `druid-modeline-meow-state-tags.'"
     (window-dedicated . "◦")
     (vc-branch  . "")
     (vc-hash  . "#"))
-  "Various symbols used in the modeline. It is possible to add padding to
-left and right for symbols that do not align perfectly (NERD
-fonts). Default symbols make use of NERD font and may appear as tofu if
-the fontis not installed on your system. Either install NERD font or use
-other characters."
+  "Various symbols used in the modeline.
+It is possible to add padding to left and right for symbols that do not
+align perfectly (NERD fonts).  Default symbols make use of NERD font and
+may appear as tofu if the fontis not installed on your system.  Either
+install NERD font or use other characters."
   :type '(alist
           :key-type symbol
           :value-type (choice (string :tag "Label")
@@ -336,11 +332,18 @@ other characters."
   :group 'druid-modeline)
 
 (defun druid-modeline-symbol (name)
-  "Retrieve SYMBOL from the nano-modeline-symbols list"
+  "Retrieve NAME from the nano-modeline-symbols list."
   (or (alist-get name druid-modeline-symbol-list) "??"))
 
 (defun druid-modeline-buffer-status (&optional symbol face padding)
-   "Return a prefix indicating if buffer is read-only, read-write or modified"
+  "Return a prefix indicating if buffer is read-only, read-write or modified.
+
+Optional argument SYMBOL is the symbol to display.
+
+Optional argument FACE is the face to apply.
+
+Optional argument PADDING is the (TOP . BOTTOM) display padding to
+apply.  If nil, fall back to `druid-modeline-padding'."
   (let* ((padding (or padding druid-modeline-padding))
          (top (propertize " " 'display `(raise ,(car padding))))
          (bot (propertize " " 'display `(raise ,(- (cdr padding)))))
@@ -358,7 +361,14 @@ other characters."
     (propertize (concat top symbol bot) 'face face)))
 
 (defun druid-modeline-buffer-interactive (&optional symbol face padding)
-  "Return a prefix indicating if buffer is interactive, read-write or modified"
+  "Return a prefix indicating if buffer is interactive, read-write or modified.
+
+Optional argument SYMBOL is the symbol to display.
+
+Optional argument FACE is the face to apply.
+
+Optional argument PADDING is the (TOP . BOTTOM) display padding to
+apply.  If nil, fall back to `druid-modeline-padding'."
   (let* ((padding (or padding druid-modeline-padding))
          (top (propertize " " 'display `(raise ,(car padding))))
          (bot (propertize " " 'display `(raise ,(- (cdr padding)))))
@@ -373,7 +383,7 @@ other characters."
     (propertize (concat top symbol bot) 'face face)))
 
 (defun druid-modeline-shell-status ()
-  "Shell status"
+  "Shell status."
   (druid-modeline-buffer-status ">_" (druid-modeline-face 'status-RO)))
 
 ;;;;; Name
@@ -381,7 +391,8 @@ other characters."
 ;;;;;; Buffer Identification
 
 (defun druid-modeline-buffer-identification (&optional name)
-  "Buffer name"
+  "Buffer name.
+Optional argument NAME, is non-nil, is used directly."
   (propertize
    (cond (name name)
          ((derived-mode-p '(shell-mode)) "*shell*")
@@ -399,7 +410,8 @@ other characters."
 ;;;;; Narrow
 
 (defun druid-modeline-narrow-status (&optional name)
-  "Narrowed status"
+  "Narrowed status.
+Optional argument NAME, is non-nil, is used directly."
   (propertize
    (cond (name name)
          ((buffer-narrowed-p) "[narrow]")
@@ -409,7 +421,8 @@ other characters."
 ;; TODO can i merge org-narrow-status into narrow-status by
 ;; using (and (eq major-mode 'org-mode))
 (defun druid-modeline-org-narrow-status (&optional name)
-  "Narrowed status for Org buffers"
+  "Narrowed status for Org buffers.
+Optional argument NAME, is non-nil, is used directly."
   (propertize
    (cond (name name)
          ((buffer-narrowed-p)
@@ -433,8 +446,8 @@ other characters."
 
 ;; " "
 (defun druid-modeline-vc-info (&optional symbol)
-  "VC information as (branch, file status)"
-
+  "VC information as (branch, file status).
+Optional argument SYMBOL, if non-nil, is used as the prefix symbol."
   (when vc-mode
     (when-let* ((file (buffer-file-name))
                 (backend (vc-backend file))
@@ -451,7 +464,8 @@ other characters."
   :group 'druid-modeline)
 
 (defun druid-modeline-shell-name (&optional name)
-  "Shell name"
+  "Shell name.
+Optional argument NAME, is non-nil, is used directly."
   (let ((mode (cond ((derived-mode-p '(term-mode))
                      (cond ((term-in-char-mode) "char")
                            ((term-in-line-mode) "line")
