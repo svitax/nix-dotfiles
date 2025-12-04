@@ -5450,11 +5450,10 @@ default, it is the symbol at point."
             ;; The first shy group matches the characters drawn by --graph.
             ;; We use numbered groups because `log-view-message-re' wants the
             ;; revision number to be group 1.
-            "^\\(?:[*/\\|]+ \\)?\
-\\(?2: ([^)]+)\\)?\
-\\(?1:[0-9a-z]+\\) \
-\\(?3:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\)\
-\\(?4:.*?:\\)"
+          "^\\(?:[*/\\| ]+ \\)?\
+\\(?2: ([^)]+)\\)?\\(?1:[0-9a-z]+\\) \
+\\(?4:[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}\\) \
+\\(?3:.*?\\):"
             ((1 'log-view-message)
              (2 'change-log-list nil lax)
              (3 'change-log-name)
