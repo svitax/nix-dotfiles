@@ -2,7 +2,7 @@
 
 ;;; Commentary:
 
-;; init is where my Emacs config starts.
+;;;; init is where my Emacs config starts.
 
 ;;; Code:
 
