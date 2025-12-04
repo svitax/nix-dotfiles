@@ -507,9 +507,6 @@ Like `+common-completion-table' but also disable sorting."
           pulsar-region-change-face 'pulsar-yellow
           pulsar-highlight-face 'pulsar-magenta)
 
-  ;; Pulse after `pulsar-pulse-region-functions'.
-  (setopt pulsar-pulse-region-functions pulsar-pulse-region-common-functions)
-
   (dolist (func '(beginning-of-buffer
                   end-of-buffer
                   beginning-of-defun
