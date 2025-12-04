@@ -4624,6 +4624,9 @@ through the edits."
              ("M-g M-n" . flymake-goto-next-error)
              ("M-g p" . flymake-goto-prev-error)
              ("M-g M-p" . flymake-goto-prev-error)
+             :map flymake-diagnostics-buffer-mode-map
+             ("n" . next-error-no-select)
+             ("p" . previous-error-no-select)
              :repeat-map flymake-goto-error-repeat-map
              ("n" . flymake-goto-next-error)
              ("p" . flymake-goto-prev-error))
