@@ -5779,24 +5779,66 @@ Respects `diff-hl-disable-on-remote'."
               (+diff-hl--debounced-update)))
 
   (setopt diff-hl-global-modes '(not image-mode pdf-view-mode))
-  ;; A slightly faster algorithm for diffing.
-  (setopt vc-git-diff-switches '("--histogram"))
   ;; Don't block Emacs when updating `diff-hl'.
   ;; (setopt diff-hl-update-async t)
   ;; Get realtime feedback in diffs after staging/unstaging hunks.
   (setopt diff-hl-show-staged-changes nil)
 
-  (bind-keys :map vc-prefix-map
+  ;; Recenter to location of diff.
+  (advice-add 'diff-hl-next-hunk
+              :after (defun +diff-hl-recenter (&optional _) (recenter)))
+
+  (defvar-keymap diff-hl-repeat-map
+    :repeat (:hints ((diff-hl-next-hunk . "next")
+                     (diff-hl-previous-hunk . "prev")
+                     (diff-hl-show-hunk-next . "show next")
+                     (diff-hl-show-hunk-previous . "show prev")
+                     (diff-hl-show-hunk . "show")
+                     (diff-hl-revert-hunk . "revert")
+                     (diff-hl-stage-dwim . "Stage"))))
+
+  (bind-keys :map +toggle-prefix-map
+             ("d" . +diff-hl-mode)
+             :map vc-prefix-map
              ("n" . diff-hl-next-hunk)
              ("p" . diff-hl-previous-hunk)
+             ("S" . diff-hl-stage-dwim)
+             ("U" . diff-hl-revert-hunk)
+             ("*" . diff-hl-show-hunk)
+             ("SPC" . diff-hl-mark-hunk)
+             :map diff-hl-command-map
+             ("n" . diff-hl-next-hunk)
+             ("p" . diff-hl-previous-hunk)
+             ("]" . nil) ; orig. diff-hl-next-hunk
+             ("[" . nil) ; orig. diff-hl-previous-hunk
+             ("}" . diff-hl-show-hunk-next)
+             ("{" . diff-hl-show-hunk-previous)
+             ("U" . diff-hl-revert-hunk)
+             ("SPC" . diff-hl-mark-hunk)
              :repeat-map diff-hl-repeat-map
              ("n" . diff-hl-next-hunk)
              ("p" . diff-hl-previous-hunk)
-             ("N" . diff-hl-show-hunk-next)
-             ("P" . diff-hl-show-hunk-previous)
+             ("}" . diff-hl-show-hunk-next)
+             ("{" . diff-hl-show-hunk-previous)
              ("*" . diff-hl-show-hunk)
-             ("r" . diff-hl-revert-hunk)
-             ("S" . diff-hl-stage-dwim)))
+             ("u" . nil) ; orig. diff-hl-revert-hunk
+             ("U" . diff-hl-revert-hunk)
+             ("S" . diff-hl-stage-dwim))
+
+  (with-eval-after-load 'diff-hl-show-hunk
+    (bind-keys :map diff-hl-show-hunk-map
+               ;; Unfortunately there's no easier way to change the footer in the
+               ;; `diff-hl-show-hunk-inline-popup' other then redefining the whole
+               ;; function, so it will be misleading with these bindings.
+               ("[" . nil) ; orig. diff-hl-show-hunk-previous
+               ("]" . nil) ; orig. diff-hl-show-hunk-next
+               ("S" . diff-hl-show-hunk-stage-hunk)
+               ("c" . diff-hl-show-hunk-copy-original-text)
+               ("n" . diff-hl-show-hunk-next)
+               ("p" . diff-hl-show-hunk-previous)
+               ("U" . diff-hl-show-hunk-revert-hunk)
+               ("{" . diff-hl-show-hunk-previous)
+               ("}" . diff-hl-show-hunk-next))))
 
 (use-package git-gutter
   :disabled t
