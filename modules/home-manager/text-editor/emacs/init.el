@@ -5811,7 +5811,7 @@ Respects `diff-hl-disable-on-remote'."
                      (diff-hl-stage-dwim . "Stage"))))
 
   (bind-keys :map +toggle-prefix-map
-             ("d" . +diff-hl-mode)
+             ("d" . diff-hl-mode)
              :map vc-prefix-map
              ("n" . diff-hl-next-hunk)
              ("p" . diff-hl-previous-hunk)
