@@ -525,6 +525,19 @@ Like `+common-completion-table' but also disable sorting."
   (add-hook 'next-error-hook #'pulsar-pulse-line-red)
   (add-hook 'next-error-hook #'pulsar-reveal-entry)
 
+  ;; HACK `pulse-flag' is being incorrectly set to nil after updating to Emacs
+  ;; 30.2. Remove this hack after upgrading to Pulsar 1.4.0.
+  (defun pulsar--create-pulse (locus face)
+    "Create a pulse spanning the LOCUS using FACE.
+LOCUS is a cons cell with two buffer positions."
+    (let ((pulse-delay pulsar-delay)
+          (pulse-flag t)
+          (pulse-iterations pulsar-iterations)
+          (overlay (make-overlay (car locus) (cdr locus))))
+      (overlay-put overlay 'pulse-delete t)
+      (overlay-put overlay 'window (frame-selected-window))
+      (pulse-momentary-highlight-overlay overlay face)))
+
   (pulsar-global-mode 1))
 
 ;; (use-package lin)
