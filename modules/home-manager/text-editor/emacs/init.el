@@ -1842,7 +1842,7 @@ first one. Else do `vertico-exit'."
   ;; default.
   (dolist (src consult-buffer-sources)
     (unless (or (null (symbol-value src))
-                (eq src 'consult--source-buffer)
+                (eq src 'consult-source-buffer)
                 (plist-member (symbol-value src) :hidden))
       (set src (plist-put (symbol-value src) :hidden t))))
 
