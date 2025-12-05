@@ -5496,6 +5496,7 @@ default, it is the symbol at point."
              ("s" . vc-log-search)
              :map diff-mode-map
              ("L" . vc-print-root-log)
+             ("u" . vc-revert)
              ;; Emacs 29 can use "C-x v v" in diff buffers, which is great, but
              ;; now I need quick access to it.
              ("v" . vc-next-action)))
