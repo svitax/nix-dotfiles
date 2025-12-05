@@ -517,7 +517,9 @@ Like `+common-completion-table' but also disable sorting."
                   forward-list
                   backward-list
                   backward-up-list
-                  down-list))
+                  down-list
+                  forward-sentence
+                  backward-sentence))
     (add-to-list 'pulsar-pulse-functions func))
   ;; There are convenience functions/commands which pulse the line using a
   ;; specific color: `pulsar-pulse-line-green' is one of them.
