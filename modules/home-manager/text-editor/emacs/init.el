@@ -1737,9 +1737,7 @@ first one. Else do `vertico-exit'."
                                           (vertico-sort-function
                                            . +vertico-sort-directories-first))
                                          (t ,@+vertico-multiform-minimal))
-          vertico-multiform-commands `(("consult-\\(.*\\)?\\(find\\|fd\\|grep\\|ripgrep\\)"
-                                        ,@+vertico-multiform-maximal)
-                                       ("citar-\\(.*\\)"
+          vertico-multiform-commands `(("citar-\\(.*\\)"
                                         ,@+vertico-multiform-maximal))
           vertico-cycle t
           vertico-count 5)
