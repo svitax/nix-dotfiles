@@ -3400,10 +3400,7 @@ end of the buffer.")
                     backward-paragraph
                     org-forward-paragraph
                     org-backward-paragraph))
-      (add-to-list 'pulsar-pulse-functions func)))
-
-  (bind-keys ("M-e" . forward-paragraph)
-             ("M-a" . backward-paragraph)))
+      (add-to-list 'pulsar-pulse-functions func))))
 
 (use-package logos
   ;; This package provides a simple approach to setting up a "focus mode". It
