@@ -2818,7 +2818,6 @@ window if it's the only one."
   (setq display-buffer-base-action
         '((display-buffer-reuse-mode-window
            display-buffer-reuse-window
-           display-buffer-in-previous-window
            +display-buffer-use-some-other-window
            display-buffer-pop-up-window)
           (some-window . mru)
