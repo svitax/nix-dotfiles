@@ -505,7 +505,8 @@ Like `+common-completion-table' but also disable sorting."
   (setopt pulsar-face 'pulsar-green
           pulsar-region-face 'pulsar-yellow
           pulsar-region-change-face 'pulsar-yellow
-          pulsar-highlight-face 'pulsar-magenta)
+          pulsar-highlight-face 'pulsar-magenta
+          pulsar-iterations 15)
 
   (dolist (func '(beginning-of-buffer
                   end-of-buffer
