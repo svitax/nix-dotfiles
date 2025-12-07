@@ -3900,29 +3900,31 @@ There is no dragging the character forward. This is the behavior of
    ("M-u" . upcase-dwim)
    ("M-=" . count-words)
 
-   ;; Make `transpose-chars' always act like when point is at end of the line.
+   ;; Make `transpose-chars' always act like when point is at end of
+   ;; the line.
    ("C-t" . +transpose-chars)
 
-   ;; Make `kill-region' and `kill-ring-save' act on symbol at point if no
-   ;; active region.
+   ;; Make `kill-region' and `kill-ring-save' act on symbol at point
+   ;; if no active region.
    ("C-w" . +kill-region)
    ("M-w" . +kill-ring-save)
-   ;; `+save-next-kill' causes the following command, if it kills, to save in
-   ;; the kill ring instead. With prefix argument has same behavior as
-   ;; `append-next-kill', which adds to previous kill.
+   ;; `+save-next-kill' causes the following command, if it kills, to
+   ;; save in the kill ring instead. With prefix argument has same
+   ;; behavior as `append-next-kill', which adds to previous kill.
    ;; ("C-M-w" . +save-next-kill)
 
    ;; `+keyboard-quit-dwim' closes an open but unfocused minibuffer.
    ("C-g" . +keyboard-quit-dwim)
    ("<escape>" . +keyboard-quit-dwim)
 
-   ;; `+duplicate-dwim' will duplicate the region if active, otherwise the
-   ;; current line.
+   ;; `+duplicate-dwim' will duplicate the region if active, otherwise
+   ;; the current line.
    ("C-M-w" . +duplicate-dwim)
    ("C-M-y" . +yank-replace-dwim)
 
    ;; The default `delete-char' doesn't respect the values of
-   ;; `delete-active-region'. Make it so `C-d' deletes the region if active.
+   ;; `delete-active-region'. Make it so `C-d' deletes the region if
+   ;; active.
    ("C-d" . delete-forward-char)
 
    ;; Kills up to a char similar to Vim's dt command.
@@ -3930,12 +3932,13 @@ There is no dragging the character forward. This is the behavior of
    ("C-S-z" . +zap-up-to-char-backward)
    ("M-S-z" . +zap-to-char-backward)
 
-   ;; Escape urls and insert dates
+   ;; Escape urls and insert dates.
    ("C-<" . +escape-url-dwim)
    ("C-=" . +insert-date)
 
-   ;; The `+comment-line-dwim' command is like the built-in `comment-dwim', but
-   ;; toggles line wise commenting instead of appending them by default.
+   ;; The `+comment-line-dwim' command is like the built-in
+   ;; `comment-dwim', but toggles line wise commenting instead of
+   ;; appending them by default.
    ("M-;" . +comment-line-dwim)
    ("C-M-;" . +comment-sexp-dwim)
    ("s-;" . +comment-sexp-dwim)
