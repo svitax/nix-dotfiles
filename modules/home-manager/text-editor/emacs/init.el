@@ -3565,16 +3565,6 @@ narrowed."
      ("e" . org-narrow-to-element)
      ("s" . org-narrow-to-subtree))))
 
-(use-package goto-chg
-  ;; The `goto-chg' package, authored by David Andersson and maintained by
-  ;; Vasilij Scheidermann, moves the cursor to the point where the last change
-  ;; happenend. Calling the command again cycles to the point before that and so
-  ;; on. Simple and super effective.
-  :config
-  (bind-keys
-   ("C-(" . goto-last-change)
-   ("C-)" . goto-last-change-reverse)))
-
 ;; (use-package poi) ;; or better-jumper
 
 ;;;;;;;;;;;;;;;;;

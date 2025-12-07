@@ -129,7 +129,6 @@ in
               consult-eglot
               dape
               # substitute
-              goto-chg
               avy
               link-hint
               logos
