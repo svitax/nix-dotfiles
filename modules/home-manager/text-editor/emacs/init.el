@@ -365,15 +365,11 @@ Like `+common-completion-table' but also disable sorting."
        ;; of the line to the edge of the window. To limit it to the end of the
        ;; line, we need to override the face's `:extend' attribute.
        '(region ((t :extend nil)))
-       ;; The `git-gutter' and `git-gutter-fr' packages default to drawing
-       ;; bitmaps for the indicators they display (e.g. bitmap of a plus sign
-       ;; for added lines). I replace these bitmaps with contiguous lines which
-       ;; look nicer, but require a change to the foreground of the relevant
-       ;; faces to yield the desired color combinations.
-       `(git-gutter-fr:added ((,c :foreground ,bg-added-fringe :background ,fringe)))
-       `(git-gutter-fr:deleted ((,c :foreground ,bg-removed-fringe :background ,fringe)))
-       `(git-gutter-fr:modified ((,c :foreground ,bg-changed-fringe :background ,fringe)))
-       ;; Same for `diff-hl'.
+       ;; The `diff-hl' package defaults to drawing bitmaps for the indicators
+       ;; they display (e.g. bitmap of a plus sign for added lines). I replace
+       ;; these bitmaps with contiguous lines which look nicer, but require a
+       ;; change to the foreground of the relevant faces to yield the desired
+       ;; color combinations.
        `(diff-hl-insert ((,c :foreground ,bg-added-fringe :background ,fringe)))
        `(diff-hl-delete ((,c :foreground ,bg-removed-fringe :background ,fringe)))
        `(diff-hl-change ((,c :foreground ,bg-changed-fringe :background ,fringe)))
@@ -5661,13 +5657,21 @@ default, it is the symbol at point."
   )
 
 (use-package diff-hl
-  :init
+  ;; `diff-hl' use the margins or fringes to highlight changes in the current
+  ;; buffer. The indicators are colour-coded to denote whether a change is an
+  ;; addition, removal, or change that includes a bit of both.
+  ;;
+  ;; This package offers some more features, such as the ability to move between
+  ;; diff hunks while editing the buffers.
+  ;;
   ;; I like to lean into native/built-in Emacs functionality where it's equal or
   ;; better than the third-party alternatives. `diff-hl' relies on the built-in
   ;; `vc.el' library instead of talking to git directly (thus expanding support
   ;; to whatever VCs vc.el supports, and not git alone), which also means it can
   ;; take advantage of its caching and other user configuration for vc.el.
   ;; Overall, it should be faster and lighter than something like `git-gutter'
+
+  :init
   (global-diff-hl-mode)
   (diff-hl-flydiff-mode)
   ;; I hate it when packages hard-code global keybindings. Do not touch my
@@ -5675,6 +5679,7 @@ default, it is the symbol at point."
   ;; package author thought was helpful causes unnecessary errors. I cannot set
   ;; `diff-hl-command-prefix' to nil or "" because then everything blows up.
   (setq-default diff-hl-command-prefix (kbd "C-x v ,"))
+
   :config
   ;; Redefine fringe bitmaps to be sleeker by making them solid bars (with no
   ;; border) that only take up up half the horizontal space in the fringe. This
@@ -5813,7 +5818,7 @@ Respects `diff-hl-disable-on-remote'."
              ("{" . diff-hl-show-hunk-previous)
              ("U" . diff-hl-revert-hunk)
              ("SPC" . diff-hl-mark-hunk)
-             :repeat-map diff-hl-repeat-map
+             :map diff-hl-repeat-map
              ("n" . diff-hl-next-hunk)
              ("p" . diff-hl-previous-hunk)
              ("}" . diff-hl-show-hunk-next)
@@ -5837,40 +5842,6 @@ Respects `diff-hl-disable-on-remote'."
                ("U" . diff-hl-show-hunk-revert-hunk)
                ("{" . diff-hl-show-hunk-previous)
                ("}" . diff-hl-show-hunk-next))))
-
-(use-package git-gutter
-  :disabled t
-  :config
-  ;; `git-gutter' and `git-gutter-fringe' use the margins or fringes to
-  ;; highlight changes in the current buffer. The indicators are colour-coded to
-  ;; denote whether a change is an addition, removal, or change that includes a
-  ;; bit of both.
-  ;;
-  ;; This package offers some more features, such as the ability to move between
-  ;; diff hunks while editing the buffers. I still need to experiment with those
-  ;; before customizing them to my liking.
-  (add-hook 'prog-mode-hook #'git-gutter-mode)
-  ;; The `git-gutter:update-interval' customizable variable was defined with
-  ;; type 'integer, but I like it between 0.3 and 0.5 so I redefine it with type
-  ;; 'number.
-  (defcustom git-gutter:update-interval 0
-    "Time interval in seconds for updating diff information."
-    :type 'number
-    :group 'git-gutter)
-  (setopt git-gutter:update-interval 0.5))
-
-(use-package git-gutter-fringe
-  :disabled t
-  :config
-  (setopt git-gutter-fr:side 'left-fringe)
-  ;; Redefine fringe bitmaps to present the diff in the fringe as solid bars
-  ;; (with no border) taking up less horizontal space in the fringe. However
-  ;; this will look bad with themes that invert the foreground/background of
-  ;; git-gutter-fr's faces (like `modus-themes' does.)
-  (setq-default fringes-outside-margins t)
-  (define-fringe-bitmap 'git-gutter-fr:added [#b11111000] nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:modified [#b11111000] nil nil '(center repeated))
-  (define-fringe-bitmap 'git-gutter-fr:deleted [#b11111000] nil nil '(center repeated)))
 
 (use-package eldoc-diffstat
   :disabled t ; NOTE disabled 2025-12-01

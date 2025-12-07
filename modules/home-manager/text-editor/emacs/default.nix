@@ -151,8 +151,6 @@ in
               # difftastic
               magit
               diff-hl
-              # git-gutter
-              # git-gutter-fringe
               eldoc-diffstat
               compile-multi
               consult-compile-multi
