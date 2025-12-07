@@ -1594,8 +1594,8 @@ ITEM is a cons cell of the form (marker . directory)."
   ;; positives.
   ;;
   ;; With orderless we can also define so-called "style-dispatchers". These are
-  ;; characters attached to the input which instruct `orderless' to use a specific
-  ;; pattern for that component.
+  ;; characters attached to the input which instruct `orderless' to use a
+  ;; specific pattern for that component.
   ;;
   ;; I used to have my own style dispatchers, but realised that I was not using
   ;; them enough. The default method has also updated since I did my
@@ -1614,6 +1614,22 @@ ITEM is a cons cell of the form (marker . directory)."
   )
 
 (use-package vertico
+  ;; The `vertico' package by Daniel Mendler displays the minibuffer in a
+  ;; vertical layout. Under the hood, it takes care to be responsive and to
+  ;; handle even massive completion tables gracefully. Whereas, say, the
+  ;; built-in completion user interface will suffer from a noticeable
+  ;; performance penalty.
+  ;;
+  ;; All we need to get a decent experience with `vertico' is to enable the
+  ;; `vertico-mode'. For most users this is enough. In my case though, I have to
+  ;; use the "multiform" mechanism of this package to make it not show up
+  ;; eagerly.
+  ;;
+  ;; Beside what I am using it for, the "multiform" mechanism allows us to
+  ;; change the layout of `vertico' on a per-command or per-category basis. We
+  ;; can, for instance, have a horizontal presentation for some items. I have
+  ;; tried this for a while, but ultimately decided to go with a more
+  ;; predictable scheme.
   :config
   (vertico-mode)
   (vertico-multiform-mode)
@@ -1828,6 +1844,7 @@ first one. Else do `vertico-exit'."
   ;; + `S-<down>' and `S-<up>' always scrolls over the list of candidates while
   ;; doing preview. The `consult-customize' macro allows us to configure the the
   ;; preview on a per-command basis.
+
   :config
   (bind-keys :map vertico-map
              ("C-M-n" . vertico-next)
