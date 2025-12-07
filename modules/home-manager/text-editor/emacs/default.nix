@@ -131,7 +131,6 @@ in
               # projection
               # substitute
               goto-chg
-              # dired-preview
               avy
               ace-link
               link-hint

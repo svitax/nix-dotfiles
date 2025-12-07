@@ -1325,16 +1325,6 @@ ITEM is a cons cell of the form (marker . directory)."
              ("F" . dired-create-empty-file) ; mirror `dired-find-file'
              ("M-s f" . nil)))
 
-(use-package dired-preview
-  :disabled t ; disabled 2025-06-26
-  :config
-  ;; The `dired-preview' package previews the file at point in an Emacs
-  ;; window.
-  (setopt dired-preview-delay 0.5)
-
-  (bind-keys :map dired-mode-map
-             ("V" . dired-preview-mode)))
-
 ;;;;;;;;;;;;;;;;;;;
 ;;;; bookmarks ;;;;
 
