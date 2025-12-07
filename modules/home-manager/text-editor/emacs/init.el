@@ -4295,7 +4295,7 @@ for the given MAJOR-MODE, any text is appended to it."
   ;; and effective!
   :config
   (show-paren-mode 1)
-  (setopt show-paren-context-when-offscreen 'overlay
+  (setopt show-paren-context-when-offscreen nil
           show-paren-when-point-in-periphery t))
 
 ;; (use-package insert-pair)
