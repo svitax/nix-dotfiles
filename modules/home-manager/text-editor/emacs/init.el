@@ -380,41 +380,6 @@ Like `+common-completion-table' but also disable sorting."
        `(keycast-command ((,c :inherit mode-line :foreground ,fg-mode-line-active :background ,bg-mode-line-active))))))
   (add-hook 'enable-theme-functions #'+modus-themes-customize-faces))
 
-(use-package ef-themes :disabled t)
-
-(use-package doric-themes :disabled t)
-
-(use-package theme-buffet
-  :disabled t ; disabled 2025-10-25
-  :config
-  ;; The `theme-buffet' package arranges to automatically change themes during
-  ;; specific times of the day or at fixed intervals. The collection of themes
-  ;; is customisable, with the default options covering the built-in Emacs
-  ;; themes.
-  ;;
-  ;; There are two ways to make this package switch themes: (i) by time of day
-  ;; or "period-based" or (ii) at fixed intervals such as hourly or every few
-  ;; minutes.
-  ;;
-  ;; For period-based switching, the length of each period is determined by
-  ;; dividing the number of seconds in a day by the number of keywords (periods)
-  ;; defined in our menu. With four periods, for example, each one lasts six hours.
-  ;;
-  ;; The command `theme-buffet-end-user' starts a period-based timer, while
-  ;; `theme-buffet-timer-hours' and `theme-buffet-timer-mins' start timers that
-  ;; trigger theme changes at fixed intervals.
-  ;;
-  ;; Note that the above commands only schedule a timer. They do not immediately
-  ;; switch to a theme appropriate for the current period. To load one right
-  ;; away, we call `theme-buffet-a-la-carte' before starting the timer.
-  (setopt theme-buffet-menu 'end-user
-          theme-buffet-end-user '(:night (modus-vivendi)
-                                  :morning (modus-operandi)
-                                  :afternoon (modus-operandi)
-                                  :evening (modus-vivendi)))
-  (theme-buffet-a-la-carte)
-  (theme-buffet-end-user))
-
 ;;;;;;;;;;;;
 ;;;; ui ;;;;
 

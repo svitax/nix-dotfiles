@@ -107,9 +107,6 @@ in
             [
               fontaine
               # modus-themes
-              # ef-themes
-              # doric-themes
-              # theme-buffet
               pulsar
               cursory
               highlight-numbers
