@@ -546,6 +546,13 @@ LOCUS is a cons cell with two buffer positions."
   (add-hook 'elpher-mode-hook #'druid-modeline-elpher-mode))
 
 (use-package keycast
+  ;; This is a helpful package by Jonas Bernoulli that echoes the key presses
+  ;; and corresponding commands on the mode line, tab bar, header line, or a
+  ;; special buffer.
+  ;;
+  ;; I usually enable `keycast-mode-line-mode' (or rather my special
+  ;; `druid-modeline-keycast-mode') when I do a presentation. It shows an
+  ;; indicator on the focused mode line.
   :config
   (define-minor-mode druid-modeline-keycast-mode
     "Show current command and its key binding in the mode line."
@@ -584,8 +591,6 @@ LOCUS is a cons cell with two buffer positions."
   (advice-add 'embark-keymap-prompter :filter-return #'store-action-key+cmd)
   (advice-add 'avy-goto-char-timer :filter-return #'store-action-key+cmd)
   (advice-add 'avy-handler-default :before #'keycast-capture-avy-dispatch)
-
-  ;; (druid-modeline-keycast-mode +1)
 
   (bind-keys :map +toggle-prefix-map
              ("k" . druid-modeline-keycast-mode)))
