@@ -3582,16 +3582,6 @@ narrowed."
 (use-package editing
   :no-require
   :config
-  (defun +open-line-below (&optional next)
-    "Insert a new line below current line."
-    (interactive "P")
-    (if next
-        (progn (end-of-line)
-               (open-line 1)
-               (next-line)
-               (indent-according-to-mode))
-      (save-excursion (end-of-line)
-                      (open-line 1))))
 
   (defun +mark-line ()
     "Put point at beginning of this line, mark at end.
@@ -3975,9 +3965,6 @@ There is no dragging the character forward. This is the behavior of
    ;; The default `delete-char' doesn't respect the values of
    ;; `delete-active-region'. Make it so `C-d' deletes the region if active.
    ("C-d" . delete-forward-char)
-
-   ;; Open new lines similar to Vim's o command.
-   ("C-o" . +open-line-below)
 
    ;; Join the current line with the line below it similar to Vim's J command.
    ("C-^" . +delete-indentation-below) ; Complements `M-^' for delete-indentation
