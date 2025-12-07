@@ -3910,7 +3910,7 @@ There is no dragging the character forward. This is the behavior of
    ("C-d" . delete-forward-char)
 
    ;; Kills up to a char similar to Vim's dt command.
-   ("C-z" . zap-up-to-char) ; Complements `M-z' for zap-to-char
+   ("M-z" . zap-up-to-char) ; More useful than original `zap-to-char'
 
    ;; Escape urls and insert dates.
    ("C-<" . +escape-url-dwim)
