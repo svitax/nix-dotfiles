@@ -520,6 +520,8 @@ LOCUS is a cons cell with two buffer positions."
            highlight-numbers-modelist))
 
 (use-package druid-modeline
+  ;; I use a custom mode line that is close in spirit to the `nano-modeline'
+  ;; package.
   :config
   (setopt druid-modeline-padding '(0.0 . 0.0))
 
