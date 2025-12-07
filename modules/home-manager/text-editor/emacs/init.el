@@ -597,26 +597,6 @@ LOCUS is a cons cell with two buffer positions."
 
 ;; (use-package spacious-padding)
 
-;; TODO use visual-fill-column. wraps long lines at fill-column instead of at
-;; the window edge. put after fill block.
-(use-package visual-line
-  :no-require
-  :config
-  ;; I normally do not use `visual-line-mode'. What it does is to break long
-  ;; lines to span multiple lines without actually affecting the underlying
-  ;; text. In other words, we still have one long line only its visualisation is
-  ;; as a paragraph.
-
-  ;; For the cases where I am fine with `visual-line-mode', I enable the mode by
-  ;; adding it to these mode hooks.
-  (dolist (mode '(help-mode-hook
-                  special-mode-hook
-                  Custom-mode-hook
-                  epa-info-mode-hook))
-    (add-hook mode #'visual-line-mode))
-
-  (bind-keys :map +toggle-prefix-map
-             ("Q" . visual-line-mode)))
 
 (use-package truncate-lines
   :no-require
@@ -644,14 +624,19 @@ LOCUS is a cons cell with two buffer positions."
   :no-require
   :config
   ;; `auto-fill-mode' automatically breaks long lines so that they wrap at the
-  ;; `fill-column' length. This way, a paragraph is not a single long line, but
-  ;; several shorter lines with newline characters between them. Often times
-  ;; this is more pleasant to work with instead of having to rely on
-  ;; `visual-line-mode' to visually wrap long lines. Relevant programs strip
-  ;; away the newlines inside a paragraph, but there are some that do not. For
-  ;; those I might rely upon `virtual-auto-fill-mode'.
-  (add-hook 'text-mode-hook #'auto-fill-mode)
-  (setopt fill-column 80)
+  ;; `fill-column' length: it happens as you type. This way, a paragraph is not
+  ;; a single long line, but several shorter lines with newline characters
+  ;; between them. I find this much more pleasant to work with instead of having
+  ;; to rely on `visual-line-mode' to visually wrap long lines. I want my text
+  ;; to be readable even if I do not use Emacs (e.g. if I use cat or less on the
+  ;; command-line). Some relevant programs strip away the newlines inside a
+  ;; paragraph, but there are some that do not. For those I might rely upon
+  ;; `virtual-line-mode' combined with `virtual-auto-fill-mode'.
+  ;;
+  ;; To manually fill a region of text, mark it and type `M-q'. Or do `M-q' to
+  ;; operate on the current paragraph without marking it. Depending on the major
+  ;; mode you are in, this key binding calls a different command. The generic
+  ;; one is `fill-paragraph'. I use `M-Q' to "unfill" text.
 
   (defun +unfill-dwim (&optional beg end)
     "Unfill paragraph or, when active, the region.
@@ -665,18 +650,51 @@ to produce the opposite effect of `fill-paragraph' and `fill-region'."
           (fill-region beg end)
         (fill-paragraph))))
 
-  ;; TODO fill column only if a line is currently passing it
+  (add-hook 'text-mode-hook #'auto-fill-mode)
+
+  ;; TODO display-fill-column-indicator only if a line is currently passing it
   ;; (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 
+  (define-minor-mode +auto-fill-or-visual-line-mode
+    "Enable `visual-line-mode' and disable `auto-fill-mode' in the current
+buffer."
+    :global nil
+    (if +auto-fill-or-visual-line-mode
+        (progn
+          (auto-fill-mode -1)
+          (visual-line-mode 1))
+      (auto-fill-mode 1)
+      (visual-line-mode -1)))
+
+  (setopt fill-column 80)
+
   (bind-keys :map global-map
-             ;; TODO I don't using shift in the binding for +unfill-dwim
+             ;; TODO I don't like using shift in the binding for +unfill-dwim
              ;; NOTE 2025-06-26 I also never use this so do I really need it?
              ("M-Q" . +unfill-dwim)
              :map +prefix-map
              ("f" . set-fill-column)
              :map +toggle-prefix-map
-             ("q" . auto-fill-mode)))
+             ("q" . +auto-fill-or-visual-line-mode)))
 
+(use-package visual-fill-column
+  :config
+  ;; I normally do not use `visual-line-mode'. What it does is to break long
+  ;; lines to span multiple lines without actually affecting the underlying
+  ;; text. In other words, we still have one long line only its visualisation is
+  ;; as a paragraph. Unfortunately the standard behavior does not respect
+  ;; `fill-column' and wraps lines at the window edge. `visual-fill-column'
+  ;; makes it so it wraps at `fill-column' (or `visual-fill-column-width').
+  ;;
+  ;; For the cases where I am fine with `visual-line-mode', I enable the mode by
+  ;; adding it to these mode hooks.
+  (dolist (mode '(help-mode-hook
+                  helpful-mode-hook
+                  Custom-mode-hook
+                  epa-info-mode-hook))
+    (add-hook mode #'visual-line-mode))
+
+  (add-hook 'visual-line-mode-hook #'visual-fill-column-for-vline))
 (use-package display-line-numbers
   :config
   ;; I do not like to see line numbers by default and seldom use

@@ -111,6 +111,7 @@ in
               cursory
               highlight-numbers
               keycast
+              visual-fill-column
               envrc
               inheritenv
               # add-node-modules-path
