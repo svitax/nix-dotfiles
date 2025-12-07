@@ -3760,12 +3760,6 @@ expression."
       (kill-ring-save (region-beginning) (region-end)))
     (setq this-command 'kill-ring-save))
 
-  (defun +kill-line-backward ()
-    "Kill from point to the beginning of line."
-    (interactive)
-    (kill-line 0)
-    (setq this-command 'kill-line))
-
   (defun +zap-to-char-backward (char &optional arg)
     "Backward `zap-to-char' for CHAR.
 Optional ARG is a numeric prefix to match ARGth occurrence of CHAR."
@@ -3913,7 +3907,6 @@ There is no dragging the character forward. This is the behavior of
    ;; active region.
    ("C-w" . +kill-region)
    ("M-w" . +kill-ring-save)
-   ("M-k" . +kill-line-backward)
    ;; `+save-next-kill' causes the following command, if it kills, to save in
    ;; the kill ring instead. With prefix argument has same behavior as
    ;; `append-next-kill', which adds to previous kill.
