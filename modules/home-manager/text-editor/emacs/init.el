@@ -2042,11 +2042,6 @@ The symbol at point is added to the future history."
              ("M-r" . consult-history) ; orig. `previous-matching-history-element'
              ))
 
-;; (use-package consult-omni
-;;   :config
-;;   (bind-keys :map +search-prefix-map
-;;              ("M-w" . consult-omni)))
-
 (use-package consult-dir
   ;; `consult-dir' allows you to easily insert directory paths into the
   ;; minibuffer prompt in Emacs.
