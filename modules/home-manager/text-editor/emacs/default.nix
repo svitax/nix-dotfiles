@@ -128,7 +128,6 @@ in
               eglot-tempel
               consult-eglot
               dape
-              # substitute
               avy
               link-hint
               logos
