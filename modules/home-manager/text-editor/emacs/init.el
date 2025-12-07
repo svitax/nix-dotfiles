@@ -3616,11 +3616,6 @@ This command can then be followed by the standard `yank-pop' (default is bound t
     (yank)
     (setq this-command 'yank))
 
-  (defun +delete-indentation-below ()
-    "Join the current line with the line beneath it."
-    (interactive)
-    (delete-indentation 1))
-
   (defun +comment-line-dwim (n)
     "Comment N lines, defaulting to the current one.
 When the region is active, comment its lines instead."
@@ -3934,9 +3929,6 @@ There is no dragging the character forward. This is the behavior of
    ;; The default `delete-char' doesn't respect the values of
    ;; `delete-active-region'. Make it so `C-d' deletes the region if active.
    ("C-d" . delete-forward-char)
-
-   ;; Join the current line with the line below it similar to Vim's J command.
-   ("C-^" . +delete-indentation-below) ; Complements `M-^' for delete-indentation
 
    ;; Kills up to a char similar to Vim's dt command.
    ("C-z" . zap-up-to-char) ; Complements `M-z' for zap-to-char
