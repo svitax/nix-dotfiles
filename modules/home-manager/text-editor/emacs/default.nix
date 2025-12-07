@@ -128,7 +128,6 @@ in
               eglot-tempel
               consult-eglot
               dape
-              # projection
               # substitute
               goto-chg
               avy

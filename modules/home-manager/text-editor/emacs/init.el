@@ -2532,22 +2532,6 @@ together."
 ;;   (bind-keys :map +project-prefix-map
 ;;              ("l" . list-projects)))
 
-(use-package projection
-  :disabled t
-  :config
-  ;; Projection adds project type support for Emacs' built-in `project.el' and
-  ;; other valuable features. You can use the provided collection of project
-  ;; types or write your own. Each project type can optionally expose different
-  ;; command types such as build, configure, test, run, package, and
-  ;; install. These commands can be called interactively and you can override
-  ;; what command to run for these command types by passing a prefix argument
-  ;; (`C-u' by default). The command you enter will be cached so subsequent
-  ;; attempts to run the same command type will use the same command. Projection
-  ;; supports both shell-commands, interactive functions, and helper functions
-  ;; which can return either of these as valid targets for each of the command
-  ;; types.
-  (global-projection-hook-mode))
-
 ;;;;;;;;;;;;;;;;;
 ;;;; buffers ;;;;
 
