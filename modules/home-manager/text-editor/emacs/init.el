@@ -3921,7 +3921,6 @@ There is no dragging the character forward. This is the behavior of
    ;; appending them by default.
    ("M-;" . +comment-line-dwim)
    ("C-M-;" . +comment-sexp-dwim)
-   ("s-;" . +comment-sexp-dwim)
 
    ;; `+indent-dwim' will indent the current defun or paragraph.
    ("C-M-q" . +indent-dwim)
