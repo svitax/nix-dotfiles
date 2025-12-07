@@ -3760,24 +3760,6 @@ expression."
       (kill-ring-save (region-beginning) (region-end)))
     (setq this-command 'kill-ring-save))
 
-  (defun +zap-to-char-backward (char &optional arg)
-    "Backward `zap-to-char' for CHAR.
-Optional ARG is a numeric prefix to match ARGth occurrence of CHAR."
-    (interactive
-     (list
-      (read-char-from-minibuffer "Zap to char: " nil 'read-char-history)
-      (prefix-numeric-value current-prefix-arg)))
-    (zap-to-char (- arg) char t))
-
-  (defun +zap-up-to-char-backward (char &optional arg)
-    "Backward `zap-up-to-char' for CHAR.
-Optional ARG is a numeric prefix to match ARGth occurrence of CHAR."
-    (interactive
-     (list
-      (read-char-from-minibuffer "Zap up to char: " nil 'read-char-history)
-      (prefix-numeric-value current-prefix-arg)))
-    (zap-up-to-char (- arg) char t))
-
   (defcustom +date-specifier "%F"
     "Date specifier for `format-time-string'.
 Used by `+insert-date'."
@@ -3929,8 +3911,6 @@ There is no dragging the character forward. This is the behavior of
 
    ;; Kills up to a char similar to Vim's dt command.
    ("C-z" . zap-up-to-char) ; Complements `M-z' for zap-to-char
-   ("C-S-z" . +zap-up-to-char-backward)
-   ("M-S-z" . +zap-to-char-backward)
 
    ;; Escape urls and insert dates.
    ("C-<" . +escape-url-dwim)
