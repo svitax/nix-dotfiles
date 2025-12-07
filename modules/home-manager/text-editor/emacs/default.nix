@@ -131,7 +131,6 @@ in
               # substitute
               goto-chg
               avy
-              ace-link
               link-hint
               logos
               move-text

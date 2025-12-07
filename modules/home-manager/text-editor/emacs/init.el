@@ -3332,9 +3332,18 @@ end of the buffer.")
              :map isearch-mode-map
              ("C-j" . avy-isearch)))
 
-;; TODO document link-hint
 (use-package link-hint
   :config
+  ;; The `link-hint' package offers a convenient way to act on visible links
+  ;; through Avy, much like the hinting interfaces of modal browsers
+  ;; (qutebrowser, vimium, pentadactyl, etc.) A "link" here is intentionally
+  ;; broad, covering URLs, file paths, buttons, Org references, Info nodes, mail
+  ;; addresses and more all qualify.
+  ;;
+  ;; The commands can follow a link or copy it and even operate on several links
+  ;; in succession. Additional link types and actions can be defined by the
+  ;; user. For example, I created an action that moves the point to the selected
+  ;; link.
   (defun +link-hint--nop () nil)
 
   (dolist (type link-hint-types)
