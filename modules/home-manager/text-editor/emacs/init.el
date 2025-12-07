@@ -3569,19 +3569,6 @@ narrowed."
   :no-require
   :config
 
-  (defun +mark-line ()
-    "Put point at beginning of this line, mark at end.
-
-If region is active, extend selection downward by line. If
-`visual-line-mode' is on, consider line as visual line."
-    (interactive)
-    (if (region-active-p)
-        (forward-line 1)
-      (progn
-        (push-mark (line-beginning-position) t t)
-        (end-of-line)
-        (forward-line 1))))
-
   ;; BUG: this still creates fundamental mode copies of my buffers
   ;; NOTE 2025-10-24 i've narrowed it down to happening when I spam
   ;; keyboard-quit while doing `helpful-key'
@@ -3943,10 +3930,6 @@ There is no dragging the character forward. This is the behavior of
    ;; current line.
    ("C-M-w" . +duplicate-dwim)
    ("C-M-y" . +yank-replace-dwim)
-
-   ;; `+mark-line' will mark the current line, or if region is active it will
-   ;; move forward a line.
-   ("C-M-h" . +mark-line) ; overrides mark-defun
 
    ;; The default `delete-char' doesn't respect the values of
    ;; `delete-active-region'. Make it so `C-d' deletes the region if active.
