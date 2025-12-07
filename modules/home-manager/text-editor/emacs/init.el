@@ -7444,6 +7444,18 @@ the `pydoc' module list before prompting."
 
 (use-package markdown-mode)
 
+(use-package text-mode
+  :config
+  ;; These are some basic settings for plain text files but also for any major
+  ;; mode that inherits from `text-mode' (like Org and Markdown).
+  ;;
+  ;; Notice how I am adding an association to the `auto-mode-alist'. The file
+  ;; names specified in that regular expression will be using `text-mode' when I
+  ;; visit them.
+  (add-to-list 'auto-mode-alist
+               '("\\`\\(README\\|CHANGELOG\\|COPYING\\|LICENSE\\)\\'"
+                 . text-mode)))
+
 ;; TODO get gitcommit tree-sitter grammar to work on my nix machine
 ;; (use-package git-commit-ts-mode
 ;;   :init
