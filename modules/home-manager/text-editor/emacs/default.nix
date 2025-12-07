@@ -114,7 +114,6 @@ in
               visual-fill-column
               envrc
               inheritenv
-              # add-node-modules-path
               marginalia
               orderless
               vertico

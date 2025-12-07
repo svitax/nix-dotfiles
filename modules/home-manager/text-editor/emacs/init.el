@@ -810,14 +810,6 @@ non-nil."
   ;; is useful for when we discover problems we can't patch upstream.
   (inheritenv-add-advice 'process-lines))
 
-(use-package add-node-modules-path
-  :disabled t ; disabled 2025-06-26
-  :config
-  ;; Adds the "node_modules/.bin" directory to the buffer "exec_path"
-  (add-hook 'js-base-mode #'add-node-modules-path)
-  (when (executable-find "pnpm")
-    (setopt add-node-modules-path-command '("pnpm bin" "pnpm bin -w"))))
-
 ;;;;;;;;;;;;;;;
 ;;;; files ;;;;
 
