@@ -813,7 +813,6 @@ non-nil."
 ;;;;;;;;;;;;;;;
 ;;;; files ;;;;
 
-;; TODO document files
 (use-package files
   :config
   (setopt y-or-n-p-use-read-key t
@@ -823,11 +822,7 @@ non-nil."
           large-file-warning-threshold nil)
 
   (bind-keys :map +prefix-map
-             ("C-f" . find-file)
-             ;; TODO add mark to xref before navigating to library
-             ;; ("b" . find-library)
-             ;; ("m" . man)
-             ))
+             ("C-f" . find-file)))
 
 (use-package backup
   :no-require
@@ -857,6 +852,7 @@ non-nil."
   (global-auto-revert-mode))
 
 (use-package recentf
+  :config
   ;; Emacs can keep track of recently visited files. Then we can revisit them
   ;; with the command `recent-open', which provides minibuffer completion.
 
@@ -869,14 +865,12 @@ non-nil."
   ;; I generally do not rely on `recentf-mode', as most of my work is done in
   ;; projects, which I switch to directly. Though I sometimes need to revisit a
   ;; file that I do not need to keep track of.
-  :config
   (recentf-mode))
 
-;; TODO document saveplace
 (use-package saveplace
+  :config
   ;; Tell Emacs to record where we were in the file, so we resume there on next
   ;; visit. Turn on place saving globally.
-  :config
   (save-place-mode))
 
 ;;;;;;;;;;;;;;;
@@ -1329,13 +1323,13 @@ ITEM is a cons cell of the form (marker . directory)."
 ;;;; bookmarks ;;;;
 
 (use-package bookmark
+  :config
   ;; Bookmarks are compartments that store arbitrary information about a file or
   ;; buffer. The records are used to recreate that file/buffer inside of
   ;; Emacs. Put differently, we can easily jump back to a file or directory (or
   ;; anything that has a bookmark recorder+handler, really). Use the
   ;; `bookmark-set' command (`C-x r m' by default) to record a bookmark and then
   ;; visit one of your bookmarks with `bookmark-jump' (`C-x r b' by default).
-  :config
   (setopt bookmark-use-annotations nil
           bookmark-automatically-show-annotations nil
           bookmark-fringe-mark nil ; Emacs 29 to hide bookmark fringe icon
@@ -1354,6 +1348,7 @@ ITEM is a cons cell of the form (marker . directory)."
 ;;;; registers ;;;;
 
 (use-package register
+  :config
   ;; Much like bookmarks, registers store data that we can reinstate quickly. A
   ;; common use-case is to write some text to a register and then insert that
   ;; text by calling the given register. This is much better than relying on the
@@ -1364,7 +1359,6 @@ ITEM is a cons cell of the form (marker . directory)."
   ;; To me, registers are essential for keyboard macros. By default, registers
   ;; do not persist between Emacs sessions, though I do need to re-use them from
   ;; time to time, hence the arrangement to record them with `savehist-mode'.
-  :config
   (setopt register-preview-delay 0.8)
 
   (with-eval-after-load 'savehist
@@ -1374,6 +1368,7 @@ ITEM is a cons cell of the form (marker . directory)."
 ;;;; completion ;;;;
 
 (use-package minibuffer
+  :config
   ;; The term "completion" describes a process where user input is assisted by
   ;; pattern matching algorithms to type out incomplete items. The most basic
   ;; way of this model of interaction is what we get in a command-line prompt,
@@ -1387,7 +1382,7 @@ ITEM is a cons cell of the form (marker . directory)."
   ;; annotations next to each candidate, and "completion styles" to control how
   ;; user input is matched to candidates. Because we use the minibuffer for most
   ;; common interactions, completion is an integral part of any setup.
-  :config
+
   ;; The `completion-styles' are pattern matching algorithms. They interpret
   ;; input and match candidates accordingly.
   ;;
@@ -2083,6 +2078,7 @@ The symbol at point is added to the future history."
   ;; file anywhere under the directory that is currently in the prompt. This can
   ;; be used with `consult-dir' to quickly switch directories and find files at
   ;; an arbitrary depth under them. It uses `consult-find' under the hood.
+
   :config
   ;; A function that returns a list of directories
   (defun +consult-dir--zoxide-dirs ()
@@ -2252,7 +2248,6 @@ minibuffer, which means it can be used as an Embark action."
 (use-package embark-consult)
 
 (use-package corfu
-  :config
   ;; `corfu' handles in-buffer text completion splendidly using Emacs'
   ;; underlying infrastructure for `completion-at-point-functions'.
   ;;
@@ -2272,7 +2267,7 @@ minibuffer, which means it can be used as an Embark action."
   ;;
   ;; `corfu-popupinfo-mode' will show a secondary documentation popup if we move
   ;; over a candidate but do not to anything with it.
-
+  :config
   ;; (global-corfu-mode)
   (corfu-popupinfo-mode 1)
 
