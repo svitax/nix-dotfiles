@@ -2697,18 +2697,6 @@ Limit list of buffers to those matching the current
    ("y" . windmove-left)
    ("Y" . windmove-swap-states-left)))
 
-(use-package too-wide-minibuffer-mode
-  :disabled t ; NOTE disabled 2025-06-26 (local)
-  ;; Adjust the minibuffer size and position so it is displayed under the
-  ;; selected window if the frame is too wide. Great for my ultrawide monitor.
-  :config
-  ;; This mode is not compatible with `minibuffer-follows-selected-frame' set to
-  ;; `t' and there is more than one frame. Disable this setting to avoid a
-  ;; warning message.
-  (setopt minibuffer-follows-selected-frame nil)
-
-  (too-wide-minibuffer-mode +1))
-
 (use-package display-buffer
   :no-require
   :config
