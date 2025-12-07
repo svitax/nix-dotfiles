@@ -3379,10 +3379,26 @@ end of the buffer.")
                ("f" . link-hint-open-link)
                ("j" . +link-hint-jump-link))))
 
-;; TODO document paragraphs
 (use-package paragraphs
   :no-require
   :config
+  ;; For a long time, I was using double spaces after a sentence, as this is the
+  ;; Emacs default. I don't have a strong preference for or against it, though I
+  ;; reverted to the single space convention as it is the norm nowadays.
+  ;;
+  ;; The technical benefit of double spaces is that it makes sentence navigation
+  ;; less ambiguous as you do not get false positives like "Dr.". Though I
+  ;; realized I seldom use such language so why type more spaces for a
+  ;; theoretical advantage?
+  ;;
+  ;; I still need to use double spaces for Elisp programming, otherwise the byte
+  ;; compiler produces warnings. It is annoyingly pedantic, but here we are...
+  (setopt sentence-end-double-space nil
+          sentence-end-without-period nil)
+
+  (add-hook 'emacs-lisp-mode-hook
+            (lambda () (setq-local sentence-end-double-space t)))
+
   (with-eval-after-load 'pulsar
     (dolist (func '(forward-paragraph
                     backward-paragraph
