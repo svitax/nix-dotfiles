@@ -3595,6 +3595,7 @@ BOUNDARIES is a cons cell representing buffer positions."
       (goto-char end)
       (newline)
       (insert (buffer-substring-no-properties beg end))))
+
   (defun +duplicate-dwim ()
     "Duplicate the current line or active region."
     (interactive)
@@ -3608,7 +3609,8 @@ BOUNDARIES is a cons cell representing buffer positions."
 
   (defun +yank-replace-dwim ()
     "Replace region with latest kill if active, otherwise replace line.
-This command can then be followed by the standard `yank-pop' (default is bound to \\[yank-pop])."
+This command can then be followed by the standard `yank-pop' (default is
+bound to \\[yank-pop])."
     (interactive)
     (if (use-region-p)
         (delete-region (region-beginning) (region-end))
