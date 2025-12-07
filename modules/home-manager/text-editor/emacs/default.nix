@@ -150,7 +150,6 @@ in
               treesit-grammars.with-all-grammars
               helpful
               devdocs
-              # difftastic
               magit
               diff-hl
               eldoc-diffstat

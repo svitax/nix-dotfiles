@@ -5657,17 +5657,6 @@ default, it is the symbol at point."
           ediff-make-buffers-readonly-at-startup nil
           ediff-show-clashes-only t))
 
-(use-package difftastic
-  :disabled t ; NOTE disabled 2025-06-26
-  :config
-  (setopt difftastic-display-buffer-function #'display-buffer)
-  ;; (add-to-list 'display-buffer-alist '("\\*difftastic git show.*\\*"
-  ;;                                      (display-buffer-reuse-window
-  ;;                                       display-buffer-pop-up-window)
-  ;;                                      (window-height . 0.5)
-  ;;                                      (body-function . select-window)))
-  )
-
 (use-package diff-hl
   ;; `diff-hl' use the margins or fringes to highlight changes in the current
   ;; buffer. The indicators are colour-coded to denote whether a change is an
