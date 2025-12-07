@@ -4705,6 +4705,18 @@ The parameter NAME, ARGS, REST, and STATE are explained in the
   ;; where to look for them.
   (setopt treesit-extra-load-path '("~/.guix-home/profile/lib/tree-sitter")))
 
+(use-package hl-todo
+  ;; This tool by Jonas Bernoulli will apply highlighting to keywords that are
+  ;; normally used in code comments. Simple and effective.
+  :config
+  (add-hook 'prog-mode-hook #'hl-todo-mode))
+
+(use-package consult-todo
+  :config
+  (bind-keys :map +search-prefix-map
+             ("t" . consult-todo)
+             ("M-t" . consult-todo)))
+
 ;;;;;;;;;;;;;
 ;;;; lsp ;;;;
 

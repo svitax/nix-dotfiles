@@ -144,6 +144,8 @@ in
               multiple-cursors
               # vundo
               flymake-collection
+              hl-todo
+              consult-todo
               apheleia
               treesit-grammars.with-all-grammars
               helpful
