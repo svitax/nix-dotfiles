@@ -597,29 +597,6 @@ LOCUS is a cons cell with two buffer positions."
 
 ;; (use-package spacious-padding)
 
-
-(use-package truncate-lines
-  :no-require
-  :config
-  ;; Truncate lines by default in a number of places and do not produce a
-  ;; message about the fact. Note that the function used to achieve this,
-  ;; i.e. `+truncate-lines-silently', my also be set up elsewhere and described
-  ;; in that context. Here I only cover the basic parent modes.
-  (defun +truncate-lines-silently ()
-    "Toggle line truncation without printing messages."
-    (let ((inhibit-message t))
-      (toggle-truncate-lines t)))
-
-  (dolist (mode '(text-mode-hook
-                  prog-mode-hook
-                  dired-mode-hook
-                  +fundamental-mode-hook
-                  hexl-mode-hook
-                  comint-mode-hook
-                  compilation-mode-hook
-                  grep-mode))
-    (add-hook mode #'+truncate-lines-silently)))
-
 (use-package fill
   :no-require
   :config
@@ -695,6 +672,53 @@ buffer."
     (add-hook mode #'visual-line-mode))
 
   (add-hook 'visual-line-mode-hook #'visual-fill-column-for-vline))
+
+(use-package truncate-lines
+  :no-require
+  :config
+  ;; This here is the opposite of what we saw above. Unlike `visual-line-mode'
+  ;; where long lines are made to look like paragraphs, "truncation" means to
+  ;; let the line cover its natural length and simply cut it off screen.
+
+  ;; I redefine the `toggle-truncate-lines' function which performs line
+  ;; truncation to not display a message about the fact. Why do we need this?
+  ;; Check the output of `M-x calendar' in a tiny window and you will see the
+  ;; reason. In short, it is better to have lines not show their full contents
+  ;; than to have something that looks completely broken. Note that this
+  ;; function may also be set up elsewhere and described in that context. Here I
+  ;; only cover the basic parent modes.
+
+  (defun toggle-truncate-lines (&optional arg)
+    "Toggle truncating of long lines for the current buffer.
+When truncating is off, long lines are folded.
+With prefix argument ARG, truncate long lines if ARG is positive,
+otherwise fold them.  Note that in side-by-side windows, this
+command has no effect if `truncate-partial-width-windows' is
+non-nil."
+    (interactive "P")
+    (setq truncate-lines
+          (if (null arg)
+              (not truncate-lines)
+            (> (prefix-numeric-value arg) 0)))
+    (force-mode-line-update)
+    (unless truncate-lines
+      (let ((buffer (current-buffer)))
+        (walk-windows (lambda (window)
+                        (if (eq buffer (window-buffer window))
+                            (set-window-hscroll window 0)))
+                      nil t))))
+
+  (dolist (mode '(text-mode-hook
+                  prog-mode-hook
+                  dired-mode-hook
+                  +fundamental-mode-hook
+                  hexl-mode-hook
+                  comint-mode-hook
+                  compilation-mode-hook
+                  grep-mode-hook
+                  log-view-mode-hook))
+    (add-hook mode #'toggle-truncate-lines)))
+
 (use-package display-line-numbers
   :config
   ;; I do not like to see line numbers by default and seldom use
@@ -2175,7 +2199,7 @@ The symbol at point is added to the future history."
   (setopt prefix-help-command #'embark-prefix-help-command)
 
   ;; Truncate lines in `embark-collect-mode'
-  (add-hook 'embark-collect-mode-hook #'+truncate-lines-silently)
+  (add-hook 'embark-collect-mode-hook #'toggle-truncate-lines)
 
   (setopt embark-confirm-act-all nil
           embark-mixed-indicator-both nil
@@ -3129,10 +3153,10 @@ split."
   ;; for selection purposes, and (iii) for long lines to be truncated, meaning
   ;; to stretch beyond the visible portion of the window without wrapping below,
   ;; and for this to be done silently without messaging me about it. The latter
-  ;; depends on my custom `+truncate-lines-silently'.
+  ;; depends on my custom `toggle-truncate-lines'.
   (setopt list-matching-lines-jump-to-current-line nil)
 
-  (add-hook 'occur-mode-hook #'+truncate-lines-silently)
+  (add-hook 'occur-mode-hook #'toggle-truncate-lines)
   (add-hook 'occur-mode-hook #'hl-line-mode)
 
   ;; Scrolling shouldn't cancel search
