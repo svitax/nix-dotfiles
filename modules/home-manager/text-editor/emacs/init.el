@@ -5973,7 +5973,11 @@ compile-multi command."
     "Read makefile targets from MAKEFILE."
     (let (targets)
       (if (not makefile)
-          (error "No build file found for project %s" (project-root (project-current))))
+          (let ((proj (project-current))
+                (root (if proj
+                          (project-root proj)
+                        default-directory)))
+            (error "No build file found for project %s" root)))
       (with-temp-buffer
         (insert-file-contents makefile)
         (goto-char (point-min))
@@ -6063,7 +6067,9 @@ Set TARGET as the TARGET to build when set."
   ;; Set the default directory resolver to the current project root.
   (setopt compile-multi-default-directory
           (defun +project-current-root ()
-            (project-root (project-current))))
+            (if-let ((proj (project-current)))
+                (project-root proj)
+              default-directory)))
 
   (bind-keys :map global-map
              ("C-c C-," . compile-multi)))
