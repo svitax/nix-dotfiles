@@ -3875,61 +3875,60 @@ There is no dragging the character forward. This is the behavior of
 
   (setopt kill-whole-line t)
 
-  (bind-keys
-   :map global-map
-   ("M-c" . capitalize-dwim)
-   ("M-l" . downcase-dwim)
-   ("M-u" . upcase-dwim)
-   ("M-=" . count-words)
+  (bind-keys :map global-map
+             ("M-c" . capitalize-dwim)
+             ("M-l" . downcase-dwim)
+             ("M-u" . upcase-dwim)
+             ("M-=" . count-words)
 
-   ;; Make `transpose-chars' always act like when point is at end of
-   ;; the line.
-   ("C-t" . +transpose-chars)
+             ;; Make `transpose-chars' always act like when point is at end of
+             ;; the line.
+             ("C-t" . +transpose-chars)
 
-   ;; Make `kill-region' and `kill-ring-save' act on symbol at point
-   ;; if no active region.
-   ("C-w" . +kill-region)
-   ("M-w" . +kill-ring-save)
-   ;; `+save-next-kill' causes the following command, if it kills, to
-   ;; save in the kill ring instead. With prefix argument has same
-   ;; behavior as `append-next-kill', which adds to previous kill.
-   ;; ("C-M-w" . +save-next-kill)
+             ;; Make `kill-region' and `kill-ring-save' act on symbol at point
+             ;; if no active region.
+             ("C-w" . +kill-region)
+             ("M-w" . +kill-ring-save)
+             ;; `+save-next-kill' causes the following command, if it kills, to
+             ;; save in the kill ring instead. With prefix argument has same
+             ;; behavior as `append-next-kill', which adds to previous kill.
+             ;; ("C-M-w" . +save-next-kill)
 
-   ;; `+keyboard-quit-dwim' closes an open but unfocused minibuffer.
-   ("C-g" . +keyboard-quit-dwim)
-   ("<escape>" . +keyboard-quit-dwim)
+             ;; `+keyboard-quit-dwim' closes an open but unfocused minibuffer.
+             ("C-g" . +keyboard-quit-dwim)
+             ("<escape>" . +keyboard-quit-dwim)
 
-   ;; `+duplicate-dwim' will duplicate the region if active, otherwise
-   ;; the current line.
-   ("C-M-w" . +duplicate-dwim)
-   ("C-M-y" . +yank-replace-dwim)
+             ;; `+duplicate-dwim' will duplicate the region if active, otherwise
+             ;; the current line.
+             ("C-M-w" . +duplicate-dwim)
+             ("C-M-y" . +yank-replace-dwim)
 
-   ;; The default `delete-char' doesn't respect the values of
-   ;; `delete-active-region'. Make it so `C-d' deletes the region if
-   ;; active.
-   ("C-d" . delete-forward-char)
+             ;; The default `delete-char' doesn't respect the values of
+             ;; `delete-active-region'. Make it so `C-d' deletes the region if
+             ;; active.
+             ("C-d" . delete-forward-char)
 
-   ;; Kills up to a char similar to Vim's dt command.
-   ("M-z" . zap-up-to-char) ; More useful than original `zap-to-char'
+             ;; Kills up to a char similar to Vim's dt command.
+             ("M-z" . zap-up-to-char) ; More useful than original `zap-to-char'
 
-   ;; Escape urls and insert dates.
-   ("C-<" . +escape-url-dwim)
-   ("C-=" . +insert-date)
+             ;; Escape urls and insert dates.
+             ("C-<" . +escape-url-dwim)
+             ("C-=" . +insert-date)
 
-   ;; The `+comment-line-dwim' command is like the built-in
-   ;; `comment-dwim', but toggles line wise commenting instead of
-   ;; appending them by default.
-   ("M-;" . +comment-line-dwim)
-   ("C-M-;" . +comment-sexp-dwim)
+             ;; The `+comment-line-dwim' command is like the built-in
+             ;; `comment-dwim', but toggles line wise commenting instead of
+             ;; appending them by default.
+             ("M-;" . +comment-line-dwim)
+             ("C-M-;" . +comment-sexp-dwim)
 
-   ;; `+indent-dwim' will indent the current defun or paragraph.
-   ("C-M-q" . +indent-dwim)
-   ("C-M-\\" . +indent-dwim)
+             ;; `+indent-dwim' will indent the current defun or paragraph.
+             ("C-M-q" . +indent-dwim)
+             ("C-M-\\" . +indent-dwim)
 
-   :map +prefix-map
-   ("C-c" . +kill-terminal-or-restart)
-   ("h" . mark-whole-buffer)
-   ("C-o" . delete-blank-lines)))
+             :map +prefix-map
+             ("C-c" . +kill-terminal-or-restart)
+             ("h" . mark-whole-buffer)
+             ("C-o" . delete-blank-lines)))
 
 ;; TODO document mark-command
 (use-package mark-command
