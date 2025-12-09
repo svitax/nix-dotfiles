@@ -6207,32 +6207,6 @@ Push `shell-last-dir' to `+shell-cd-directories'."
 
   ;;;; General commands
 
-  ;; (defun +shell ()
-  ;;     "Like `shell' but always start a new shell.
-  ;; Name the shell buffer after the `default-directory'.  If the name of
-  ;; that buffer already exists, then reuse it."
-  ;;     (interactive)
-  ;;     (with-current-buffer (shell (format "*shell in %s*" default-directory))
-  ;;       (add-hook 'comint-output-filter-functions #'+shell-update-name-on-cd nil
-  ;;                 :local)))
-
-  ;; (defun +project-shell ()
-  ;;     "Start an inferior shell in the current project's root directory.
-  ;; If a buffer already exists for running a shell in the project's root,
-  ;; switch to it.  Otherwise, create a new shell buffer.
-  ;; With \\[universal-argument] prefix arg, create a new inferior shell buffer even
-  ;; if one already exists."
-  ;;     (interactive)
-  ;;     (let* ((default-directory (project-root (project-current t)))
-  ;;            (shell-buffer (get-buffer (format "*shell in %s" default-directory))))
-  ;;       (if (and shell-buffer (not current-prefix-arg))
-  ;;           (if (comint-check-proc shell-buffer)
-  ;;               (pop-to-buffer shell-buffer (bound-and-true-p display-comint-buffer-action))
-  ;;             (shell shell-buffer))
-  ;;         (+shell))))
-
-  (defvar +shell--shells nil)
-
   (defvar-local +shell--shell nil)
   (defvar-local +shell--last-buffer nil)
 
