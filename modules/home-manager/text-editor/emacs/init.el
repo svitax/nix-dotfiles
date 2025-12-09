@@ -6282,11 +6282,6 @@ output instead."
 
   ;;;; Minor mode setup
 
-  (defvar-keymap +shell-mode-map
-    :doc "Key map for `+shell-mode'."
-    "C-x C-z" #'+shell-pop-to-buffer
-    "C-c C-q" #'+kill-this-buffer)
-
   (define-minor-mode +shell-mode
     "Provide extra functionality for the Emacs `shell'.
 Add a bookmark handler for shell buffer and activate the
@@ -6331,8 +6326,7 @@ Add a bookmark handler for shell buffer and activate the
              ("M-r" . +consult-history-comint-send)
              ("C-c C-k" . comint-clear-buffer)
              ("C-c C-w" . comint-write-output)
-             :map comint-mode-map
-             ("C-c C-q" . +kill-this-buffer)))
+             ("C-x C-z" . +shell-pop-to-buffer)))
 
 (use-package native-complete
   :disabled t ; NOTE disabled 2025-06-26
