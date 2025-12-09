@@ -6174,20 +6174,6 @@ Push `shell-last-dir' to `+shell-cd-directories'."
      "cd"
      (+shell--cd-prompt)))
 
-  ;;;;; VC root directory
-
-  (defun +shell--get-vc-root-dir ()
-    "Return `vc-root-dir' or root of present Git repository."
-    (or (vc-root-dir)
-        (locate-dominating-file "." ".git")))
-
-  (defun +shell-cd-vc-root-dir ()
-    "Change into the `vc-root-dir'."
-    (interactive)
-    (if-let* ((root (+shell--get-vc-root-dir)))
-        (+shell--insert-and-send "cd" root)
-      (user-error "Cannot find the VC root of `%s'" default-directory)))
-
   ;;;; Bookmark support
   ;;;; NOTE 2025-06-26 Emacs 31 supports bookmarking shell buffers natively. Remove this
   ;;;; code when it's time to upgrade
@@ -6393,7 +6379,6 @@ output instead."
     "M-p" #'+shell-up-dwim
     "M-n" #'+shell-down-dwim
     "C-x C-z" #'+shell-pop-to-buffer
-    ;; "C-c C-." #'+shell-cd-vc-root-dir
     ;; "C-c d" #'+shell-cd
     "C-c C-q" #'+kill-this-buffer)
 
