@@ -2099,20 +2099,20 @@ The symbol at point is added to the future history."
   ;; Adding to the list of consult-dir sources
   (add-to-list 'consult-dir-sources '+consult-dir--source-zoxide t)
 
-  ;; Minor mode to pass the selected directory directly to cd, meant to be used
-  ;; in `shell-mode'.
-  (define-minor-mode +consult-dir-shell-mode
-    "Provide extra functionality to integrate the Emacs `shell' with
-    `consult-dir'."
-    :init-value nil
-    :global nil
-    (if +consult-dir-shell-mode
-        (setq-local consult-dir-default-command
-                    (lambda ()
-                      (interactive)
-                      (+shell--insert-and-send "cd" default-directory)))
-      (setq-local consult-dir-default-command nil)))
-  (add-hook 'shell-mode-hook #'+consult-dir-shell-mode)
+  ;; BUG Changing the `consult-dir-default-command' to (+shell--insert-and-send
+  ;; "cd" default-directory) in +shell-mode makes `shell-dirtrack-mode' stop
+  ;; working (cd commands issued to the shell no longer set the buffer's
+  ;; default-directory). Is the `shell-directory-tracker' function in
+  ;; `comint-input-filter-functions' no longer respected?
+  ;;
+  ;; This is why I have chosen to use the following function instead which
+  ;; passes the selected directory directly to cd, meant to be used in
+  ;; `shell-mode'.
+  (defun +consult-dir-shell-cd ()
+    "Choose a directory and cd to it."
+    (declare (interactive-only t))
+    (interactive)
+    (+shell--insert-and-send "cd" (consult-dir--pick "In directory: ")))
 
   ;; TODO can i define a function in bash that calls consult-dir for
   ;; shell-mode. i know i can probably do this for vterm, but what about shell?
@@ -2128,7 +2128,9 @@ The symbol at point is added to the future history."
              ("C-x C-d" . consult-dir)
              ("C-x C-j" . consult-dir-jump-file)
              :map vertico-map
-             ("C-x C-j" . consult-dir-jump-file)))
+             ("C-x C-j" . consult-dir-jump-file)
+             :map shell-mode-map
+             ("C-x C-d" . +consult-dir-shell-cd)))
 
 (use-package embark
   ;; The `embark' package by Omar Antolin Camarena provides a mechanism to
