@@ -3287,6 +3287,18 @@ end of the buffer.")
     (setopt xref-show-xrefs-function #'consult-xref
             xref-show-definitions-function #'consult-xref))
 
+  ;; Record location with `xref-push-marker-stack' before navigating with
+  ;; `find-function' and related.
+  (defun +xref-push-marker-stack-a (&rest _args)
+    "Advice function for `xref-push-marker-stack'."
+    (xref-push-marker-stack))
+  (dolist (fn '(find-face-definition
+                find-function
+                find-function-on-key
+                find-library
+                find-variable))
+    (advice-add fn :before #'+xref-push-marker-stack-a))
+
   (with-eval-after-load 'pulsar
     (dolist (func '(xref-go-back
                     xref-go-forward
