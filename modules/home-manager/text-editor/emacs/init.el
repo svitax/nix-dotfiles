@@ -4090,10 +4090,9 @@ purposes.  See the documentation of `set-mark' for more information."
              ("C-x M-s" . nil) ; unmap `scratch-plus-switch'
              ("C-c s" . scratch-plus-switch)))
 
-
-;; TODO document move-text
-;; TODO M-n/M-p in org-mode is org-metadown/org-metaup on org elements
 (use-package move-text
+  ;; The package `move-text' provides utility functions to easily move the
+  ;; current line or region up and down.
   :config
   ;; Re-indent the text in and around a text move.
   (defun +indent-region-advice (&rest ignored)
