@@ -131,6 +131,7 @@ in
               avy
               link-hint
               logos
+              scratch-plus
               move-text
               expand-region
               multiple-cursors

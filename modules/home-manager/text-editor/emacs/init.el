@@ -4066,105 +4066,30 @@ purposes.  See the documentation of `set-mark' for more information."
   (put '+unpop-to-mark-command 'repeat-hint "unpop")
   (put '+unpop-global-mark 'repeat-hint "unpop"))
 
-(use-package scratch
-  :disabled t ; NOTE disabled 2025-06-26
-  :no-require
+(use-package scratch-plus
+  ;; This package provides the means to create unkillable scratch buffers,
+  ;; persistent scratch buffers, per-project scratch buffers, and per-major-mode
+  ;; scratch buffers.
+  :init
+  (setopt scratch-plus-initial-message
+          (lambda (majormode)
+            (format "This is a scratch buffer for `%s'." majormode)))
   :config
-  ;; This custom library provides the means to create a scratch buffer for a
-  ;; given major mode. It has the option to set a default major mode to use. It
-  ;; can also copy the active region into the scratch buffer. Read the doc
-  ;; string of the command `+scratch-buffer'.
+  (scratch-plus-mode)
 
-  (defgroup +scratch ()
-    "Scratch buffers for editable major mode of choice."
-    :group 'editing)
+  ;; TODO use :xdg-state keyword to set scratch-plus-save-directory
+  ;; TODO +scratch-pop-to-buffer modeled after +shell, +ielm, and +python ones
+  (setopt scratch-plus-save-directory user-emacs-directory
+          scratch-plus-prevent-kill nil
+          scratch-plus-display-action
+          '((+display-buffer-use-some-other-window)
+            (dedicated . t)
+            (body-function . select-window)))
 
-  (defcustom +scratch-default-mode 'text-mode
-    "Default major mode for `+scratch-buffer'."
-    :type 'symbol
-    :group '+scratch)
+  (bind-keys :map scratch-plus-mode-map
+             ("C-x M-s" . nil) ; unmap `scratch-plus-switch'
+             ("C-c s" . scratch-plus-switch)))
 
-  (defun +scratch--list-modes ()
-    "List known major modes."
-    (let (symbols)
-      (mapatoms
-       (lambda (symbol)
-         (when (and (functionp symbol)
-                    (or (provided-mode-derived-p symbol 'text-mode)
-                        (provided-mode-derived-p symbol 'prog-mode)))
-           (push symbol symbols))))
-      symbols))
-
-  (defun +scratch--insert-comment ()
-    "Insert comment for major mode, if appropriate.
-Insert a comment if `comment-start' is non-nil and the buffer is
-empty."
-    (when (and (+common-empty-buffer-p) comment-start)
-      (insert (format "Scratch buffer for: %s\n\n" major-mode))
-      (goto-char (point-min))
-      (comment-region (line-beginning-position) (line-end-position))))
-
-  (defun +scratch--prepare-buffer (region &optional mode)
-    "Add contents to scratch buffer and name it accordingly.
-
-REGION is added to the contents to the new buffer.
-
-Use the current buffer's major mode by default.  With optional
-MODE use that major mode instead."
-    (let ((major (or mode major-mode)))
-      (with-current-buffer (pop-to-buffer (format "*%s scratch*" major))
-        (funcall major)
-        (+scratch--insert-comment)
-        (goto-char (point-max))
-        (unless (string-empty-p region)
-          (when (+common-line-regexp-p 'non-empty)
-            (insert "\n\n"))
-          (insert region)))))
-
-  (defvar +scratch--major-mode-history nil
-    "Minibuffer history of `+scratch--major-mode-prompt'.")
-
-  (defun +scratch--major-mode-prompt ()
-    "Prompt for major mode and return the choice as a symbol."
-    (intern
-     (completing-read "Select major mode: "
-                      (+scratch--list-modes)
-                      nil
-                      :require-match
-                      nil
-                      '+scratch--major-mode-history)))
-
-  (defun +scratch--capture-region ()
-    "Capture active region, else return empty string."
-    (if (region-active-p)
-        (buffer-substring-no-properties (region-beginning) (region-end))
-      ""))
-
-  (defun +scratch-buffer (&optional arg)
-    "Produce a scratch buffer matching the current major mode.
-
-With optional ARG as a prefix argument (\\[universal-argument]),
-use `+scratch-default-mode'.
-
-With ARG as a double prefix argument, prompt for a major mode
-with completion.  Candidates are derivatives of `text-mode' or
-`prog-mode'.
-
-If region is active, copy its contents to the new scratch
-buffer.
-
-Buffers are named as *MAJOR-MODE scratch*.  If one already exists
-for the given MAJOR-MODE, any text is appended to it."
-    (interactive "P")
-    (let ((region (+scratch--capture-region)))
-      (pcase (prefix-numeric-value arg)
-        (16 (+scratch--prepare-buffer region (+scratch--major-mode-prompt)))
-        (4 (+scratch--prepare-buffer region +scratch-default-mode))
-        (_ (+scratch--prepare-buffer region)))))
-
-  (bind-keys
-   :map global-map
-   ("C-c s" . +scratch-buffer)))
 
 ;; TODO document move-text
 ;; TODO M-n/M-p in org-mode is org-metadown/org-metaup on org elements
