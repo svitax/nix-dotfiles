@@ -6139,8 +6139,8 @@ ARGS is a list of strings."
       (rename-buffer (format "*shell in %s*" default-directory) :make-unique)))
 
   ;;;; Bookmark support
-  ;;;; NOTE 2025-06-26 Emacs 31 supports bookmarking shell buffers natively. Remove this
-  ;;;; code when it's time to upgrade
+  ;;;;; NOTE 2025-06-26 Emacs 31 supports bookmarking shell buffers
+  ;;;;; natively. Remove this code when it's time to upgrade
 
   ;; Adapted from esh-mode.el
   (declare-function bookmark-prop-get "bookmark" (bookmark prop))
@@ -6296,9 +6296,10 @@ Add a bookmark handler for shell buffer and activate the
     :global nil
     (if +shell-mode
         (progn
-          (setq-local bookmark-make-record-function #'+shell-bookmark-make-record))
           (add-hook 'comint-output-filter-functions
                     #'+shell-update-name-on-cd nil :local)
+          (setq-local bookmark-make-record-function
+                      #'+shell-bookmark-make-record))
       (remove-hook 'comint-output-filter-functions
                    #'+shell-update-name-on-cd :local)
       (setq-local bookmark-make-record-function nil)))
