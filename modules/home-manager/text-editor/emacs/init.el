@@ -6111,7 +6111,6 @@ ARGS is a list of strings."
 
   ;;;; Input from shell command history using completion
 
-  ;; TODO: Do I need +shell-input-from-history when I have consult-history?
   (with-eval-after-load 'consult
     (add-to-list
      'consult-mode-histories
@@ -6122,40 +6121,6 @@ ARGS is a list of strings."
     (interactive)
     (consult-history)
     (comint-send-input))
-
-  (defun +shell--build-input-history ()
-    "Return `comint-input-ring' as a list."
-    (when (and (ring-p comint-input-ring)
-               (not (ring-empty-p comint-input-ring)))
-      (let (history)
-        ;; We have to build up a list ourselves from the ring vector.
-        (dotimes (index (ring-length comint-input-ring))
-          (push (ring-ref comint-input-ring index) history))
-        (delete-dups history))))
-
-  (defvar +shell--input-history-completion-history nil
-    "Minibuffer history of `+shell--input-history-prompt'.
-Not to be confused with the shell input history, which is stored
-in the `comint-input-ring' (see `+shell--build-input-history').")
-
-  (defun +shell--input-history-prompt ()
-    "Prompt for completion against `+shell--build-input-history'."
-    (let* ((history (+shell--build-input-history))
-           (default (car history)))
-      (completing-read
-       (format-prompt "Insert input from history" default)
-       history nil :require-match nil
-       '+shell--input-history-completion-history
-       default)))
-
-  (defun +shell-input-from-history ()
-    "Insert command from shell input history.
-Only account for the history Emacs knows about, ignoring
-`comint-input-ring-file-name' (e.g. ~/.bash_history)."
-    (declare (interactive-only t))
-    (interactive)
-    (+shell--insert-and-send
-     (+shell--input-history-prompt)))
 
   ;;;; Outline support for shell prompts
 
