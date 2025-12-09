@@ -4849,12 +4849,16 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
   ;; Display `shortdoc' examples in *Help* buffers.
   (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function 100)
 
-  (bind-keys
-   :map help-map
-   ("h" . describe-face)
-   ("C-h" . embark-prefix-help-command)
-   ("C-k" . describe-keymap)
-   ("." . display-local-help)))
+  (bind-keys :map help-map
+             ("C" . describe-char) ; orig. `describe-coding-system'
+             ("F" . apropos-function) ; parallel to f: `describe-function'
+             ("h" . describe-face)
+             ("C-h" . embark-prefix-help-command)
+             ("C-k" . describe-keymap)
+             ("L" . apropos-library) ; orig. `describe-language-environment'
+             ("u" . apropos-user-option)
+             ("V" . apropos-variable) ; parallel to v: `describe-variable'
+             ("." . display-local-help)))
 
 ;; TODO document helpful and find a better section for it
 (use-package helpful
