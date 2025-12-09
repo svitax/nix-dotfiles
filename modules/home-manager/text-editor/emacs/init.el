@@ -4379,7 +4379,35 @@ through the edits."
 
 ;; TODO document flymake-collection
 (use-package flymake-collection
-  :config (add-hook 'after-init-hook #'flymake-collection-hook-setup))
+  :config
+  ;; Change :flymake-hook use-package keyword to :lint
+  (defvar flymake-collection-hook-config)
+
+  (declare-function use-package-concat "use-package-core")
+  (declare-function use-package-process-keywords "use-package-core")
+  (defvar use-package-keywords)
+  (defvar use-package-deferring-keywords)
+
+  (if (member :flymake-hook use-package-keywords)
+      (setq use-package-keywords (remove :flymake-hook use-package-keywords)))
+
+  ;; Add to use-package-keywords, just after :custom.
+  (unless (member :lint use-package-keywords)
+    (let ((tail (nthcdr (cl-position :custom use-package-keywords)
+                        use-package-keywords)))
+      (setcdr tail (cons :lint (cdr tail)))))
+
+  (defun use-package-normalize/:lint (_name _keyword args)
+    args)
+
+  (defun use-package-handler/:lint (name-symbol _ hooks rest state)
+    (let ((body (use-package-process-keywords name-symbol rest state)))
+      (use-package-concat
+       (cl-loop for it in hooks
+                collect `(push (quote ,it) flymake-collection-hook-config))
+       body)))
+
+  (add-hook 'after-init-hook #'flymake-collection-hook-setup))
 
 ;;;;;;;;;;;;;;;;;;;;
 ;;;; formatting ;;;;
@@ -6749,9 +6777,9 @@ interactively."
 (use-package python
   :lsp-hook (python-mode python-ts-mode)
   :format ruff python-mode python-ts-mode
-  :flymake-hook ((python-mode python-ts-mode)
-                 flymake-collection-ruff
-                 (flymake-collection-pycodestyle :disabled t))
+  :lint ((python-mode python-ts-mode)
+         flymake-collection-ruff
+         (flymake-collection-pycodestyle :disabled t))
   :config
   ;; Make sure packages that try to use python-mode are redirected to
   ;; python-ts-mode
