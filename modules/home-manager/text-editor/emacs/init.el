@@ -6153,27 +6153,6 @@ Push `shell-last-dir' to `+shell-cd-directories'."
                 ((string-match-p "cd " input)))
       (rename-buffer (format "*shell in %s*" default-directory) :make-unique)))
 
-  (defvar +shell--cd-history nil
-    "Minibuffer history for `+shell-cd'.")
-
-  (defun +shell--cd-prompt ()
-    "Prompt for a directory among `+shell-cd-directories'."
-    (if-let* ((history +shell-cd-directories)
-              (dirs (cons default-directory history))
-              (def (if (listp dirs) (car dirs) shell-last-dir)))
-        (completing-read
-         (format-prompt "Select directory" def)
-         dirs nil :require-match nil '+shell--cd-history def)
-      (user-error "No directories have been tracked")))
-
-  (defun +shell-cd ()
-    "Switch to `+shell-cd-directories' using minibuffer completion."
-    (declare (interactive-only t))
-    (interactive)
-    (+shell--insert-and-send
-     "cd"
-     (+shell--cd-prompt)))
-
   ;;;; Bookmark support
   ;;;; NOTE 2025-06-26 Emacs 31 supports bookmarking shell buffers natively. Remove this
   ;;;; code when it's time to upgrade
@@ -6323,7 +6302,6 @@ output instead."
   (defvar-keymap +shell-mode-map
     :doc "Key map for `+shell-mode'."
     "C-x C-z" #'+shell-pop-to-buffer
-    ;; "C-c d" #'+shell-cd
     "C-c C-q" #'+kill-this-buffer)
 
   (define-minor-mode +shell-mode
