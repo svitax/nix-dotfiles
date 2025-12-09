@@ -5617,29 +5617,6 @@ Respects `diff-hl-disable-on-remote'."
                ("{" . diff-hl-show-hunk-previous)
                ("}" . diff-hl-show-hunk-next))))
 
-(use-package eldoc-diffstat
-  :disabled t ; NOTE disabled 2025-12-01
-  :config
-  ;; I have `eldoc-echo-area-use-multiline-p' set to nil, so a lot of useful
-  ;; information is truncated from the echo area like the number of files
-  ;; changed, insertions, and deletions. However, this information is still
-  ;; available with `eldoc-doc-buffer'.
-  (global-eldoc-diffstat-mode)
-
-  (defun +eldoc-diffstat-setup-binds (mode-map)
-    (bind-keys :map mode-map
-               ("C-c C-d" . eldoc-doc-buffer)))
-
-  (with-eval-after-load 'git-rebase
-    (+eldoc-diffstat-setup-binds git-rebase-mode-map))
-  (with-eval-after-load 'log-view
-    (+eldoc-diffstat-setup-binds log-view-mode-map))
-  (with-eval-after-load 'magit
-    (+eldoc-diffstat-setup-binds magit-log-mode-map)
-    (+eldoc-diffstat-setup-binds magit-status-mode-map))
-  (with-eval-after-load 'vc-annotate
-    (+eldoc-diffstat-setup-binds vc-annotate-mode-map)))
-
 ;;;;;;;;;;;;;;;;
 ;;;; comint ;;;;
 

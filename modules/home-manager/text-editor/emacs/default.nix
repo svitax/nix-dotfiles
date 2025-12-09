@@ -145,7 +145,6 @@ in
               devdocs
               magit
               diff-hl
-              eldoc-diffstat
               compile-multi
               consult-compile-multi
               # native-complete
