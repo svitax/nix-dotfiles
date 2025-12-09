@@ -6206,8 +6206,6 @@ If PROMPT is nil, don't prompt for a directory and use
       (shell shell)
       (setq +shell--last-buffer origin)
       (with-current-buffer shell
-        (add-hook 'comint-output-filter-functions
-                  #'+shell-update-name-on-cd nil :local)
         (when +shell-kill-buffer-on-exit
           (let* ((buffer (current-buffer))
                  (process (get-buffer-process buffer))
@@ -6299,6 +6297,10 @@ Add a bookmark handler for shell buffer and activate the
     (if +shell-mode
         (progn
           (setq-local bookmark-make-record-function #'+shell-bookmark-make-record))
+          (add-hook 'comint-output-filter-functions
+                    #'+shell-update-name-on-cd nil :local)
+      (remove-hook 'comint-output-filter-functions
+                   #'+shell-update-name-on-cd :local)
       (setq-local bookmark-make-record-function nil)))
 
   (add-hook 'shell-mode-hook #'+shell-mode)
