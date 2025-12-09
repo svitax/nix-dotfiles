@@ -173,8 +173,6 @@ in
               saveplace-pdf-view
               nov
               tmr
-              # empv
-              mpv
               shr-tag-pre-highlight
               elpher
               # erc-hl-nicks
