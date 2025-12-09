@@ -6130,22 +6130,7 @@ ARGS is a list of strings."
             (lambda ()
               (setq outline-regexp shell-prompt-pattern)))
 
-  ;;;; Directory navigation
-
-  ;;;;; Directory tracking
-
-  (defvar +shell-cd-directories nil
-    "List of accumulated `shell-last-dir'.")
-
-  (with-eval-after-load 'savehist
-    (add-to-list 'savehist-additional-variables '+shell-cd-directories))
-
-  (defun +shell-track-cd (&rest _)
-    "Track shell input of cd commands.
-Push `shell-last-dir' to `+shell-cd-directories'."
-    (when-let* ((input (+shell--last-input))
-                ((string-match-p "cd " input)))
-      (push shell-last-dir +shell-cd-directories)))
+  ;;;; Directory tracking
 
   (defun +shell-update-name-on-cd (&rest _)
     "Update the shell buffer name after a cd for use in `+shell'."
@@ -6313,9 +6298,7 @@ Add a bookmark handler for shell buffer and activate the
     :global nil
     (if +shell-mode
         (progn
-          (add-hook 'comint-output-filter-functions #'+shell-track-cd nil :local)
           (setq-local bookmark-make-record-function #'+shell-bookmark-make-record))
-      (remove-hook 'comint-output-filter-functions #'+shell-track-cd :local)
       (setq-local bookmark-make-record-function nil)))
 
   (add-hook 'shell-mode-hook #'+shell-mode)
