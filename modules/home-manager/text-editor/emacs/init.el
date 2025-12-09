@@ -6207,32 +6207,6 @@ Push `shell-last-dir' to `+shell-cd-directories'."
 
   ;;;; General commands
 
-  (defun +shell--history-or-motion (history-fn motion-fn arg)
-    "Call HISTORY-FN or MOTION-FN with ARG depending on where point is.
-If `+shell--beginning-of-prompt-p' returns non-nil call
-HISTORY-FN, else MOTION-FN."
-    (let ((fn (if (or (+shell--beginning-of-prompt-p)
-                      (eq last-command 'comint-next-input)
-                      (eq last-command 'comint-previous-input))
-                  history-fn
-                motion-fn)))
-      (funcall-interactively fn arg)
-      (setq this-command fn)))
-
-  (defun +shell-up-dwim (arg)
-    "Return previous ARGth history input or go ARGth lines up.
-If point is at the beginning of a shell prompt, return previous
-input, otherwise perform buffer motion."
-    (interactive "^p")
-    (+shell--history-or-motion 'comint-previous-input 'previous-line arg))
-
-  (defun +shell-down-dwim (arg)
-    "Return next ARGth history input or or go ARGth lines down.
-If point is at the beginning of a shell prompt, return previous
-input, otherwise perform buffer motion."
-    (interactive "^p")
-    (+shell--history-or-motion 'comint-next-input 'next-line arg))
-
   ;; (defun +shell ()
   ;;     "Like `shell' but always start a new shell.
   ;; Name the shell buffer after the `default-directory'.  If the name of
@@ -6374,10 +6348,6 @@ output instead."
 
   (defvar-keymap +shell-mode-map
     :doc "Key map for `+shell-mode'."
-    "<up>" #'+shell-up-dwim
-    "<down>" #'+shell-down-dwim
-    "M-p" #'+shell-up-dwim
-    "M-n" #'+shell-down-dwim
     "C-x C-z" #'+shell-pop-to-buffer
     ;; "C-c d" #'+shell-cd
     "C-c C-q" #'+kill-this-buffer)
