@@ -4545,8 +4545,8 @@ The parameter NAME, ARGS, REST, and STATE are explained in the
   ;;
   ;; (add-hook 'SOME-MAJOR-MODE #'eglot-ensure)
   ;;
-  ;; My `eglot-use-package' package adds the `:lsp-hook' keyword for use-package
-  ;; forms to simplify this.
+  ;; My `eglot-use-package' package adds the `:lsp-ensure' keyword for
+  ;; use-package forms to simplify this.
   :init
   (with-eval-after-load 'pulsar
     (dolist (func '(eglot-find-typeDefinition
@@ -4582,12 +4582,13 @@ The parameter NAME, ARGS, REST, and STATE are explained in the
    ("C-c C-r" . eglot-rename)))
 
 (use-package eglot-use-package
-  ;; Adds :lsp-hook, :lsp-server, and :lsp-config keywords for use-package forms
+  ;; Adds :lsp-ensure, :lsp-server, and :lsp-config keywords for use-package
+  ;; forms.
   ;;
   ;; Possible variations
   ;;
   ;; (use-package go-ts-mode
-  ;;   :lsp-hook (go-ts-mode go-mod-ts-mode)
+  ;;   :lsp-ensure (go-ts-mode go-mod-ts-mode)
   ;;   :lsp-server ((go-ts-mode go-mod-ts-mode) . ("gopls"))
   ;;   :lsp-config '(gopls: . (:ui.completion.usePlaceholders t
   ;;                           :hints (:assignVariableTypes t
@@ -4606,20 +4607,20 @@ The parameter NAME, ARGS, REST, and STATE are explained in the
   (declare-function use-package-concat "use-package-core")
   (declare-function use-package-process-keywords "use-package-core")
 
-  (push :lsp-hook use-package-keywords)
+  (push :lsp-ensure use-package-keywords)
   (push :lsp-server use-package-keywords)
   (push :lsp-config use-package-keywords)
 
-  (defun use-package-normalize/:lsp-hook (_name _keyword args)
-    "Normalizer for `:lsp-hook' in `use-package' forms.
+  (defun use-package-normalize/:lsp-ensure (_name _keyword args)
+    "Normalizer for `:lsp-ensure' in `use-package' forms.
 The parameter ARGS is explained in the `use-package' documentation."
     (setq args (flatten-list args))
     (cond
      ((symbolp args) (list args))
      ((and (listp args) (cl-every #'symbolp args)) args)
-     (t (error "Invalid :lsp-hook value: %S" args))))
-  (defun use-package-handler/:lsp-hook (name _keyword args rest state)
-    "Handler for `lsp-hook' in `use-package' forms.
+     (t (error "Invalid :lsp-ensure value: %S" args))))
+  (defun use-package-handler/:lsp-ensure (name _keyword args rest state)
+    "Handler for `:lsp-ensure' in `use-package' forms.
 The parameters NAME, ARGS, REST, and STATE are explained in the
 `use-package' documentation."
     (let (eval-forms)
@@ -6775,7 +6776,7 @@ interactively."
 ;;              ("C-c M-d" . beardbolt-starter)))
 
 (use-package python
-  :lsp-hook (python-mode python-ts-mode)
+  :lsp-ensure (python-mode python-ts-mode)
   :format ruff python-mode python-ts-mode
   :lint ((python-mode python-ts-mode)
          flymake-collection-ruff
@@ -6976,7 +6977,7 @@ the `pydoc' module list before prompting."
   ;; Luckily for us, `nix-ts-mode' adds `nix-mode' as its parent, so we get the
   ;; best of both worlds when both are loaded.
   :mode "\\.nix\\'"
-  :lsp-hook nix-ts-mode
+  :lsp-ensure nix-ts-mode
   :config
   ;; Make sure packages that try to use nix-mode are redirected to nix-ts-mode
   (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode))
@@ -6990,7 +6991,7 @@ the `pydoc' module list before prompting."
 (use-package go-ts-mode
   :mode (("\\.go\\'" . go-ts-mode)
          ("/go\\.mod\\'" . go-mod-ts-mode))
-  :lsp-hook (go-ts-mode go-mod-ts-mode)
+  :lsp-ensure (go-ts-mode go-mod-ts-mode)
   :lsp-config '((:gopls . (:ui.completion.usePlaceholders t
                            :hints (:assignVariableTypes t
                                    :constantValues t
@@ -7009,7 +7010,7 @@ the `pydoc' module list before prompting."
 ;; (use-package hare-ts-mode)
 
 (use-package c-ts-mode
-  :lsp-hook (c-ts-mode c++-ts-mode)
+  :lsp-ensure (c-ts-mode c++-ts-mode)
   :config
   ;; Make sure packages that try to use c-mode or c++-mode are redirected to
   ;; c-ts-mode or c++-ts-mode
@@ -7045,7 +7046,7 @@ the `pydoc' module list before prompting."
   (setopt json-ts-mode-indent-offset tab-width))
 
 (use-package toml-ts-mode
-  :lsp-hook (toml-ts-mode conf-toml-mode)
+  :lsp-ensure (toml-ts-mode conf-toml-mode)
   :lsp-server ((toml-ts-mode conf-toml-mode) . ("taplo" "lsp" "stdio"))
   :format
   (taplo-fmt . ("taplo" "format" "-"))
