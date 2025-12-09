@@ -5824,7 +5824,8 @@ Interactively also sends a terminating newline."
   ;;
   ;; The result is a flexible interface for building context-aware compilation
   ;; menus, which allows us to invoke the right command without needing to
-  ;; hardcode it in advance.
+  ;; hardcode it in advance. Currently I have automatic target generation
+  ;; functions for Makefiles and rudimentary support for Nix flakes.
 
   ;; I do not rely on the `prefix-argument' to run `compile' commands in
   ;; `compilation-shell-minor-mode', because I have "C-x C-q" bound to
@@ -5995,25 +5996,6 @@ Set TARGET as the TARGET to build when set."
             (?n "Nix Flake" nix)))
 
   (consult-compile-multi-mode))
-
-(use-package projection-multi
-  :disabled t
-  :config
-  ;; `projection' has an optional extension package called `projection-multi' to
-  ;; integrate `compile-multi' into the current project type. It can extract
-  ;; available compilation targets from Makefiles, CMake configuration, etc. and
-  ;; lets you execute them easily. By default, `projection-multi-compile'
-  ;; determines all project types matching the current project and then resolves
-  ;; compilation targets based on them. For example, a project that would match
-  ;; CMake and tox would let you select both tox and CMake build
-  ;; targets.
-  ;;
-  ;; Currently automatic target generation functions are available for the
-  ;; following project types: projection (simply presents available projection
-  ;; commands for the matching project types), CMake, Make, Poetry Poe, and Tox.
-  (bind-keys
-   :map mode-specific-map
-   ("C-," . projection-multi-compile)))
 
 ;;;;;;;;;;;;;;;
 ;;;; shell ;;;;
