@@ -3569,22 +3569,6 @@ narrowed."
   :no-require
   :config
 
-  ;; BUG: this still creates fundamental mode copies of my buffers
-  ;; NOTE 2025-10-24 i've narrowed it down to happening when I spam
-  ;; keyboard-quit while doing `helpful-key'
-  (defun +keyboard-quit-dwim ()
-    "Smarter version of the built-in `keyboard-quit'.
-
-The generic `keyboard-quit' does not do the expected thing when the
-minibuffer is open. Whereas we want it to close the minibuffer, even
-without explicitly focusing it."
-    (interactive)
-    (if (active-minibuffer-window)
-        (if (minibufferp)
-            (minibuffer-keyboard-quit)
-          (abort-recursive-edit))
-      (keyboard-quit)))
-
   (defun +duplicate--buffer-substring (boundaries)
     "Duplicate buffer substring between BOUNDARIES.
 BOUNDARIES is a cons cell representing buffer positions."
@@ -3893,10 +3877,6 @@ There is no dragging the character forward. This is the behavior of
              ;; save in the kill ring instead. With prefix argument has same
              ;; behavior as `append-next-kill', which adds to previous kill.
              ;; ("C-M-w" . +save-next-kill)
-
-             ;; `+keyboard-quit-dwim' closes an open but unfocused minibuffer.
-             ("C-g" . +keyboard-quit-dwim)
-             ("<escape>" . +keyboard-quit-dwim)
 
              ;; `+duplicate-dwim' will duplicate the region if active, otherwise
              ;; the current line.
