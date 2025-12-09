@@ -149,7 +149,6 @@ in
               consult-compile-multi
               # native-complete
               # vterm
-              mistty
               ess
               pydoc
               nix-mode
