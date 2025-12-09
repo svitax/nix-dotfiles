@@ -4842,14 +4842,20 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
   (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function 100)
 
   (bind-keys :map help-map
+             ("a" . describe-face) ; orig. `apropos-command'
+             ("C-a" . find-face-definition) ; orig. `about-emacs'
              ("C" . describe-char) ; orig. `describe-coding-system'
              ("F" . apropos-function) ; parallel to f: `describe-function'
-             ("h" . describe-face)
+             ("C-f" . find-function) ; orig. `view-emacs-FAQ'
              ("C-h" . embark-prefix-help-command)
-             ("C-k" . describe-keymap)
+             ("K" . describe-keymap)
+             ("C-k" . find-function-on-key) ; orig. `Info-goto-emacs-key-command-node'
              ("L" . apropos-library) ; orig. `describe-language-environment'
-             ("u" . apropos-user-option)
+             ("C-l" . find-library) ; orig. `view-lossage'
+             ("U" . apropos-user-option)
              ("V" . apropos-variable) ; parallel to v: `describe-variable'
+             ("C-v" . find-variable)
+             ("X" . apropos-command)
              ("." . display-local-help)))
 
 ;; TODO document helpful and find a better section for it
