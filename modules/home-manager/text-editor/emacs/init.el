@@ -4104,10 +4104,10 @@ purposes.  See the documentation of `set-mark' for more information."
   (advice-add 'move-text-up :after '+indent-region-advice)
   (advice-add 'move-text-down :after '+indent-region-advice)
 
-  (bind-keys
-   :map global-map
-   ("M-p" . move-text-up)
-   ("M-n" . move-text-down)))
+  ;; TODO what should I bind move-text to in org-mode?
+  (bind-keys :map global-map
+             ("M-<up>" . move-text-up)
+             ("M-<down>" . move-text-down)))
 
 (use-package tabs
   :no-require
