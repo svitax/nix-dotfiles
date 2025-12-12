@@ -6005,6 +6005,14 @@ Set TARGET as the TARGET to build when set."
                 (project-root proj)
               default-directory)))
 
+  ;; Parallel build support for `make' in the default `compile-command'.
+  (setopt compile-command
+          (concat "make "
+                  (when-let* ((jobs (+compile-multi--guess-parallelism
+                                     +compile-multi-build-jobs)))
+                    (concat "-j " (number-to-string jobs) " "))
+                  "-k "))
+
   (bind-keys :map global-map
              ("C-c C-," . compile-multi)))
 
