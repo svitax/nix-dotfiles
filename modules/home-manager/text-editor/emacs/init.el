@@ -5794,11 +5794,12 @@ Interactively also sends a terminating newline."
       ;; (c++-ts-mode-hook
       ;;       . (concat "g++ -std=c++17 -Wall -Wextra -Wshadow -Wno-sign-conversion \
       ;; -O2 -I/Users/admin/problems/include " buffer-file-name " && ./a.out"))
-      (go-ts-mode-hook . (concat "go run " buffer-file-name))
+      (go-ts-mode-hook . (concat "go run " buffer-file-name " "))
       ;; (go-ts-mode-hook . "go build -o a.out ")
-      (rust-ts-mode-hook . "cargo run ")
+      (rust-ts-mode-hook . (concat "cargo run "))
       ;; (rust-ts-mode-hook . "rustc -o a.out ")
-      (sh-mode-hook . buffer-file-name)))
+      (sh-mode-hook . (concat buffer-file-name " "))
+      (python-ts-mode-hook . (concat "python " buffer-file-name " "))))
 
   (dolist (pair +compile-commands)
     (let ((mode (car pair))
