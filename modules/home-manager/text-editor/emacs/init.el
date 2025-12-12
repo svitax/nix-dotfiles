@@ -7183,6 +7183,15 @@ the `pydoc' module list before prompting."
   (add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode))
   (setopt go-ts-mode-indent-offset tab-width))
 
+;; (use-package gotest
+;;   :config
+;;   (bind-keys :map go-ts-mode-map
+;;              :prefix "C-c C-t"
+;;              :prefix-map go-test-commands-map
+;;              ;; https://github.com/travisjeffery/dotfiles/blob/7d11d67e1d2109b49e1c399c67872d676d80826c/.emacs.d/init.el#L1478
+;;              ("C-t" . go-test-current-test)
+;;              ("C-f" . go-test-current-file)))
+
 (use-package templ-ts-mode)
 
 ;; TODO https://sr.ht/~p00f/hare-ts-mode/
