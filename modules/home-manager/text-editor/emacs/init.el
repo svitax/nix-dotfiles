@@ -4266,11 +4266,14 @@ back to regular `er/expand-region'"
   (bind-keys
    :map global-map
    ("C-'" . mc-mark-map) ; C-c m
+   :map mc/keymap
+   ("C-'" . nil) ; orig. `mc-hide-unmatched-lines-mode'
    :map mc-mark-map
    ("." . mc/mark-all-like-this-dwim)
    ("C-a" . mc/edit-beginnings-of-lines)
    ("C-e" . mc/edit-ends-of-lines)
-   ("k" . mc-hide-unmatched-lines-mode) ; keep
+   ("k" . mc-hide-unmatched-lines-mode) ; "keep" mnemonic
+   ("C-k" . mc-hide-unmatched-lines-mode) ; "keep" mnemonic
    ("n" . mc/mark-next-like-this-symbol)
    ("p" . mc/mark-previous-like-this-symbol)
    ("C-n" . mc/mark-next-lines)
