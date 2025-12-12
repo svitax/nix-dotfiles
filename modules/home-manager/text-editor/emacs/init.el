@@ -4870,7 +4870,11 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
   :no-require
   :config
   ;; Display `shortdoc' examples in *Help* buffers.
-  (add-hook 'help-fns-describe-function-functions #'shortdoc-help-fns-examples-function 100)
+  (add-hook 'help-fns-describe-function-functions
+            #'shortdoc-help-fns-examples-function 100)
+
+  (setopt help-window-select t
+          help-window-keep-selected t)
 
   (bind-keys :map help-map
              ("a" . describe-face) ; orig. `apropos-command'
