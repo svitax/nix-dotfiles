@@ -4312,6 +4312,7 @@ back to regular `er/expand-region'"
    ("C-'" . mc-mark-map) ; C-c m
    :map mc/keymap
    ("C-'" . nil) ; orig. `mc-hide-unmatched-lines-mode'
+   ("<return>" . nil) ; orig. `multiple-cursors-mode'
    :map mc-mark-map
    ("." . mc/mark-all-like-this-dwim)
    ("C-a" . mc/edit-beginnings-of-lines)
