@@ -4269,7 +4269,6 @@ back to regular `er/expand-region'"
    :map mc-mark-map
    ("." . mc/mark-all-like-this-dwim)
    ("a" . mc/edit-beginnings-of-lines)
-   ("d" . mc/mark-all-like-this-in-defun)
    ("e" . mc/edit-ends-of-lines)
    ("k" . mc-hide-unmatched-lines-mode) ; keep
    ("n" . mc/mark-next-like-this-symbol)
