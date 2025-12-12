@@ -4280,6 +4280,20 @@ back to regular `er/expand-region'"
     (+mc/mark-sexps 'backwards)
     (mc/maybe-multiple-cursors-mode))
   (add-to-list 'mc--default-cmds-to-run-once '+mc/mark-previous-sexps)
+
+  (defun +mc/remove-current-cursor ()
+    "Remove the current cursor by replacing the next fake cursor."
+    (interactive)
+    (let ((next-cursor
+           (or (mc/next-fake-cursor-after-point)
+               (mc/prev-fake-cursor-before-point)
+               (error "This is the only cursor."))))
+      (mapc 'mc/remove-fake-cursor
+            (cl-remove-if-not 'mc/fake-cursor-p
+                              (overlays-at (point))))
+      (mc/pop-state-from-overlay next-cursor)))
+  (add-to-list 'mc--default-cmds-to-run-once '+mc/remove-current-cursor)
+
   (defvar-keymap mc-mark-map
     :doc "multiple-cursors mark map."
     :prefix 'mc-mark-map)
@@ -4291,7 +4305,8 @@ back to regular `er/expand-region'"
                      (+mc/mark-next-sexps . "next sexp")
                      (+mc/mark-previous-sexps . "prev sexp")
                      (mc/skip-to-next-like-this . "skip next")
-                     (mc/skip-to-previous-like-this . "skip prev"))))
+                     (mc/skip-to-previous-like-this . "skip prev")
+                     (+mc/remove-current-cursor . "del"))))
   (bind-keys
    :map global-map
    ("C-'" . mc-mark-map) ; C-c m
@@ -4300,6 +4315,7 @@ back to regular `er/expand-region'"
    :map mc-mark-map
    ("." . mc/mark-all-like-this-dwim)
    ("C-a" . mc/edit-beginnings-of-lines)
+   ("C-d" . +mc/remove-current-cursor)
    ("C-e" . mc/edit-ends-of-lines)
    ("k" . mc-hide-unmatched-lines-mode) ; "keep" mnemonic
    ("C-k" . mc-hide-unmatched-lines-mode) ; "keep" mnemonic
@@ -4313,6 +4329,7 @@ back to regular `er/expand-region'"
    (">" . mc/skip-to-next-like-this)
    ("<" . mc/skip-to-previous-like-this)
    :repeat-map mc-mark-repeat-map
+   ("C-d" . +mc/remove-current-cursor)
    ("n" . mc/mark-next-like-this-symbol)
    ("p" . mc/mark-previous-like-this-symbol)
    ("C-n" . mc/mark-next-lines)
