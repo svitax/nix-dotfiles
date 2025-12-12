@@ -4382,19 +4382,18 @@ back to regular `er/expand-region'"
 If point is already on an overlayed symbol, select them all with
 `multiple-cursors'."
     (interactive)
-    (let ((overlays (symbol-overlay-get-list 0)))
-      (cond ((not overlays)
-             (call-interactively #'symbol-overlay-put)
-             (+symbol-overlay-active-mode 1))
-            ((seq-find
-              (lambda (overlay)
-                (and (<= (overlay-start overlay) (point))
-                     (<= (point) (overlay-end overlay))))
-              overlays)
+    (let* ((overlays (symbol-overlay-get-list 0))
+           (overlay-at-point (and overlays
+                                  (seq-find
+                                   (lambda (overlay)
+                                     (and (<= (overlay-start overlay) (point))
+                                          (<= (point) (overlay-end overlay))))
+                                   overlays))))
+      (cond (overlay-at-point
              (+symbol-overlay-mc-mark-all))
             (t
-             (symbol-overlay-remove-all)
-             (+symbol-overlay-active-mode -1)))))
+             (call-interactively #'symbol-overlay-put)
+             (+symbol-overlay-active-mode 1)))))
 
   (advice-add 'symbol-overlay-remove-all :after
               (lambda (&rest _)
