@@ -275,7 +275,7 @@ Like `+common-completion-table' but also disable sorting."
              ;; ("o" . other-window) ("C-o" . guix) ; delete-blank-lines ; "os" mnemonic
              ("p" . +project-prefix-map) ; ("C-p" . ) ; mark-page
              ("q" . kbd-macro-query) ("C-q" . read-only-mode)
-             ("r" . +registers-prefix-map) ("C-r" . find-file-read-only)
+             ("r" . +registers-prefix-map) ; ("C-r" . consult-recent-file) ; find-file-read-only
              ("s" . save-some-buffers) ("C-s" . save-buffer)
              ("t" . +tab-prefix-map) ("C-t" . transpose-lines)
              ("u" . undo) ; vundo? ("C-u" . ) ; upcase-region ; "undo" mnemonic?
@@ -865,6 +865,9 @@ non-nil."
   ;; I generally do not rely on `recentf-mode', as most of my work is done in
   ;; projects, which I switch to directly. Though I sometimes need to revisit a
   ;; file that I do not need to keep track of.
+
+  (setopt recentf-max-saved-items 100)
+
   (recentf-mode))
 
 (use-package saveplace
@@ -1987,6 +1990,7 @@ The symbol at point is added to the future history."
              ("M-y" . consult-yank-pop)
              :map +prefix-map
              ("b" . consult-buffer) ; orig. `switch-to-buffer'
+             ("C-r" . consult-recent-file) ; orig. `find-file-read-only'
              :map ctl-x-4-map
              ("b" . consult-buffer-other-window) ; orig. `switch-to-buffer-other-window'
              :map ctl-x-5-map
