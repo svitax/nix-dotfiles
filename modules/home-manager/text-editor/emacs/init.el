@@ -4886,6 +4886,34 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
           :program "."
           :env (:CGO_ENABLED "0")))
 
+  ;; Add CGO_ENABLED=0 to dlv-gotest config otherwise it doesn't work on NixOS.
+  (add-to-list 'dape-configs
+               '(dlv-gotest
+                 modes (go-mode go-ts-mode)
+                 ensure dape-ensure-command
+                 command "dlv"
+                 command-args ("dap" "--listen" "127.0.0.1::autoport")
+                 command-cwd dape-command-cwd
+                 command-insert-stderr t
+                 port :autoport
+                 :request "launch"
+                 :type "debug"
+                 :mode "test"
+                 :cwd dape-cwd
+                 :program
+                 (lambda ()
+                   (concat "./" (file-relative-name
+                                 default-directory
+                                 (funcall dape-cwd-fn))))
+                 :args
+                 (lambda ()
+                   (when-let* ((test-name (go-test--get-current-test)
+                                ;; or (gotest-ts-get-subtest-ts)
+                                ))
+                    (if test-name `["-test.run" ,test-name]
+                     (error "No test selected"))))
+                 :env (:CGO_ENABLED "0")))
+
   ;; Dape's default configuration assumes `codelldb' is manually installed in
   ;; `user-emacs-directory', which doesn't work with my NixOS setup. Here I
   ;; configure Dape to use the appropriate path for codelldb.
