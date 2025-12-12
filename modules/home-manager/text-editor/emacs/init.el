@@ -4276,8 +4276,6 @@ back to regular `er/expand-region'"
    ("p" . mc/mark-previous-like-this-symbol)
    ("C-n" . mc/mark-next-lines)
    ("C-p" . mc/mark-previous-lines)
-   ("r" . mc/reverse-regions)
-   ("s" . mc/sort-regions)
    (">" . mc/skip-to-next-like-this)
    ("<" . mc/skip-to-previous-like-this)
    :repeat-map mc-mark-repeat-map
