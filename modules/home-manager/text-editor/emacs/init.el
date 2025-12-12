@@ -4253,6 +4253,33 @@ back to regular `er/expand-region'"
   ;; approach distorts lines and just plainly doesn't work, so I disable it.
   (setopt mc/match-cursor-style t)
 
+  (defun +mc/mark-sexps (num-sexps direction)
+    (dotimes (i (if (= num-sexps 0) 1 num-sexps))
+      (mc/save-excursion
+       (let ((furthest-cursor (cl-ecase direction
+                                (forwards  (mc/furthest-cursor-after-point))
+                                (backwards (mc/furthest-cursor-before-point)))))
+         (when (overlayp furthest-cursor)
+           (goto-char (overlay-get furthest-cursor 'point))
+           (when (= num-sexps 0)
+             (mc/remove-fake-cursor furthest-cursor))))
+       (cl-ecase direction
+         (forwards (forward-sexp 2) (backward-sexp 1))
+         (backwards (backward-sexp 2) (forward-sexp 1)))
+       (mc/create-fake-cursor-at-point))))
+
+  (defun +mc/mark-next-sexps (arg)
+    "Mark next ARG sexps."
+    (interactive "p")
+    (+mc/mark-sexps arg 'forwards)
+    (mc/maybe-multiple-cursors-mode))
+  (add-to-list 'mc--default-cmds-to-run-once '+mc/mark-next-sexps)
+
+  (defun +mc/mark-previous-sexps (arg)
+    (interactive "p")
+    (+mc/mark-sexps 'backwards)
+    (mc/maybe-multiple-cursors-mode))
+  (add-to-list 'mc--default-cmds-to-run-once '+mc/mark-previous-sexps)
   (defvar-keymap mc-mark-map
     :doc "multiple-cursors mark map."
     :prefix 'mc-mark-map)
@@ -4261,6 +4288,8 @@ back to regular `er/expand-region'"
                      (mc/mark-previous-like-this-symbol . "prev")
                      (mc/mark-next-lines . "next line")
                      (mc/mark-previous-lines . "prev line")
+                     (+mc/mark-next-sexps . "next sexp")
+                     (+mc/mark-previous-sexps . "prev sexp")
                      (mc/skip-to-next-like-this . "skip next")
                      (mc/skip-to-previous-like-this . "skip prev"))))
   (bind-keys
@@ -4278,6 +4307,8 @@ back to regular `er/expand-region'"
    ("p" . mc/mark-previous-like-this-symbol)
    ("C-n" . mc/mark-next-lines)
    ("C-p" . mc/mark-previous-lines)
+   ("C-M-n" . +mc/mark-next-sexps)
+   ("C-M-p" . +mc/mark-previous-sexps)
    ("C-SPC" . mc/mark-pop)
    (">" . mc/skip-to-next-like-this)
    ("<" . mc/skip-to-previous-like-this)
@@ -4286,6 +4317,8 @@ back to regular `er/expand-region'"
    ("p" . mc/mark-previous-like-this-symbol)
    ("C-n" . mc/mark-next-lines)
    ("C-p" . mc/mark-previous-lines)
+   ("C-M-n" . +mc/mark-next-sexps)
+   ("C-M-p" . +mc/mark-previous-sexps)
    ("C-SPC" . mc/mark-pop)
    (">" . mc/skip-to-next-like-this)
    ("<" . mc/skip-to-previous-like-this)))
