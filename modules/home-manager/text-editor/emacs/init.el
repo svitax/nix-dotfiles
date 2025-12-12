@@ -4288,6 +4288,68 @@ back to regular `er/expand-region'"
    (">" . mc/skip-to-next-like-this)
    ("<" . mc/skip-to-previous-like-this)))
 
+(use-package symbol-overlay
+  :config
+  (defun +symbol-overlay-mc-mark-all ()
+    "Mark all symbol overlays using `multiple-cursors'."
+    (interactive)
+    (when-let* ((overlays (symbol-overlay-get-list 0))
+                (point (point))
+                (point-overlay (seq-find
+                                (lambda (overlay)
+                                  (and (<= (overlay-start overlay) point)
+                                       (<= point (overlay-end overlay))))
+                                overlays))
+                (offset (- point (overlay-start point-overlay))))
+      (setq deactivate-mark t)
+      (mapc (lambda (overlay)
+              (unless (eq overlay point-overlay)
+                (mc/save-excursion
+                 (goto-char (+ (overlay-start overlay) offset))
+                 (mc/create-fake-cursor-at-point))))
+            overlays)
+      (mc/maybe-multiple-cursors-mode)))
+
+  (defvar-keymap +symbol-overlay-active-map
+    :doc "Keymap automatically actived when there are overlays from
+`symbol-overlay'."
+    "C-g" #'symbol-overlay-remove-all)
+
+  (define-minor-mode +symbol-overlay-active-mode
+    "Minor mode for when overlays from `symbol-overlay' exist."
+    :keymap +symbol-overlay-active-map
+    :global nil)
+
+  (defun +symbol-overlay-dwim ()
+    "Toggle all overlays of symbol at point.
+
+If point is already on an overlayed symbol, select them all with
+`multiple-cursors'."
+    (interactive)
+    (let ((overlays (symbol-overlay-get-list 0)))
+      (cond ((not overlays)
+             (call-interactively #'symbol-overlay-put)
+             (+symbol-overlay-active-mode 1))
+            ((seq-find
+              (lambda (overlay)
+                (and (<= (overlay-start overlay) (point))
+                     (<= (point) (overlay-end overlay))))
+              overlays)
+             (+symbol-overlay-mc-mark-all))
+            (t
+             (symbol-overlay-remove-all)
+             (+symbol-overlay-active-mode -1)))))
+
+  (advice-add 'symbol-overlay-remove-all :after
+              (lambda (&rest _)
+                (when (not (symbol-overlay-get-list 0))
+                  (+symbol-overlay-active-mode -1))))
+
+  (bind-keys :map global-map
+             ("C-," . +symbol-overlay-dwim)
+             :map symbol-overlay-map
+             ("C-g" . symbol-overlay-remove-all)))
+
 (use-package vundo
   :disabled t
   ;; The `vundo' package by Yuan Fu (aka "casouri") builds on top of the

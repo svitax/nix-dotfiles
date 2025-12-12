@@ -135,6 +135,7 @@ in
               move-text
               expand-region
               multiple-cursors
+              symbol-overlay
               # vundo
               flymake-collection
               hl-todo
