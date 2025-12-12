@@ -4406,25 +4406,24 @@ If point is already on an overlayed symbol, select them all with
              ;; I don't like that symbol-overlay binds one zillion keys.
              ("<" . nil) ; orig. `symbol-overlay-jump-first'
              (">" . nil) ; orig. `symbol-overlay-jump-last'
-             ("M-<" . symbol-overlay-jump-first)
-             ("M->" . symbol-overlay-jump-last)
-             ("M-%" . symbol-overlay-query-replace)
              ("d" . nil) ; orig. `symbol-overlay-jump-to-definition'
              ("e" . nil) ; orig. `symbol-overlay-echo-mark'
-             ("C-g" . symbol-overlay-remove-all)
              ("h" . nil) ; orig. `symbol-overlay-map-help'
              ("i" . nil) ; orig. `symbol-overlay-put'
              ("n" . nil) ; orig. `symbol-overlay-jump-next'
              ("p" . nil) ; orig. `symbol-overlay-jump-prev'
-             ("M-n" . symbol-overlay-jump-next)
-             ("M-p" . symbol-overlay-jump-prev)
              ("q" . nil) ; orig. `symbol-overlay-query-replace'
              ("r" . nil) ; orig. `symbol-overlay-rename'
              ("s" . nil) ; orig. `symbol-overlay-isearch-literally'
-             ("C-s" . symbol-overlay-isearch-literally)
              ("t" . nil) ; orig. `symbol-overlay-toggle-in-scope'
              ("w" . nil) ; orig. `symbol-overlay-save-symbol'
-             ))
+             ("M-<" . symbol-overlay-jump-first)
+             ("M->" . symbol-overlay-jump-last)
+             ("M-%" . symbol-overlay-query-replace)
+             ("C-g" . symbol-overlay-remove-all)
+             ("M-n" . symbol-overlay-jump-next)
+             ("M-p" . symbol-overlay-jump-prev)
+             ("C-s" . symbol-overlay-isearch-literally)))
 
 (use-package vundo
   :disabled t
