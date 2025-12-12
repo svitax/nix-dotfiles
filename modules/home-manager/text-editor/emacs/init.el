@@ -1218,6 +1218,9 @@ Add this to `dired-mode-hook'."
   ;; `dired-jump' doesn't need a repeat map.
   (put 'dired-jump 'repeat-map nil)
 
+  ;; Reuse current buffer in Dired by pressing 'a' (`dired-find-alternate-file')
+  (put 'dired-find-alternate-file 'disabled nil)
+
   ;; `+dired-hist' is a minor mode that keeps track of visited Dired buffers and
   ;; lets you go back and forward across them. This is similar to the facility
   ;; provided in other Emacs major modes, such as Info and EWW.
