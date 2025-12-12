@@ -7192,6 +7192,8 @@ the `pydoc' module list before prompting."
 ;;              ("C-t" . go-test-current-test)
 ;;              ("C-f" . go-test-current-file)))
 
+;; (use-package go-tag)
+
 (use-package templ-ts-mode)
 
 ;; TODO https://sr.ht/~p00f/hare-ts-mode/
