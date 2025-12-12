@@ -3307,6 +3307,24 @@ end of the buffer.")
                     xref-find-definitions))
       (add-to-list 'pulsar-pulse-functions func))))
 
+(use-package re-builder
+  ;; `re-builder' defines a command that lets us write a regexp that matches
+  ;; against the current buffer, allowing us to test it live.
+  :config
+
+  (defun +reb-query-replace (to-string)
+    "Replace current RE from point with `query-replace-regexp'."
+    (interactive
+     (let ((regexp (with-current-buffer reb-target-buffer
+                     reb-regexp)))
+       (barf-if-buffer-read-only)
+       (list (query-replace-read-to regexp "Query replace" t))))
+    (with-current-buffer reb-target-buffer
+      (query-replace-regexp reb-regexp to-string)))
+
+  (bind-keys :map reb-mode-map
+             ("M-%" . +reb-query-replace)))
+
 ;; TODO dumbjump
 
 (use-package avy
