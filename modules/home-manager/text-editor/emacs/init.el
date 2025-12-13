@@ -628,6 +628,7 @@ to produce the opposite effect of `fill-paragraph' and `fill-region'."
         (fill-paragraph))))
 
   (add-hook 'text-mode-hook #'auto-fill-mode)
+  (add-hook 'prog-mode-hook #'auto-fill-mode)
 
   ;; TODO display-fill-column-indicator only if a line is currently passing it
   ;; (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
