@@ -3398,22 +3398,21 @@ end of the buffer.")
 
   (bind-keys :map global-map
              ("C-c j" . link-hint-open-link)
-             ("C-c J" . +link-hint-jump-link)
-             :map Info-mode-map
-             ("f" . link-hint-open-link)
-             ("j" . +link-hint-jump-link))
-  (with-eval-after-load 'eww
-    (bind-keys :map eww-mode-map
-               ("f" . link-hint-open-link)
-               ("j" . +link-hint-jump-link)))
-  (with-eval-after-load 'nov
-    (bind-keys :map nov-mode-map
-               ("f" . link-hint-open-link)
-               ("j" . +link-hint-jump-link)))
-  (with-eval-after-load 'elpher
-    (bind-keys :map elpher-mode-map
-               ("f" . link-hint-open-link)
-               ("j" . +link-hint-jump-link))))
+             ("C-c J" . +link-hint-jump-link))
+
+  (dolist (spec '((elpher elpher-mode-map)
+                  (eww eww-mode-map)
+                  (help help-mode-map)
+                  (helpful helpful-mode-map)
+                  (nov nov-mode-map)
+                  (info Info-mode-map)))
+    (let ((feature (car spec))
+          (maps (cdr spec)))
+      (with-eval-after-load feature
+        (dolist (map maps)
+          (bind-keys :map (symbol-value map)
+                     ("f" . link-hint-open-link)
+                     ("j" . +link-hint-jump-link)))))))
 
 (use-package paragraphs
   :no-require
