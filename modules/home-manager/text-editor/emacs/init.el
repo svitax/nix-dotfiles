@@ -2091,7 +2091,8 @@ The symbol at point is added to the future history."
   (defun +consult-dir--zoxide-dirs ()
     "Return list of zoxide dirs."
     (mapcar
-     #'abbreviate-file-name
+     (lambda (dir)
+       (file-name-as-directory (abbreviate-file-name dir)))
      (split-string (shell-command-to-string "zoxide query --list") "\n" t)))
   ;; A consult source that calls this function
   (defvar +consult-dir--source-zoxide
