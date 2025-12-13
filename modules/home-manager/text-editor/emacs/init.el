@@ -8519,7 +8519,7 @@ continue, per `org-agenda-skip-function'."
   (add-hook 'outline-minor-mode-hook '+outline-set-display-table)
 
   (setopt outline-minor-mode-highlight nil
-          outline-minor-mode-cycle t
+          outline-minor-mode-cycle nil
           outline-minor-mode-use-buttons nil)
 
   (bind-keys :map outline-minor-mode-map
