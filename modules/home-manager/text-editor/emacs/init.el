@@ -5660,6 +5660,31 @@ default, it is the symbol at point."
   ;; `ediff-files', `ediff-buffers'. Sometimes I use the 3-way variants with
   ;; `ediff-files3' and `ediff-buffers3', though this is rare.
   :init
+  (defun +ediff-store-layout ()
+    "Store current frame window configuration as a frame parameter.
+Add this function to the `ediff-before-setup-hook'.
+
+Also see `+ediff-restore-layout'."
+    (let ((frame (selected-frame)))
+      (set-frame-parameter
+       frame
+       '+ediff-last-layout
+       (current-window-configuration frame))))
+
+  (defun +ediff-restore-layout ()
+    "Restore the frame's window configuration.
+Add this function to the `ediff-quit-hook'.
+
+Also see `+ediff-store-layout'."
+    (if-let* ((layout (frame-parameter (selected-frame) '+ediff-last-layout)))
+        (set-window-configuration layout)
+      ;; We do not signal a `user-error' here because that would prevent
+      ;; `ediff-quit' from closing the Ediff session.
+      (message "No Ediff window configuration for the current frame")))
+
+  (add-hook 'ediff-before-setup-hook #'+ediff-store-layout)
+  (add-hook 'ediff-quit-hook #'+ediff-restore-layout)
+
   (setopt ediff-split-window-function 'split-window-horizontally
           ediff-window-setup-function 'ediff-setup-windows-plain
           ediff-keep-variants nil
