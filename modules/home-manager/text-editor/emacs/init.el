@@ -1751,29 +1751,11 @@ first one. Else do `vertico-exit'."
                                            . +vertico-sort-directories-first))
                                          (t ,@+vertico-multiform-minimal))
           vertico-multiform-commands `(("citar-\\(.*\\)"
+                                        ,@+vertico-multiform-maximal)
+                                       ("+consult-completion-at-point"
                                         ,@+vertico-multiform-maximal))
           vertico-cycle t
           vertico-count 5)
-
-  ;; The `completion-in-region-function' handles in-buffer text completion using
-  ;; Emacs' underlying infrastructure for `completion-at-point-functions'. A
-  ;; popular interface for this is `corfu', which provides in-buffer popups. I
-  ;; find these too visually distracting, especially when they appear
-  ;; automatically. I don't want things eagerly popping in and out of my view. I
-  ;; want manual completion. Pop up only when I say so.
-  ;;
-  ;; Since I have already configured `vertico' to behave this way, it makes
-  ;; sense to leverage that interface here. When Vertico is active, use
-  ;; `consult-completion-in-region' to handle in-buffer completions through the
-  ;; minibuffer. Otherwise use the default `completion--in-region' function.
-  (setopt completion-in-region-function
-          (lambda (&rest args)
-            (apply (cond ((and (minibufferp)
-                               minibuffer-completion-table)
-                          #'completion--in-region)
-                         (t
-                          #'consult-completion-in-region))
-                   args)))
 
   (with-eval-after-load 'rfn-eshadow
     ;; This works with `file-name-shadow-mode' enabled. When you are in
@@ -1990,8 +1972,24 @@ The symbol at point is added to the future history."
                (region-beginning)
                (region-end))))
 
+  ;; The `completion-in-region-function' handles in-buffer text completion using
+  ;; Emacs' underlying infrastructure for `completion-at-point-functions'. A
+  ;; popular interface for this is `corfu', which provides in-buffer
+  ;; popups. Sometimes I want to leverage my customized `vertico' interface with
+  ;; `consult-completion-in-region'.
+  (defun +consult-completion-at-point ()
+    "Perform completion on the text around point, using `consult'.
+
+The completion method is determined by completion-at-point-functions."
+    (interactive)
+    (let ((completion-in-region-function #'consult-completion-in-region))
+      (completion-at-point)))
+
   (bind-keys :map global-map
              ("M-y" . consult-yank-pop)
+             ("C-M-i" . +consult-completion-at-point)
+             :map emacs-lisp-mode-map
+             ("C-M-i" . +consult-completion-at-point)
              :map +prefix-map
              ("b" . consult-buffer) ; orig. `switch-to-buffer'
              ("C-r" . consult-recent-file) ; orig. `find-file-read-only'
@@ -2279,7 +2277,7 @@ minibuffer, which means it can be used as an Embark action."
   ;; `corfu-popupinfo-mode' will show a secondary documentation popup if we move
   ;; over a candidate but do not to anything with it.
   :config
-  ;; (global-corfu-mode)
+  (global-corfu-mode)
   (corfu-popupinfo-mode 1)
 
   (setopt corfu-cycle t
@@ -2308,17 +2306,6 @@ minibuffer, which means it can be used as an Embark action."
        (t
         (default-indent-new-line)))))
 
-  (defun +corfu-completion-at-point ()
-    "Perform completion on the text around point, using `corfu'.
-
-The completion method is determined by completion-at-point-functions."
-    (interactive)
-    (let ((completion-in-region-function #'corfu--in-region))
-      (completion-at-point)))
-  (bind-keys :map global-map
-             ("C-M-i" . +corfu-completion-at-point)
-             :map emacs-lisp-mode-map
-             ("C-M-i" . +corfu-completion-at-point))
 
   (bind-keys :map corfu-map
              ("C-h" . corfu-info-documentation)
