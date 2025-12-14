@@ -5682,14 +5682,14 @@ default, it is the symbol at point."
   ;; Overall, it should be faster and lighter than something like `git-gutter'
 
   :init
-  (global-diff-hl-mode)
-  (diff-hl-flydiff-mode)
   ;; I hate it when packages hard-code global keybindings. Do not touch my
   ;; global bindings unless I explicitly say so. And now trying to undo what the
   ;; package author thought was helpful causes unnecessary errors. I cannot set
   ;; `diff-hl-command-prefix' to nil or "" because then everything blows up.
   (setq-default diff-hl-command-prefix (kbd "C-x v ,"))
 
+  (global-diff-hl-mode)
+  (diff-hl-flydiff-mode)
   :config
   ;; Redefine fringe bitmaps to be sleeker by making them solid bars (with no
   ;; border) that only take up up half the horizontal space in the fringe. This
