@@ -5614,7 +5614,7 @@ default, it is the symbol at point."
              ;; Apply our +magit-kill-buffers command only in magit-status
              ("q" . +magit-kill-buffers)))
 
-(use-package diff
+(use-package diff-mode
   :config
   ;; This built-in mode is an easy and effective way to interact with diffs. A
   ;; "diff" is a Unix tradition of showing line-wise differences in a file. If
