@@ -1753,6 +1753,8 @@ first one. Else do `vertico-exit'."
           vertico-multiform-commands `(("citar-\\(.*\\)"
                                         ,@+vertico-multiform-maximal)
                                        ("+consult-completion-at-point"
+                                        ,@+vertico-multiform-maximal)
+                                       ("+corfu-move-to-minibuffer"
                                         ,@+vertico-multiform-maximal))
           vertico-cycle t
           vertico-count 5)
@@ -2306,9 +2308,18 @@ minibuffer, which means it can be used as an Embark action."
        (t
         (default-indent-new-line)))))
 
+  (defun +corfu-move-to-minibuffer ()
+    (interactive)
+    (pcase completion-in-region--data
+      (`(,beg ,end ,table ,pred ,extras)
+       (let ((completion-extra-properties extras)
+             completion-cycle-threshold completion-cycling)
+         (consult-completion-in-region beg end table pred)))))
+  (add-to-list 'corfu-continue-commands #'+corfu-move-to-minibuffer)
 
   (bind-keys :map corfu-map
              ("C-h" . corfu-info-documentation)
+             ("C-l" . +corfu-move-to-minibuffer)
              ("C-v" . corfu-popupinfo-scroll-up)
              ("M-v" . corfu-popupinfo-scroll-down)
              ("M-." . corfu-info-location)
