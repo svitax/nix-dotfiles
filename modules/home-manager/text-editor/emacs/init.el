@@ -5477,6 +5477,7 @@ default, it is the symbol at point."
              ("v" . vc-prefix-map)
              :map vc-prefix-map
              ("c" . vc-prepare-patch)
+             ("e" . vc-ediff)
              ("F" . vc-update) ; symmetric with P: `vc-push'
              ("k" . vc-delete-file) ; 'k' for kill==>delete is more common
              ("x" . nil) ; unmap `vc-delete-file'
