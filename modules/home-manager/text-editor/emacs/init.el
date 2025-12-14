@@ -5451,6 +5451,11 @@ default, it is the symbol at point."
         (indent-rigidly (point-min) (point-max) 2)
         (buffer-string))))
 
+  (defun +vc-dir-jump ()
+    "Jump to present directory in a `vc-dir' buffer."
+    (interactive)
+    (vc-dir default-directory))
+
   (setopt vc-follow-symlinks t
           vc-find-revision-no-save t
           vc-git-log-edit-summary-target-len 50
@@ -5479,6 +5484,7 @@ default, it is the symbol at point."
              ("c" . vc-prepare-patch)
              ("e" . vc-ediff)
              ("F" . vc-update) ; symmetric with P: `vc-push'
+             ("j" . +vc-dir-jump) ; similar to `dired-jump'
              ("k" . vc-delete-file) ; 'k' for kill==>delete is more common
              ("x" . nil) ; unmap `vc-delete-file'
              :map vc-dir-mode-map
