@@ -5498,6 +5498,8 @@ default, it is the symbol at point."
              ("c" . vc-prepare-patch)
              ("f" . nil) ; unmap `log-view-find-revision'
              ("F" . vc-update)
+             ("I" . vc-log-incoming)
+             ("O" . vc-log-outgoing)
              ("P" . vc-push)
              ("s" . vc-log-search)
              :map diff-mode-map
