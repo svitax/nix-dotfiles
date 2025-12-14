@@ -5819,6 +5819,8 @@ Respects `diff-hl-disable-on-remote'."
              ("U" . diff-hl-revert-hunk)
              ("*" . diff-hl-show-hunk)
              ("SPC" . diff-hl-mark-hunk)
+             :map diff-hl-mode-map
+             ([remap vc-diff] . nil) ; undo the default remapping of `vc-diff'
              :map diff-hl-command-map
              ("n" . diff-hl-next-hunk)
              ("p" . diff-hl-previous-hunk)
