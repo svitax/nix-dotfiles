@@ -5496,6 +5496,7 @@ default, it is the symbol at point."
              ("<tab>" . log-view-toggle-entry-display) ; orig. `log-view-msg-next'
              ("<backtab>" . nil) ; unmap `log-view-msg-prev'
              ("c" . vc-prepare-patch)
+             ("f" . nil) ; unmap `log-view-find-revision'
              ("F" . vc-update)
              ("P" . vc-push)
              ("s" . vc-log-search)
