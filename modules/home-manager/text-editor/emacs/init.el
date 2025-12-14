@@ -5417,6 +5417,20 @@ default, it is the symbol at point."
   ;; I can see the files with "C-c C-f"
   (remove-hook 'log-edit-hook #'log-edit-show-files)
 
+  ;; Remember more commit messages
+  (setopt log-edit-maximum-comment-ring-size 1000)
+
+  ;; `consult-history' support for `log-edit-mode'
+  (with-eval-after-load 'consult
+    (add-to-list 'consult-mode-histories
+                 '(log-edit-mode
+                   log-edit-comment-ring
+                   log-edit-comment-ring-index
+                   log-edit-beginning-of-line)))
+
+  (with-eval-after-load 'savehist
+    (add-to-list 'savehist-additional-variables 'log-edit-comment-ring))
+
   ;; The default `vc-git-expanded-log-entry' makes it hard to visually see where
   ;; the commit message starts and ends. I redefine it here to add a newline at
   ;; the top and indent it by 2 spaces.
@@ -5474,6 +5488,7 @@ default, it is the symbol at point."
              :map vc-git-stash-shared-map
              ("k" . vc-git-stash-delete-at-point) ; symmetry with `vc-dir-delete-file'
              :map log-edit-mode-map
+             ("M-r" . consult-history) ; orig. `log-edit-comment-search-backward'
              ("M-s" . nil)  ; unmap `log-edit-comment-search-forward'
              :map log-view-mode-map
              ("RET" . log-view-find-revision) ; orig. `log-edit-toggle-entry-display'
