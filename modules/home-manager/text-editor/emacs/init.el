@@ -6059,13 +6059,13 @@ Interactively also sends a terminating newline."
    ("C-." . recompile)
    :map compilation-mode-map
    ("C-x C-q" . +compile-toggle-comint)
-   ("C-d" . +comint-send-self)
-   ("C-j" . +comint-send-self)
-   ("y" . +comint-send-self)
-   ("n" . +comint-send-self)
    :map compilation-minor-mode-map
    ("C-x C-q" . +compile-toggle-comint)
    :map compilation-shell-minor-mode-map
+   ("C-j" . +comint-send-self)
+   ("n" . +comint-send-self)
+   ("y" . +comint-send-self)
+   ("RET" . +comint-send-self)
    ("C-x C-q" . +compile-toggle-comint)
    :map minibuffer-local-shell-command-map
    ("M-r" . +compile-input-from-history)
