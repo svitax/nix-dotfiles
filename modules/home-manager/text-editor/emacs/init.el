@@ -6527,6 +6527,13 @@ output instead."
                 (shell-command-to-string command))))
       (exchange-point-and-mark)))
 
+  (defun +shell-recenter ()
+    "Scroll the window so that the current line is at the top of the window."
+    (interactive)
+    (goto-char (point-max))
+    (let ((recenter-positions '(top bottom)))
+      (recenter-top-bottom)))
+
   ;;;; Minor mode setup
 
   (define-minor-mode +shell-mode
@@ -6570,6 +6577,7 @@ Add a bookmark handler for shell buffer and activate the
              :map +project-prefix-map
              ("z" . +project-shell)
              :map shell-mode-map
+             ("C-l" . +shell-recenter)
              ("M-r" . +consult-history-comint-send)
              ("C-c C-k" . comint-clear-buffer)
              ("C-c C-w" . comint-write-output)
