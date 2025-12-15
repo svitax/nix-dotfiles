@@ -2216,6 +2216,7 @@ minibuffer, which means it can be used as an Embark action."
     (interactive)
     (isearch-mode nil)
     (isearch-edit-string)
+    (deactivate-mark)
     ;; Make sure isearch-lazy-count is updated on first invocation of
     ;; embark-isearch commands
     (when isearch-lazy-count
@@ -2228,6 +2229,7 @@ minibuffer, which means it can be used as an Embark action."
     (interactive)
     (isearch-mode t)
     (isearch-edit-string)
+    (deactivate-mark)
     ;; Make sure isearch-lazy-count is updated on first invocation of
     ;; embark-isearch commands
     (when isearch-lazy-count
