@@ -6007,12 +6007,20 @@ Interactively also sends a terminating newline."
       (process-send-string
        (get-buffer-process (current-buffer))
        string)))
+
   (defun +comint-send-self ()
     "Send the pressed key to the current process."
     (interactive)
     (+compile-send-input
      (apply #'string
             (append (this-command-keys-vector) nil))))
+
+  (defun +comint-send-eof-and-quit ()
+    "Send an EOF to the current buffer's process and quit window."
+    (interactive nil comint-mode)
+    (let ((proc (get-buffer-process (current-buffer))))
+      (when proc (comint-send-eof))
+      (quit-window t)))
 
   (defun +compile-toggle-comint ()
     "Restart compilation with (or without) `comint-mode'."
@@ -6062,6 +6070,7 @@ Interactively also sends a terminating newline."
    :map compilation-minor-mode-map
    ("C-x C-q" . +compile-toggle-comint)
    :map compilation-shell-minor-mode-map
+   ("C-d" . +comint-send-eof-and-quit)
    ("C-j" . +comint-send-self)
    ("n" . +comint-send-self)
    ("y" . +comint-send-self)
