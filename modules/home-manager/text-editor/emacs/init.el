@@ -207,6 +207,7 @@ Optional keyword arguments:
     :main-doc STRING - Documentation for the main function.
     :project-doc STRING - Documentation for the project function.
     :pop-doc STRING - Documentation for the pop-to-bufer function.
+    :global BOOLEAN - Whether to use directory-based naming.
 
 Example:
     (+define-repl-commands vterm vterm-mode)
@@ -214,32 +215,34 @@ Example:
     (+define-repl-commands shell shell-mode
      :init (lambda () (shell (current-buffer)))
      :main-doc \"Start an inferior shell...\")"
-    (let ((name (symbol-name name))
-          (last-buffer-var (intern (format "+%s--last-buffer" name)))
-          (kill-on-exit-var (intern (format "+%s-kill-buffer-on-exit" name)))
-          (setup-kill (intern (format "+%s--setup-kill-on-exit" name)))
-          (init (or (plist-get args :init)
-                       mode))
-          (main (intern (format "+%s" name)))
-          (main-doc (or (plist-get args :main-doc)
-                           (format "Start %s in the specified directory."
-                                   name)))
-          (project (intern (format "+project-%s" name)))
-          (project-doc (or (plist-get args :project-doc)
-                              (format "Start %s in the current project's root." name)))
-          (pop (intern (format "+%s-pop-to-buffer" name)))
-          (pop-doc (or (plist-get args :pop-doc)
-                          (format "Switch to %s process buffer.
+    (let* ((name (symbol-name name))
+           (last-buffer-var (intern (format "+%s--last-buffer" name)))
+           (kill-on-exit-var (intern (format "+%s-kill-buffer-on-exit" name)))
+           (setup-kill (intern (format "+%s--setup-kill-on-exit" name)))
+           (init (or (plist-get args :init)
+                     mode))
+           (main (intern (format "+%s" name)))
+           (main-doc (or (plist-get args :main-doc)
+                         (format "Start %s in the specified directory."
+                                 name)))
+           (global (plist-get args :global))
+           (project (intern (format "+project-%s" name)))
+           (project-doc (or (plist-get args :project-doc)
+                            (format "Start %s in the current project's root." name)))
+           (pop (intern (format "+%s-pop-to-buffer" name)))
+           (pop-doc (or (plist-get args :pop-doc)
+                        (format "Switch to %s process buffer.
 
 If no %s process for current buffer exists, %s is called interactively.
 
 With prefix argument ARG, prompt for a directory."
-                                  name name main))))
+                                name name (format "+%s" name)))))
       `(progn
          (defvar-local ,last-buffer-var nil)
 
          (defcustom ,kill-on-exit-var t
-           "Kill a %s process buffer after the process terminates."
+           ,(format "Kill a %s process buffer after the process terminates."
+             name)
            :type 'boolean)
 
          (defun ,setup-kill ()
@@ -254,17 +257,20 @@ With prefix argument ARG, prompt for a directory."
                (when (not (one-window-p)) (delete-window))
                (kill-buffer (process-buffer proc)))))))
 
-         (defun ,main (&optional prompt)
+         (defun ,main ,(if global '() '(&optional prompt))
           ,main-doc
-          (interactive (list t))
+          ,(if global '(interactive) '(interactive (list t)))
           (let* ((origin (current-buffer))
-                 (default-directory
-                  (if prompt
-                      (read-directory-name "Directory: " default-directory)
-                    default-directory))
-                 (buffer (get-buffer-create (format
-                                             ,(format "*%s in %%s*" name)
-                                             default-directory))))
+                 ,@(unless global
+                    `((default-directory
+                       (if prompt
+                           (read-directory-name "Directory: " default-directory)
+                         default-directory))))
+                 (buffer (get-buffer-create ,(if global
+                                                 `(format "*%s*" ,name)
+                                               `(format
+                                                 (format "*%s in %%s*" ,name)
+                                                 default-directory)))))
            (switch-to-buffer-other-window buffer)
            (with-current-buffer buffer
             (unless (derived-mode-p ',mode)
@@ -276,21 +282,25 @@ With prefix argument ARG, prompt for a directory."
             (setq-local ,last-buffer-var buffer))
            buffer))
 
-         (defun ,project ()
-          ,project-doc
-          (interactive)
-          (let ((default-directory (project-root (project-current t))))
-           (,main nil)))
+         ,@(unless global
+            `((defun ,project ()
+               ,project-doc
+               (interactive)
+               (let ((default-directory (project-root (project-current t))))
+                (,main nil)))))
 
-         (defun ,pop (&optional arg)
+         (defun ,pop ,(if global '() '(&optional arg))
           ,pop-doc
-          (interactive "P")
-          (cond (arg
-                 (call-interactively ',main))
+          ,(if global '(interactive) '(interactive "P"))
+          (cond
+           ,@(unless global
+              `((arg (call-interactively ',main))))
            ((buffer-live-p ,last-buffer-var)
             (switch-to-buffer-other-window ,last-buffer-var))
            (t
-            (,project))))))))
+            ,(if global
+                 `(,main)
+               `(,project)))))))))
 
 ;;;;;;;;;;;;;;;;;;;
 ;;;; bindings ;;;;;
@@ -6949,62 +6959,10 @@ region is active."
 (use-package ielm
   :config
   ;; Toggle between Ielm and Elisp buffers.
-  (defvar-local +ielm--last-buffer nil)
-  (defvar-local +ielm--working-buffer nil)
-
-  (defcustom +ielm-kill-buffer-on-exit t
-    "Kill an Ielm buffer after the process terminates."
-    :type 'boolean)
-
-  (defun +ielm (&optional buf-name)
-    "Interactively evaluate Emacs Lisp expressions.
-Creates a buffer named BUF-NAME if provided (`*ielm*' by default),
-See `inferior-emacs-lisp-mode' for details."
-    (interactive)
-    (let* (old-point
-           (buf-name (or buf-name "*ielm*"))
-           (buf (get-buffer-create buf-name)))
-      (with-current-buffer buf
-        (unless (zerop (buffer-size)) (setq old-point (point)))
-        (inferior-emacs-lisp-mode)
-        (setq-local trusted-content :all)
-
-        (when +ielm-kill-buffer-on-exit
-          (let* ((buffer (current-buffer))
-                 (process (get-buffer-process buffer))
-                 (sentinel (process-sentinel process)))
-            (set-process-sentinel
-             process
-             (lambda (proc event)
-               (when sentinel
-                 (funcall sentinel proc event))
-               (unless (buffer-live-p proc)
-                 (if (not (one-window-p))
-                     (kill-buffer-and-window))
-                 (kill-buffer buffer)))))))
-      (switch-to-buffer-other-window buf)
-      (when old-point (push-mark old-point))
-      buf))
-
-  (defun +ielm-pop-to-buffer (&optional arg)
-    "Switch to an Ielm process buffer.
-
-If no Ielm process for current buffer exists, `+ielm' is called
-interactively."
-    (interactive "P")
-    (let* ((in-repl (eq major-mode 'inferior-emacs-lisp-mode))
-           (repl (and (buffer-live-p +ielm--working-buffer)
-                      +ielm--working-buffer))
-           (origin (current-buffer)))
-      (cond (in-repl
-             (switch-to-buffer-other-window +ielm--last-buffer))
-            (repl
-             (switch-to-buffer-other-window repl))
-            (t
-             (setq repl (call-interactively '+ielm))
-             (setq-local +ielm--working-buffer repl)
-             (with-current-buffer repl
-               (setq-local +ielm--last-buffer origin))))))
+  (+define-repl-commands
+   ielm
+   inferior-emacs-lisp-mode
+   :global t)
 
   (bind-keys :map emacs-lisp-mode-map
              ("C-c C-z" . +ielm-pop-to-buffer)
