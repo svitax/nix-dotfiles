@@ -6560,6 +6560,7 @@ Add a bookmark handler for shell buffer and activate the
   (setopt shell-command-prompt-show-cwd t ; Emacs 27.1
           shell-input-autoexpand 'input
           shell-highlight-undef-enable t ; Emacs 29.1
+          shell-fontify-input-enable nil ; Emacs 29.1
           ;; shell-kill-buffer-on-exit t ; Emacs 29.1
           +shell-kill-buffer-on-exit t ; also kills window
           shell-completion-fignore '("~" "#" "%"))
