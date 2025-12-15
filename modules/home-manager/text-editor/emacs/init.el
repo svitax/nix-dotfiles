@@ -6551,7 +6551,7 @@ Add a bookmark handler for shell buffer and activate the
                       #'+shell-bookmark-make-record))
       (remove-hook 'comint-output-filter-functions
                    #'+shell-update-name-on-cd :local)
-      (setq-local bookmark-make-record-function nil)))
+      (kill-local-variable 'bookmark-make-record-function)))
 
   (add-hook 'shell-mode-hook #'+shell-mode)
 
