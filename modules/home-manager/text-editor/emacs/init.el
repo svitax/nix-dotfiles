@@ -3473,6 +3473,12 @@ end of the buffer.")
    :map +narrow-prefix-map
    ("p" . logos-narrow-dwim)))
 
+(use-package scroll
+  ;; Scrolling behaviour
+  :no-require
+  :config
+  (setopt scroll-preserve-screen-position t
+          scroll-error-top-bottom t))
 
 ;; TODO document narrow
 (use-package narrow
