@@ -6053,8 +6053,6 @@ Interactively also sends a terminating newline."
                 (lambda ()
                   (setq-local compile-command command)))))
 
-  (add-hook 'shell-mode-hook 'compilation-shell-minor-mode)
-
   (bind-keys
    :map +prefix-map
    ("C-," . +compile)
