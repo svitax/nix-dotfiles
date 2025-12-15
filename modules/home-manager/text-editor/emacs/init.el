@@ -191,7 +191,106 @@ Like `+common-completion-table' but also disable sorting."
     (apply args)
     (run-hooks '+fundamental-mode-hook))
 
-  (advice-add #'fundamental-mode :around #'+fundamental-mode-run-hook))
+  (advice-add #'fundamental-mode :around #'+fundamental-mode-run-hook)
+
+  (defmacro +define-repl-commands (name mode &rest args)
+    "Define commands to manage and toggle a REPL-like buffer.
+
+NAME is a symbol identifier for the REPL type (e.g., vterm, shell,
+ielm).
+
+MODE is the major mode symbol for the REPL (e.g., vterm-mode,
+shell-mode, inferior-emacs-lisp-mode).
+
+Optional keyword arguments:
+    :init FUNCTION - Function to initialize the REPL (defaults to MODE)
+    :main-doc STRING - Documentation for the main function.
+    :project-doc STRING - Documentation for the project function.
+    :pop-doc STRING - Documentation for the pop-to-bufer function.
+
+Example:
+    (+define-repl-commands vterm vterm-mode)
+
+    (+define-repl-commands shell shell-mode
+     :init (lambda () (shell (current-buffer)))
+     :main-doc \"Start an inferior shell...\")"
+    (let ((name (symbol-name name))
+          (last-buffer-var (intern (format "+%s--last-buffer" name)))
+          (kill-on-exit-var (intern (format "+%s-kill-buffer-on-exit" name)))
+          (setup-kill (intern (format "+%s--setup-kill-on-exit" name)))
+          (init (or (plist-get args :init)
+                       mode))
+          (main (intern (format "+%s" name)))
+          (main-doc (or (plist-get args :main-doc)
+                           (format "Start %s in the specified directory."
+                                   name)))
+          (project (intern (format "+project-%s" name)))
+          (project-doc (or (plist-get args :project-doc)
+                              (format "Start %s in the current project's root." name)))
+          (pop (intern (format "+%s-pop-to-buffer" name)))
+          (pop-doc (or (plist-get args :pop-doc)
+                          (format "Switch to %s process buffer.
+
+If no %s process for current buffer exists, %s is called interactively.
+
+With prefix argument ARG, prompt for a directory."
+                                  name name main))))
+      `(progn
+         (defvar-local ,last-buffer-var nil)
+
+         (defcustom ,kill-on-exit-var t
+           "Kill a %s process buffer after the process terminates."
+           :type 'boolean)
+
+         (defun ,setup-kill ()
+          ,(format "Setup process sentinel to kill %s buffer on exit." name)
+          (when-let* ((process (get-buffer-process (current-buffer)))
+                      (sentinel (process-sentinel process)))
+           (set-process-sentinel
+            process
+            (lambda (proc event)
+              (funcall sentinel proc event)
+              (unless (process-live-p proc)
+               (when (not (one-window-p)) (delete-window))
+               (kill-buffer (process-buffer proc)))))))
+
+         (defun ,main (&optional prompt)
+          ,main-doc
+          (interactive (list t))
+          (let* ((origin (current-buffer))
+                 (default-directory
+                  (if prompt
+                      (read-directory-name "Directory: " default-directory)
+                    default-directory))
+                 (buffer (get-buffer-create (format
+                                             ,(format "*%s in %%s*" name)
+                                             default-directory))))
+           (switch-to-buffer-other-window buffer)
+           (with-current-buffer buffer
+            (unless (derived-mode-p ',mode)
+             (funcall ',init)))
+           (setq-local ,last-buffer-var origin)
+           (when ,kill-on-exit-var
+            (,setup-kill))
+           (with-current-buffer origin
+            (setq-local ,last-buffer-var buffer))
+           buffer))
+
+         (defun ,project ()
+          ,project-doc
+          (interactive)
+          (let ((default-directory (project-root (project-current t))))
+           (,main nil)))
+
+         (defun ,pop (&optional arg)
+          ,pop-doc
+          (interactive "P")
+          (cond (arg
+                 (call-interactively ',main))
+           ((buffer-live-p ,last-buffer-var)
+            (switch-to-buffer-other-window ,last-buffer-var))
+           (t
+            (,project))))))))
 
 ;;;;;;;;;;;;;;;;;;;
 ;;;; bindings ;;;;;
@@ -6360,92 +6459,20 @@ ARGS is a list of strings."
 
   ;;;; General commands
 
-  (defvar-local +shell--shell nil)
-  (defvar-local +shell--last-buffer nil)
+  (+define-repl-commands
+   shell
+   shell-mode
+   :init (lambda () (shell (current-buffer)))
+   :main-doc "Start an inferior shell in the specified directory.
 
-  (defcustom +shell-kill-buffer-on-exit t
-    "Kill a +shell process buffer after the process terminates."
-    :type 'boolean)
+If PROMPT is nil, don't prompt for a directory and use `default-directory'."
+   :project-doc "Start an inferior shell in the current project's root directory."
+   :pop-doc "Switch to an inferior shell.
 
-  (defun +shell--maybe-remember-buffer (buffer)
-    (when (and buffer
-               (eq major-mode 'shell-mode))
-      (setq +shell--last-buffer buffer)))
+If no inferior shell for the current buffer exists, `+shell' is called
+interactively.
 
-  (defsubst +shell--set-this-buffer-shell (s &optional this)
-    (with-current-buffer (or this (current-buffer)) (setq +shell--shell s)))
-
-  (defun +shell--switch-to-buffer (buffer)
-    (unless (eq buffer (current-buffer))
-      (switch-to-buffer-other-window buffer)))
-
-  (defun +shell (&optional prompt)
-    "Start an inferior shell in the specified directory.
-
-If PROMPT is nil, don't prompt for a directory and use
-`default-directory'."
-    (interactive (list t))
-    (let* ((origin (current-buffer))
-           (dir (if (eq prompt nil)
-                    default-directory
-                  (read-directory-name "Directory: " default-directory)))
-           (default-directory dir)
-           (shell (get-buffer-create (format "*shell in %s*" default-directory))))
-      (switch-to-buffer-other-window shell)
-      (shell shell)
-      (setq +shell--last-buffer origin)
-      (with-current-buffer shell
-        (when +shell-kill-buffer-on-exit
-          (let* ((buffer (current-buffer))
-                 (process (get-buffer-process buffer))
-                 (sentinel (process-sentinel process)))
-            (set-process-sentinel
-             process
-             (lambda (proc event)
-               (when sentinel
-                 (funcall sentinel proc event))
-               (unless (buffer-live-p proc)
-                 (if (not (one-window-p))
-                     (kill-buffer-and-window))
-                 (kill-buffer buffer))))))
-        (+shell--set-this-buffer-shell (current-buffer) origin)
-        (+shell--set-this-buffer-shell (current-buffer)))))
-
-  (defun +project-shell ()
-    "Start an inferior shell in the current project's root directory."
-    (interactive)
-    (let ((default-directory (project-root (project-current t))))
-      (+shell nil)))
-
-  (defun +shell-home ()
-    "Start an inferior shell in user's home directory."
-    (interactive)
-    (let ((default-directory (or (getenv "HOME") (expand-file-name "~"))))
-      (+shell nil)))
-
-  (defun +shell-pop-to-buffer (&optional arg impl buffer)
-    "Switch to running a shell in the current project's root directory.
-
-If shell is the current buffer, switch to the previously used
-buffer.
-
-If no shell is running, execute `+shell' to start a fresh one.
-
-With \\[universal-argument] prefix argument, the user can specify a
-directory."
-    (interactive "P")
-    (let* ((in-shell (eq major-mode 'shell-mode))
-           (in-live-shell (and in-shell (get-buffer-process (current-buffer))))
-           (shell (and (buffer-live-p +shell--shell) +shell--shell)))
-      (cond (arg (call-interactively '+shell)) ;
-            (in-live-shell
-             (when (and (not (eq shell buffer))
-                        (buffer-live-p +shell--last-buffer))
-               (+shell--switch-to-buffer +shell--last-buffer)))
-            (shell (+shell--set-this-buffer-shell shell)
-                   (+shell--switch-to-buffer shell))
-            (t (call-interactively '+project-shell)))
-      (+shell--maybe-remember-buffer buffer)))
+With prefix argument ARG, prompt for a directory.")
 
   (defun +shell-command-at-line (&optional prefix)
     "Run contents of line around point as a shell command and
@@ -6516,7 +6543,6 @@ Add a bookmark handler for shell buffer and activate the
              ("C-!" . +shell-command-at-line)
              :map +prefix-map
              ("C-z" . +shell-pop-to-buffer)
-             ("RET" . +shell-home)
              :map +project-prefix-map
              ("z" . +project-shell)
              :map shell-mode-map
@@ -6559,27 +6585,28 @@ Add a bookmark handler for shell buffer and activate the
   ;; My workflow is to keep `shell' as my main conduit to the command line, such
   ;; as for when I need to call one of my scripts, and only use `vterm' when I
   ;; really need a CLI tool that is likely to produce graphical artefacts.
-  :disabled t
   :config
-  (defun +project-vterm ()
-    "Start an inferior shell in the current project's root directory.
-If a buffer already exists for running a shell in the project's root,
-switch to it.  Otherwise, create a new shell buffer.
-With \\[universal-argument] prefix arg, create a new inferior shell buffer even
-if one already exists."
-    (interactive)
-    (let* ((default-directory (project-root (project-current t)))
-           (vterm-buffer-name (format "*vterm in %s" default-directory))
-           (vterm-buffer (get-buffer vterm-buffer-name)))
-      (if (and vterm-buffer (not current-prefix-arg))
-          (pop-to-buffer vterm-buffer (bound-and-true-p display-comint-buffer-action))
-        (vterm vterm-buffer-name))))
+  (+define-repl-commands
+   vterm
+   vterm-mode
+   :main-doc "Create an interactive Vterm buffer in the specified directory.
+
+If PROMPT is nil, don't prompt for a directory and use `default-directory'."
+   :project-doc "Create an interactive Vterm buffer in the current project's root."
+   :pop-doc "Switch to a Vterm process buffer.
+
+If no Vterm process for current buffer exists, `+vterm' is called interactively.
+
+With prefix argument ARG, prompt for a directory.")
 
   ;; TODO make vterm keep track of directory and update buffer name, just like
   ;; my +shell command
 
   (setopt vterm-kill-buffer-on-exit nil
-          vterm-max-scrollback 9999))
+          vterm-max-scrollback 9999)
+
+  (bind-keys :map +prefix-map
+             ("<return>" . +vterm-pop-to-buffer)))
 
 ;;;;;;;;;;;;;;
 ;;;; prog ;;;;
