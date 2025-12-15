@@ -3837,7 +3837,9 @@ There is no dragging the character forward. This is the behavior of
       (indent-for-tab-command)
       (deactivate-mark)))
 
-  (setopt kill-whole-line t)
+  (setopt kill-whole-line t
+          kill-do-not-save-duplicates t
+          save-interprogram-paste-before-kill t)
 
   (bind-keys :map global-map
              ("M-c" . capitalize-dwim)
