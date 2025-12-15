@@ -2006,8 +2006,10 @@ first one. Else do `vertico-exit'."
                                     (derived-mode-p
                                      'shell-mode
                                      'eshell-mode
-                                     'mistty-mode
-                                     'comint-mode)))
+                                     'comint-mode
+                                     'term-mode
+                                     'vterm-mode
+                                     'mistty-mode)))
                       (buffer-list))))))
   (add-to-list 'consult-buffer-sources '+consult--source-shell-buffer :append)
 
