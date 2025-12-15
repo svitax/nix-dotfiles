@@ -6893,6 +6893,8 @@ region is active."
   (dolist (fn '(eval-print-last-sexp eval-last-sexp eval-defun))
     (advice-add fn :before-until #'+eval-region-if-active))
 
+  (setopt eval-expression-print-length nil)
+
   (bind-keys :map +prefix-map
              ("C-e" . eval-last-sexp)
              :map lisp-interaction-mode-map
