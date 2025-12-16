@@ -22,6 +22,7 @@
           pkgs.go
           pkgs.gopls
           pkgs.golangci-lint
+          pkgs.delve
 
           pkgs.nixfmt-rfc-style
           pkgs.nixd
