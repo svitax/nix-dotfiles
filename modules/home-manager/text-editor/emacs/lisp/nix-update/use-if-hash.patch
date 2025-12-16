@@ -1,0 +1,24 @@
+ nix-update.el | 49 +++++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 39 insertions(+), 10 deletions(-)
+
+diff --git a/nix-update.el b/nix-update.el
+index 195f6d8..489de66 100644
+--- a/nix-update.el
++++ b/nix-update.el
+@@ -244,7 +265,15 @@ updated."
+                               (line-end-position))))))))))
+           (if (assq 'rev data)
+               (set-field "rev" (alist-get 'rev data)))
+-          (set-field "sha256" (alist-get 'sha256 data))
++          (if (get-field "hash")
++              (set-field "hash"
++                         (or (alist-get 'hash data)
++                             (string-trim
++                              (shell-command-to-string
++                               (concat
++                                "nix hash convert --hash-algo sha256 --to sri "
++                                (alist-get 'sha256 data))))))
++            (set-field "sha256" (alist-get 'sha256 data)))
+           (if (assq 'date data)
+               (set-field "# date"
+                          (let ((date (alist-get 'date data)))

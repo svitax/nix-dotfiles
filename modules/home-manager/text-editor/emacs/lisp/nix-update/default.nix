@@ -14,6 +14,7 @@ epkgs.melpaBuild {
   };
   patches = [
     ./nix-prefetch-git-with-nix-run.patch
+    ./use-if-hash.patch
   ];
   recipe = pkgs.writeText "recipe" ''
     (nix-update
