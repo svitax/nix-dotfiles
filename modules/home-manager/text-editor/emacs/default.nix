@@ -149,7 +149,7 @@ in
               compile-multi
               consult-compile-multi
               # native-complete
-              # vterm
+              vterm
               ess
               pydoc
               nix-mode
