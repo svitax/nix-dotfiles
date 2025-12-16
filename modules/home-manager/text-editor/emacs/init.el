@@ -10096,11 +10096,6 @@ manually to first get the icon files."
                  '(bibtex-mode nerd-icons-mdicon "nf-md-book"
                    :face nerd-icons-lblue)))
 
-  (with-eval-after-load 'mistty
-    (add-to-list 'nerd-icons-mode-icon-alist
-                 '(mistty-mode nerd-icons-devicon "nf-dev-terminal"
-                   :face nerd-icons-green)))
-
   (with-eval-after-load 'ess
     (add-to-list 'nerd-icons-mode-icon-alist
                  '(ess-r-mode nerd-icons-devicon "nf-dev-r"
