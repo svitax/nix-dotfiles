@@ -5,12 +5,12 @@
 }:
 epkgs.melpaBuild {
   pname = "gptel-quick";
-  version = "20250601.1010";
+  version = "20251105.1158";
   src = pkgs.fetchFromGitHub {
     owner = "karthink";
     repo = "gptel-quick";
-    rev = "495b5e0b5348dbced1448bd12cbf8847e30b5175";
-    hash = "sha256-xMrzeWG5L+MpGAhPFlV8KV+xa7CWC1D48osRrioGlsw=";
+    rev = "018ff2be8f860a1e8fe3966eec418ad635620c38";
+    hash = "sha256-7a5+YQifwtVYHP6qQXS1yxA42bVGXmErirra0TrSSQ0=";
   };
   recipe = pkgs.writeText "recipe" ''
     (gptel-quick
@@ -21,7 +21,7 @@ epkgs.melpaBuild {
     gptel
   ];
   meta = {
-    homepage = "";
+    homepage = "https://github.com/karthink/gptel-quick";
     license = lib.licenses.gpl3Plus;
   };
 }
