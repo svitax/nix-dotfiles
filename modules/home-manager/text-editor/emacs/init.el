@@ -5721,7 +5721,7 @@ default, it is the symbol at point."
 
   (add-hook 'diff-mode-hook #'outline-minor-mode)
 
-  (bind-keys :map diff-mode-map
+  (bind-keys :map diff-mode-shared-map
              ("TAB" . outline-cycle)
              ("M-n" . diff-file-next)
              ("M-o" . nil) ; unmap `diff-goto-source'
