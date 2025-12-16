@@ -5991,6 +5991,40 @@ Respects `diff-hl-disable-on-remote'."
   ;; Mirror `display-buffer-base-action' into `display-comint-buffer-action'.
   (setopt display-comint-buffer-action display-buffer-base-action)
 
+  (defun +comint-send-input (input &optional nl)
+    "Send INPUT to the current process.
+Interactively also sends a terminating newline."
+    (interactive "MInput: \nd")
+    (let ((string (concat input (if nl "\n"))))
+      ;; This is just for visual feedback
+      (let ((inhibit-read-only t))
+        (insert-before-markers string))
+      ;; This is the important stuff
+      (process-send-string
+       (get-buffer-process (current-buffer))
+       string)))
+
+  (defun +comint-send-self ()
+    "Send the pressed key to the current process."
+    (interactive)
+    (+comint-send-input
+     (apply #'string
+            (append (this-command-keys-vector) nil))))
+
+  (defun +comint-send-eof-and-quit ()
+    "Send an EOF to the current buffer's process and quit window."
+    (interactive nil comint-mode)
+    (let ((proc (get-buffer-process (current-buffer))))
+      (when proc (comint-send-eof))
+      (quit-window t)))
+
+  (defun +comint-clear-screen ()
+    "Scroll the window so that the current line is at the top of the window."
+    (interactive)
+    (goto-char (point-max))
+    (let ((recenter-positions '(top bottom)))
+      (recenter-top-bottom)))
+
   (setq-default comint-scroll-to-bottom-on-input t
                 comint-scroll-to-bottom-on-output nil
                 comint-input-autoexpand 'input)
@@ -5998,7 +6032,12 @@ Respects `diff-hl-disable-on-remote'."
   (setopt comint-prompt-read-only t
           comint-buffer-maximum-size 9999
           comint-completion-autolist t
-          comint-input-ignoredups t))
+          comint-input-ignoredups t)
+
+  (bind-keys :map comint-mode-map
+             ("C-l" . +comint-clear-screen)
+             ("C-M-l" . comint-clear-buffer) ; orig. `comint-show-output'
+             ("C-c C-r" . comint-show-output)))
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;;; compilation ;;;;
@@ -6065,33 +6104,6 @@ directory to run `compile'."
              (or project-compilation-buffer-name-function
                  compilation-buffer-name-function)))
         (call-interactively 'compile))))
-
-  (defun +compile-send-input (input &optional nl)
-    "Send INPUT to the current process.
-Interactively also sends a terminating newline."
-    (interactive "MInput: \nd")
-    (let ((string (concat input (if nl "\n"))))
-      ;; This is just for visual feedback
-      (let ((inhibit-read-only t))
-        (insert-before-markers string))
-      ;; This is the important stuff
-      (process-send-string
-       (get-buffer-process (current-buffer))
-       string)))
-
-  (defun +comint-send-self ()
-    "Send the pressed key to the current process."
-    (interactive)
-    (+compile-send-input
-     (apply #'string
-            (append (this-command-keys-vector) nil))))
-
-  (defun +comint-send-eof-and-quit ()
-    "Send an EOF to the current buffer's process and quit window."
-    (interactive nil comint-mode)
-    (let ((proc (get-buffer-process (current-buffer))))
-      (when proc (comint-send-eof))
-      (quit-window t)))
 
   (defun +compile-toggle-comint ()
     "Restart compilation with (or without) `comint-mode'."
@@ -6520,13 +6532,6 @@ output instead."
                 (shell-command-to-string command))))
       (exchange-point-and-mark)))
 
-  (defun +shell-recenter ()
-    "Scroll the window so that the current line is at the top of the window."
-    (interactive)
-    (goto-char (point-max))
-    (let ((recenter-positions '(top bottom)))
-      (recenter-top-bottom)))
-
   ;;;; Minor mode setup
 
   (define-minor-mode +shell-mode
@@ -6570,9 +6575,7 @@ Add a bookmark handler for shell buffer and activate the
              :map +project-prefix-map
              ("z" . +project-shell)
              :map shell-mode-map
-             ("C-l" . +shell-recenter)
              ("M-r" . +consult-history-comint-send)
-             ("C-c C-k" . comint-clear-buffer)
              ("C-c C-w" . comint-write-output)
              ("C-x C-z" . +shell-pop-to-buffer)))
 
