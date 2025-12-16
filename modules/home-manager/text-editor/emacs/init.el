@@ -193,34 +193,40 @@ Like `+common-completion-table' but also disable sorting."
 
   (advice-add #'fundamental-mode :around #'+fundamental-mode-run-hook)
 
-  (defmacro +define-repl-commands (name mode &rest args)
+  (defmacro +define-repl-commands (name &rest args)
     "Define commands to manage and toggle a REPL-like buffer.
 
 NAME is a symbol identifier for the REPL type (e.g., vterm, shell,
 ielm).
 
-MODE is the major mode symbol for the REPL (e.g., vterm-mode,
-shell-mode, inferior-emacs-lisp-mode).
-
 Optional keyword arguments:
     :init FUNCTION - Function to initialize the REPL (defaults to MODE)
+    :buffer-name STRING - Name to use for buffer (defaults to capitalized NAME)
     :main-doc STRING - Documentation for the main function.
     :project-doc STRING - Documentation for the project function.
     :pop-doc STRING - Documentation for the pop-to-bufer function.
     :global BOOLEAN - Whether to use directory-based naming.
 
-Example:
-    (+define-repl-commands vterm vterm-mode)
+Examples:
+    (+define-repl-commands vterm)
 
-    (+define-repl-commands shell shell-mode
-     :init (lambda () (shell (current-buffer)))
-     :main-doc \"Start an inferior shell...\")"
+    (+define-repl-commands shell
+     :main-doc \"Start an inferior shell...\")
+
+    (+define-repl-commands ielm
+     :global t)
+
+    (+define-repl-commands python-shell
+     :buffer-name \"Python\"
+     :init run-python)"
     (let* ((name (symbol-name name))
+           (buffer-base-name (or (plist-get args :buffer-name)
+                                 (capitalize name)))
            (last-buffer-var (intern (format "+%s--last-buffer" name)))
            (kill-on-exit-var (intern (format "+%s-kill-buffer-on-exit" name)))
            (setup-kill (intern (format "+%s--setup-kill-on-exit" name)))
            (init (or (plist-get args :init)
-                     mode))
+                     (intern name)))
            (main (intern (format "+%s" name)))
            (main-doc (or (plist-get args :main-doc)
                          (format "Start %s in the specified directory."
@@ -266,20 +272,31 @@ With prefix argument ARG, prompt for a directory."
                        (if prompt
                            (read-directory-name "Directory: " default-directory)
                          default-directory))))
-                 (buffer (get-buffer-create ,(if global
-                                                 `(format "*%s*" ,name)
-                                               `(format
-                                                 (format "*%s in %%s*" ,name)
-                                                 default-directory)))))
-           (switch-to-buffer-other-window buffer)
-           (with-current-buffer buffer
-            (unless (derived-mode-p ',mode)
-             (funcall ',init)))
-           (setq-local ,last-buffer-var origin)
-           (when ,kill-on-exit-var
-            (,setup-kill))
+                 (buffer-name ,(if global
+                                   `(format "*%s*" ,buffer-base-name)
+                                 `(format "*%s[%s]*"
+                                   ,buffer-base-name
+                                   (file-name-nondirectory
+                                    (directory-file-name
+                                     default-directory)))))
+                 (buffer (save-window-excursion
+                           (let ((result (funcall ',init)))
+                            (cond
+                             ((bufferp result) result)
+                             ((processp result) (process-buffer result))
+                             (t (current-buffer)))))))
            (with-current-buffer origin
             (setq-local ,last-buffer-var buffer))
+           (with-current-buffer buffer
+            (rename-buffer buffer-name t)
+            (setq-local ,last-buffer-var origin)
+            (when ,kill-on-exit-var
+             (,setup-kill))
+            (when (boundp 'envrc-mode)
+             ;; Force envrc to update in the inferior Python process buffer,
+             ;; otherwise envrc's environment variables don't seem to apply.
+             (envrc--update)))
+           (pop-to-buffer buffer)
            buffer))
 
          ,@(unless global
@@ -6473,8 +6490,6 @@ ARGS is a list of strings."
 
   (+define-repl-commands
    shell
-   shell-mode
-   :init (lambda () (shell (current-buffer)))
    :main-doc "Start an inferior shell in the specified directory.
 
 If PROMPT is nil, don't prompt for a directory and use `default-directory'."
@@ -6600,7 +6615,6 @@ Add a bookmark handler for shell buffer and activate the
   :config
   (+define-repl-commands
    vterm
-   vterm-mode
    :main-doc "Create an interactive Vterm buffer in the specified directory.
 
 If PROMPT is nil, don't prompt for a directory and use `default-directory'."
@@ -6961,7 +6975,6 @@ region is active."
   ;; Toggle between Ielm and Elisp buffers.
   (+define-repl-commands
    ielm
-   inferior-emacs-lisp-mode
    :global t)
 
   (bind-keys :map emacs-lisp-mode-map
@@ -6985,44 +6998,26 @@ region is active."
   ;; python-ts-mode
   (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
 
-  (defvar-local +python-shell--last-buffer nil)
-  (defcustom +python-shell-kill-buffer-on-exit t
-    "Kill an inferior Python process buffer after the process terminates."
-    :type 'boolean)
-  (defun +python-shell-pop-to-buffer (&optional arg)
-    "Switch to inferior Python process buffer.
+  (+define-repl-commands
+   python-shell
+   :init run-python
+   :buffer-name "Python"
+   :main-doc
+   "Run an inferior Python process in the specified directory.
 
-If no inferior Python process for current buffer exists, `run-python' is
-called an interactively."
-    (interactive "P")
-    (let* ((in-repl (eq major-mode 'inferior-python-mode))
-           (repl (python-shell-get-buffer))
-           (origin (current-buffer)))
-      (cond (in-repl
-             (switch-to-buffer-other-window +python-shell--last-buffer))
-            (repl
-             (switch-to-buffer-other-window repl))
-            (t
-             (call-interactively 'run-python)
-             (python-shell-with-shell-buffer
-               (setq-local +python-shell--last-buffer origin)
-               ;; Force envrc to update in the inferior Python process buffer,
-               ;; otherwise envrc's environment variables don't seem to apply.
-               (envrc--update)
-               ;; TODO: should this be an :after advice on `run-python'?
-               (when +python-shell-kill-buffer-on-exit
-                 (let* ((buffer (python-shell-get-buffer))
-                        (process (python-shell-get-process))
-                        (sentinel (process-sentinel process)))
-                   (set-process-sentinel
-                    process
-                    (lambda (proc event)
-                      (when sentinel
-                        (funcall sentinel proc event))
-                      (unless (buffer-live-p proc)
-                        (if (not (one-window-p))
-                            (kill-buffer-and-window))
-                        (kill-buffer buffer)))))))))))
+If PROMPT is nil, don't prompt for a directory and use
+`default-directory'.
+
+Runs the hook `inferior-python-mode-hook' after `comint-mode-hook' is
+run.  (Type \\[describe-mode] in the process buffer for a list of
+commands.)"
+   :pop-doc
+   "Switch to inferior Python process buffer.
+
+If no inferior Python process for the current buffer exists, `+python'
+is called interactively.
+
+With prefix argument ARG, prompt for a directory.")
 
   (defun +python-shell-send-dwim (&optional arg msg)
     "Send the block or statement at point to inferior Python process.
