@@ -9905,61 +9905,35 @@ instead of the current one."
   ;; channel I join automatically whenever I do `M-x rcirc' is that of
   ;; `#emacs'. Again, I am not into IRC.
   :config
+  (defun +rcirc-buffer-list ()
+    "Return a list of rcirc buffers."
+    (seq-filter (lambda (buf)
+                  (and (buffer-live-p buf)
+                       (with-current-buffer buf
+                         (derived-mode-p 'rcirc-mode))))
+                (buffer-list)))
+
+  (with-eval-after-load 'consult
+    (defvar +rcirc-buffer-source
+      `( :name "rcirc"
+         :hidden t
+         :narrow ?I
+         :category buffer
+         :action ,#'switch-to-buffer
+         :state ,'consult--buffer-state
+         :items ,(lambda () (mapcar #'buffer-name (+rcirc-buffer-list)))
+         "Source for `consult-buffer' to list rcirc buffers."))
+    (add-to-list 'consult-buffer-sources '+rcirc-buffer-source :append))
+
   (setopt rcirc-server-alist `(("irc.libera.chat"
                                 :channels ("#emacs")
                                 :port 6697
                                 :encryption tls))
           rcirc-prompt "%t> "
           rcirc-default-nick "svitax"
-          rcirc-default-user-name rcirc-default-nick)
-
-  (rcirc-track-minor-mode 1))
-
-;; TODO document erc
-(use-package erc
-  :disabled t
-  :config
-  (with-eval-after-load 'consult
-    (defvar +erc-buffer-source
-      `( :name "ERC"
-         :hidden t
-         :narrow ?I
-         :category buffer
-         :action ,#'switch-to-buffer
-         :state ,'consult--buffer-state
-         :items ,(lambda () (mapcar 'buffer-name (erc-buffer-list))))
-      "Source for `consult-buffer' to list ERC buffers.")
-
-    (add-to-list 'consult-buffer-sources '+erc-buffer-source :append))
-
-  (defun +erc-close-buffers ()
-    "Close all ERC buffers."
-    (interactive)
-    (mapc 'kill-buffer (erc-buffer-list nil erc-server-process)))
-
-  (setopt erc-autojoin-channels-alist '()
-          erc-join-buffer 'buffer
-          erc-header-line-format " %n on %t (%m,%l)"
-          erc-hide-list '("NICK" "JOIN" "PART" "QUIT" "MODE" "AWAY")
-          erc-track-exclude-types '("324" "329" "332" "333" "353" "477" "JOIN" "MODE" "NICK" "PART" "QUIT")
-          erc-hide-prompt t
-          erc-hide-timestamps t
-          erc-echo-timestamps nil
-          erc-kill-buffer-on-part t
-          erc-kill-server-buffer-on-quit t
-          erc-kill-queries-on-quit t
-          erc-timestamp-format "%H:%M"
-          erc-log-insert-log-on-open t
-          erc-log-channels-directory (expand-file-name "emacs/erc-logs" (xdg-cache-home))
-          erc-fill-function 'erc-fill-static
-          erc-fill-static-center 14
-          erc-fill-column 82)
-
-  (bind-keys
-   :map erc-mode-map
-   ("C-c C-q" . +erc-close-buffers)))
-
-(use-package erc-hl-nicks :disabled t)
+          rcirc-default-user-name rcirc-default-nick
+          ;; NOTE Is there a canonical way to disable this?
+          rcirc-timeout-seconds most-positive-fixnum))
 
 ;;;;;;;;;;;;;;
 ;;;; guix ;;;;

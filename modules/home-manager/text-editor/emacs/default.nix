@@ -175,7 +175,6 @@ in
               tmr
               shr-tag-pre-highlight
               elpher
-              # erc-hl-nicks
               # leetcode
               gptel
               nerd-icons
