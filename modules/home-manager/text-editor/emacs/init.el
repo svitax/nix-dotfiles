@@ -5721,10 +5721,11 @@ default, it is the symbol at point."
 
   (add-hook 'diff-mode-hook #'outline-minor-mode)
 
-  (bind-keys :map diff-mode-shared-map
+  (bind-keys :map diff-mode-map
+             ("M-o" . nil) ; unmap `diff-goto-source'
+             :map diff-mode-shared-map
              ("TAB" . outline-cycle)
              ("M-n" . diff-file-next)
-             ("M-o" . nil) ; unmap `diff-goto-source'
              ("M-p" . diff-file-prev)))
 
 (use-package ediff
