@@ -6136,15 +6136,11 @@ Interactively also sends a terminating newline."
    ("C-," . +compile)
    ("C-." . recompile)
    :map compilation-mode-map
+   ("C-d" . +comint-send-eof-and-quit)
    ("C-x C-q" . +compile-toggle-comint)
    :map compilation-minor-mode-map
    ("C-x C-q" . +compile-toggle-comint)
    :map compilation-shell-minor-mode-map
-   ("C-d" . +comint-send-eof-and-quit)
-   ("C-j" . +comint-send-self)
-   ("n" . +comint-send-self)
-   ("y" . +comint-send-self)
-   ("RET" . +comint-send-self)
    ("C-x C-q" . +compile-toggle-comint)
    :map minibuffer-local-shell-command-map
    ("M-r" . +compile-input-from-history)
