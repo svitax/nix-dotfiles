@@ -4935,8 +4935,10 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
        (use-package-process-keywords name rest state)
        `((eval-after-load 'eglot ',(macroexp-progn (nreverse eval-forms))))))))
 
-;; TODO document eglot-tempel
 (use-package eglot-tempel
+  ;; The `eglot-tempel' package enables `eglot' to use `tempel' for LSP snippet
+  ;; expansion instead of yasnippet, translating LSP templates into Tempel's
+  ;; s-expression format.
   :init
   (eglot-tempel-mode t))
 
