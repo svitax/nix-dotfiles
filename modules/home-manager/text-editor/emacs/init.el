@@ -5149,8 +5149,9 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
    ("C-c C-d" . eldoc)
    ("C-h C-." . eldoc)))
 
-;; TODO document help
 (use-package help
+  ;; The built-in `help' features provides Emacs' documentation system for
+  ;; viewing function, variable, and keybinding descriptions.
   :no-require
   :config
   ;; Display `shortdoc' examples in *Help* buffers.
@@ -5177,8 +5178,12 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
              ("X" . apropos-command)
              ("." . display-local-help)))
 
-;; TODO document helpful and find a better section for it
 (use-package helpful
+  ;; The `helpful' package enhances Emacs' help system with more detailed and
+  ;; better-organized information, including source code snippets, references,
+  ;; and keybinding contexts. I extend it with commands to navigate between
+  ;; multiple Helpful buffers in a manner similar to `help-go-back' and
+  ;; `help-go-forward'.
   :config
 
   ;; Can't be 1 if I want +helpful-next/previous to work
