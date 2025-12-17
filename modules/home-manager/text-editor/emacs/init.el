@@ -4975,8 +4975,10 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
 ;;;;;;;;;;;;;
 ;;;; dap ;;;;
 
-;; TODO document dape
 (use-package dape
+  ;; The `dape' package provides a Debug Adapter Protocol (DAP) client for
+  ;; Emacs, enabling interactive debugging through language specific debug
+  ;; adapters (dlv, debugpy, codelldb, etc.).
   :config
   (bind-key "y" dape-global-map +prefix-map)
   (setopt dape-key-prefix "")
