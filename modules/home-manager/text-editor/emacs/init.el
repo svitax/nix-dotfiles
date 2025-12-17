@@ -2018,7 +2018,7 @@ first one. Else do `vertico-exit'."
           "rg --null --line-buffered --color=never --max-columns=1000 --path-separator /\
  --smart-case --no-heading --with-filename --line-number --search-zip --follow")
 
-  ;; NOTE document pulsar and consult integration
+  ;; Pulsar integration
   (with-eval-after-load 'pulsar
     (setq consult-after-jump-hook nil)
     (dolist (fn '(pulsar-recenter-center pulsar-reveal-entry))
