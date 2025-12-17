@@ -413,8 +413,11 @@ With prefix argument ARG, prompt for a directory."
              ("(" . kmacro-start-macro) (")" . kmacro-end-macro)
              ("TAB" . indent-rigidly)))
 
-;; NOTE document repeat
 (use-package repeat
+  ;; The built-in `repeat-mode' allows commands to be repeated by pressing a
+  ;; single key after their initial invocation. For example, after "C-x o"
+  ;; (`other-window'), pressing `o' again cycles through windows without needing
+  ;; the full key sequence.
   :config
   (repeat-mode)
   (setopt repeat-exit-key "C-g"
