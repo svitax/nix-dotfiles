@@ -4626,8 +4626,11 @@ through the edits."
   (bind-keys :map global-map
              ("C-c C-v" . flymake-mode)))
 
-;; TODO document flymake-collection
 (use-package flymake-collection
+  ;; The `flymake-collection' package provides a collection of Flymake backends
+  ;; for use with `flymake-diagnostic-functions', gives us tools to easily
+  ;; define new Flymake backends, and can help selectively enable or disable
+  ;; these backends based on a buffer's major mode.
   :config
   ;; Change :flymake-hook use-package keyword to :lint
   (defvar flymake-collection-hook-config)
