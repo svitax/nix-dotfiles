@@ -2675,8 +2675,8 @@ together."
 ;;;;;;;;;;;;;;;;;
 ;;;; buffers ;;;;
 
-;; NOTE document buffer
 (use-package buffers
+  ;; Commands for buffers.
   :no-require
   :config
   (defun +kill-this-buffer (&optional arg)
@@ -2724,21 +2724,14 @@ Limit list of buffers to those matching the current
 
   (bind-keys :map global-map
              ("M-s b" . +buffers-major-mode)
+             ("M-s M-b" . +buffers-major-mode)
              ("C-<next>" . end-of-buffer)
              ("C-<prior>" . beginning-of-buffer)
              :map +prefix-map
              ("k" . +kill-this-buffer)
              ("C-b" . ibuffer)
              ("<right>" . next-buffer)
-             ("<left>" . previous-buffer)
-             ;; :map +buffer-prefix-map
-             ;; ("c" . clone-indirect-buffer-other-window)
-             ;; ("g" . revert-buffer-quick)
-             ;; ("k" . +kill-this-buffer)
-             ;; ("m" . +buffers-major-mode) ; (prot) if i can filter in consult-buffer by major mode i don't need this
-             ;; ("r" . +rename-file-and-buffer)
-             ;; ("v" . +buffers-vc-root) ; (prot) if i can filter in consult-buffer by vc root i don't need this
-             ))
+             ("<left>" . previous-buffer)))
 
 (use-package uniquify
   ;; When a buffer name is reserved, Emacs tries to produce the new buffer by
