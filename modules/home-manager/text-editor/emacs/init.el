@@ -405,7 +405,7 @@ With prefix argument ARG, prompt for a directory."
              ("s" . save-some-buffers) ("C-s" . save-buffer)
              ("t" . +tab-prefix-map) ("C-t" . transpose-lines)
              ("u" . undo) ; vundo? ("C-u" . ) ; upcase-region ; "undo" mnemonic?
-             ;; ("v" . magit-status) ; vc-prefix-map ("C-v" . find-alternate-file)
+             ;; ("v" . vc-prefix-map) ("C-v" . find-sibling-file) ; find-alternate-file
              ("w" . +window-prefix-map) ("C-w" . write-file)
              ("x" . +toggle-prefix-map) ("C-x" . exchange-point-and-mark)
              ;; ("y" . dape-global-map) ; ("C-y" . ) ; "why" mnemonic
@@ -952,8 +952,78 @@ non-nil."
           confirm-kill-emacs 'yes-or-no-p
           large-file-warning-threshold nil)
 
+  ;; Add sibling files to `read-file-name'. This means in a .c file buffer, I
+  ;; can do `C-x C-f' (`find-file') followed by multiple invocations of `M-n'
+  ;; (`next-history-element') to get the corresponding .h file.
+  (define-advice read-file-name--defaults
+      (:filter-return (ret) +add-sibling-files)
+    "Add sibling file of each default suggestion."
+    (let ((ret*))
+      (mapc
+       (lambda (x)
+         (push x ret*)
+         (let ((extra (find-sibling-file-search x)))
+           (mapc (lambda (y) (push (abbreviate-file-name y) ret*)) extra)))
+       ret)
+      (setq ret* (nreverse ret*))))
+
+  (with-eval-after-load 'embark
+    (defun +embark-find-sibling-file (file)
+      "Visit a \"sibling\" file of FILE.
+
+The \"sibling\" file is defined by the `find-sibling-rules' variable."
+      (let ((sibling (find-sibling-file-search file)))
+        (if (null sibling)
+            (user-error "Couldn't find any sibling files")
+          (find-file (if (length= sibling 1)
+                         (car sibling)
+                       (completing-read "Find file" sibling))))))
+
+    (bind-keys :map embark-file-map
+               ("V" . +embark-find-sibling-file)))
+
+  ;; TODO `:sibling-rules' use-package keyword to add onto `find-sibling-rules'
+  (defun +find-sibling-rules-extension (alist)
+    "Generate `find-sibling-rules'.
+
+ALIST format: ((EXT (TARGETS...)) ...) where EXT is like \\\".cc\\\" and
+TARGETS is a list like (\".h\" \".hh\")."
+    (mapcan (lambda (rule)
+              (let ((ext (car rule))
+                    (targets (cadr rule)))
+                (mapcar (lambda (target)
+                          (list (concat "\\([^/]+\\)" ext "\\'")
+                                (concat "\\1" target)))
+                        targets)))
+            alist))
+
+  (setopt find-sibling-rules
+          (+find-sibling-rules-extension
+           '(("\\.cc\\'" (".hh" ".h"))
+             ("\\.hh\\'" (".cc" ".C" ".CC" ".cxx" ".cpp" ".c++"))
+
+             ("\\.c\\'" (".h"))
+             ("\\.m\\'" (".h"))
+             ("\\.h\\'" (".c" ".cc" ".C" ".CC" ".cxx" ".cpp" ".c++" ".m"))
+
+             ("\\.C\\'" (".H" ".hh" ".h"))
+             ("\\.H\\'"   (".C"  ".CC"))
+
+             ("\\.CC\\'"  (".HH" ".H"  ".hh" ".h"))
+             ("\\.HH\\'"  (".CC"))
+
+             ("\\.c\\+\\+\\'" (".h++" ".hh" ".h"))
+             ("\\.h\\+\\+\\'" (".c++"))
+
+             ("\\.cpp\\'" (".hpp" ".hh" ".h"))
+             ("\\.hpp\\'" (".cpp"))
+
+             ("\\.cxx\\'" (".hxx" ".hh" ".h"))
+             ("\\.hxx\\'" (".cxx")))))
+
   (bind-keys :map +prefix-map
-             ("C-f" . find-file)))
+             ("C-f" . find-file)
+             ("C-v" . find-sibling-file)))
 
 (use-package backup
   :no-require
