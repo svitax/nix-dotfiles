@@ -7557,8 +7557,11 @@ written in lower case and ignore casing while spell-checking."
 ;; <https://github.com/krisbalintona/pdf-meta-edit>
 ;; (use-package pdf-meta-edit)
 
-;; NOTE document nov
 (use-package nov
+  ;; The `nov.el' package provides a comfortable reading experience for EPUB
+  ;; files within Emacs, rendering them as reflowable text rather than showing
+  ;; the raw XML structure.
+
   ;; Activate nov-mode for epub files
   :mode ("\\.epub\\'" . nov-mode)
   ;; (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
