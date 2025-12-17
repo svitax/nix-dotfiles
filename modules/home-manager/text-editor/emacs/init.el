@@ -4030,8 +4030,17 @@ There is no dragging the character forward. This is the behavior of
              ("h" . mark-whole-buffer)
              ("C-o" . delete-blank-lines)))
 
-;; TODO document mark-command
 (use-package mark-command
+  ;; The mark is a fundamental Emacs concept that serves multiple purposes: it
+  ;; defines one end of the region (with point being the other), and it records
+  ;; positions in your navigation history. Every time you set the mark, that
+  ;; position is added to the `mark-ring' (a list of previous mark locations in
+  ;; the current buffer). The global mark-ring extends this across all buffers.
+  ;;
+  ;; Use `C-SPC' (`set-mark-command') to set the mark at point. With a prefix
+  ;; argument `C-u C-SPC' pops back to the previous mark position. Each
+  ;; invocation moves further back through the mark ring. This effectively lets
+  ;; you retrace your steps.
   :no-require
   :config
   ;; A problem with the `mark-ring' is that sometimes it gets filled with
