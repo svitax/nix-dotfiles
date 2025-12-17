@@ -2594,8 +2594,10 @@ together."
              ("M-n" . tempel-next)
              ("M-p" . tempel-previous)))
 
-;; TODO document tempel-collection
-(use-package tempel-collection)
+(use-package tempel-collection
+  ;; The `tempel-collection' package provides a curated collection of templates
+  ;; for `tempel' covering common languages and modes.
+  )
 
 ;;;;;;;;;;;;;;;;;
 ;;;; project ;;;;
