@@ -899,9 +899,10 @@ non-nil."
 ;;;;;;;;;;;;;;;;;;;;;
 ;;;; environment ;;;;
 
-;; TODO document envrc
 (use-package envrc
-  ;; Buffer-local "direnv" integration for Emacs
+  ;;  The `envrc' package provides buffer-local variable management by
+  ;; integrating with `direnv', an external tool that loads and unloads
+  ;; environment variables based on the current directory.
   :config
   ;; By default, when I call `project-compile', `project-shell-command', or
   ;; `project-async-shell-command' and select another project that has a .envrc
