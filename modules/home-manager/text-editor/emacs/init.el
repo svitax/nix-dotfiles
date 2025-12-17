@@ -3614,8 +3614,19 @@ end of the buffer.")
   (setopt scroll-preserve-screen-position t
           scroll-error-top-bottom t))
 
-;; TODO document narrow
 (use-package narrow
+  ;; Narrowing is a powerful Emacs feature that restricts the visible and
+  ;; editable portion of a buffer to a specific region, temporarily hiding
+  ;; everything outside it. This is useful for focusing on any arbitrary region
+  ;; without distraction. You can perform operations like search-and-replace or
+  ;; run keyboard macros without affecting the rest of the buffer.
+  ;;
+  ;; The built-in narrowing commands work well but require remembering which
+  ;; specific command applies in each context. I define the
+  ;; `+narrow-or-widen-dwim' command which provides a more "do what I mean"
+  ;; approach to reduce the cognitive overhead of choosing between
+  ;; `narrow-to-defun', `narrow-to-region', `org-narrow-to-subtree', `widen',
+  ;; and so on.
   :no-require
   :config
 
