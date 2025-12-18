@@ -49,9 +49,7 @@ in
         ];
 
         home.packages = with pkgs; [
-          difftastic # for difftastic.el
           unzip # for nov.el
-          emacs-lsp-booster
           single-file-cli # for +web-archive-url
           chromium # need chromium to use single-file-cli
           # monolith
