@@ -14,20 +14,6 @@ let
 
   # TODO find a way to not have to define epkgs here and just inherit from my programs.emacs
   epkgs = pkgs.emacsPackagesFor cfg.package;
-
-  lispDir = ../emacs/lisp;
-  lispPackages = builtins.attrValues (
-    builtins.mapAttrs (
-      _name: type:
-      if type == "directory" && builtins.pathExists (lispDir + "/${_name}/default.nix") then
-        import (lispDir + "/${_name}") {
-          inherit lib pkgs;
-          inherit epkgs;
-        }
-      else
-        null
-    ) (builtins.readDir lispDir)
-  );
 in
 {
   options.text-editor.emacs = {
@@ -87,14 +73,13 @@ in
           # package = pkgs.emacs-unstable;
           inherit (cfg) package;
           extraPackages =
-            _:
-            with epkgs;
-            [
+            _: with epkgs; [
               fontaine
               # modus-themes
               pulsar
               cursory
               highlight-numbers
+              druid-modeline
               keycast
               visual-fill-column
               envrc
@@ -139,7 +124,8 @@ in
               pydoc
               nix-mode
               nix-ts-mode
-              # templ-ts-mode
+              nix-update
+              templ-ts-mode
               dts-mode
               jinx
               biblio
@@ -162,6 +148,7 @@ in
               elpher
               # leetcode
               gptel
+              gptel-quick
               nerd-icons
               nerd-icons-completion
               nerd-icons-corfu
@@ -169,8 +156,7 @@ in
               nerd-icons-ibuffer
               nerd-icons-grep
               compile-multi-nerd-icons
-            ]
-            ++ lispPackages;
+            ];
         };
 
         services.emacs = with pkgs; {
