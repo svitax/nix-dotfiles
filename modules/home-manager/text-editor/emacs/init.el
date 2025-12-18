@@ -845,7 +845,10 @@ non-nil."
                   compilation-mode-hook
                   grep-mode-hook
                   log-view-mode-hook))
-    (add-hook mode #'toggle-truncate-lines)))
+    (add-hook mode #'toggle-truncate-lines))
+
+  (bind-keys :map +toggle-prefix-map
+             ("t" . toggle-truncate-lines)))
 
 (use-package display-line-numbers
   :config
@@ -2816,7 +2819,6 @@ Limit list of buffers to those matching the current
              ("i" . insert-buffer)
              ("n" . clone-buffer)
              ("r" . +rename-buffer-or-file) ; orig. `rename-buffer'
-             ("t" . toggle-truncate-lines)
              ("u" . rename-uniquely)))
 
 (use-package uniquify
