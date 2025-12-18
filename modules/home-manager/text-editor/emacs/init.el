@@ -2466,10 +2466,12 @@ minibuffer, which means it can be used as an Embark action."
   ;; `corfu' handles in-buffer text completion splendidly using Emacs'
   ;; underlying infrastructure for `completion-at-point-functions'.
   ;;
-  ;; However, automatic in-buffer text completion distracts me. I don't want
-  ;; things eagerly popping in and out of my view. I want manual completion. Pop
-  ;; up only when I say so. So completion is triggered with the `TAB' key,
-  ;; producing a popup where the cursor is. See my `tabs' configuration.
+  ;; In-buffer text completion distracts me, no matter how minimalist it is. It
+  ;; slows me down and distracts me. I especially don't want things eagerly
+  ;; popping in and out of my view. When I do, however, need to rely on it, I
+  ;; want manual completion. Pop up only when I say so. Completion is triggered
+  ;; with the `TAB' key, producing a popup where the cursor is, if
+  ;; re-indentation cannot be performed there. See my `tabs' configuration.
   ;;
   ;; On that note, I set `corfu-preview-current' to nil because I don't want the
   ;; selected candidates to insert themselves into my buffer without my
@@ -2480,8 +2482,10 @@ minibuffer, which means it can be used as an Embark action."
   ;; insertion while a corfu popup is active. This means I get all the benefits
   ;; of `orderless' with `corfu'.
   ;;
-  ;; `corfu-popupinfo-mode' will show a secondary documentation popup if we move
-  ;; over a candidate but do not to anything with it.
+  ;; The companion `corfu-popupinfo-mode' will show a secondary documentation
+  ;; popup if we move over a candidate but do not to anything with it for the
+  ;; first number in `corfu-popupinfo-delay' in seconds and then sebsequent
+  ;; popups are subject to the second number of that same variable.
   :config
   (global-corfu-mode)
   (corfu-popupinfo-mode 1)
