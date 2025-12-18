@@ -28,21 +28,6 @@ let
         null
     ) (builtins.readDir lispDir)
   );
-
-  localInfoFiles = (
-    pkgs.runCommand "local-info-files"
-      {
-        src = ./info;
-      }
-      ''
-        mkdir -p $out/share/info
-        cp $src/*.info $out/share/info/
-
-        for file in $out/share/info/*.info; do
-          ${pkgs.texinfo}/bin/install-info "$file" $out/share/info/dir
-        done
-      ''
-  );
 in
 {
   options.text-editor.emacs = {
@@ -94,7 +79,7 @@ in
             withHspell = false;
             withAspell = false;
           })
-          localInfoFiles
+          info-files
         ];
 
         programs.emacs = {

@@ -13,7 +13,7 @@
     homeManagerModules = import ../modules/home-manager;
 
     # Custom packages and modifications, exported as overlays
-    # overlays = import ../overlays { inherit inputs outputs; };
+    overlays = import ../overlays { inherit inputs; };
 
     # Custom flake templates, accessible through
     # 'nix flake init -t github:username/reponame#template' or
