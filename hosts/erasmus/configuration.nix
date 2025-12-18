@@ -37,7 +37,7 @@
   # TOOD refactor ollama config
   services.ollama = {
     enable = true;
-    acceleration = "rocm";
+    package = pkgs.ollama-rocm;
     environmentVariables = {
       # Override the LLVM target by getting the version from your GPU like so
       # nix-shell -p "rocmPackages.rocminfo" --run "rocminfo" | grep "gfx"
