@@ -374,8 +374,6 @@ With prefix argument ARG, prompt for a directory."
     :doc "Prefix map for minor mode toggles."
     :prefix '+toggle-prefix-map
     "h" #'hl-line-mode
-    ;; "l" #'logos-focus-map
-    ;; "s" #'spacious-padding-mode
     ;; "r" #'rainbow-mode
     )
 
@@ -516,7 +514,7 @@ With prefix argument ARG, prompt for a directory."
   :config
   ;; Define detailed font configurations and set them on command.
   (bind-keys :map +toggle-prefix-map
-             ("f" . fontaine-set-preset))
+             ("f" . fontaine-set-preset)) ; orig. `font-lock-update'
 
   (setopt x-underline-at-descent-line nil
           text-scale-remap-header-line t
@@ -861,7 +859,7 @@ non-nil."
   (setq-default display-line-numbers-widen t)
 
   (bind-keys :map +toggle-prefix-map
-             ("n" . global-display-line-numbers-mode)))
+             ("l" . global-display-line-numbers-mode)))
 
 (use-package whitespace
   :config
@@ -2230,7 +2228,7 @@ The completion method is determined by completion-at-point-functions."
              ("L" . consult-line-multi)
              ("u" . consult-focus-lines) ("M-u" . consult-focus-lines) ; C-u to unfocus
              :map +toggle-prefix-map
-             ("t" . consult-theme)
+             ("a" . consult-theme)
              :map consult-narrow-map
              ;; Available filters are displayed with the `consult-narrow-help'
              ;; command at the prompt
@@ -2767,15 +2765,21 @@ window as well."
           (kill-buffer-and-window))
       (kill-this-buffer)))
 
-  (defun +rename-file-and-buffer (name)
-    "Apply NAME to current file and rename its buffer."
+  (defun +rename-buffer-or-file (newname)
+    "Change current buffer's name to NEWNAME (a string).
+If buffer has a file, apply NEWNAME to it as well."
     (interactive
-     (list (read-file-name "Rename current file: " (buffer-file-name))))
+     (list (if (buffer-file-name)
+               (read-file-name "Rename file: " (buffer-file-name))
+             (read-string "Rename buffer (to new name): " (buffer-name)))))
     (let ((file (buffer-file-name)))
-      (if (vc-registered file)
-          (vc-rename-file file name)
-        (rename-file file name))
-      (set-visited-file-name name t t)))
+      (cond ((and file (vc-registered file))
+             (vc-rename-file file newname))
+            (file
+             (rename-file file newname)
+             (set-visited-file-name newname t t))
+            (t
+             (rename-buffer newname)))))
 
   (defun +buffers--major-mode-prompt ()
     "Prompt of `+buffers-major-mode'.
@@ -2802,10 +2806,18 @@ Limit list of buffers to those matching the current
              ("C-<next>" . end-of-buffer)
              ("C-<prior>" . beginning-of-buffer)
              :map +prefix-map
-             ("k" . +kill-this-buffer)
              ("C-b" . ibuffer)
+             ("k" . +kill-this-buffer)
              ("<right>" . next-buffer)
-             ("<left>" . previous-buffer)))
+             ("<left>" . previous-buffer)
+             :map +toggle-prefix-map
+             ("F" . font-lock-update)
+             ("g" . revert-buffer-quick)
+             ("i" . insert-buffer)
+             ("n" . clone-buffer)
+             ("r" . +rename-buffer-or-file) ; orig. `rename-buffer'
+             ("t" . toggle-truncate-lines)
+             ("u" . rename-uniquely)))
 
 (use-package uniquify
   ;; When a buffer name is reserved, Emacs tries to produce the new buffer by
@@ -3667,12 +3679,13 @@ end of the buffer.")
       (recenter 1))) ; Use 0 for the absolute top
   (add-hook 'logos-page-motion-hook #'+logos--recenter-top)
 
-  (bind-keys
-   :map +prefix-map
-   ("]" . logos-forward-page-dwim)
-   ("[" . logos-backward-page-dwim)
-   :map +narrow-prefix-map
-   ("p" . logos-narrow-dwim)))
+  (bind-keys :map +prefix-map
+             ("]" . logos-forward-page-dwim)
+             ("[" . logos-backward-page-dwim)
+             :map +narrow-prefix-map
+             ("p" . logos-narrow-dwim)
+             :map +toggle-prefix-map
+             ("p" . logos-focus-mode)))
 
 (use-package scroll
   ;; Scrolling behaviour
