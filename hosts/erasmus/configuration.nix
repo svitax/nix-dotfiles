@@ -19,7 +19,7 @@
   desktop-manager.xfce.enable = true;
   # desktop-manager.kde.enable = true;
 
-  nixos.enable = true;
+  nix-settings.enable = true;
 
   storage.onedrive.enable = true;
 

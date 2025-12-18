@@ -73,7 +73,7 @@ rec {
     stevenblack = ./network/stevenblack;
   };
 
-  nixos = ./nixos;
+  nix-settings = ./nix-settings;
 
   security = {
     # NOTE: gpg
@@ -133,7 +133,7 @@ rec {
 
       network.stevenblack
 
-      nixos
+      nix-settings
 
       # window-manager.gnome
       # window-manager.lightdm

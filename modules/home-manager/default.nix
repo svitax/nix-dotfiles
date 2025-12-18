@@ -74,6 +74,8 @@ rec {
     # NOTE: gtklock (for lockscreen) https://github.com/jovanlanik/gtklock or swaylock-effects https://github.com/mortie/swaylock-effects
   };
 
+  nix-settings = ./nix-settings;
+
   shell = {
     bash = ./shell/bash;
     # fish = ./shell/fish;
@@ -138,6 +140,8 @@ rec {
       graphical.anki
       graphical.discord
       graphical.mpv
+
+      nix-settings
 
       shell.bash
       # shell.fish

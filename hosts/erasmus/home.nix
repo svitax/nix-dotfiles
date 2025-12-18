@@ -43,6 +43,8 @@
     mpv.enable = true;
   };
 
+  nix-settings.enable = true;
+
   shell = {
     bash.enable = true;
     # fish.enable = true;

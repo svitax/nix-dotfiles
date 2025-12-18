@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.nixos;
+  cfg = config.nix-settings;
 in
 {
-  options.nixos = {
+  options.nix-settings = {
     enable = lib.mkEnableOption "Configures Nix options.";
   };
 
@@ -18,5 +18,10 @@ in
 
     # Allow unfree packages
     nixpkgs.config.allowUnfree = true;
+
+    # Apply overlays
+    nixpkgs.overlays = [
+      inputs.self.overlays.packages
+    ];
   };
 }
