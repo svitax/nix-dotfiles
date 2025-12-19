@@ -5207,19 +5207,30 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
   ;; they're in and source documentation from them. Flymake diagnostics are more
   ;; urgent, so I want to make sure they're first. By default Flymake adds
   ;; itself to the end.
+  (defun +eldoc-setup-flymake ()
+    "Ensure `flymake-eldoc-function' is always first in
+`eldoc-documentation-functions'."
+    (when (memq 'flymake-eldoc-function eldoc-documentation-functions)
+      (setq-local eldoc-documentation-functions
+                  (cons 'flymake-eldoc-function
+                        (delq 'flymake-eldoc-function
+                              eldoc-documentation-functions)))))
   (defun +eldoc-setup-elisp ()
     "Setup `eldoc-documentation-functions' for `emacs-lisp-mode' buffers."
     (setq-local eldoc-documentation-functions '(flymake-eldoc-function
                                                 elisp-eldoc-var-docstring
-                                                elisp-eldoc-funcall)))
+                                                elisp-eldoc-funcall))
+    (add-hook 'flymake-mode-hook #'+eldoc-setup-flymake))
   (defun +eldoc-setup-eglot ()
     "Setup `eldoc-documentation-functions' for `eglot-managed-mode' buffers."
-    (setq-local eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly)
+    (setq-local eldoc-documentation-strategy 'eldoc-documentation-compose)
     (setq-local eldoc-documentation-functions '(flymake-eldoc-function
-                                                ;; markdown-eldoc-function
-                                                ;; eglot-signature-eldoc-function
-                                                eglot-hover-eldoc-function))
-    (eldoc-mode +1))
+                                                eglot-signature-eldoc-function
+                                                eglot-hover-eldoc-function
+                                                ;; eglot-highlight-eldoc-function
+                                                eglot-code-action-suggestion))
+    (add-hook 'flymake-mode-hook #'+eldoc-setup-flymake)
+    (eldoc-mode 1))
   (add-hook 'emacs-lisp-mode-hook #'+eldoc-setup-elisp)
   (add-hook 'eglot-managed-mode-hook #'+eldoc-setup-eglot)
 
