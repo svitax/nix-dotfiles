@@ -2702,8 +2702,8 @@ together."
   (setopt project-switch-commands '((project-switch-to-buffer "Buffer" ?b)
                                     (project-dired "Dired" ?d)
                                     (project-find-file "File" ?f)
-                                    (+project-consult-grep "Grep" ?g)
-                                    (+shell-pop-to-buffer "Shell" ?s)
+                                    (+project-consult-ripgrep "Grep" ?g)
+                                    (+shell-pop-to-buffer "Shell" ?z)
                                     (magit-project-status "VC" ?v)
                                     (project-compile "Compile" ?,)
                                     (project-async-shell-command "Async Command" ?&)
@@ -2720,19 +2720,19 @@ together."
   ;; `project-find-file' will ask for a project to use, then switch to it, then
   ;; prompt for a file inside of the specified project.
 
-  (defun +project-consult-grep (&optional dir initial)
-    "Search with `grep' for files in DIR with INITIAL input with
+  (defun +project-consult-ripgrep (&optional dir initial)
+    "Search with `ripgrep' for files in DIR with INITIAL input with
 `consult-project-function' set to the default project function."
     (interactive)
     (let ((consult-project-function 'consult--default-project-function))
-      (consult-grep dir initial)))
+      (+consult-ripgrep-dwim dir initial)))
 
   (bind-keys :map +project-prefix-map
              ;; ("b" . project-switch-to-buffer) ; alt. `consult-project-buffer'
              ("d" . project-dired)
              ("e" . project-eshell)
              ("f" . project-find-file)
-             ("g" . +project-consult-grep)
+             ("g" . +project-consult-ripgrep)
              ("k" . project-kill-buffers)
              ("p" . project-switch-project)
              ("r" . project-query-replace-regexp)
