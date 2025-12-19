@@ -137,7 +137,6 @@ in
               org-remark
               org-noter
               anki-editor
-              markdown-mode
               pdf-tools
               saveplace-pdf-view
               nov

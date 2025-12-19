@@ -7420,8 +7420,6 @@ the `pydoc' module list before prompting."
   :mode (("\\.keymap\\'" . dts-mode)
          ("\\.overlay\\'" . dts-mode)))
 
-(use-package markdown-mode)
-
 (use-package text-mode
   :config
   ;; These are some basic settings for plain text files but also for any major
