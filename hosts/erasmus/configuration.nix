@@ -14,25 +14,32 @@
     outputs.nixosModules.allModules
   ];
 
-  boot.systemd-boot.enable = true;
+  modules = {
+    desktop = {
+      desktop-environments = {
+        xfce.enable = true;
+        # kde.enable = true;
+      };
+    };
 
-  desktop-manager.xfce.enable = true;
-  # desktop-manager.kde.enable = true;
+    nix.enable = true;
 
-  nix-settings.enable = true;
+    profiles = {
+      networks = {
+        stevenblack.enable = true;
+      };
+    };
 
-  storage.onedrive.enable = true;
+    services = {
+      onedrive.enable = true;
+    };
 
-  style.fonts.enable = true;
+    system = {
+      boot.systemd-boot.enable = true;
+    };
 
-  documentation = {
-    enable = true;
-    doc.enable = true;
-    info.enable = true;
-    man.enable = true;
+    style.fonts.enable = true;
   };
-
-  network.stevenblack.enable = true;
 
   # TOOD refactor ollama config
   services.ollama = {

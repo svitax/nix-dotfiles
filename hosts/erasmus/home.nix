@@ -8,73 +8,53 @@
     outputs.homeManagerModules.allModules
   ];
 
-  # browser = {
-  #   qutebrowser.enable = true;
-  # };
+  modules = {
+    desktop = {
+      applications = {
+        # anki.enable = true;
+        discord.enable = true;
+      };
+      browsers = {
+        # librewolf.enable = true;
+        # chromium.enable = true;
+      };
+      desktop-environments = {
+        xfce.enable = true;
+      };
+      media = {
+        mpv.enable = true;
+        yt-dlp.enable = true;
+      };
+    };
 
-  # TODO add all of these command-line modules to a single module?
-  command-line = {
-    # atuin.enable = true;
-    direnv.enable = true;
-    fd.enable = true;
-    git.enable = true;
-    man.enable = true;
-    nh.enable = true;
-    # nurl.enable = true;
-    # pandoc.enable = true;
-    # poppler.enable = true;
-    ripgrep.enable = true;
-    timewarrior.enable = true;
-    yt-dlp.enable = true;
-    zoxide.enable = true;
-  };
+    documentation = {
+      info.enable = true;
+      man.enable = true;
+    };
 
-  # desktop = {
-  # firefox.enable = true;
-  # foot.enable = true;
-  # rofi.enable = true;
-  # };
+    editors = {
+      emacs = {
+        enable = true;
+        defaultEditor = true;
+      };
+    };
 
-  desktop-manager.xfce.enable = true;
+    # TODO add all of these modules to a nix module
+    nix = {
+      nh.enable = true;
+      nixpkgs.enable = true;
+      # nurl.enable = true;
+    };
 
-  graphical = {
-    anki.enable = true;
-    discord.enable = true;
-    mpv.enable = true;
-  };
-
-  nix-settings.enable = true;
-
-  shell = {
-    bash.enable = true;
-    # fish.enable = true;
-    starship.enable = true;
-    # zsh.enable = true;
-  };
-
-  text-editor = {
-    emacs = {
-      enable = true;
-      defaultEditor = true;
+    shell = {
+      bash.enable = true;
+      direnv.enable = true;
+      git.enable = true;
+      starship.enable = true;
+      timewarrior.enable = true;
+      zoxide.enable = true;
     };
   };
-
-  # window-manager.sway.enable = true;
-
-  # TODO: extract maestral module
-  # systemd.user.services.maestral = {
-  #   Unit = {
-  #     Description = "Maestral daemon";
-  #   };
-  #   Install = {
-  #     WantedBy = [ "default.target" ];
-  #   };
-  #   Service = {
-  #     ExecStart = "${pkgs.maestral}/bin/maestral start --foreground";
-  #     ExecStop = "${pkgs.maestral}/bin/maestral stop";
-  #     Restart = "on-failure";
-  #   };
-  # };
 
   # Home Manager needs a bit of information about you and the paths it should
   # manage.
@@ -98,8 +78,6 @@
     # pkgs.hello
     # TODO extract home.packages into modules
     runelite
-    # maestral
-    # maestral-gui
 
     # # It is sometimes useful to fine-tune packages, for example, by applying
     # # overrides. You can do that directly here, just don't forget the

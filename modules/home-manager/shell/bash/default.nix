@@ -1,20 +1,29 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
   inherit (lib) mkEnableOption;
 
-  cfg = config.shell.bash;
+  cfg = config.modules.shell.bash;
 in
 {
-  options.shell.bash = {
+  options.modules.shell.bash = {
     enable = mkEnableOption "Bash";
   };
 
   config = lib.mkIf cfg.enable {
     home.file.".local/share/my_bash/dircolors".source = ./dircolors;
+
+    # Some interactive shell utilities I find universally indispensible.
+    home.packages = with pkgs; [
+      fd
+      libqalculate # calculator cli w/ currency conversion (qalc)
+      ripgrep
+    ];
+
     programs.bash = {
       enable = true;
       initExtra = ''

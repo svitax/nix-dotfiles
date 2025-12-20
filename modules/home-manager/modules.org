@@ -1,0 +1,196 @@
+* Desktop
+** Applications
+*** Anki
+*** Discord
+*** Rofi
+Make different launcher entries but use Emacs as a Rofi-like launcher instead
+https://github.com/hlissner/dotfiles/blob/e2d4db1e36c36642e67b9d6736c011b5fc8f7791/modules/desktop/apps/rofi.nix
+** Browsers
+*** Qutebrowser
+*** Nyxt
+*** Firefox
+** Compositors
+*** Picom
+** Desktop-Environments
+*** Xfce
+shinglify.enable (for autotiling) https://gitlab.com/corthbandt/shinglify
+retro/copland-esque themes
+** Display-Managers
+lightdm or sddm
+sddm theme https://github.com/stepanzubkov/where-is-my-sddm-theme
+sddm theme https://github.com/Zhaith-Izaliel/sddm-sugar-candy-nix
+** Media
+*** Cad
+https://github.com/hlissner/dotfiles/blob/e2d4db1e36c36642e67b9d6736c011b5fc8f7791/modules/desktop/media/cad.nix
+--- for 3D modeling & design
+For game art assets, interior design, and product demos for clients
+
+freecad
+blender
+*** Daw
+https://github.com/hlissner/dotfiles/blob/e2d4db1e36c36642e67b9d6736c011b5fc8f7791/modules/desktop/media/daw.nix
+Make music and sound effects
+
+reaper # my daw for making/recording music
+audacity # for one-off audio editing
+sunvox # for chiptune
+*** Graphics
+https://github.com/hlissner/dotfiles/blob/e2d4db1e36c36642e67b9d6736c011b5fc8f7791/modules/desktop/media/graphics.nix
+
+enable
+tools.enable # CLI/scripting tools
+        imagemagick
+        # optimizers
+        # lossless      lossy
+        optipng          pngquant
+        jpegoptim      libjpeg
+                              gifsicle
+vector.enable # replaces illustrator (maybe indesign?)
+        inkscape
+raster.enable # replaces photoshop
+        gimp
+        krita
+sprites # sprite sheets & animation
+        pixelorama
+*** Music
+beets # library management
+feishin # media player
+playerctl # to control feishin
+picard # for editing tags
+id3v2 # for editing tags (CLI)
+*** Pdf
+--- for managing PDFs
+
+ghostscript # for optimizing pdfs
+poppler-utils # various pdf tools
+wkhtmltopdf
+pdfgrep
+img2pdf
+ocrmypdf
+*** Video
+--- the pictures. they move.
+for all things video. video playback, (ed|de)coding, and editing. OBS to capture
+footage/stream, audacity for audio, handbrake/ffmpeg to encode it all. this,
+paired with davinci resolve for video editing and I'm set
+
+enable
+capture.enable
+        obs-studio # for streaming/recording footage
+editor.enable
+        davinci-resolve # for editing it
+player.enable
+        mpv
+        mpvc # cli controller for mpv
+tools.enable
+        ffmpeg-full # in the cli
+        handbrake # for the gui
+** Terminals
+*** St
+** Window-Managers
+*** Dwm
+*** AGS/EWW/Quickshell
+ags (for user dashboard and system resource monitor and other widgets)
+ags (for osd) or wob https://github.com/francma/wob
+ags (for notifications) or
+ags (for bar) or waybar
+panel and widgets in ags for inspiration https://github.com/Jas-SinghFSU/HyprPanel
+some widgets in eww for inspiration https://github.com/dharmx/vile
+* Documentation
+** Info
+** Man
+* Editors
+** Emacs
+https://github.com/hlissner/dotfiles/blob/e2d4db1e36c36642e67b9d6736c011b5fc8f7791/modules/editors/emacs.nix
+Emacs (debug mode)
+* Hardware
+https://github.com/hlissner/dotfiles/blob/e2d4db1e36c36642e67b9d6736c011b5fc8f7791/modules/profiles/default.nix#L12
+https://github.com/hlissner/dotfiles/blob/e2d4db1e36c36642e67b9d6736c011b5fc8f7791/modules/profiles/hardware/bluetooth.nix#L9
+** Cpu
+https://github.com/hlissner/dotfiles/blob/e2d4db1e36c36642e67b9d6736c011b5fc8f7791/modules/profiles/hardware/cpu/amd.nix#L9
+*** Amd
+*** Intel
+** Gpu
+*** Amd
+*** Nvidia
+https://github.com/hlissner/dotfiles/blob/e2d4db1e36c36642e67b9d6736c011b5fc8f7791/modules/profiles/hardware/gpu/nvidia.nix#L12
+** Audio
+** Bluetooth
+** Wifi
+* Nix
+* Profiles
+** Platform
+*** Linode
+** Networks
+*** CA (canada)
+*** DK (denmark)
+*** Ts0 (tailscale)
+*** Blocky/pi-hole
+blocky https://nixos.wiki/wiki/Blocky and https://github.com/0xERR0R/blocky
+pi-hole https://github.com/pi-hole/pi-hole
+stevenblack = ./network/stevenblack;
+* Security
+** Gnupg
+** Shoji-Nix
+https://github.com/AdoPi/shoji-nix
+** SSH
+* Services
+** Cloud
+owncloud https://github.com/owncloud/ocis
+nextcloud
+** RSS
+freshrss https://github.com/FreshRSS/FreshRSS
+** Others
+ photoprism (photo server) https://github.com/photoprism/photoprism or immich (photo and video server) https://github.com/immich-app/immich
+ jellyfin (media server) https://github.com/jellyfin/jellyfin
+ jellyseerr (media server request manager) https://github.com/Fallenbagel/jellyseerr
+ TRaSH-Guides https://github.com/TRaSH-Guides/Guides
+ recyclarr (sync TRaSH Guides to sonarr and radarr) https://github.com/recyclarr/recyclarr
+ lidarr (music indexer) https://github.com/Lidarr/Lidarr
+ radarr (movie indexer) https://github.com/Radarr/Radarr
+ sonarr (tv show indexer) https://github.com/Sonarr/Sonarr
+ bazarr (subtitle indexer) https://github.com/morpheus65535/bazarr
+ prowlarr https://github.com/Prowlarr/Prowlarr
+ readarr https://github.com/Readarr/Readarr
+ unpackerr (extract downloads) https://github.com/Unpackerr/unpackerr
+glance (homelab and feeds dashboard) https://github.com/glanceapp/glance or homer (homelab dashboard) https://github.com/bastienwirtz/homer
+tubearchivist (youtube media server) https://github.com/tubearchivist/tubearchivist
+podgrab (podcast manager/downloader/archiver) https://github.com/akhilrex/podgrab
+audiobookshelf (podcast and audiobook server) https://github.com/advplyr/audiobookshelf
+plapp
+plane (jira alternative) https://github.com/makeplane/plane
+feishin (music player) https://github.com/jeffvli/feishin
+wallabag (read-it-later) https://github.com/wallabag/wallabag
+wallabag = ./homelab/wallabag;
+shiori = ./homelab/shiori;
+paperless-ngx (physical document archiver) https://github.com/paperless-ngx/paperless-ngx
+kaizoku (manga downloader) https://github.com/oae/kaizoku
+radicale (caldav and carddav) https://github.com/Kozea/Radicale
+maybe (personal finance) https://github.com/maybe-finance/maybe
+postgresql = ./homelab/postgresql;
+* Shell
+TODO: nh should be grouped with other nix settings
+** Bash
+** Direnv
+** Fd
+** Git
+** Ripgrep
+** Starship
+* System
+** Boot
+systemd-boot config
+grub theme https://github.com/PROxZIMA/boo-grub
+plymouth (for graphical boot splash) https://github.com/PROxZIMA/proxzima-plymouth
+** Disk
+disko https://github.com/nix-community/disko
+** Utils
+enable
+benchmarks.enable
+
+glances, bandwhich, hwinfo, iftop, ioping, lm_sensors, lsof, pciutils, powertop,
+smartmontools, sysstat, unixtools.netstat, usbutils, sysbench, unigine-valley, speedtest-cli
+* Virtualization
+** Distrobox
+** Docker
+** Lxd
+** Qemu
+* Xdg

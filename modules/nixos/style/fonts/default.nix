@@ -7,10 +7,10 @@
 let
   inherit (lib) mkEnableOption;
 
-  cfg = config.style.fonts;
+  cfg = config.modules.style.fonts;
 in
 {
-  options.style.fonts = {
+  options.modules.style.fonts = {
     enable = mkEnableOption "Fonts";
   };
 

@@ -6,10 +6,10 @@
 let
   inherit (lib) mkEnableOption;
 
-  cfg = config.shell.starship;
+  cfg = config.modules.shell.starship;
 in
 {
-  options.shell.starship = {
+  options.modules.shell.starship = {
     enable = mkEnableOption "Starship prompt";
   };
 
