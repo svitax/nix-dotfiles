@@ -1483,26 +1483,54 @@ ITEM is a cons cell of the form (marker . directory)."
 
   (+dired-hist-mode 1)
 
-  (bind-keys
-   :map +prefix-map
-   ("d" . dired)
-   ("C-j" . dired-jump)
-   :map dired-mode-map
-   ("e" . wdired-change-to-wdired-mode)
-   ("i" . +dired-insert-subdir) ; override `dired-maybe-insert-subdir'
-   ("l" . +dired-hist-go-back)
-   ("r" . +dired-hist-go-forward)
-   ("/" . +dired-limit-regexp)
-   ("M-e" . +dired-subdirectory-next)
-   ("M-a" . +dired-subdirectory-previous)
-   ("C-c C-n" . +dired-subdirectory-next)
-   ("C-c C-p" . +dired-subdirectory-previous)
-   ("C-c C-l" . +dired-limit-regexp)
-   ("M-s f" . +dired-search-flat-list) ; alt. `consult-find'
-   ("M-s M-f" . +dired-search-flat-list) ; alt. `consult-find'
-   ("M-s g" . +dired-grep-marked-files) ; alt. `consult-grep'
-   ("M-s M-g" . +dired-grep-marked-files) ; alt. `consult-grep'
-   ))
+  (defun +dired-create-dwim (path)
+    "Create a directory or empty file based on PATH.
+If PATH ends with '/', create a directory.
+Otherwise, create an empty file.
+Parent directories are created as needed.
+
+If PATH already exists, signal an error."
+    (interactive (list (read-file-name "Create (directory or empty file): ")))
+    (if (file-exists-p path)
+        (message "Cannot create '%s': already exists." path)
+      (if (string-suffix-p "/" path)
+          (dired-create-directory path)
+        (dired-create-empty-file path))))
+
+  (defun +dired-goto-dwim (path)
+    "Open PATH in Dired.
+If PATH is a directory, open it.
+If PATH is a file, open its parent directory and move point to the file."
+    (interactive (list (read-file-name "Goto (directory or file): ")))
+    (let* ((expanded (expand-file-name path))
+           (dir (if (file-directory-p expanded)
+                    expanded
+                  (file-name-directory expanded))))
+      (dired dir)
+      (when (file-exists-p expanded)
+        (dired-goto-file expanded))))
+
+  (bind-keys :map +prefix-map
+             ("d" . dired)
+             ("C-j" . dired-jump)
+             :map dired-mode-map
+             ("e" . wdired-change-to-wdired-mode)
+             ("i" . +dired-insert-subdir) ; override `dired-maybe-insert-subdir'
+             ("j" . +dired-goto-dwim) ; orig. `dired-goto-file'
+             ("l" . +dired-hist-go-back)
+             ("r" . +dired-hist-go-forward)
+             ("/" . +dired-limit-regexp)
+             ("+" . +dired-create-dwim) ; orig. `dired-create-directory'
+             ("M-e" . +dired-subdirectory-next)
+             ("M-a" . +dired-subdirectory-previous)
+             ("C-c C-n" . +dired-subdirectory-next)
+             ("C-c C-p" . +dired-subdirectory-previous)
+             ("C-c C-l" . +dired-limit-regexp)
+             ("M-s f" . +dired-search-flat-list) ; alt. `consult-find'
+             ("M-s M-f" . +dired-search-flat-list) ; alt. `consult-find'
+             ("M-s g" . +dired-grep-marked-files) ; alt. `consult-grep'
+             ("M-s M-g" . +dired-grep-marked-files) ; alt. `consult-grep'
+             ))
 
 (use-package dired-aux
   :after dired
