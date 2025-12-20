@@ -39,12 +39,7 @@
       };
     };
 
-    # TODO add all of these modules to a nix module
-    nix = {
-      nh.enable = true;
-      nixpkgs.enable = true;
-      # nurl.enable = true;
-    };
+    nix.enable = true;
 
     shell = {
       bash.enable = true;
