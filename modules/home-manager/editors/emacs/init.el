@@ -2320,11 +2320,15 @@ The completion method is determined by completion-at-point-functions."
   ;; This is why I have chosen to use the following function instead which
   ;; passes the selected directory directly to cd, meant to be used in
   ;; `shell-mode'.
-  (defun +consult-dir-shell-cd ()
-    "Choose a directory and cd to it."
-    (declare (interactive-only t))
-    (interactive)
-    (+shell--insert-and-send "cd" (consult-dir--pick "In directory: ")))
+  (with-eval-after-load 'shell
+    (defun +consult-dir-shell-cd ()
+      "Choose a directory and cd to it."
+      (declare (interactive-only t))
+      (interactive)
+      (+shell--insert-and-send "cd" (consult-dir--pick "In directory: ")))
+
+    (bind-keys :map shell-mode-map
+               ("C-x C-d" . +consult-dir-shell-cd)))
 
   ;; TODO can i define a function in bash that calls consult-dir for
   ;; shell-mode. i know i can probably do this for vterm, but what about shell?
@@ -2340,9 +2344,7 @@ The completion method is determined by completion-at-point-functions."
              ("C-x C-d" . consult-dir)
              ("C-x C-j" . consult-dir-jump-file)
              :map vertico-map
-             ("C-x C-j" . consult-dir-jump-file)
-             :map shell-mode-map
-             ("C-x C-d" . +consult-dir-shell-cd)))
+             ("C-x C-j" . consult-dir-jump-file)))
 
 (use-package embark
   ;; The `embark' package by Omar Antolin Camarena provides a mechanism to
