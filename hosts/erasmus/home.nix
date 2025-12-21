@@ -41,6 +41,10 @@
 
     nix.enable = true;
 
+    services = {
+      dropbox.enable = true;
+    };
+
     shell = {
       bash.enable = true;
       direnv.enable = true;
