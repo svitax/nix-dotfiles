@@ -61,8 +61,7 @@
         packages = with pkgs; [
           (python.withPackages arg)
 
-          basedpyright
-          black
+          ty
           ruff
 
           taplo
