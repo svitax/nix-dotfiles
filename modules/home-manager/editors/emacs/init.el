@@ -7487,10 +7487,10 @@ the `pydoc' module list before prompting."
 ;;   (with-eval-after-load 'magit
 ;;     (setopt git-commit-major-mode 'git-commit-ts-mode)))
 
-;; (use-package git-modes
-;;   :config
-;;   (add-to-list 'auto-mode-alist
-;;                (cons "/.dockerignore\\'" 'gitignore-mode)))
+(use-package git-modes
+  :config
+  (add-to-list 'auto-mode-alist
+               (cons "/.dockerignore\\'" 'gitignore-mode)))
 
 ;; (use-package csv)
 

@@ -124,6 +124,7 @@ in
               nix-update
               templ-ts-mode
               dts-mode
+              git-modes
               jinx
               biblio
               # biblio-openlibrary
