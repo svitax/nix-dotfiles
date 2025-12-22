@@ -4941,6 +4941,12 @@ The parameter NAME, ARGS, REST, and STATE are explained in the
           (assoc-delete-all 'eglot--managed-mode mode-line-misc-info)))
   (add-hook 'eglot-managed-mode-hook #'+eglot-remove-mode-line-misc-info)
 
+  ;; Eglot automatically turns on `eglot-inlay-hints-mode' with no built-in way
+  ;; to disable this globally. I don't like inlay hints on by default.
+  (defun +eglot-disable-inlay-hints ()
+    (eglot-inlay-hints-mode -1))
+  (add-hook 'eglot-managed-mode-hook #'+eglot-disable-inlay-hints)
+
   (setopt eglot-extend-to-xref t)
 
   (bind-keys
