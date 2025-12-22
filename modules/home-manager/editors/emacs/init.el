@@ -7207,6 +7207,15 @@ delimited by `python-nav-beginning-of-statement' and
           (python-shell-send-region beg end)
         (user-error "Can't get code block from current position"))))
 
+  (with-eval-after-load 'compile
+    (add-to-list
+     'compilation-error-regexp-alist-alist
+     '(ruff-full
+       "^\\([A-Za-z0-9-]+\\).*\n *--> \\([^:]+\\):\\([0-9]+\\):\\([0-9]+\\)"
+       2 3 4
+       2 nil))
+    (add-to-list 'compilation-error-regexp-alist 'ruff-full))
+
   (setopt python-shell-interpreter "python"
           python-shell-interpreter-args "-i"
           python-shell-dedicated 'project
