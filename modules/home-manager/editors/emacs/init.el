@@ -7213,6 +7213,7 @@ delimited by `python-nav-beginning-of-statement' and
           ;; python-shell-completion-native-enable nil
           python-shell-completion-native-disabled-interpreters '("ipython"
                                                                  "jupyter")
+          python-check-command "ruff check --output-format=concise --quiet"
           python-indent-guess-indent-offset t
           python-indent-guess-indent-offset-verbose nil
           python-indent-offset 4)
@@ -7238,7 +7239,7 @@ delimited by `python-nav-beginning-of-statement' and
              ;; ("C-c C-s" . nil)
              ;; TODO: ("C-c C-t" . +python-test-commands-map)
              ;; ("C-c C-u" . dape)
-             ("C-c C-v" . nil) ; unmap `python-check'
+             ("C-c C-v" . python-check)
              ;; ("C-c C-w" . nil)
              ;; TODO: ("C-c C-x" . run-python) ; +python-shell-start-map?
              ;; ("C-c C-y" . nil)
