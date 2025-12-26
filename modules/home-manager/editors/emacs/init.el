@@ -1981,8 +1981,6 @@ first one. Else do `vertico-exit'."
                                          (t ,@+vertico-multiform-minimal))
           vertico-multiform-commands `(("citar-\\(.*\\)"
                                         ,@+vertico-multiform-maximal)
-                                       ("+consult-completion-at-point"
-                                        ,@+vertico-multiform-maximal)
                                        ("+corfu-move-to-minibuffer"
                                         ,@+vertico-multiform-maximal))
           vertico-cycle t
@@ -2207,22 +2205,22 @@ The symbol at point is added to the future history."
 
   ;; The `completion-in-region-function' handles in-buffer text completion using
   ;; Emacs' underlying infrastructure for `completion-at-point-functions'. A
-  ;; popular interface for this is `corfu', which provides in-buffer
-  ;; popups. Sometimes I want to leverage my customized `vertico' interface with
-  ;; `consult-completion-in-region'.
-  (defun +consult-completion-at-point ()
-    "Perform completion on the text around point, using `consult'.
-
-The completion method is determined by completion-at-point-functions."
-    (interactive)
-    (let ((completion-in-region-function #'consult-completion-in-region))
-      (completion-at-point)))
+  ;; popular interface for this is `corfu', which provides in-buffer popups.
+  ;;
+  ;; I want to leverage my customized Vertico interface, so when it is active
+  ;; use `consult-completion-in-region'. Otherwise use the default
+  ;; `completion--in-region' function.
+  (setopt completion-in-region-function
+          (lambda (&rest args)
+              (apply (cond ((and (minibufferp)
+                                 minibuffer-completion-table)
+                            #'completion--in-region)
+                           (t
+                            #'consult-completion-in-region))
+                     args)))
 
   (bind-keys :map global-map
              ("M-y" . consult-yank-pop)
-             ("C-M-i" . +consult-completion-at-point)
-             :map emacs-lisp-mode-map
-             ("C-M-i" . +consult-completion-at-point)
              :map +prefix-map
              ("b" . consult-buffer) ; orig. `switch-to-buffer'
              ("C-r" . consult-recent-file) ; orig. `find-file-read-only'
@@ -2518,7 +2516,6 @@ minibuffer, which means it can be used as an Embark action."
   ;; first number in `corfu-popupinfo-delay' in seconds and then sebsequent
   ;; popups are subject to the second number of that same variable.
   :config
-  (global-corfu-mode)
   (corfu-popupinfo-mode 1)
 
   (setopt corfu-cycle t
@@ -2556,7 +2553,19 @@ minibuffer, which means it can be used as an Embark action."
          (consult-completion-in-region beg end table pred)))))
   (add-to-list 'corfu-continue-commands #'+corfu-move-to-minibuffer)
 
-  (bind-keys :map corfu-map
+  (defun +corfu-completion-at-point ()
+    "Perform completion on the text around point, using `corfu'.
+
+The completion method is determined by completion-at-point-functions."
+    (interactive)
+    (let ((completion-in-region-function #'corfu--in-region))
+      (completion-at-point)))
+
+  (bind-keys :map global-map
+             ("C-M-i" . +corfu-completion-at-point)
+             :map emacs-lisp-mode-map
+             ("C-M-i" . +corfu-completion-at-point)
+             :map corfu-map
              ("C-h" . corfu-info-documentation)
              ("C-l" . +corfu-move-to-minibuffer)
              ("C-v" . corfu-popupinfo-scroll-up)
