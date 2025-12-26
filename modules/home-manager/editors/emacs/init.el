@@ -7203,14 +7203,18 @@ The block is delimited by `python-nav-beginning-of-block' and
 delimited by `python-nav-beginning-of-statement' and
 `python-nav-end-of-statement'."
     (interactive)
-    (let ((beg (save-excursion
-                 (or (python-nav-beginning-of-block)
-                     (python-nav-beginning-of-statement))
-                 (point-marker)))
-          (end (save-excursion
-                 (or (python-nav-end-of-block)
-                     (python-nav-end-of-statement))
-                 (point-marker)))
+    (let ((beg (if (use-region-p)
+                   (region-beginning)
+                 (save-excursion
+                   (or (python-nav-beginning-of-block)
+                       (python-nav-beginning-of-statement))
+                   (point-marker))))
+          (end (if (use-region-p)
+                   (point-marker)
+                 (save-excursion
+                   (or (python-nav-end-of-block)
+                       (python-nav-end-of-statement))
+                   (point-marker))))
           (python-indent-guess-indent-offset-verbose nil))
       (if (and beg end)
           (python-shell-send-region beg end)
