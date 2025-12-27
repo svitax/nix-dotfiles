@@ -1988,6 +1988,9 @@ first one. Else do `vertico-exit'."
            (not (eq 'file (vertico--metadata-get 'category))))
       (minibuffer-complete)
       (vertico-exit))
+     ((and vertico-unobtrusive-mode (> vertico--total 1))
+      (minibuffer-complete-and-exit)
+      (+vertico-minimal-next))
      ((and vertico-unobtrusive-mode
            (not minibuffer--require-match)
            (or (string-empty-p (minibuffer-contents))
@@ -1995,9 +1998,6 @@ first one. Else do `vertico-exit'."
                (eq vertico-preselect 'directory)
                (eq vertico-preselect 'prompt)))
       (vertico-exit-input))
-     ((and vertico-unobtrusive-mode (> vertico--total 1))
-      (minibuffer-complete-and-exit)
-      (+vertico-minimal-next))
      (t
       (vertico-exit))))
 
