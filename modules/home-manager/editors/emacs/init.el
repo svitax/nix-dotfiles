@@ -646,7 +646,33 @@ LOCUS is a cons cell with two buffer positions."
            (rx (and symbol-start (or (+ digit) (+ hex-digit) (and "0" (any "xX") (+ hex-digit))) symbol-end))
            highlight-numbers-modelist))
 
+(use-package simple-modeline
+  :no-require
+  :config
+  (line-number-mode)
+  (column-number-mode)
+
+  (setopt mode-line-percent-position nil
+          mode-line-position-column-line-format '(" (%l,%C)")
+          mode-line-right-align-edge 'right-fringe
+          mode-line-format '("%e" mode-line-front-space
+                             (:propertize
+                              ("" mode-line-mule-info mode-line-client
+                               mode-line-modified mode-line-remote
+                               mode-line-window-dedicated)
+                              display (min-width (6.0)))
+                             mode-line-frame-identification
+                             mode-line-buffer-identification
+                             "   "
+                             mode-line-position
+                             (project-mode-line project-mode-line-format)
+                             (vc-mode vc-mode)
+                             "  "
+                             mode-line-format-right-align
+                             mode-line-misc-info mode-line-end-spaces)))
+
 (use-package druid-modeline
+  :disabled t
   ;; I use a custom mode line that is close in spirit to the `nano-modeline'
   ;; package.
   :config
@@ -670,7 +696,21 @@ LOCUS is a cons cell with two buffer positions."
   (add-hook 'nov-mode-hook #'druid-modeline-nov-mode)
   (add-hook 'eww-mode-hook #'druid-modeline-eww-mode)
   (add-hook 'Info-mode-hook #'druid-modeline-info-mode)
-  (add-hook 'elpher-mode-hook #'druid-modeline-elpher-mode))
+  (add-hook 'elpher-mode-hook #'druid-modeline-elpher-mode)
+
+  (with-eval-after-load 'keycast
+    (define-minor-mode druid-modeline-keycast-mode
+      "Show current command and its key binding in the mode line."
+      :global t
+      (if druid-modeline-keycast-mode
+          (progn
+            (add-hook 'pre-command-hook 'keycast--update t)
+            (add-to-list 'global-mode-string '("" keycast-mode-line)))
+        (remove-hook 'pre-command-hook 'keycast--update)
+        (setq global-mode-string (remove '("" keycast-mode-line)
+                                         global-mode-string))))
+    (bind-keys :map +toggle-prefix-map
+               ("k" . druid-modeline-keycast-mode))))
 
 (use-package keycast
   ;; This is a helpful package by Jonas Bernoulli that echoes the key presses
@@ -681,19 +721,11 @@ LOCUS is a cons cell with two buffer positions."
   ;; `druid-modeline-keycast-mode') when I do a presentation. It shows an
   ;; indicator on the focused mode line.
   :config
-  (define-minor-mode druid-modeline-keycast-mode
-    "Show current command and its key binding in the mode line."
-    :global t
-    (if druid-modeline-keycast-mode
-        (progn
-          (add-hook 'pre-command-hook 'keycast--update t)
-          (add-to-list 'global-mode-string '("" keycast-mode-line)))
-      (remove-hook 'pre-command-hook 'keycast--update)
-      (setq global-mode-string (remove '("" keycast-mode-line) global-mode-string))))
 
   (setopt keycast-mode-line-format "%2s%k%c%R"
           keycast-mode-line-window-predicate 'mode-line-window-selected-p
-          keycast-mode-line-remove-tail-elements nil)
+          keycast-mode-line-remove-tail-elements nil
+          keycast-mode-line-insert-after 'mode-line-misc-info)
 
   (dolist (input '(self-insert-command org-self-insert-command))
     (add-to-list 'keycast-substitute-alist `(,input "." "Typing…")))
@@ -720,7 +752,9 @@ LOCUS is a cons cell with two buffer positions."
   (advice-add 'avy-handler-default :before #'keycast-capture-avy-dispatch)
 
   (bind-keys :map +toggle-prefix-map
-             ("k" . druid-modeline-keycast-mode)))
+             ("k" . keycast-mode-line-mode))
+
+  (keycast-mode-line-mode))
 
 ;; (use-package spacious-padding)
 
