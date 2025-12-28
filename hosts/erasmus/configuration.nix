@@ -104,10 +104,7 @@
       "networkmanager"
       "wheel"
     ];
-    packages = with pkgs; [
-      kdePackages.kate
-      #  thunderbird
-    ];
+    packages = with pkgs; [ ];
   };
 
   # List packages installed in system profile. To search, run:
