@@ -7199,7 +7199,6 @@ region is active."
 
 (use-package python
   :lsp-ensure (python-mode python-ts-mode)
-  :lsp-server ((python-mode python-ts-mode) . ("ty" "server"))
   :format ruff python-mode python-ts-mode
   :lint ((python-mode python-ts-mode)
          flymake-collection-ruff
