@@ -15,8 +15,8 @@
         discord.enable = true;
       };
       browsers = {
-        # librewolf.enable = true;
         # chromium.enable = true;
+        librewolf.enable = true;
       };
       desktop-environments = {
         xfce.enable = true;
