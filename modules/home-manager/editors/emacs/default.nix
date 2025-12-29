@@ -162,9 +162,6 @@ in
           startWithUserSession = "graphical";
         };
 
-
-        programs.info.enable = true;
-        programs.man.enable = true;
         xdg.mimeApps = {
           enable = true;
           defaultApplications = {

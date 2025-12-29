@@ -15,6 +15,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    programs.info.enable = true;
+
     home.packages = with pkgs; [
       info-files
     ];
