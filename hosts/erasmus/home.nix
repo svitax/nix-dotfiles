@@ -17,6 +17,7 @@
       browsers = {
         # chromium.enable = true;
         librewolf.enable = true;
+        # qutebrowser.enable = true;
       };
       desktop-environments = {
         xfce.enable = true;
