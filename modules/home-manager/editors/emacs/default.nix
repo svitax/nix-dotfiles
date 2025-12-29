@@ -162,18 +162,18 @@ in
           startWithUserSession = "graphical";
         };
 
-        # xdg.mimeApps = {
-        #   enable = true;
-        #   defaultApplications = {
-        #     "application/text" = "emacsclient.desktop";
-        #     "application/textedit" = "emacsclient.desktop";
-        #     "text/anytext" = "emacsclient.desktop";
-        #     "text/plain" = "emacsclient.desktop";
-        #   };
-        # };
 
         programs.info.enable = true;
         programs.man.enable = true;
+        xdg.mimeApps = {
+          enable = true;
+          defaultApplications = {
+            "application/text" = "emacsclient.desktop";
+            "application/textedit" = "emacsclient.desktop";
+            "text/anytext" = "emacsclient.desktop";
+            "text/plain" = "emacsclient.desktop";
+          };
+        };
 
         programs.git.settings = {
           difftool.diff.cmd = ''
