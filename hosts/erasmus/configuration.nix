@@ -32,6 +32,7 @@
 
     security = {
       gnupg.enable = true;
+      pass.enable = true;
     };
 
     services = {
