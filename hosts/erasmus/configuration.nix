@@ -30,6 +30,10 @@
       };
     };
 
+    security = {
+      gnupg.enable = true;
+    };
+
     services = {
       ollama.enable = true;
       onedrive.enable = true;
