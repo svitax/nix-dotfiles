@@ -1,0 +1,48 @@
+Create Both
+Expunge Both
+SyncState *
+
+IMAPAccount gmail
+Host imap.gmail.com
+UserCmd "pass show gmail-mbsync | grep '^Username:' | cut -d' ' -f2-"
+PassCmd "pass show gmail-mbsync | head -n1"
+TLSType IMAPS
+
+IMAPStore gmail-remote
+Account gmail
+
+MaildirStore gmail-local
+Subfolders Verbatim
+Path ~/mail/gmail/
+Inbox ~/mail/gmail/inbox
+
+Channel gmail-inbox
+Near ":gmail-local:inbox"
+Far ":gmail-remote:INBOX"
+
+Channel gmail-sent
+Near ":gmail-local:sent"
+Far ":gmail-remote:[Gmail]/Sent Mail"
+
+Channel gmail-drafts
+Near ":gmail-local:drafts"
+Far ":gmail-remote:[Gmail]/Drafts"
+
+Channel gmail-all
+Near ":gmail-local:all"
+Far ":gmail-remote:[Gmail]/All Mail"
+
+Channel gmail-trash
+Near ":gmail-local:trash"
+Far ":gmail-remote:[Gmail]/Trash"
+
+Channel gmail-spam
+Near ":gmail-local:spam"
+Far ":gmail-remote:[Gmail]/Spam"
+
+Group gmail
+Channel gmail-inbox
+Channel gmail-sent
+Channel gmail-drafts
+Channel gmail-trash
+Channel gmail-spam
