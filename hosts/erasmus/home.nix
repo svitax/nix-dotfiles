@@ -51,6 +51,7 @@
       direnv.enable = true;
       git.enable = true;
       mbsync.enable = true;
+      msmtp.enable = true;
       starship.enable = true;
       timewarrior.enable = true;
       zoxide.enable = true;
