@@ -1,0 +1,34 @@
+#!/bin/sh
+
+# pre-new --- Notmuch rules that run before notmuch-new(1)
+
+# Move messages out of folders when tags are removed
+for tag in inbox trash spam; do
+    notmuch search --output=files "path:/.*\/${tag}/ and not tag:${tag}" | \
+        grep "/${tag}/" | \
+        while IFS= read -r f; do
+            mv -v "$f" "$(echo ${f} | sed "s;/${tag}/;/archive/;" | sed 's/,U=[0-9]*:/:/')"
+        done
+done
+
+# Move messages into folders when tags are added
+for tag in inbox trash spam; do
+    # exclude directory based on tag
+    if [ "$tag" = "inbox" ]; then
+        exclude_dir="archive"
+    else
+        exclude_dir="nothing-will-match-this"
+    fi
+
+    notmuch search --output=files "not path:/.*\/${tag}/ and tag:${tag}" | \
+        grep -v "/${exclude_dir}/" | \
+        while IFS= read -r f; do
+            mv -v "$f" "$(echo ${f} | sed "s;/[[:alnum:]]*/cur/;/${tag}/cur/;" | sed 's/,U=[0-9]*:/:/')"
+        done
+done
+
+# Delete messages tagged as deleted
+notmuch search --output=files tag:deleted | \
+    while IFS= read -r f; do
+        rm -v "$f"
+    done

@@ -52,6 +52,7 @@
       git.enable = true;
       mbsync.enable = true;
       msmtp.enable = true;
+      notmuch.enable = true;
       starship.enable = true;
       timewarrior.enable = true;
       zoxide.enable = true;

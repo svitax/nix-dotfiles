@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# post-new --- Notmuch rules that run after notmuch-new(1)
+#
+# Note that the order of those commands matters.
+
+# tag based on folder location
+notmuch tag +inbox -- path:/.*/inbox/
+notmuch tag +draft -- path:/.*/drafts/
+notmuch tag +sent -- path:/.*/sent/
+notmuch tag +trash -- path:/.*/trash/
+notmuch tag +spam -- path:/.*/spam/
+
+notmuch tag +list -- path:/lists/.*/
+
+# tag emails sent to myself as todo
+notmuch tag +todo -inbox -sent -- tag:inbox and tag:sent
+
+# If file was moved out of folder on server remove respective tag
+notmuch tag -inbox -- not path:/.*/inbox/ and tag:inbox
+notmuch tag -trash -- not path:/.*/trash/ and tag:trash
+notmuch tag -spam -- not path:/.*/spam/ and tag:spam
+
+notmuch tag -new +inbox -- tag:new
