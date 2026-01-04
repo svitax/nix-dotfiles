@@ -28,8 +28,8 @@ Channel gmail-drafts
 Near ":gmail-local:drafts"
 Far ":gmail-remote:[Gmail]/Drafts"
 
-Channel gmail-all
-Near ":gmail-local:all"
+Channel gmail-archive
+Near ":gmail-local:archive"
 Far ":gmail-remote:[Gmail]/All Mail"
 
 Channel gmail-trash
