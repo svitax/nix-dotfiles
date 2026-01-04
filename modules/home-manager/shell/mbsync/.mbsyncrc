@@ -13,8 +13,8 @@ Account gmail
 
 MaildirStore gmail-local
 Subfolders Verbatim
-Path ~/mail/gmail/
-Inbox ~/mail/gmail/inbox
+Path ~/mail/igorbarale@gmail.com/
+Inbox ~/mail/igorbarale@gmail.com/inbox
 
 Channel gmail-inbox
 Near ":gmail-local:inbox"
