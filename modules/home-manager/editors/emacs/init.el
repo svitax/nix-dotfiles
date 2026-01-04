@@ -8244,6 +8244,8 @@ When inside a table, re-align the table and move to the next field."
       (add-hook hook #'pulsar-reveal-entry)))
 
   (bind-keys
+   :map global-map
+   ("C-c l" . org-store-link)
    ;; I don't like that Org binds one zillion keys, so if I want one for
    ;; something more important, I disable it from here.
    :map org-mode-map
@@ -9464,11 +9466,616 @@ BibTeX file."
 ;;;;;;;;;;;;;;;
 ;;;; email ;;;;
 
-;; TODO consult-notmuch <https://codeberg.org/jao/consult-notmuch>
-;; (use-package consult-notmuch)
+;; Email inside of Emacs is one of the best changes I have ever made to my
+;; workflow. I consider it far better than the `mutt' setup I once had. The
+;; benefits are down to the interconnectedness of the Emacs environment. All
+;; text editing capabilities are available. Same for buffer navigation. Same for
+;; themes and fonts. Then we have integration with `org-capture' to quickly
+;; produce a task that shows up on the Org agenda and has a link back to the
+;; original email. And there is also the seamless connection between Emacs and
+;; GPG, so any encrypted file/email is decrypted behind the scenes with us
+;; experiencing it as every other regular file. Fantastic stuff!
+
+(use-package auth-source
+  ;; Emacs reads login credentials from the list of files specified in the user
+  ;; option `auth-sources'. This is not limited to emails, mind you, as we can
+  ;; have credentials such as for running `sudo' via TRAMP or logging in to IRC
+  ;; with the `rcirc' command.
+  :config
+  ;; Here I enable the `pass' storage backend, which makes sure password-store
+  ;; is added to the auth-sources. There is a useful function to get a password
+  ;; from the password store which also follows the recommended conventions for
+  ;; multiple fields in a pass file:
+  ;;
+  ;;    (auth-source-pass-get 'secret "gmail-mbsync")
+  ;;
+  (auth-source-pass-enable)
+
+  ;; FIXME: The built-in `auth-source-pass-get' has an inconsistent API where
+  ;; the special key 'secret must be passed as a symbol, but all other keys
+  ;; (like "user") must be strings. This is because the password-store parser
+  ;; uses a symbol for the password but strings for metadata fields. I redefine
+  ;; the function here to accept both symbols and strings for any key by trying
+  ;; both forms, making the interface consistent.
+  (defun auth-source-pass-get (key entry)
+    "Return the value associated to KEY in the password-store entry ENTRY.
+
+ENTRY is the name of a password-store entry.
+The key used to retrieve the password is the symbol `secret'.
+
+The convention used as the format for a password-store file is
+the following (see URL `https://www.passwordstore.org/#organization'):
+
+secret
+key1: value1
+key2: value2"
+    (let* ((data (auth-source-pass-parse-entry entry)))
+      (or (auth-source-pass--get-attr key data)
+          (auth-source-pass--get-attr
+           (if (symbolp key) (symbol-name key) (intern key))
+           data))))
+
+  (setopt user-full-name "Igor Santos"
+          user-mail-address (auth-source-pass-get 'Username "gmail-mbsync")))
+
+(use-package message
+  ;; Across all Emacs mail clients that I have used (`gnus', `mu4e', and
+  ;; `notmuch') message composition is handled by the same built-in library:
+  ;; `message.el'. It produces a buffer with email headers at the top, followed
+  ;; by a separator line, and then the body of the message where we write what
+  ;; we want. The body can have a signature automatically appended to it.
+  ;;
+  ;; Between frictionless encryption and the ease of editing text in a message
+  ;; composition buffer, the email setup I have in Emacs is the most potent I
+  ;; have ever used.
+  :config
+
+  ;; Message buffers can integrate with the system's GPG agent to encrypt the
+  ;; current message. This is done by inserting a special MIME tag at the top of
+  ;; the message body. I do it by typing "C-c C-m C-e", which invokes the
+  ;; command (`mml-secure-message-sign-encrypt'). If the GPG agent is running
+  ;; and the password is already saved in the keyring, the message is sent
+  ;; encrypted without any further prompts (Emacs generally treats encrypted
+  ;; files transparently if everything is set up at the environment level).
+  (setopt mm-encrypt-option nil ; use 'guided for both if you need more control
+          mm-sign-option nil)
+
+  (setopt mml-secure-openpgp-encrypt-to-self t
+          mml-secure-openpgp-sign-with-sender t
+          mml-secure-smime-encrypt-to-self t
+          mml-secure-smime-sign-with-sender t)
+
+  ;; When replying to emails I receive, I normally comment inline by citing the
+  ;; original message. Concretely, this looks like this:
+  ;;
+  ;;    > Some text I am commenting on.
+  ;;
+  ;;    My comment on it.
+  ;;
+  ;; The settings I have for citing messages ensure that the top of the message
+  ;; includes the `From' and `Date' headers, so the original email that I am
+  ;; replying to looks like this in my message composition buffer:
+  ;;
+  ;;    > From: Some Name <name@domain.tld>
+  ;;    > Date: Tue, 9 Jan 2024 06:58:38 +0200
+  ;;    >
+  ;;    > Some text I am commenting on.
+  ;;
+  ;;    My comment on it.
+  ;;
+  ;; Check the documentation of the `format-time-string' function to understand
+  ;; how the date is defined in the user option `message-citation-line-format'.
+  (setopt
+   message-citation-line-function #'message-insert-formatted-citation-line
+   message-citation-line-format (concat "> From: %f\n"
+                                        "> Date: %a, %e %b %Y %T %z\n"
+                                        ">")
+   message-ignored-cited-headers "") ; default is "." for all headers
+
+  ;; When citing a portion of text, I do not need to include the entirety of it,
+  ;; but also the parts that are pertinent to the matter at hand. I thus
+  ;; frequently elide text by marking it and typing "C-c C-e"
+  ;; (`message-elide-region'). The `message-elide-ellipsis' I specify here turns
+  ;; the region into a cited snippet that references the line count, like:
+  ;;
+  ;;    > From: Some Name <name@domain.tld>
+  ;;    > Date: Tue, 9 Jan 2024 06:58:38 +0200
+  ;;    >
+  ;;    > Some text I am commenting on.
+  ;;
+  ;;    My comment on it.
+  ;;
+  ;;    > Something that shows lots of details I do not need to keep in place:
+  ;;    >
+  ;;    > [... 20 lines elided]
+  ;;
+  ;;    Another comment of mine here
+  (setopt message-elide-ellipsis "\n> [... %l lines elided]\n")
+
+  ;; To attach a file, type "C-c C-a" (`mml-attach-file'). This uses minibuffer
+  ;; completion to select a single file. An alternative is to use `dired' to
+  ;; produce a file listing, mark the relevant files, and attach them from
+  ;; there (`gnus-dired-mode').
+
+  ;; Once the message is done, type "C-c C-c" to send it. The exact command
+  ;; depends on the mail user agent. In my case, it is
+  ;; `notmuch-mua-send-and-exit'. By default, Emacs prompts for confirmation
+  ;; before sending out the message. I disable that by modifying
+  ;; `message-confirm-send'. Similarly, I prefer to delete the buffer of a sent
+  ;; message, so I change the value of `message-kill-buffer-on-exit'.
+  (setopt mail-user-agent 'message-user-agent
+          message-mail-user-agent t  ; use `mail-user-agent'
+          compose-mail-user-agent-warnings nil)
+
+  (add-hook 'message-setup-hook #'message-sort-headers)
+  (setopt mail-header-separator "--text follows this line--")
+
+  (setopt message-signature ""
+          mail-signature message-signature)
+
+  (setopt message-confirm-send nil
+          message-kill-buffer-on-exit t
+          message-wide-reply-confirm-recipients nil))
+
+(use-package gnus-dired
+  ;; The whole point of Emacs is to draw linkages between different specialised
+  ;; tools. One such case is to use the built-in file manager to select some
+  ;; files and attach them to the currently open message composition buffer. Do
+  ;; it by typing "C-c C-m C-a" (`gnus-dired-attach'). This also works without
+  ;; an open message composition buffer. In that case, it produces such a
+  ;; buffer, with the attachments in place. Though I usually have the message
+  ;; buffer in place before going to `dired' to find some attatchments.
+  ;;
+  ;; Note that the minor mode which sets up the relevant settings is called
+  ;; `gnus-dired-mode', although it does not require `gnus' and its numerous
+  ;; accoutrements.
+  :config
+  (add-hook 'dired-mode-hook #'turn-on-gnus-dired-mode))
+
+(use-package sendmail
+  ;; I use the external `msmtp' program to handle email sending, else to set up
+  ;; the Mail Transfer Agent (MTA). We need to tell Emacs to use the msmtp
+  ;; program, unless we compatibility layer to set the system's `sendmail'
+  ;; utility to msmtp.
+  ;;
+  ;; What I like about this approach is that I do not have to specify any login
+  ;; credentials in Emacs and can, in principle, define distinct authentication
+  ;; methods for different email accounts.
+  :config
+  (setopt sendmail-program (executable-find "msmtp")
+          send-mail-function #'sendmail-send-it
+          message-sendmail-envelope-from 'header))
+
+(use-package notmuch
+  ;; When we refer to `notmuch' we cover three distinct concepts:
+  ;;
+  ;; The command-line mail indexer
+  ;;    It produces a database out of our local mail directory. We can then
+  ;;    query the database to get to the email we are looking for.
+  ;;
+  ;; The Mail User Agent (MUA), else email client
+  ;;    It provides an Emacs interface to the aforementioned indexer. This MUA
+  ;;    also draws linkages between other programs, to write and send
+  ;;    messages. The user does not need to know that under the hood it is not
+  ;;    one "thing" that gets the job done, though this is how it appears prima
+  ;;    facile.
+  ;;
+  ;; The system package
+  ;;    Most `notumuch' system packages bundle the above two. In fact, the
+  ;;    indexer and the Emacs MUA are maintained in tandem by the same
+  ;;    developers.
+
+  :config
+  ;; To actually use the `notmuch' mail user agent, we need to specify (i) who
+  ;; we are and (ii) where should sent mail be directed to. This is that the
+  ;; user options `notmuch-identities' and `notmuch-fcc-dirs' are about.
+  ;;
+  ;; At any rate, the format of `notmuch-identities' is like this:
+  ;;
+  ;;    (setopt notmuch-identities '("My Fullname <someone@somewhere.com>"
+  ;;                                 "Nickname <just-my-nick@somewhere.com>"))
+  (setq notmuch-identities
+        '((format "%s <%s>"
+           user-full-name
+           (auth-source-pass-get 'Username "gmail-mbsync"))))
+
+  ;; While the corresponding `notmuch-fcc-dirs' map those accounts to the
+  ;; relative path of their local sent mail folder (it is relative to the root
+  ;; of the directory that `notmuch' indexes, so something like
+  ;; `~/mail/gmail/sent' needs to be written as `gmail/sent'). The data
+  ;; structure looks like this:
+  ;;
+  ;;    (setopt notmuch-fcc-dirs
+  ;;            '(("someone@somewhere.com" . "someone/sent")
+  ;;               "nickname@somewhere.com" . "nickname/sent"))
+  (setq notmuch-fcc-dirs `((,(auth-source-pass-get 'Username "gmail-mbsync")
+                            . "gmail/sent")))
+
+  ;; When we use the `notmuch' Emacs command to get into the mail user agent, we
+  ;; are presented in the "hello" buffer. It contains a set of pseudo-graphical
+  ;; widgets to check the available tags, view recent searches, perform a new
+  ;; search, and the like. I find it too busy and not useful, as all that
+  ;; functionality is already available directly with key bindings. Why navigate
+  ;; all the way to the search box when "s" (`notmuch-search') initiates a new
+  ;; search? As always, use "M-x describe-mode" (or type `C-h m') to learn about
+  ;; the keys and commands of the current major mode (as well as to check all
+  ;; the minor modes that are effective therein).
+  ;;
+  ;; My "hello" buffer is a single vertical listing of my saved searches. Those
+  ;; include the name of the search, such as `inbox', followed by a total
+  ;; message count. Everything else is removed. As such, the values of
+  ;; `notmuch-hello-recent-searches-max' and `notmuch-show-all-tags-list' are
+  ;; not relevant.
+  (setopt notmuch-show-logo nil
+          notmuch-column-control 1.0
+          notmuch-hello-auto-refresh t
+          notmuch-hello-recent-searches-max 20
+          notmuch-hello-thousands-separator ""
+          notmuch-hello-sections '(notmuch-hello-insert-saved-searches)
+          notmuch-show-all-tags-list t)
+
+  ;; The search buffers are the interface I work with the most. They provide a
+  ;; listing of all message threads that match the given search terms.
+  ;;
+  ;; Most of the configurations I have here are stylistic in nature. The one
+  ;; that defines necessary functionality is the value of the user option
+  ;; `notmuch-saved-searches'. The `:query' of those saved searches is what we
+  ;; would normally pass at the command line on the `notmuch search' invocation,
+  ;; or inside of the mail user agent by typing "s" (`notmuch-search').
+  (setopt notmuch-search-oldest-first nil
+          notmuch-search-result-format '(("date" . "%12s  ")
+                                         ("count" . "%-7s  ")
+                                         ("authors" . "%-20s  ")
+                                         ("subject" . "%-80s  ")
+                                         ("tags" . "(%s)"))
+          notmuch-tree-result-format '(("date" . "%12s  ")
+                                       ("authors" . "%-20s  ")
+                                       ((("tree" . "%s")
+                                         ("subject" . "%s"))
+                                        . " %-80s  ")
+                                       ("tags" . "(%s)"))
+          notmuch-search-line-faces '(("unread" . notmuch-search-unread-face)
+                                      ;; I disabled this because I add a
+                                      ;; cosmetic emoji via
+                                      ;; `notmuch-tag-formats'. This way I do
+                                      ;; not get an intense style which is very
+                                      ;; distracting when I filter my mail to
+                                      ;; include this tag.
+                                      ;;
+                                      ;; ("flagged" . notmuch-search-flagged-face)
+                                      ;;
+                                      ;; Using italic instead is just
+                                      ;; fine. Though I also tried it without
+                                      ;; any face and I was okay with it. The
+                                      ;; upside of having a face is that you can
+                                      ;; identify the message even when the
+                                      ;; window is split and you don't see the
+                                      ;; tags.
+                                      ("flagged" . italic))
+          notmuch-show-empty-saved-searches t
+          notmuch-saved-searches `(( :name "💬 all unread (inbox)"
+                                     :query "tag:unread and tag:inbox"
+                                     :sort-order newest-first
+                                     :key ,(kbd "u"))
+                                   ( :name "📥 inbox"
+                                     :query "tag:inbox"
+                                     :sort-order newest-first
+                                     :key ,(kbd "i"))))
+
+  ;; Part of the value of using a mail indexer is the ability to tag
+  ;; messages. These help with data retrieval and filtering. For `notmuch', tags
+  ;; are a purely indexing construct, meaning that they are not written to the
+  ;; underlying file. An exception to this are the standard IMAP tags for
+  ;; read/unread, seen, attachments, and deleted (I think that's all, but please
+  ;; double check).
+  ;;
+  ;; The "+" or "-" prefix indicates whether a tag is added or removed from the
+  ;; list. The same characters work as key bindings in all `notmuch' buffers to
+  ;; bring up a minibuffer interface for adding/removing tags. This interface
+  ;; accetps multiple entries, so even if we start with a "-" we can still
+  ;; continue with an addition.
+  ;;
+  ;; Otherwise, tagging operations follow a predefined scheme, specified in the
+  ;; user option `notmuch-tagging-keys'.
+  (setopt notmuch-message-replied-tags '("+replied")
+          notmuch-message-forwarded-tags '("+forwarded")
+          notmuch-show-mark-read-tags '("-unread")
+          notmuch-draft-tags '("+draft")
+          notmuch-draft-folder "drafts"
+          notmuch-draft-save-plaintext 'ask)
+
+  (defcustom +notmuch-delete-tag "deleted"
+    "Single tag that applies to mail marked for deletion.
+This is used by `+notmuch-delete-mail'.")
+
+  (defcustom +notmuch-mark-delete-tags
+    `(,(format "+%s" +notmuch-delete-tag) "-inbox" "-unread")
+    "List of tags to mark for deletion.
+To actually delete email, refer to `+notmuch-delete-mail'."
+    :type '(repeat string)
+    :group 'notmuch)
+
+  (defcustom +notmuch-mark-trash-tags '("+trash" "-unread" "-inbox")
+    "List of tags to mark as trash."
+    :type '(repeat string)
+    :group 'notmuch)
+
+  (defcustom +notmuch-mark-flag-tags '("+flag" "-unread")
+    "List of tags to mark as important (flagged).
+This gets the `notmuch-tag-flagged' face, if that is specified in
+`notmuch-tag-formats'."
+    :type '(repeat string)
+    :group 'notmuch)
+
+  (defcustom +notmuch-mark-spam-tags '("+spam" "-inbox" "-unread")
+    "List of tags to mark as spam."
+    :type '(repeat string)
+    :group 'notmuch)
+
+  (defcustom +notmuch-mark-todo-tags '("+todo" "-unread")
+    "List of tags to mark as todo."
+    :type '(repeat string)
+    :group 'notmuch)
+
+  ;; All emojis are cosmetic. The tags are just the text: I would not like to
+  ;; input emoji for searching.
+  (setq notmuch-tag-formats
+        '(("unread" (propertize tag 'face 'notmuch-tag-unread))
+          ("flag" (propertize tag 'face 'notmuch-tag-flagged)
+           (concat tag "🚩"))
+          ("todo" (propertize tag 'face 'notmuch-tag-flagged)
+           (concat tag "📋"))
+          ("encrypted" (concat tag "🔒"))
+          ("attachment" (concat tag "📎")))
+        notmuch-tag-deleted-formats
+        '(("unread" (notmuch-apply-face bare-tag 'notmuch-tag-deleted)
+           (concat "👁️‍🗨️" tag))
+          (".*" (notmuch-apply-face tag 'notmuch-tag-deleted)
+           (concat "🚫" tag)))
+        notmuch-tag-added-formats
+        '(("deleted" (notmuch-apply-face tag 'notmuch-tag-added)
+           (concat "💥" tag))
+          ("trashed" (notmuch-apply-face tag 'notmuch-tag-added)
+           (concat "🗑️" tag))
+          ("todo" (notmuch-apply-face tag 'notmuch-tag-added)
+           (concat "📋" tag))
+          (".*" (notmuch-apply-face tag 'notmuch-tag-added)
+           (concat "🏷️" tag))))
+
+  ;; These are for the actions that are available after pressing 'k'
+  ;; (`notmuch-tag-jump'). For direct actions, refer to the key bindings below.
+  (setopt notmuch-tagging-keys
+          `((,(kbd "d") +notmuch-mark-trash-tags "🗑️ Mark as trash")
+            (,(kbd "D") +notmuch-mark-delete-tags "💥 Mark for deletion")
+            (,(kbd "f") +notmuch-mark-flag-tags "🚩 Flag as important")
+            (,(kbd "s") +notmuch-mark-spam-tags "🔥 Mark as spam")
+            (,(kbd "T") +notmuch-mark-todo-tags "📋 Mark as todo")
+            (,(kbd "r") ("-unread") "👁️‍🗨️ Mark as read")
+            (,(kbd "u") ("+unread") "🗨️ Mark as unread")))
+
+  ;; Most of the settings here are stylistic. I would not mind having them
+  ;; differently. They are complementary to those germane to the built-in
+  ;; `message.el'.
+  ;;
+  ;; The `notmuch-mua-attachment-regexp' is a neat little helper to prevent me
+  ;; from sending out a message without its stipulated attachment. It can give
+  ;; false positives, as I may write something that is about "emotional
+  ;; attachment", but on the balance I do like being asked for confirmation
+  ;; where needed.
+  (setopt notmuch-mua-compose-in 'current-window
+          notmuch-mua-hidden-headers nil
+          notmuch-address-command 'internal
+          notmuch-address-use-company nil
+          notmuch-always-prompt-for-sender t
+          notmuch-mua-cite-function 'message-cite-original-without-signature
+          notmuch-mua-reply-insert-header-p-function 'notmuch-show-reply-insert-header-p-never
+          notmuch-mua-user-agent-function nil
+          notmuch-maildir-use-notmuch-insert t
+          notmuch-crypto-process-mime t
+          notmuch-crypto-get-keys-asynchronously t
+          notmuch-mua-attachment-regexp  ; see `notmuch-mua-send-hook'
+          (concat "\\b\\(attache\?ment\\|attached\\|attach\\)\\b"))
+
+  (with-eval-after-load 'message
+    (defun +notmuch-message-tab ()
+      "Override for `message-tab' to enforce header line check.
+More specifically, perform address completion on a relevant header line,
+because `message-tab' sometimes (not sure when/how) fails to do that and
+instead tries to complete against dictionary entries."
+      (interactive nil message-mode)
+      (cond
+       ((save-excursion
+          (goto-char (line-beginning-position))
+          (looking-at notmuch-address-completion-headers-regexp))
+        (notmuch-address-expand-name)
+        ;; Completion was performed; nothing else to do.
+        nil)
+       (message-tab-body-function (funcall message-tab-body-function))
+       (t (funcall (or (lookup-key text-mode-map "\t")
+                       (lookup-key global-map "\t")
+                       'indent-relative)))))
+
+    (advice-add #'message-tab :override #'+notmuch-message-tab))
+
+  ;; Some simple tweaks here to get the presentation I like while reading
+  ;; messages. Everything here is valuable to me, though note the "wash"
+  ;; parts. Those pertain to a behavior where long quotes are hidden behind a
+  ;; button. The idea is to hide most of the text and reveal it on demand. I
+  ;; never want that: if there is a long section of text there, I need to see it.
+  ;;
+  ;; Nothe that the presentation of HTML messages is affected by the state of
+  ;; the built-in Simple HTML Renderer (`shr'). Concretely, there is the
+  ;; `shr-use-colors' option, which I disable because I do not want hardcoded
+  ;; values to mess up my theme. As such, newsletters, receipts, etc., which are
+  ;; usually rendered on a white background will be dark while using a dark
+  ;; theme. This is considerably nicer.
+  (setopt notmuch-show-relative-dates t
+          notmuch-show-all-multipart/alternative-parts nil
+          notmuch-show-indent-messages-width 0
+          notmuch-show-indent-multipart nil
+          notmuch-show-part-button-default-action 'notmuch-show-view-part
+          notmuch-show-text/html-blocked-images "." ; block everything
+          notmuch-wash-wrap-lines-length 120
+          notmuch-unthreaded-show-out nil
+          notmuch-message-headers '("To" "Cc" "Subject" "Date")
+          notmuch-message-headers-visible t)
+
+  (let ((count most-positive-fixnum)) ; I don't like the buttonisation of long quotes
+    (setq notmuch-wash-citation-lines-prefix count
+          notmuch-wash-citation-lines-suffix count))
+
+  ;; Here I set up the following:
+  ;;
+  ;; - Remind me when I am mentioning an attachment but do not include one.
+  ;;   This is done by reading the contents of the message in search for the
+  ;;   `notmuch-mua-attachment-regexp'.
+  ;;
+  ;; - Do not use a `header-line' when showing a message. It adds visual
+  ;;   clutter.
+  ;;
+  ;; - Do not activate `notmuch-hl-line-mode' because I want the generic
+  ;;   `hl-line-mode' to take effect instead. This is because I use the `lin'
+  ;;   package to remap buffer-locally the line highlight to be a bit more
+  ;;   noticeable in major modes where line selection is the main action.
+  ;;
+  ;; - Define key bindings that make sense to me. The most important change here
+  ;;   is the flipped meaning of the `r' and `R' keys, as I want to reply to all
+  ;;   recipients by default. I also define a few useful extra commands to
+  ;;   quickly perform a tagging operation, such as to mark a message for
+  ;;   deletion and remove it from the inbox.
+
+  (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check) ; also see ; `notmuch-mua-attachment-regexp'
+  (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
+  (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
+  (remove-hook 'notmuch-search-hook #'notmuch-hl-line-mode)
+
+  (defmacro +notmuch-search-tag-thread (name tags)
+    "Produce NAME function parsing TAGS."
+    (declare (indent defun))
+    `(defun ,name (&optional untag beg end)
+      ,(format
+        "Mark with `%s' the currently selected thread.
+
+Operate on each message in the currently selected thread. With optional BEG and
+END as points delimiting a region that encompasses multiple threads, operate on
+all those messages instead.
+
+With optional prefix argument (\\[universal-argument]) as UNTAG, reverse the
+application of the tags.
+
+This function advances to the next thread when finished."
+        tags)
+      (interactive (cons current-prefix-arg (notmuch-interactive-region)))
+      (when ,tags
+       (notmuch-search-tag
+        (notmuch-tag-change-list ,tags untag) beg end))
+      (when (eq beg end)
+       (notmuch-search-next-thread))))
+
+  (+notmuch-search-tag-thread +notmuch-search-delete-thread
+    +notmuch-mark-delete-tags)
+
+  (+notmuch-search-tag-thread +notmuch-search-trash-thread
+    +notmuch-mark-trash-tags)
+
+  (+notmuch-search-tag-thread +notmuch-search-flag-thread
+    +notmuch-mark-flag-tags)
+
+  (+notmuch-search-tag-thread +notmuch-search-spam-thread
+    +notmuch-mark-spam-tags)
+
+  (defmacro +notmuch-show-tag-message (name tags)
+    "Produce NAME function parsing TAGS."
+    (declare (indent defun))
+    `(defun ,name (&optional untag)
+      ,(format
+        "Apply `%s' to message.
+
+With optional prefix argument (\\[universal-argument]) as UNTAG,
+reverse the application of the tags."
+        tags)
+      (interactive "P")
+      (when ,tags
+       (apply 'notmuch-show-tag-message
+        (notmuch-tag-change-list ,tags untag)))))
+
+  (+notmuch-show-tag-message +notmuch-show-delete-message
+    +notmuch-mark-delete-tags)
+
+  (+notmuch-show-tag-message +notmuch-show-trash-message
+    +notmuch-mark-trash-tags)
+
+  (+notmuch-show-tag-message +notmuch-show-flag-message
+    +notmuch-mark-flag-tags)
+
+  (+notmuch-show-tag-message +notmuch-show-spam-message
+    +notmuch-mark-spam-tags)
+
+  (defun +notmuch-refresh-buffer (&optional arg)
+    "Run `notmuch-refresh-this-buffer'.
+With optional prefix ARG (\\[universal-argument]) call
+`notmuch-refresh-all-buffers'."
+    (interactive "P")
+    (if arg
+        (notmuch-refresh-all-buffers)
+      (notmuch-refresh-this-buffer)))
+
+  (defun +notmuch-delete-mail ()
+    "Permanently delete mail marked as `+notmuch-delete-mail'.
+Prompt for confirmation before carrying out the operation.
+
+Do not attempt to refresh the index.  This will be done upon the
+next invocation of 'notmuch new'."
+    (interactive)
+    (let* ((del-tag +notmuch-delete-tag)
+           (count
+            (string-to-number
+             (with-temp-buffer
+               (shell-command
+                (format "notmuch count tag:%s" +notmuch-delete-tag) t)
+               (buffer-substring-no-properties (point-min) (1- (point-max))))))
+           (mail (if (> count 1) "mails" "mail")))
+      (unless (> count 0)
+        (user-error "No mail marked as `%s'" del-tag))
+      (when (yes-or-no-p
+             (format "Delete %d %s marked as `%s'?" count mail del-tag))
+        (shell-command
+         (format "notmuch search --output=files --format=text0 tag:%s | xargs -r0 rm" del-tag)
+         t))))
+
+  (bind-keys :map global-map
+             ("C-c m" . notmuch)
+             :map +prefix-map
+             ("m" . notmuch-mua-new-mail)
+             :map notmuch-hello-mode-map
+             ("n" . widget-forward)
+             ("p" . widget-backward)
+             :map notmuch-search-mode-map
+             ;; I normally don't use the tree view, otherwise check
+             ;; `notmuch-tree-mode-map'
+             ("d" . +notmuch-search-trash-thread)
+             ("D" . +notmuch-search-delete-thread)
+             ("g" . +notmuch-refresh-buffer)
+             ("r" . notmuch-search-reply-to-thread) ; easier to reply to all by default
+             ("R" . notmuch-search-reply-to-thread-sender)
+             ("S" . +notmuch-search-spam-thread)
+             ("/" . notmuch-search-filter) ; alias for "l"
+             :map notmuch-show-mode-map
+             ("SPC" . notmuch-show-advance)
+             ("S-SPC" . notmuch-show-rewind)
+             ("d" . +notmuch-show-trash-message)
+             ("D" . +notmuch-show-delete-message)
+             ("r" . notmuch-show-reply-to-thread) ; easier to reply to all by default
+             ("R" . notmuch-show-reply-to-thread-sender)
+             ("S" . +notmuch-show-spam-message)))
+
+(use-package consult-notmuch
+  :config
+  (bind-keys :map +search-prefix-map
+             ("m" . consult-notmuch)
+             ("M-m" . consult-notmuch)))
 
 (use-package ol-notmuch
-  :disabled t
   ;; It can be useful to include links to e-mail messages or search queries in
   ;; your Org files. `ol-notmuch' supports this. In simple terms, this package
   ;; provides glue code between Notmuch and Org capture that allows me to create

@@ -141,6 +141,9 @@ in
               saveplace-pdf-view
               nov
               tmr
+              notmuch
+              consult-notmuch
+              ol-notmuch
               shr-tag-pre-highlight
               elpher
               # leetcode
