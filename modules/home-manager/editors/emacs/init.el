@@ -798,12 +798,13 @@ to produce the opposite effect of `fill-paragraph' and `fill-region'."
     "Enable `visual-line-mode' and disable `auto-fill-mode' in the current
 buffer."
     :global nil
-    (if +auto-fill-or-visual-line-mode
+    (if visual-line-mode
         (progn
-          (auto-fill-mode -1)
-          (visual-line-mode 1))
-      (auto-fill-mode 1)
-      (visual-line-mode -1)))
+          (auto-fill-mode 1)
+          (visual-line-mode -1))
+      (progn
+        (auto-fill-mode -1)
+        (visual-line-mode 1))))
 
   (setopt fill-column 80)
 
