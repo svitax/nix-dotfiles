@@ -831,7 +831,8 @@ buffer."
   (dolist (mode '(help-mode-hook
                   helpful-mode-hook
                   Custom-mode-hook
-                  epa-info-mode-hook))
+                  epa-info-mode-hook
+                  message-mode-hook))
     (add-hook mode #'visual-line-mode))
 
   (add-hook 'visual-line-mode-hook #'visual-fill-column-for-vline))
