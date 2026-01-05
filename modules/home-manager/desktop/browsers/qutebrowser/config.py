@@ -191,10 +191,10 @@ c.bindings.commands['normal'] = {
     '<ctrl-r>': 'cmd-set-text ?',
 
     # Hinting
-    '<alt-j>': 'hint all',
+    '<ctrl-j>': 'hint all',
     '<ctrl-alt-j>': 'hint all tab',
 
-    '<alt-o>': 'hint links spawn --detach umpv {hint-url}',
+    '<ctrl-alt-.>': 'hint links spawn --detach umpv {hint-url}',
     '<alt-.>': 'spawn --detach umpv {url}',
     # '<alt-o>': 'hint links spawn --detach umpv --force-window yes {hint-url}',
     # '<alt-.>': 'spawn --detach umpv --force-window yes {url}',
@@ -216,11 +216,11 @@ c.bindings.commands['normal'] = {
 
     '<ctrl-x>u': 'undo --window',
 
-    # '<alt-o>': 'tab-focus last',
+    '<alt-o>': 'tab-focus last',
 
     # History
-    '<alt-n>': 'forward',
-    '<alt-p>': 'back',
+    '<ctrl-alt-,>': 'forward',
+    '<alt-,>': 'back',
     '<alt-r>': 'reload',
 
     # Numbers
