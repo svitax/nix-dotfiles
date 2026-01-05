@@ -9610,7 +9610,7 @@ key2: value2"
   (add-hook 'message-setup-hook #'message-sort-headers)
   (setopt mail-header-separator "--text follows this line--")
 
-  (setopt message-signature ""
+  (setopt message-signature nil
           mail-signature message-signature)
 
   (setopt message-confirm-send nil
@@ -9689,7 +9689,7 @@ key2: value2"
   ;;            '(("someone@somewhere.com" . "someone/sent")
   ;;               "nickname@somewhere.com" . "nickname/sent"))
   (setq notmuch-fcc-dirs `((,(auth-source-pass-get 'Username "gmail-mbsync")
-                            . "gmail/sent")))
+                            . "igorbarale@gmail.com/sent")))
 
   ;; When we use the `notmuch' Emacs command to get into the mail user agent, we
   ;; are presented in the "hello" buffer. It contains a set of pseudo-graphical
@@ -9835,7 +9835,7 @@ This gets the `notmuch-tag-flagged' face, if that is specified in
         notmuch-tag-added-formats
         '(("deleted" (notmuch-apply-face tag 'notmuch-tag-added)
            (concat "💥" tag))
-          ("trashed" (notmuch-apply-face tag 'notmuch-tag-added)
+          ("trash" (notmuch-apply-face tag 'notmuch-tag-added)
            (concat "🗑️" tag))
           ("todo" (notmuch-apply-face tag 'notmuch-tag-added)
            (concat "📋" tag))
@@ -10043,10 +10043,8 @@ next invocation of 'notmuch new'."
          (format "notmuch search --output=files --format=text0 tag:%s | xargs -r0 rm" del-tag)
          t))))
 
-  (bind-keys :map global-map
-             ("C-c m" . notmuch)
-             :map +prefix-map
-             ("m" . notmuch-mua-new-mail)
+  (bind-keys :map +prefix-map
+             ("m" . notmuch)
              :map notmuch-hello-mode-map
              ("n" . widget-forward)
              ("p" . widget-backward)
