@@ -21,4 +21,4 @@ notmuch tag -inbox -- not path:/.*/inbox/ and tag:inbox
 notmuch tag -trash -- not path:/.*/trash/ and tag:trash
 notmuch tag -spam -- not path:/.*/spam/ and tag:spam
 
-notmuch tag -new +inbox -- tag:new
+notmuch tag -new -- tag:new
