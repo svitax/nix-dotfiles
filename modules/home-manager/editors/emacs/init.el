@@ -9617,7 +9617,15 @@ key2: value2"
 
   (setopt message-confirm-send nil
           message-kill-buffer-on-exit t
-          message-wide-reply-confirm-recipients nil))
+          message-wide-reply-confirm-recipients nil)
+
+  (defun +message-display-newlines ()
+    (when (boundp 'whitespace-style)
+      (setq-local whitespace-style (append '(newline newline-mark))))
+    (whitespace-mode -1)
+    (whitespace-mode +1))
+
+  (add-hook 'message-mode-hook #'+message-display-newlines))
 
 (use-package gnus-dired
   ;; The whole point of Emacs is to draw linkages between different specialised
