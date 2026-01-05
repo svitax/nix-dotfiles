@@ -909,7 +909,12 @@ non-nil."
   ;; larger files. Since I only render trailing whitespace, empty lines, and tab
   ;; characters to draw attention to fix these mistakes, this ends up not
   ;; mattering as much.
-  (setopt whitespace-style '(face tabs tab-mark trailing empty))
+  (setopt whitespace-style '(face trailing tabs tab-mark lines-tail empty)
+          whitespace-display-mappings
+          '((space-mark   ?\     [?\u00B7]     [?.])
+            (space-mark   ?\xA0  [?\u00A4]     [?_])
+            (newline-mark ?\n    [?\u21A9 ?\n])
+            (tab-mark     ?\t    [?\u00BB ?\t] [?\\ ?\t])))
 
   ;; `whitespace-mode' provides the actions feature which allows us to
   ;; automatically run a series of actions after a buffer is written. I'm
