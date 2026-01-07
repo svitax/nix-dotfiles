@@ -10078,8 +10078,8 @@ next invocation of 'notmuch new'."
              ("S-SPC" . notmuch-show-rewind)
              ("d" . +notmuch-show-trash-message)
              ("D" . +notmuch-show-delete-message)
-             ("r" . notmuch-show-reply-to-thread) ; easier to reply to all by default
-             ("R" . notmuch-show-reply-to-thread-sender)
+             ("r" . notmuch-show-reply) ; easier to reply to all by default
+             ("R" . notmuch-show-reply-sender)
              ("S" . +notmuch-show-spam-message)))
 
 (use-package consult-notmuch
