@@ -2051,6 +2051,8 @@ first one. Else do `vertico-exit'."
              ("C-p" . +vertico-minimal-previous)
              ("C-v" . vertico-scroll-up)
              ("M-v" . vertico-scroll-down)
+             ("<next>" . vertico-scroll-up)
+             ("<prior>" . vertico-scroll-down)
              ("<down>" . +vertico-minimal-next)
              ("<up>" . +vertico-minimal-previous)
              ("C-l" . vertico-multiform-vertical)
