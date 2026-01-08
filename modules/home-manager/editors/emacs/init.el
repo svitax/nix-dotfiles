@@ -9559,6 +9559,9 @@ key2: value2"
           mml-secure-smime-encrypt-to-self t
           mml-secure-smime-sign-with-sender t)
 
+  ;; Automatically sign every email.
+  ;; (add-hook 'message-send-hook 'mml-secure-message-sign-pgpmime)
+
   ;; When replying to emails I receive, I normally comment inline by citing the
   ;; original message. Concretely, this looks like this:
   ;;
