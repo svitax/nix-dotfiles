@@ -1092,6 +1092,11 @@ TARGETS is a list like (\".h\" \".hh\")."
   ;; example, when a "git pull" modifies the file we are already displaying in a
   ;; buffer. Emacs thus automatically reverts the buffer to reflect the new file
   ;; contents.
+  (setopt auto-revert-remote-files nil ; this slows down tramp
+          auto-revert-verbose t ; show message when file changes
+          auto-revert-avoid-polling t ; use save signal
+          global-auto-revert-non-file-buffers t)
+
   (global-auto-revert-mode))
 
 (use-package recentf
