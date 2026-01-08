@@ -27,7 +27,7 @@ in
       };
       Service = {
         Type = "oneshot";
-        ExecStart = "${pkgs.isync}/bin/mbsync -a";
+        ExecStart = "${pkgs.isync}/bin/mbsync -Va";
         ExecStartPost = "${pkgs.notmuch}/bin/notmuch new";
       };
     };
