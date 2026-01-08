@@ -30,6 +30,9 @@ in
         ExecStart = "${pkgs.isync}/bin/mbsync -Va";
         ExecStartPost = "${pkgs.notmuch}/bin/notmuch new";
       };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
     };
 
     systemd.user.timers.mbsync = {
