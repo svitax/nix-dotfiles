@@ -176,6 +176,9 @@ c.bindings.commands['normal'] = {
 
     '<ctrl-space>': 'mode-enter insert',
 
+    '<ctrl-shift-+>': 'zoom-in',
+    '<ctrl-->': 'zoom-out',
+
     # Opening links
     '<ctrl-l>': 'cmd-set-text -s :open',
     '<ctrl-shift-l>': 'cmd-set-text -s :open {url:pretty}',
