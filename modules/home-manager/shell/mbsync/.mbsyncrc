@@ -1,6 +1,12 @@
 Create Both
 Expunge Both
 SyncState *
+# by default (CopyArrivalDate no)
+# See:
+# https://wiki.archlinux.org/index.php/Isync#Emails_on_remote_server_have_the_wrong_date
+# https://rakhim.org/fastmail-setup-with-emacs-mu4e-and-mbsync-on-macos/
+# https://vxlabs.com/2021/03/21/mbsync-copyarrivaldate-yes/
+CopyArrivalDate yes
 
 IMAPAccount gmail
 Host imap.gmail.com
