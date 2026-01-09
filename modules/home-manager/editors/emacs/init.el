@@ -9467,6 +9467,9 @@ BibTeX file."
   ;; To view the running timers in a tabulated list, invoke the command
   ;; `tmr-tabulated-view'. From there, type `C-h m' (or M-x `describe-mode') to
   ;; learn about all the available commands and their respective key bindings.
+  (setopt tmr-timer-finished-functions
+          (remove 'tmr-sound-play tmr-timer-finished-functions))
+
   (bind-keys :map global-map
              ("C-c t" . tmr-prefix-map)))
 
