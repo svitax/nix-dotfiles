@@ -7452,16 +7452,9 @@ the `pydoc' module list before prompting."
 ;; TODO https://sr.ht/~p00f/hare-ts-mode/
 ;; (use-package hare-ts-mode)
 
-(use-package c-ts-mode
-  :lsp-ensure (c-ts-mode c++-ts-mode)
+(use-package cc-mode
   :config
-  ;; Make sure packages that try to use c-mode or c++-mode are redirected to
-  ;; c-ts-mode or c++-ts-mode
-  (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
-
-  (setopt c-ts-mode-indent-style 'k&r
-          c-ts-mode-indent-offset tab-width))
+  (setopt c-basic-offset tab-width))
 
 ;; (use-package geiser)
 
