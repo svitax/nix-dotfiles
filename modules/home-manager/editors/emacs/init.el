@@ -2027,7 +2027,10 @@ first one. Else do `vertico-exit'."
                                          (t ,@+vertico-multiform-minimal))
           vertico-multiform-commands `(("citar-\\(.*\\)"
                                         ,@+vertico-multiform-maximal)
-                                       ("+corfu-move-to-minibuffer"
+                                       (,(concat
+                                          "+corfu-move-to-minibuffer\\|"
+                                          "+compile-input-from-history\\|"
+                                          "consult-history")
                                         ,@+vertico-multiform-maximal))
           vertico-cycle t
           vertico-count 5)
