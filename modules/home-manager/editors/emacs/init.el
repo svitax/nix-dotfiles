@@ -5810,19 +5810,21 @@ designators specifying which revisions to compare."
   (bind-keys :map +prefix-map
              ("v" . vc-prefix-map)
              :map vc-prefix-map
-             ("c" . vc-prepare-patch)
+             ;; ("c" . vc-clone) ; Emacs 31
+             ("C" . vc-prepare-patch)
              ("d" . +vc-dir-dwim)
              ("e" . vc-ediff)
-             ("F" . vc-update) ; symmetric with P: `vc-push'
+             ("F" . vc-pull) ; symmetric with P: `vc-push'
              ("j" . +vc-dir-jump) ; similar to `dired-jump'
              ("k" . vc-delete-file) ; 'k' for kill==>delete is more common
              ("x" . nil) ; unmap `vc-delete-file'
              ("=" . +vc-diff-dwim) ; orig. `vc-diff'
              :map vc-dir-mode-map
-             ("c" . vc-prepare-patch)
-             ("d" . vc-diff) ; orig `vc-dir-clean-files', parallel to D: `vc-root-diff'
-             ("F" . vc-update) ; symmetric with P: `vc-push'
+             ;; ("c" . vc-clone) ; Emacs 31
+             ("C" . vc-prepare-patch)
+             ("F" . vc-pull) ; symmetric with P: `vc-push'
              ("k" . vc-dir-delete-file) ; 'k' for kill==>delete is more common
+             ("s" . vc-create-tag)
              ("=" . +vc-diff-dwim) ; orig. `vc-diff'
              :map vc-git-stash-shared-map
              ("k" . vc-git-stash-delete-at-point) ; symmetry with `vc-dir-delete-file'
