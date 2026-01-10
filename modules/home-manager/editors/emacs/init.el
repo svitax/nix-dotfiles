@@ -5753,6 +5753,27 @@ default, it is the symbol at point."
     (interactive)
     (vc-dir default-directory))
 
+  (defun +vc-dir-dwim (arg)
+    "Show VC status using `vc-dir-root' or `vc-dir'.
+
+Without a prefix argument, run `vc-dir-root', which shows the VC status
+for \"interesting\" files in and below the repository root directory.
+
+With prefix argument ARG (\\[universal-argument]), run `vc-dir',
+prompting for a directory. A second prefix argument causes `vc-dir' to prompt
+for the VC backend as well.
+
+See `vc-dir' and `vc-dir-root' for full details of the VC status buffer
+and available commands."
+    (interactive "P")
+    (cond ((null arg)
+           (call-interactively 'vc-dir-root))
+          ((equal arg '(4))
+           (let ((current-prefix-arg nil))
+             (call-interactively 'vc-dir)))
+          (t
+           (call-interactively 'vc-dir))))
+
   (defun +vc-diff-dwim (&optional historic)
     "Display diffs between file revisions or of buffer against file.
 Normally this compares the currently selected fileset with their working
@@ -5790,6 +5811,7 @@ designators specifying which revisions to compare."
              ("v" . vc-prefix-map)
              :map vc-prefix-map
              ("c" . vc-prepare-patch)
+             ("d" . +vc-dir-dwim)
              ("e" . vc-ediff)
              ("F" . vc-update) ; symmetric with P: `vc-push'
              ("j" . +vc-dir-jump) ; similar to `dired-jump'
