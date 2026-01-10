@@ -5753,6 +5753,17 @@ default, it is the symbol at point."
     (interactive)
     (vc-dir default-directory))
 
+  (defun +vc-diff-dwim (&optional historic)
+    "Display diffs between file revisions or of buffer against file.
+Normally this compares the currently selected fileset with their working
+revisions. With a prefix argument HISTORIC, it reads two revision
+designators specifying which revisions to compare."
+    (interactive)
+    (if-let* ((buffer (current-buffer))
+              (_ (buffer-modified-p buffer)))
+        (diff-buffer-with-file buffer)
+      (call-interactively #'vc-diff)))
+
   (setopt vc-follow-symlinks t
           vc-find-revision-no-save t
           vc-git-log-edit-summary-target-len 50
@@ -5784,11 +5795,13 @@ default, it is the symbol at point."
              ("j" . +vc-dir-jump) ; similar to `dired-jump'
              ("k" . vc-delete-file) ; 'k' for kill==>delete is more common
              ("x" . nil) ; unmap `vc-delete-file'
+             ("=" . +vc-diff-dwim) ; orig. `vc-diff'
              :map vc-dir-mode-map
              ("c" . vc-prepare-patch)
              ("d" . vc-diff) ; orig `vc-dir-clean-files', parallel to D: `vc-root-diff'
              ("F" . vc-update) ; symmetric with P: `vc-push'
              ("k" . vc-dir-delete-file) ; 'k' for kill==>delete is more common
+             ("=" . +vc-diff-dwim) ; orig. `vc-diff'
              :map vc-git-stash-shared-map
              ("k" . vc-git-stash-delete-at-point) ; symmetry with `vc-dir-delete-file'
              :map log-edit-mode-map
