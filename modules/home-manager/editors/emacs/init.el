@@ -8368,14 +8368,6 @@ When inside a table, re-align the table and move to the next field."
                ":CAPTURED: %U\n"
                ":END:\n\n"
                "%i"))
-            ;; See the `ol-notmuch' section for available template extensions.
-            ;; ("@" "Inbox [e-mail]" entry (file "20250110T181524--inbox.org")
-            ;;  ,(concat "* TODO Process %:subject :@mail:\n"
-            ;;           ":PROPERTIES:\n"
-            ;;           ":CAPTURED: %U\n"
-            ;;           ":END:\n\n"
-            ;;           "%a\n%i%?")
-            ;;  :empty-lines-after 1)
             ("m" "Meeting" entry (file+headline "20250111T062159--agenda.org"
                                   "Future")
              ,(concat "* %? :meeting:\n"
@@ -10169,7 +10161,16 @@ next invocation of 'notmuch new'."
   ;; Remember, if you define your own link types, any property you store with
   ;; `org-link-store-props' can be accessed in capture templates in a similar
   ;; way.
-  :after notmuch)
+  :after notmuch
+  :config
+  (add-to-list 'org-capture-templates
+               `("@" "Inbox [e-mail]" entry (file "20250110T181524--inbox.org")
+                 ,(concat "* TODO Process %:subject :mail:\n"
+                   ":PROPERTIES:\n"
+                   ":CAPTURED: %U\n"
+                   ":END:\n\n"
+                   "%a\n%i%?")
+                 :empty-lines-after 1)))
 
 ;;;;;;;;;;;;;;;
 ;;;; media ;;;;
