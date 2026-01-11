@@ -74,6 +74,7 @@ in
               fontaine
               # modus-themes
               pulsar
+              lin
               cursory
               highlight-numbers
               druid-modeline
