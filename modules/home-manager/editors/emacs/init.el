@@ -10229,12 +10229,11 @@ NO-DISPLAY is sent forward to `notmuch-search'."
   :config
   (add-to-list 'org-capture-templates
                `("@" "Inbox [e-mail]" entry (file "20250110T181524--inbox.org")
-                 ,(concat "* TODO Process %:subject :mail:\n"
+                 ,(concat "* TODO Process %a :mail:\n"
                    ":PROPERTIES:\n"
                    ":CAPTURED: %U\n"
-                   ":END:\n\n"
-                   "%a\n%i%?")
-                 :empty-lines-after 1)))
+                   ":END:\n"
+                   "%i%?"))))
 
 ;;;;;;;;;;;;;;;
 ;;;; media ;;;;
