@@ -10113,6 +10113,48 @@ next invocation of 'notmuch new'."
          (format "notmuch search --output=files --format=text0 tag:%s | xargs -r0 rm" del-tag)
          t))))
 
+  (defun +notmuch-search-get-from ()
+    "A helper function to find the email address for the given email.
+Assumes `notmuch-search-mode'."
+    (let ((notmuch-addr-sexp
+           (car (notmuch-call-notmuch-sexp "address"
+                                           "--format=sexp"
+                                           "--format-version=1"
+                                           "--output=sender"
+                                           (notmuch-search-find-thread-id)))))
+      (plist-get notmuch-addr-sexp :name-addr)))
+
+  (defun +notmuch-tree-get-from ()
+    "A helper function to find the email address for the given email.
+Assumes `notmuch-tree-mode'."
+    (plist-get (notmuch-tree-get-prop :headers) :From))
+
+  (defun +notmuch-get-from ()
+    "Find the From email address for the email at point."
+    (car (notmuch-clean-address (cond ((eq major-mode 'notmuch-show-mode)
+                                       (notmuch-show-get-from))
+                                      ((eq major-mode 'notmuch-tree-mode)
+                                       (+notmuch-tree-get-from))
+                                      ((eq major-mode 'notmuch-search-mode)
+                                       (+notmuch-search-get-from))
+                                      (t nil)))))
+
+  (defun +notmuch-filter-by-from ()
+    "Filter the current search view to show all emails sent from the sender of
+the current thread."
+    (interactive)
+    (notmuch-search-filter (concat "from:" (+notmuch-get-from))))
+
+  (defun +notmuch-search-by-from (&optional no-display)
+    "Show all emails sent from the sender of the current thread.
+NO-DISPLAY is sent forward to `notmuch-search'."
+    (interactive)
+    (notmuch-search (concat "from:" (+notmuch-get-from))
+                    notmuch-search-oldest-first
+                    nil
+                    nil
+                    no-display))
+
   (bind-keys :map +prefix-map
              ("m" . notmuch)
              :map notmuch-hello-mode-map
@@ -10124,10 +10166,12 @@ next invocation of 'notmuch new'."
              ("d" . +notmuch-search-trash-thread)
              ("D" . +notmuch-search-delete-thread)
              ("g" . +notmuch-refresh-buffer)
+             ("L" . +notmuch-filter-by-from)
              ("r" . notmuch-search-reply-to-thread) ; easier to reply to all by default
              ("R" . notmuch-search-reply-to-thread-sender)
              ("S" . +notmuch-search-spam-thread)
              ("/" . notmuch-search-filter) ; alias for "l"
+             (";" . +notmuch-search-by-from)
              :map notmuch-show-mode-map
              ("SPC" . notmuch-show-advance)
              ("S-SPC" . notmuch-show-rewind)
