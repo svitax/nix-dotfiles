@@ -10165,6 +10165,7 @@ NO-DISPLAY is sent forward to `notmuch-search'."
              ;; `notmuch-tree-mode-map'
              ("d" . +notmuch-search-trash-thread)
              ("D" . +notmuch-search-delete-thread)
+             ("F" . +notmuch-search-flag-thread)
              ("g" . +notmuch-refresh-buffer)
              ("L" . +notmuch-filter-by-from)
              ("r" . notmuch-search-reply-to-thread) ; easier to reply to all by default
@@ -10177,6 +10178,7 @@ NO-DISPLAY is sent forward to `notmuch-search'."
              ("S-SPC" . notmuch-show-rewind)
              ("d" . +notmuch-show-trash-message)
              ("D" . +notmuch-show-delete-message)
+             ("F" . +notmuch-show-flag-message)
              ("r" . notmuch-show-reply) ; easier to reply to all by default
              ("R" . notmuch-show-reply-sender)
              ("S" . +notmuch-show-spam-message)))
