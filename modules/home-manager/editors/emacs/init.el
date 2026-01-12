@@ -10173,6 +10173,7 @@ NO-DISPLAY is sent forward to `notmuch-search'."
              ("S" . +notmuch-search-spam-thread)
              ("/" . notmuch-search-filter) ; alias for "l"
              (";" . +notmuch-search-by-from)
+             ("S-SPC" . notmuch-search-scroll-down)
              :map notmuch-show-mode-map
              ("SPC" . notmuch-show-advance)
              ("S-SPC" . notmuch-show-rewind)
