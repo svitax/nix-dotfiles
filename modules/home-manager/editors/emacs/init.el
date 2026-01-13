@@ -9300,8 +9300,8 @@ word to search."
   (setopt dictionary-server "localhost"
           dictionary-use-single-buffer t)
 
-  (bind-keys :map help-map
-             ("C-d" . +dictionary-search-dwim)))
+  (bind-keys :map global-map
+             ("M-#" . +dictionary-search-dwim)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;;;; bibliography ;;;;
