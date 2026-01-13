@@ -96,9 +96,10 @@
 ;;   ;; (use-package bookmark
 ;;   ;;   :xdg-state
 ;;   ;;   (bookmark-default-file "bookmarks.eld"))
-;;   ;; 1. On load of 'bookmark', create an $XDG_STATE_HOME/emacs/bookmark directory
-;;   ;;    if it doesn't already exist.
-;;   ;; 2. Set `bookmark-default-file' to $XDG_STATE_HOME/emacs/bookmark/bookmark.eld
+;;   ;; 1. On load of 'bookmark', create an $XDG_STATE_HOME/emacs/bookmark
+;;   ;;    directory if it doesn't already exist.
+;;   ;; 2. Set `bookmark-default-file' to
+;;   ;;    $XDG_STATE_HOME/emacs/bookmark/bookmark.eld
 ;;   )
 
 ;;;;;;;;;;;;;;
@@ -234,7 +235,8 @@ Examples:
            (global (plist-get args :global))
            (project (intern (format "+project-%s" name)))
            (project-doc (or (plist-get args :project-doc)
-                            (format "Start %s in the current project's root." name)))
+                            (format "Start %s in the current project's root."
+                                    name)))
            (pop (intern (format "+%s-pop-to-buffer" name)))
            (pop-doc (or (plist-get args :pop-doc)
                         (format "Switch to %s process buffer.
@@ -573,11 +575,12 @@ With prefix argument ARG, prompt for a directory."
 (use-package cursory
   :config
   ;; Cursory provides a thin wrapper around built-in variables that affect the
-  ;; style of the Emacs cursor on graphical terminals. The intent is to allow the
-  ;; user to define preset configurations such as 'block with slow blinking' or
-  ;; 'bar with fast blinking' and set them on demand. The use-case for such
-  ;; presets is to adapt to evolving interface requirements and concomitant levels
-  ;; of expected comfort, such as in the difference between writing and reading.
+  ;; style of the Emacs cursor on graphical terminals. The intent is to allow
+  ;; the user to define preset configurations such as 'block with slow blinking'
+  ;; or 'bar with fast blinking' and set them on demand. The use-case for such
+  ;; presets is to adapt to evolving interface requirements and concomitant
+  ;; levels of expected comfort, such as in the difference between writing and
+  ;; reading.
   (cursory-set-preset (or (cursory-restore-latest-preset) 'box-no-blink))
   (cursory-mode 1)
   (bind-keys :map +toggle-prefix-map
@@ -1676,11 +1679,12 @@ If PATH is a file, open its parent directory and move point to the file."
   ;; emacs).
   ;;
   ;; In Emacs, completion encompasses user interfaces that show the available
-  ;; candidates (the likely options) right away, as well as provide more advanced
-  ;; capabilities for storing the history of previous inputs, displaying helpful
-  ;; annotations next to each candidate, and "completion styles" to control how
-  ;; user input is matched to candidates. Because we use the minibuffer for most
-  ;; common interactions, completion is an integral part of any setup.
+  ;; candidates (the likely options) right away, as well as provide more
+  ;; advanced capabilities for storing the history of previous inputs,
+  ;; displaying helpful annotations next to each candidate, and "completion
+  ;; styles" to control how user input is matched to candidates. Because we use
+  ;; the minibuffer for most common interactions, completion is an integral part
+  ;; of any setup.
 
   ;; The `completion-styles' are pattern matching algorithms. They interpret
   ;; input and match candidates accordingly.
@@ -1763,8 +1767,9 @@ If PATH is a file, open its parent directory and move point to the file."
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
   ;; Make it so prompts where more than one candidate can be provided using
   ;; completion show an indicator about this fact. Each candidate is separated
-  ;; by the `crm-separator'. We display [`completing-read-multiple': <separator>],
-  ;; e.g., [`completing-read-multiple': ,] if the separator is a comma.
+  ;; by the `crm-separator'. We display [`completing-read-multiple':
+  ;; <separator>], e.g., [`completing-read-multiple': ,] if the separator is a
+  ;; comma.
   ;; (setq crm-prompt (format "%s %%p" (propertize "[%d]" 'face 'shadow))) ; Emacs 31
   (defun crm-indicator (args)
     (cons (format "[`completing-read-multiple': %s]  %s"
@@ -1927,10 +1932,10 @@ If PATH is a file, open its parent directory and move point to the file."
   :config
   (vertico-mode)
   (vertico-multiform-mode)
-  ;; I don't like it when the minibuffer shows up eagerly. I find it disorienting
-  ;; and motion sickness inducing when there are many things jumping around on my
-  ;; screen at once, such as when the minibuffer constantly resizes itself or
-  ;; pushes my windows around.
+  ;; I don't like it when the minibuffer shows up eagerly. I find it
+  ;; disorienting and motion sickness inducing when there are many things
+  ;; jumping around on my screen at once, such as when the minibuffer constantly
+  ;; resizes itself or pushes my windows around.
   ;;
   ;; The "multiform" mechanism of the `vertico' package allows us to change the
   ;; layout on a per-command or per-category basis. We can use this mechanism to
@@ -3313,8 +3318,8 @@ split."
 ;; (use-package otpp
 ;;   :config
 ;;   (otpp-mode 1)
-;;   ;; I want to advice the commands in `otpp-override-commands' to be run in the
-;;   ;; current tab's root directory.
+;;   ;; I want to advice the commands in `otpp-override-commands' to be run in
+;;   ;; the current tab's root directory.
 ;;   (otpp-override-mode 1))
 
 ;; TODO: document bufferlo <https://github.com/florommel/bufferlo>
@@ -3659,25 +3664,26 @@ end of the buffer.")
 ;; TODO dumbjump
 
 (use-package avy
-  ;; The `avy' package lets you select a location on the screen to move the cursor
-  ;; to. It does so by producing an overlay with characters that need to be typed
-  ;; to specify the location. By default, the overlay covers the candidate, though
-  ;; I change the `avy-style' to have it appear as a prefix instead.
+  ;; The `avy' package lets you select a location on the screen to move the
+  ;; cursor to. It does so by producing an overlay with characters that need to
+  ;; be typed to specify the location. By default, the overlay covers the
+  ;; candidate, though I change the `avy-style' to have it appear as a prefix
+  ;; instead.
   ;;
   ;; There are several commands on offer which narrow down the candidates. My
-  ;; favorite is `avy-goto-char-timer' (closely followed by `avy-goto-char-2' and
-  ;; `avy-goto-word-1'). It prompts for a character and then has a time window
-  ;; lasting `avy-timeout-seconds' during which it can read more characters. Once
-  ;; Avy receives the input, it overlays every word that contains those characters
-  ;; in succession. By default if there is a single match, it jumps directly to
-  ;; it.
+  ;; favorite is `avy-goto-char-timer' (closely followed by `avy-goto-char-2'
+  ;; and `avy-goto-word-1'). It prompts for a character and then has a time
+  ;; window lasting `avy-timeout-seconds' during which it can read more
+  ;; characters. Once Avy receives the input, it overlays every word that
+  ;; contains those characters in succession. By default if there is a single
+  ;; match, it jumps directly to it.
   ;;
   ;; Avy has the ability to act on the candidate rather than simply jump to
   ;; it. Karthik Chikmagalur has a comprehensive essay on the matter, which I
   ;; consider essential reading for anyone wanting to make best use of this
-  ;; package: https://karthinks.com/software/avy-can-do-anything/ (2021-10-21). I
-  ;; still am not sure whether I need all that power though, as in my workflow I
-  ;; jump to a point and then invoke `embark-act'.
+  ;; package: https://karthinks.com/software/avy-can-do-anything/
+  ;; (2021-10-21). I still am not sure whether I need all that power though, as
+  ;; in my workflow I jump to a point and then invoke `embark-act'.
   :config
   (setopt avy-keys '(?n ?r ?t ?s ?h ?a ?e ?i ?g ?y) ; Graphite keyboard layout
           avy-timeout-seconds 0.27
@@ -3765,11 +3771,11 @@ end of the buffer.")
 
 (use-package logos
   ;; This package provides a simple approach to setting up a "focus mode". It
-  ;; uses the `page-delimiter' (typically `^L') or the outline together with some
-  ;; commands to move between pages whether narrowing is in effect or not. It
-  ;; also provides some optional aesthetic tweaks which come into effect when
-  ;; the buffer-local `logos-focus-mode' is enabled. The manual shows how to
-  ;; extend the code to achieve the desired result.
+  ;; uses the `page-delimiter' (typically `^L') or the outline together with
+  ;; some commands to move between pages whether narrowing is in effect or
+  ;; not. It also provides some optional aesthetic tweaks which come into effect
+  ;; when the buffer-local `logos-focus-mode' is enabled. The manual shows how
+  ;; to extend the code to achieve the desired result.
   ;;
   ;; I use `logos' to do video presentations that involve "slides". Each
   ;; heading/section becomes its own "slide" simply by narrowing to it.
@@ -5458,7 +5464,7 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
         (funcall helpful-switch-buffer-function buf)
       (user-error "No helpful buffer to switch to")))
 
-                                        ; Keep a record of buffers so our next/previous commands work.
+  ;; Keep a record of buffers so our next/previous commands work.
   (advice-add #'helpful--buffer :filter-return #'+record-new-buffers-a)
 
   (bind-keys
@@ -5694,8 +5700,8 @@ default, it is the symbol at point."
   ;;   - If the file is not under version control but is in a directory which
   ;;     itself is version controlled, then the file will be added to the list
   ;;     of tracked files.
-  ;; - Type `C-x v v' again and `vc' will proceed to the next action, which is to
-  ;;   commit the changes to history. This is done in the next `log-edit'
+  ;; - Type `C-x v v' again and `vc' will proceed to the next action, which is
+  ;;   to commit the changes to history. This is done in the next `log-edit'
   ;;   buffer.
   ;; - By convention, the message of each commit is separated into a summary and
   ;;   the body of the message. An empty line divides them. The summary is the
@@ -9315,21 +9321,21 @@ word to search."
   :config
   ;; A bibliography provides pointers to stuff in the world outside of our
   ;; writings like books, articles, web pages, videos, etc. When we want to
-  ;; reference these outside things, we attach an indicator which is used to look
-  ;; up that reference in our bibliography. Think of the bibliography as a
+  ;; reference these outside things, we attach an indicator which is used to
+  ;; look up that reference in our bibliography. Think of the bibliography as a
   ;; database of links and information about those links. Now when we want to
-  ;; associate a piece of writing to some external thing, we don't have to rely on
-  ;; the physical form of that thing.
+  ;; associate a piece of writing to some external thing, we don't have to rely
+  ;; on the physical form of that thing.
   ;;
-  ;; Biblio provides facilities to browse and gather bibliographic references from
-  ;; various well-curated sources, and formats them as BibTeX entries, the file
-  ;; format of my bibliography. This is better than typing all entries manually
-  ;; with the built-in BibTeX mode, which is inefficient and could easily lead to
-  ;; errors. Simply run `biblio-lookup', select the source, and enter a search
-  ;; query. Once the search has completed, a new buffer opens with the
-  ;; results. You can then select your target entry and insert it into the buffer
-  ;; you called biblio-lookup from, copy it and paste it later, or a perform a
-  ;; number of other possible commands.
+  ;; Biblio provides facilities to browse and gather bibliographic references
+  ;; from various well-curated sources, and formats them as BibTeX entries, the
+  ;; file format of my bibliography. This is better than typing all entries
+  ;; manually with the built-in BibTeX mode, which is inefficient and could
+  ;; easily lead to errors. Simply run `biblio-lookup', select the source, and
+  ;; enter a search query. Once the search has completed, a new buffer opens
+  ;; with the results. You can then select your target entry and insert it into
+  ;; the buffer you called biblio-lookup from, copy it and paste it later, or a
+  ;; perform a number of other possible commands.
   (defvar +bibliography-files
     (list (concat (denote-directory) "reference/" "bibliography.bib"))
     "List of bibliography files.")
@@ -9374,7 +9380,8 @@ BibTeX file."
       (message "No BibTeX file(s) defined.")))
 
   (defun +bibtex-extract-attachments ()
-    "Extract attachment file names from BibTeX files in `+bibliography-directory'."
+    "Extract attachment file names from BibTeX files in
+`+bibliography-directory'."
     (let ((attachments '()))
       (dolist (bibtex-file +bibliography-files)
         (with-temp-buffer
@@ -9384,8 +9391,9 @@ BibTeX file."
             (let ((file-paths (split-string (match-string 1)
                                             "[[:space:]]*;[[:space:]]*")))
               (dolist (file-path file-paths)
-                (message "Attachment: %s" (expand-file-name (string-trim file-path
-                                                                         +bibliography-directory)))
+                (message "Attachment: %s"
+                         (expand-file-name
+                          (string-trim file-path +bibliography-directory)))
                 (push (expand-file-name (string-trim file-path)
                                         +bibliography-directory)
                       attachments))))))
@@ -9445,7 +9453,8 @@ BibTeX file."
 ;; fiction and non-fiction books.
 (use-package biblio-gbooks :disabled t)
 
-;; mostly for ebib-add-file-entry to scaffold bibtex-entries with the file key already set up
+;; mostly for ebib-add-file-entry to scaffold bibtex-entries with the file key
+;; already set up
 ;; (use-package ebib)
 
 (use-package citar
@@ -10573,7 +10582,10 @@ Use link at point if there is one, otherwise the current page's URL."
            (buf-name (format "feeds: %s" title)))
       (with-temp-buffer
         (insert source)
-        (occur-1 +eww--occur-feed-regexp "\\3" (list (current-buffer)) buf-name))
+        (occur-1 +eww--occur-feed-regexp
+                 "\\3"
+                 (list (current-buffer))
+                 buf-name))
       ;; Handle relative URLs, so that we get an absolute URL out of them.
       ;; Findings like "rss.xml" are not particularly helpful.
       ;;
@@ -10582,7 +10594,9 @@ Use link at point if there is one, otherwise the current page's URL."
       (when (get-buffer buf-name)
         (with-current-buffer (get-buffer buf-name)
           (let ((inhibit-read-only t)
-                (base-url (replace-regexp-in-string "\\(.*/\\)[^/]+\\'" "\\1" url)))
+                (base-url (replace-regexp-in-string
+                           "\\(.*/\\)[^/]+\\'" "\\1"
+                           url)))
             (goto-char (point-min))
             (unless (re-search-forward +common-url-regexp nil t)
               (re-search-forward ".*")
@@ -11017,8 +11031,9 @@ from local browser. It also cleans LeetCode cookies in `url-cookie-file'."
 ;;;; icons ;;;;
 
 ;; I define a user option to conditionally load icons in various parts of the
-;; Emacs interface. These are purely cosmetic. I prefer less noise in my buffers,
-;; but they help communicate more information which is sometimes helpful.
+;; Emacs interface. These are purely cosmetic. I prefer less noise in my
+;; buffers, but they help communicate more information which is sometimes
+;; helpful.
 
 ;; TODO a minor mode that activates and deactivates icons
 
