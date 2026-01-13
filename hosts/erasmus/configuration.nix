@@ -36,6 +36,7 @@
     };
 
     services = {
+      dictd.enable = true;
       ollama.enable = true;
       onedrive.enable = true;
     };
