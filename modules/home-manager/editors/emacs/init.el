@@ -9280,6 +9280,29 @@ in your `denote-directory'."
    ("C-c a p" . +anki-editor-push-tree)
    ("C-c a r" . +anki-editor-reset-cloze-number)))
 
+(use-package dictionary
+  :config
+  (defun +dictionary-search-dwim (&optional arg)
+    "Search for definition of word at point. If region is active, search for
+contents of region instead. If called with a prefix argument, query for
+word to search."
+    (interactive "P")
+    (if arg
+        (dictionary-search nil)
+      (if (use-region-p)
+          (dictionary-search (buffer-substring-no-properties
+                              (region-beginning)
+                              (region-end)))
+        (if (thing-at-point 'word)
+            (dictionary-lookup-definition)
+          (+dictionary-search-dwim '(4))))))
+
+  (setopt dictionary-server "localhost"
+          dictionary-use-single-buffer t)
+
+  (bind-keys :map help-map
+             ("C-d" . +dictionary-search-dwim)))
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ;;;; bibliography ;;;;
 
