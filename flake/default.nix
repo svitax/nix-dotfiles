@@ -34,7 +34,7 @@
       devShells.default = pkgs.mkShell {
         packages = with pkgs; [
           inputs.self.formatter.${system}
-          nixfmt-rfc-style
+          nixfmt
           nixd
         ];
         name = "evermind";
