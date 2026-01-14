@@ -794,22 +794,32 @@ LOCUS is a cons cell with two buffer positions."
   ;; To manually fill a region of text, mark it and type `M-q'. Or do `M-q' to
   ;; operate on the current paragraph without marking it. Depending on the major
   ;; mode you are in, this key binding calls a different command. The generic
-  ;; one is `fill-paragraph'. I use `M-Q' to "unfill" text.
+  ;; one is `fill-paragraph'.
 
-  (defun +unfill-dwim (&optional beg end)
-    "Unfill paragraph or, when active, the region.
-Join all lines in region delimited by BEG and AND, if active, while
-respecting any empty lines (so multiple paragraphs are not joined, just
-unfilled). If no region is active, operate on the paragraph. The idea is
-to produce the opposite effect of `fill-paragraph' and `fill-region'."
-    (interactive "r")
+  (defvar +fill-paragraph-state nil
+    "The way the paragraph was filled the last time.")
+
+  (defun +unfill-paragraph ()
+    "Replace newline chars in current paragraph by single spaces.
+This command does the inverse of `fill-paragraph'."
+    (interactive)
     (let ((fill-column most-positive-fixnum))
-      (if (use-region-p)
-          (fill-region beg end)
-        (fill-paragraph))))
+      (call-interactively 'fill-paragraph)))
 
-  (add-hook 'text-mode-hook #'auto-fill-mode)
-  (add-hook 'prog-mode-hook #'auto-fill-mode)
+  (defun +fill-paragraph-dwim ()
+    "Fill the current paragraph in one of two ways:
+It fills the paragraph in the traditional way, or unfills it."
+    (interactive)
+    (unless (eq last-command this-command)
+      (setq +fill-paragraph-state nil))
+    (let (deactivate-mark)
+      (cl-case +fill-paragraph-state
+        ('fill-paragraph
+         (call-interactively '+unfill-paragraph)
+         (setq +fill-paragraph-state 'unfill-paragraph))
+        (t
+         (call-interactively 'fill-paragraph)
+         (setq +fill-paragraph-state 'fill-paragraph)))))
 
   (define-minor-mode +auto-fill-or-visual-line-mode
     "Enable `visual-line-mode' and disable `auto-fill-mode' in the current
@@ -823,12 +833,17 @@ buffer."
         (auto-fill-mode -1)
         (visual-line-mode 1))))
 
+  (add-hook 'text-mode-hook #'auto-fill-mode)
+  (add-hook 'prog-mode-hook #'auto-fill-mode)
+
   (setopt fill-column 80)
 
   (bind-keys :map global-map
-             ;; TODO I don't like using shift in the binding for +unfill-dwim
-             ;; NOTE 2025-06-26 I also never use this so do I really need it?
-             ("M-Q" . +unfill-dwim)
+             ("M-q" . +fill-paragraph-dwim) ; orig. `fill-paragraph'
+             :map org-mode-map
+             ("M-q" . +fill-paragraph-dwim) ; orig. `org-fill-paragraph'
+             :map prog-mode-map
+             ("M-q" . +fill-paragraph-dwim) ; orig. `prog-fill-reindent-defun'
              :map +prefix-map
              ("f" . set-fill-column)
              :map +toggle-prefix-map
