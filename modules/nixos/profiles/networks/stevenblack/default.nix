@@ -29,10 +29,11 @@ in
         "social"
       ];
     };
-    networking.extraHosts = ''
-    0.0.0.0 youtube.com
-    0.0.0.0 www.youtube.com
-    '';
+    # networking.extraHosts = ''
+    # 0.0.0.0 youtube.com
+    # 0.0.0.0 www.youtube.com
+    # '';
+
     # If I don't mind having externally fetched resources, I could use a fixed
     # output derivation (FOD) to fetch the data directly
     # extrahostsfromsteve = pkgs.fetchurl {
