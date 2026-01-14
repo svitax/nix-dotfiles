@@ -21,10 +21,10 @@ in
     # Enable the XFCE desktop environment.
     services.xserver.desktopManager.xfce.enable = true;
 
-    environment.systemPackages = with pkgs; [ xfce.xfce4-pulseaudio-plugin ];
+    environment.systemPackages = with pkgs; [ xfce4-pulseaudio-plugin ];
     programs.thunar.plugins = with pkgs; [
-      xfce.thunar-archive-plugin
-      xfce.thunar-dropbox-plugin
+      thunar-archive-plugin
+      thunar-dropbox-plugin
     ];
 
     services.blueman.enable = true;
