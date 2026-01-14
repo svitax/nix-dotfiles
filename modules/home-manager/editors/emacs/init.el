@@ -811,9 +811,6 @@ to produce the opposite effect of `fill-paragraph' and `fill-region'."
   (add-hook 'text-mode-hook #'auto-fill-mode)
   (add-hook 'prog-mode-hook #'auto-fill-mode)
 
-  ;; TODO display-fill-column-indicator only if a line is currently passing it
-  ;; (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
-
   (define-minor-mode +auto-fill-or-visual-line-mode
     "Enable `visual-line-mode' and disable `auto-fill-mode' in the current
 buffer."
