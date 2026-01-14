@@ -34,7 +34,7 @@ in
 
     defaultEditor = mkOption {
       type = types.bool;
-      default = true;
+      default = false;
       description = "Whether to use Emacs as default editor";
     };
   };
@@ -166,16 +166,6 @@ in
           startWithUserSession = "graphical";
         };
 
-        xdg.mimeApps = {
-          enable = true;
-          defaultApplications = {
-            "application/text" = "emacsclient.desktop";
-            "application/textedit" = "emacsclient.desktop";
-            "text/anytext" = "emacsclient.desktop";
-            "text/plain" = "emacsclient.desktop";
-          };
-        };
-
         programs.git.settings = {
           difftool.diff.cmd = ''
             ${emacsBin} --eval '(ediff-files "'$LOCAL'" "'$REMOTE'")'
@@ -189,6 +179,16 @@ in
         xdg.configFile."emacs" = {
           source = ../emacs;
           recursive = true;
+        };
+        xdg.mimeApps = {
+          enable = true;
+          defaultApplications = {
+            "application/text" = "emacsclient.desktop";
+            "application/textedit" = "emacsclient.desktop";
+            "text/anytext" = "emacsclient.desktop";
+            "text/plain" = "emacsclient.desktop";
+            "x-scheme-handler/mailto" = "emacsclient-mail.desktop";
+          };
         };
       }
       (lib.mkIf cfg.defaultEditor { services.emacs.defaultEditor = true; })
