@@ -812,9 +812,9 @@ It fills the paragraph in the traditional way, or unfills it."
     (interactive)
     (unless (eq last-command this-command)
       (setq +fill-paragraph-state nil))
-    (let (deactivate-mark)
+    (let ((deactivate-mark nil))
       (cl-case +fill-paragraph-state
-        ('fill-paragraph
+        (fill-paragraph
          (call-interactively '+unfill-paragraph)
          (setq +fill-paragraph-state 'unfill-paragraph))
         (t
