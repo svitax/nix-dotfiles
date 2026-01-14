@@ -840,8 +840,6 @@ buffer."
 
   (bind-keys :map global-map
              ("M-q" . +fill-paragraph-dwim) ; orig. `fill-paragraph'
-             :map org-mode-map
-             ("M-q" . +fill-paragraph-dwim) ; orig. `org-fill-paragraph'
              :map prog-mode-map
              ("M-q" . +fill-paragraph-dwim) ; orig. `prog-fill-reindent-defun'
              :map +prefix-map
