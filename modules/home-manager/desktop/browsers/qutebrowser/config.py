@@ -197,8 +197,8 @@ c.bindings.commands['normal'] = {
     '<ctrl-j>': 'hint all',
     '<ctrl-alt-j>': 'hint all tab',
 
-    '<ctrl-alt-.>': 'hint links spawn --detach umpv {hint-url}',
-    '<alt-.>': 'spawn --detach umpv {url}',
+    '<ctrl-o>': 'spawn --detach umpv {url}',
+    '<ctrl-alt-o>': 'hint links spawn --detach umpv {hint-url}',
     # '<alt-o>': 'hint links spawn --detach umpv --force-window yes {hint-url}',
     # '<alt-.>': 'spawn --detach umpv --force-window yes {url}',
 
