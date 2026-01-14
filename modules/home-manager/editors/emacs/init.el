@@ -9778,9 +9778,9 @@ key2: value2"
   ;;    (setopt notmuch-identities '("My Fullname <someone@somewhere.com>"
   ;;                                 "Nickname <just-my-nick@somewhere.com>"))
   (setq notmuch-identities
-        '((format "%s <%s>"
-           user-full-name
-           (auth-source-pass-get 'Username "gmail-mbsync"))))
+        `(,(format "%s <%s>"
+            user-full-name
+            (auth-source-pass-get 'Username "gmail-mbsync"))))
 
   ;; While the corresponding `notmuch-fcc-dirs' map those accounts to the
   ;; relative path of their local sent mail folder (it is relative to the root
