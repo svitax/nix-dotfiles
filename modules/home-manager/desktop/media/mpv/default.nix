@@ -19,21 +19,18 @@ in
 
     programs.mpv = {
       enable = true;
-      package = (
-        pkgs.mpv-unwrapped.wrapper {
-          scripts = with pkgs.mpvScripts; [
-            uosc
-            sponsorblock-minimal
-            thumbfast
-            quality-menu
-            mpv-playlistmanager
-            reload
-            autoload
-            # autocrop
-          ];
-          mpv = pkgs.mpv-unwrapped;
-        }
-      );
+      package = pkgs.mpv.override {
+        scripts = with pkgs.mpvScripts; [
+          uosc
+          sponsorblock-minimal
+          thumbfast
+          quality-menu
+          mpv-playlistmanager
+          reload
+          autoload
+          # autocrop
+        ];
+      };
       # TODO extract out the .conf files for my mpv config so it is easier to
       # migrate later
       config = {
