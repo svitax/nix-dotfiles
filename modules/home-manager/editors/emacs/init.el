@@ -1262,6 +1262,7 @@ TARGETS is a list like (\".h\" \".hh\")."
   (setopt dired-guess-shell-alist-user
           '(("\\.\\(png\\|jpe?g\\|tiff\\)" "feh" "xdg-open")
             ("\\.\\(mp[34]\\|m4a\\|ogg\\|flac\\|webm\\|mkv\\)" "mpv" "xdg-open")
+            (".gif" "mpv --loop=inf")
             (".*" "xdg-open")))
 
   ;; These are some minor tweaks that I do not really care about. The only one
