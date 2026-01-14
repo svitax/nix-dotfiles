@@ -14,7 +14,7 @@ in
     enable = mkEnableOption "gnupg";
     cacheTTL = mkOption {
       type = types.int;
-      default = 3600; # 1 hr
+      default = 43200; # 12 hrs
     };
   };
 
