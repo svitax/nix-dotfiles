@@ -21,6 +21,14 @@ in
     # Enable the XFCE desktop environment.
     services.xserver.desktopManager.xfce.enable = true;
 
+    # Don't use Wayland or portals.
+    services.xserver.desktopManager.xfce.enableWaylandSession = false;
+    xdg.portal.enable = false;
+    environment.xfce.excludePackages = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-xapp
+    ];
+
     environment.systemPackages = with pkgs; [ xfce4-pulseaudio-plugin ];
     programs.thunar.plugins = with pkgs; [
       thunar-archive-plugin
