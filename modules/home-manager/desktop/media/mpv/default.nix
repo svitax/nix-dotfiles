@@ -43,6 +43,7 @@ in
         watch-later-directory = "${config.xdg.stateHome}/mpv/watch_later";
         geometry = "50%x100%"; # only relevant for non-tiling WMs
         keep-open = true;
+        video-sync = "display-resample";
         hwdec = "auto-safe";
         vo = "gpu-next";
         ytdl-format = "(bestvideo[vcodec^=av01][height<=?1440]/bestvideo[height<=?1440])+bestaudio/best";
