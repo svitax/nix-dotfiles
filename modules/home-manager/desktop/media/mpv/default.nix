@@ -88,8 +88,8 @@ in
         q = "quit-watch-later";
         Q = "quit";
 
-        n = "playlist-next";
-        p = "playlist-prev";
+        n = "playlist-next ; script-message playlistmanager show playlist 3";
+        p = "playlist-prev ; script-message playlistmanager show playlist 3";
 
         SPACE = "cycle pause";
         f = "cycle fullscreen";
