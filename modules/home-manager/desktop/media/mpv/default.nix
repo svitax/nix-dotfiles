@@ -45,7 +45,7 @@ in
         geometry = "50%x100%"; # only relevant for non-tiling WMs
         hwdec = "auto-safe";
         vo = "gpu-next";
-        ytdl-format = "(bestvideo[vcodec^=av01][height<=?2160]/bestvideo[height<=?2160])+bestaudio/best";
+        ytdl-format = "(bestvideo[vcodec^=av01][height<=?1440]/bestvideo[height<=?1440])+bestaudio/best";
       };
       scriptOpts = {
         autoload = {
