@@ -71,6 +71,9 @@ in
           network = true;
           hwdec = true;
         };
+        ytdl_hook = {
+          ytdl_path = "${lib.getExe pkgs.yt-dlp}";
+        };
       };
       bindings = {
         MBTN_LEFT_DBL = "cycle fullscreen";
