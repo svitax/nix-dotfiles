@@ -10043,6 +10043,8 @@ instead tries to complete against dictionary entries."
   ;;   This is done by reading the contents of the message in search for the
   ;;   `notmuch-mua-attachment-regexp'.
   ;;
+  ;; - Warn me if I forget to include a subject field.
+  ;;
   ;; - Do not use a `header-line' when showing a message. It adds visual
   ;;   clutter.
   ;;
@@ -10058,6 +10060,10 @@ instead tries to complete against dictionary entries."
   ;;   deletion and remove it from the inbox.
 
   (add-hook 'notmuch-mua-send-hook #'notmuch-mua-attachment-check) ; also see ; `notmuch-mua-attachment-regexp'
+  (add-hook 'notmuch-mua-send-hook (defun +message-ensure-subject ()
+                                     (unless (or (message-field-value "Subject")
+                                                 (y-or-n-p "No subject. Send?"))
+                                       (user-error "Aborting."))))
   (add-hook 'notmuch-show-hook (lambda () (setq-local header-line-format nil)))
   (remove-hook 'notmuch-show-hook #'notmuch-show-turn-on-visual-line-mode)
   (remove-hook 'notmuch-search-hook #'notmuch-hl-line-mode)
