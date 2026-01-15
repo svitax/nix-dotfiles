@@ -41,7 +41,6 @@ in
         save-watch-history = true;
         write-filename-in-watch-later-config = true;
         watch-later-directory = "${config.xdg.stateHome}/mpv/watch_later";
-        geometry = "50%x100%"; # only relevant for non-tiling WMs
         force-seekable = true;
         keep-open = true;
         video-sync = "display-resample";
