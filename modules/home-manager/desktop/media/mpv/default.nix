@@ -21,6 +21,7 @@ in
       enable = true;
       package = pkgs.mpv.override {
         scripts = with pkgs.mpvScripts; [
+          mpris
           uosc
           sponsorblock-minimal
           thumbfast
