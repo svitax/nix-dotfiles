@@ -69,6 +69,7 @@ in
         thumbfast = {
           spawn_first = true;
           network = true;
+          hwdec = true;
         };
       };
       bindings = {
