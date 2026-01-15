@@ -24,6 +24,7 @@ in
         enable = true;
         settings = {
           default-cache-ttl = cfg.cacheTTL;
+          max-cache-ttl = cfg.cacheTTL;
           allow-emacs-pinentry = "";
           allow-loopback-pinentry = "";
         };
