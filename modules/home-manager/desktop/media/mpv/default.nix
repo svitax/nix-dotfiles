@@ -30,6 +30,7 @@ in
           reload
           autoload
           # autocrop
+          mpv-image-viewer.freeze-window
         ];
       };
       # TODO extract out the .conf files for my mpv config so it is easier to
