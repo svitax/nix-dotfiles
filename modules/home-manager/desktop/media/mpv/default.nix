@@ -73,6 +73,7 @@ in
         };
         ytdl_hook = {
           ytdl_path = "${lib.getExe pkgs.yt-dlp}";
+          try_ytdl_first = true;
         };
       };
       bindings = {
