@@ -29,7 +29,6 @@ in
           mpv-playlistmanager
           reload
           autoload
-          # autocrop
           mpv-image-viewer.freeze-window
         ];
       };
