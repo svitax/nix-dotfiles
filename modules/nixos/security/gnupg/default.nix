@@ -22,7 +22,6 @@ in
     programs.gnupg = {
       agent = {
         enable = true;
-        pinentryPackage = pkgs.pinentry-gtk2;
         settings = {
           default-cache-ttl = cfg.cacheTTL;
           allow-emacs-pinentry = "";
