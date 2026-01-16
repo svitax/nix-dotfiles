@@ -5501,6 +5501,10 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
 ;;   (democratize-examples-in-help))
 
 ;; TODO document man
+(use-package woman
+  :init (add-to-list 'savehist-ignored-variables 'woman-topic-history)
+  :config (setopt woman-fontify t))
+
 (use-package man
   :config
   (defun +man-copy-name-as-kill ()
