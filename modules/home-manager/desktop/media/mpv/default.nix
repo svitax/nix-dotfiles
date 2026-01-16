@@ -152,6 +152,8 @@ in
         n = "playlist-next ; script-message playlistmanager show playlist 3";
         p = "playlist-prev ; script-message playlistmanager show playlist 3";
 
+        "Ctrl+h" = "script-binding uosc/keybinds";
+
         SPACE = "cycle pause";
         f = "cycle fullscreen";
 
