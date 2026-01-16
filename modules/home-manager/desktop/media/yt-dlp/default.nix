@@ -20,10 +20,15 @@ in
     programs.yt-dlp = {
       enable = true;
       settings = {
-        embed-thumbnail = true;
-        embed-metadata = true;
+        format = "(bestvideo[vcodec^=av01][height<=?1440]/bestvideo[height<=?1440])+bestaudio/best";
+        audio-format = "best";
         embed-subs = true;
-        sub-langs = "en";
+        embed-thumbnail = true;
+        embed-chapters = true;
+        embed-info-json = true;
+        embed-metadata = true;
+        write-subs = true;
+        write-auto-subs = true;
       };
     };
   };
