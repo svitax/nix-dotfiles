@@ -5500,12 +5500,16 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
 ;;   (democratize-examples-in-helpful)
 ;;   (democratize-examples-in-help))
 
-;; TODO document man
 (use-package woman
   :init (add-to-list 'savehist-ignored-variables 'woman-topic-history)
   :config (setopt woman-fontify t))
 
 (use-package man
+  ;; Most buffers conform with rules we define in `display-buffer-alist'.
+  ;; However, `M-x man' does not do this because it has its own behavior. At
+  ;; least it is customizable. The `Man-notify-method' is a very old option,
+  ;; according to what the Help buffer is telling me, so I suspect this was
+  ;; never updated to conform with the newer `display-buffer-alist'.
   :config
   (defun +man-copy-name-as-kill ()
     "Copy name of current man page into the kill ring."
@@ -5568,6 +5572,8 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
     "Go to TOPIC in the current man page."
     (interactive (list (completing-read "Topic: " (+man-index-topics) nil t)))
     (goto-char (gethash topic +man-index-index )))
+
+  (setopt Man-notify-method 'aggressive) ; does not obey `display-buffer-alist'
 
   (bind-keys :map help-map
              ("M" . man)
