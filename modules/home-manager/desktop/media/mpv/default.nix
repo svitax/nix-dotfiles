@@ -35,17 +35,71 @@ in
       # TODO extract out the .conf files for my mpv config so it is easier to
       # migrate later
       config = {
-        volume = 60;
-        volume-max = 100;
+        ### Seeking ###
+        save-position-on-quit = true; # saves the seekbar position on exit
+        force-seekable = true; # force videos to be seekable
+
+        ### RAM ###
+        cache = true; # uses a large seekable RAM cache even for local input
+        cache-secs = 300; # uses extra large RAM cache (needs cache=yes)
+        demuxer-max-back-bytes = "20M"; # sets fast seeking
+        demuxer-max-bytes = "20M"; # sets fast seeking
+        # demuxer-max-bytes = "1800M";
+        # demuxer-max-back-bytes = "1200M";
+        # stream-buffer-size = "3MiB";
+
+        ### Video ###
+        vlang = "en,eng"; # sets the video language
+        vo = "gpu-next"; # sets video out to experimental libplacebo renderer
+        video-sync = "display-resample";
+        interpolation = true;
+        scale-antiring = 0.6;
+        profile = "high-quality";
+
+        ### Audio ###
+        volume-max = 100; # everything above 100 results in amplification
+        volume = 70; # default volume
+        alang = "en,eng,es,ja,jp,jpn"; # sets the audio language
+
+        ### General ###
+        keep-open = true; # keep player open after a video/playlist ends
+        pause = true; # disables autoplay
+        prefetch-playlist = true; # prefetch/buffer files later in the playlist
         save-watch-history = true;
         write-filename-in-watch-later-config = true;
         watch-later-directory = "${config.xdg.stateHome}/mpv/watch_later";
-        force-seekable = true;
-        keep-open = true;
-        video-sync = "display-resample";
-        hwdec = "auto-safe";
-        vo = "gpu-next";
-        ytdl-format = "(bestvideo[vcodec^=av01][height<=?1440]/bestvideo[height<=?1440])+bestaudio/best";
+
+        ### Hardware Decoder ###
+        hwdec = "auto-safe"; # safe list of auto hardware decoder profiles
+
+        ### OSD ###
+
+        ### Subtitles ###
+        # sub-auto = "fuzzy";
+        # slang = "en,eng,enUS,en-US,es"; # sets the subtitle language
+        sub-use-margins = true;
+        sub-ass-force-margins = true;
+        sub-font-size = 34;
+        sub-color = "#FFFFFF";
+        sub-border-size = 2.4;
+        sub-border-color = "#FF000000";
+        sub-shadow-color = "#A0000000";
+        sub-shadow-offset = 0.75;
+        sub-bold = true;
+        sub-ass-style-overrides = "Kerning=yes";
+        embedded-fonts = true; # use embedded fonts for SSA/ASS subs
+
+        ### Shaders ###
+        # For high-end hardware, we recommend using the following shaders:
+        # - ArtCNN_C4F32.glsl <https://github.com/Artoriuz/ArtCNN/blob/main/GLSL/ArtCNN_C4F32.glsl>
+        #   for higher quality sources
+        # - nnedi3-nns128-win8x4.hook <https://github.com/bjin/mpv-prescalers/blob/master/compute/nnedi3-nns128-win8x4.hook>
+        #   for lower quality sources
+        # g cycle-values glsl-shaders "~~/shaders/nnedi3-nns128-win8x4.hook" "~~/shaders/ArtCNN_C4F32.glsl" ""
+        #
+        # or https://github.com/hl2guide/better-mpv-config/blob/c9ff805c47561f9bc2726cee3a325f11decf12df/mpv_v3/configs/mpv_shaders.conf
+
+        ytdl-raw-options = ''sub-lang="en.*,es",sub-format=best'';
       };
       scriptOpts = {
         autoload = {
