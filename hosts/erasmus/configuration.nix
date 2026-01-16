@@ -22,6 +22,10 @@
       };
     };
 
+    documentation = {
+      man.enable = true;
+    };
+
     nix.enable = true;
 
     profiles = {

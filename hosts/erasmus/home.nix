@@ -30,7 +30,6 @@
 
     documentation = {
       info.enable = true;
-      man.enable = true;
     };
 
     editors = {

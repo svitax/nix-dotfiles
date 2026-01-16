@@ -15,12 +15,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.man = {
+    documentation.man = {
       enable = true;
       generateCaches = true;
     };
-    home.packages = with pkgs; [
+    environment.systemPackages = with pkgs; [
       man-pages
+      man-pages-posix
     ];
   };
 }
