@@ -26,6 +26,12 @@ in
         DontCheckDefaultBrowser = true;
         DisablePocket = true;
         DisableAppUpdate = true;
+        WebsiteFilter = {
+          Block = [
+            "*://*.youtube.com/*"
+            "*://youtube.com/*"
+          ];
+        };
         ExtensionSettings =
           with builtins;
           let
