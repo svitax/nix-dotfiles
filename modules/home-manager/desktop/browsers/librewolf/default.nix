@@ -45,6 +45,7 @@ in
           in
           listToAttrs [
             (extension "bitwarden-password-manager" "{446900e4-71c2-419f-a6a7-df9c091e268b}")
+            (extension "istilldontcareaboutcookies" "idcac-pub@guus.ninja")
           ];
       };
     };
