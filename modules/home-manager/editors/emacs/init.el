@@ -9307,6 +9307,9 @@ in your `denote-directory'."
    ("C-c a p" . +anki-editor-push-tree)
    ("C-c a r" . +anki-editor-reset-cloze-number)))
 
+;;;;;;;;;;;;;;;;;;;;
+;;;; dictionary ;;;;
+
 (use-package dictionary
   :config
   (defun +dictionary-search-dwim (&optional arg)
