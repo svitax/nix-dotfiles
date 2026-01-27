@@ -11,7 +11,7 @@
   modules = {
     desktop = {
       applications = {
-        # anki.enable = true;
+        anki.enable = true;
         discord.enable = true;
       };
       browsers = {
