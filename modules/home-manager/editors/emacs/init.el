@@ -9733,7 +9733,8 @@ key2: value2"
 
   (setopt message-confirm-send nil
           message-kill-buffer-on-exit t
-          message-wide-reply-confirm-recipients nil)
+          message-wide-reply-confirm-recipients nil
+          message-forward-as-mime t)
 
   (defun +message-display-newlines ()
     (when (boundp 'whitespace-style)
