@@ -375,9 +375,7 @@ With prefix argument ARG, prompt for a directory."
   (defvar-keymap +toggle-prefix-map
     :doc "Prefix map for minor mode toggles."
     :prefix '+toggle-prefix-map
-    "h" #'hl-line-mode
-    ;; "r" #'rainbow-mode
-    )
+    "h" #'hl-line-mode)
 
   (bind-keys :map global-map
              ("C-x" . +prefix-map)
@@ -653,7 +651,26 @@ LOCUS is a cons cell with two buffer positions."
   (setopt lin-face 'lin-cyan)
   (lin-global-mode 1))
 
-;; (use-package rainbow-mode)
+(use-package rainbow-mode
+  ;; This package provides an in-buffer preview of a color value.
+  :config
+  (setopt rainbow-ansi-colors nil
+          rainbow-x-colors nil)
+
+  (defun +rainbow-colorize-match (color &optional match)
+    "Like `rainbow-colorize-match' but works with `hl-line-mode'."
+    (let ((match (or match 0)))
+      (put-text-property
+       (match-beginning match) (match-end match)
+       'face `((:background ,(if (> 0.5 (rainbow-x-color-luminance color))
+                                 "white" "black"))
+               (:foreground ,color)
+               (:inverse-video t)))))
+
+  (advice-add #'rainbow-colorize-match :override #'+rainbow-colorize-match)
+
+  (bind-keys :map +toggle-prefix-map
+             ("C" . rainbow-mode)))
 
 ;; Highlight numbers in source code
 (use-package highlight-numbers

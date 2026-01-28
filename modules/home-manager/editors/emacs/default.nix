@@ -76,6 +76,7 @@ in
               pulsar
               lin
               cursory
+              rainbow-mode
               highlight-numbers
               druid-modeline
               keycast
