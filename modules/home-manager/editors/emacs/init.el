@@ -7814,6 +7814,16 @@ written in lower case and ignore casing while spell-checking."
           pdf-outline-imenu-use-flat-menus t
           large-file-warning-threshold nil)
 
+  (setq pdf-annot-default-annotation-properties
+        `((t
+           (label . ,user-full-name)
+           (color . "#483d8b"))
+          (text (icon . "Note"))
+          (highlight (color . "#FFF993"))
+          (squiggly (color . "orange"))
+          (strike-out (color . "red"))
+          (underline (color . "blue"))))
+
   (bind-keys
    :map pdf-view-mode-map
    ("a" . pdf-annot-add-text-annotation)
