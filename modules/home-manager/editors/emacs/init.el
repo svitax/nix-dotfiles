@@ -9325,12 +9325,60 @@ in your `denote-directory'."
     (anki-editor-push-notes 'tree)
     (+anki-editor-reset-cloze-number))
 
+  (defun +anki-editor-delete-tree (&optional prefix)
+    "Delete all notes under the current tree from Anki.
+With prefix also delete the entire tree from Org."
+    (interactive "P")
+    (save-excursion
+      (org-back-to-heading t)
+      (let ((note-ids '())
+            (tree-start (point))
+            (tree-end (save-excursion (org-end-of-subtree t t) (point))))
+        (org-map-entries
+         (lambda ()
+           (when-let ((note-id-str
+                       (org-entry-get nil anki-editor-prop-note-id)))
+             (when-let ((note-id (string-to-number note-id-str)))
+               (when (> note-id 0)
+                 (push note-id note-ids)))))
+         nil
+         'tree)
+        (if (null note-ids)
+            (if prefix
+                (progn
+                  (message "No notes in tree are in Anki (no note-ids found)")
+                  (when (yes-or-no-p "Delete tree from Org anyway?")
+                    (org-mark-subtree)
+                    (kill-region nil nil t)
+                    (message "Deleted tree from Org")))
+              (user-error "No notes in tree are in Anki (no note-ids found)"))
+          (when (yes-or-no-p
+                 (format "Delete %d note%s from Anki%s?"
+                         (length note-ids)
+                         (if (> (length note-ids) 1) "s" "")
+                         (if prefix " and from Org" "")))
+            (anki-editor-api-call-result 'deleteNotes :notes note-ids)
+            (message "Deleted %d note%s from Anki"
+                     (length note-ids)
+                     (if (> (length note-ids) 1) "s" ""))
+
+            (org-map-entries
+             (lambda ()
+               (org-entry-delete nil anki-editor-prop-note-id))
+             nil
+             'tree)
+            (when prefix
+              (goto-char tree-start)
+              (org-mark-subtree)
+              (kill-region nil nil t)
+              (message "Deleted tree from Org")))))))
+
   (bind-keys
    :map org-mode-map
    ("C-c a a" . anki-editor-insert-note)
    ("C-c a c" . +anki-editor-cloze-region-auto-incr)
    ("C-c a C" . +anki-editor-cloze-region-dont-incr)
-   ("C-c a d" . anki-editor-delete-notes)
+   ("C-c a d" . +anki-editor-delete-tree)
    ("C-c a p" . +anki-editor-push-tree)
    ("C-c a r" . +anki-editor-reset-cloze-number)))
 
