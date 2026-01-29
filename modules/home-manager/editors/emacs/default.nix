@@ -11,9 +11,6 @@ let
   cfg = config.modules.editors.emacs;
 
   emacsBin = "${cfg.package}/bin/emacsclient";
-
-  # TODO find a way to not have to define epkgs here and just inherit from my programs.emacs
-  epkgs = pkgs.emacsPackagesFor cfg.package;
 in
 {
   options.modules.editors.emacs = {
@@ -70,7 +67,7 @@ in
           # package = pkgs.emacs-unstable;
           inherit (cfg) package;
           extraPackages =
-            _: with epkgs; [
+            _: with pkgs.emacsPackages; [
               fontaine
               # modus-themes
               pulsar
