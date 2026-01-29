@@ -5409,7 +5409,7 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
           help-window-keep-selected t)
 
   (bind-keys :map help-map
-             ("a" . describe-face) ; orig. `apropos-command'
+             ("A" . describe-face)
              ("C-a" . find-face-definition) ; orig. `about-emacs'
              ("C" . describe-char) ; orig. `describe-coding-system'
              ("C-f" . find-function) ; orig. `view-emacs-FAQ'
