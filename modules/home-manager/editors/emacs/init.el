@@ -6892,15 +6892,13 @@ Add a bookmark handler for shell buffer and activate the
             ("^\\[[1-9][0-9]*\\]" . font-lock-constant-face)))
 
   (bind-keys :map global-map
+             ("C-&" . +shell-pop-to-buffer)
              ("C-!" . +shell-command-at-line)
-             :map +prefix-map
-             ("C-z" . +shell-pop-to-buffer)
              :map +project-prefix-map
-             ("z" . +project-shell)
+             ("s" . +project-shell)
              :map shell-mode-map
              ("M-r" . +consult-history-comint-send)
-             ("C-c C-w" . comint-write-output)
-             ("C-x C-z" . +shell-pop-to-buffer)))
+             ("C-c C-w" . comint-write-output)))
 
 (use-package native-complete
   :disabled t ; NOTE disabled 2025-06-26
