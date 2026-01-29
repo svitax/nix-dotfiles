@@ -2867,15 +2867,17 @@ together."
 
   (bind-keys :map +project-prefix-map
              ;; ("b" . project-switch-to-buffer) ; alt. `consult-project-buffer'
-             ("d" . project-dired)
+             ("c" . project-compile)
+             ("d" . project-find-dir)
+             ("D" . project-dired)
              ("e" . project-eshell)
              ("f" . project-find-file)
              ("g" . +project-consult-ripgrep)
              ("k" . project-kill-buffers)
+             ("o" . project-any-command)
              ("p" . project-switch-project)
              ("r" . project-query-replace-regexp)
              ("v" . project-vc-dir)
-             ("," . project-compile)
              ("&" . project-async-shell-command)
              ("!" . project-shell-command)))
 
