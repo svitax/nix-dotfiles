@@ -1620,10 +1620,8 @@ If PATH is a file, open its parent directory and move point to the file."
              ("C-c C-n" . +dired-subdirectory-next)
              ("C-c C-p" . +dired-subdirectory-previous)
              ("C-c C-l" . +dired-limit-regexp)
-             ("M-s f" . +dired-search-flat-list) ; alt. `consult-find'
-             ("M-s M-f" . +dired-search-flat-list) ; alt. `consult-find'
-             ("M-s g" . +dired-grep-marked-files) ; alt. `consult-grep'
-             ("M-s M-g" . +dired-grep-marked-files) ; alt. `consult-grep'
+             ("M-s F" . +dired-search-flat-list) ; alt. `consult-find'
+             ("M-s G" . +dired-grep-marked-files) ; alt. `consult-grep'
              ))
 
 (use-package dired-aux
