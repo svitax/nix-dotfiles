@@ -3518,16 +3518,26 @@ Either bind this to a key in `isearch-mode-map' or add it to
         (region-beginning) (region-end)))
       (deactivate-mark)))
 
+  ;; Automatically place the cursor at the start of an Isearch match when
+  ;; exiting.
+  (defun +isearch-exit-at-start ()
+    "Exit search at the beginning of current match."
+    (unless (or isearch-mode-end-hook-quit
+                (bound-and-true-p isearch-suspended)
+                (not isearch-forward)
+                (not isearch-other-end)
+                (and (boundp 'avy-command)
+                     (eq avy-command 'avy-isearch)))
+      (goto-char isearch-other-end)))
+
   ;; Place the cursor on the opposite end of an Isearch when exitting. Do this
   ;; with `C-RET' while in Isearch.
-  (defun +isearch-other-end ()
-    "End current search in the opposite side of the match.
-Particularly useful when the match does not fall within the
-confines of word boundaries (e.g. multiple words)."
+  (defun +isearch-exit-at-end ()
+    "Exit search at the end of the current match."
     (interactive)
-    (isearch-done)
-    (when isearch-other-end
-      (goto-char isearch-other-end)))
+    (let ((isearch-other-end (point)))
+      (isearch-exit))
+    (unless isearch-forward (goto-char isearch-other-end)))
 
   ;; Delete the non-matching portion of a query in Isearch with a single
   ;; backspace instead of doing it character-by-character.
@@ -3597,6 +3607,8 @@ beginning of the buffer.")
 With numeric ARG, move to ARGth occurrence counting from the
 end of the buffer.")
 
+  (add-hook 'isearch-mode-end-hook #'+isearch-exit-at-start)
+
   (bind-keys
    :map +search-prefix-map
    ("c" . count-matches)
@@ -3615,7 +3627,7 @@ end of the buffer.")
    ("<backspace>" . isearch-del-char)
    ("<C-backspace>" . +isearch-abort-dwim)
    ("<M-backspace>" . +isearch-abort-dwim)
-   ("<C-return>" . +isearch-other-end)
+   ("<C-return>" . +isearch-exit-at-end)
    ("M-/" . isearch-complete)
    ("M-s o" . +isearch-occur)
    ("M-s g" . +isearch-project-grep)
