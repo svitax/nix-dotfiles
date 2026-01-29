@@ -5408,7 +5408,17 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
   (setopt help-window-select t
           help-window-keep-selected t)
 
-  (bind-keys :map help-map
+  (bind-keys :prefix-map +apropos-prefix-map :prefix "C-h a"
+             ("a" . apropos)
+             ("d" . apropos-documentation)
+             ("f" . apropos-function) ; parallel to C-h f: `describe-function'
+             ("i" . info-apropos)
+             ("l" . apropos-library) ; parallel to C-h C-l. `find-library'
+             ("u" . apropos-user-option)
+             ("v" . apropos-variable) ; parallel to C-h v: `describe-variable'
+             ("V" . apropos-local-variable)
+             ("x" . apropos-command) ; parallel to C-h x: `describe-command'
+             :map help-map
              ("A" . describe-face)
              ("C-a" . find-face-definition) ; orig. `about-emacs'
              ("C" . describe-char) ; orig. `describe-coding-system'
@@ -5418,17 +5428,7 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
              ("C-k" . find-function-on-key) ; orig. `Info-goto-emacs-key-command-node'
              ("C-l" . find-library) ; orig. `view-lossage'
              ("C-v" . find-variable)
-             ("." . display-local-help)
-             :prefix-map +apropos-prefix-map :prefix "C-h a"
-             ("a" . apropos)
-             ("d" . apropos-documentation)
-             ("f" . apropos-function) ; parallel to C-h f: `describe-function'
-             ("i" . info-apropos)
-             ("l" . apropos-library) ; parallel to C-h C-l. `find-library'
-             ("u" . apropos-user-option)
-             ("v" . apropos-variable) ; parallel to C-h v: `describe-variable'
-             ("V" . apropos-local-variable)
-             ("x" . apropos-command)))
+             ("." . display-local-help)))
 
 (use-package helpful
   ;; The `helpful' package enhances Emacs' help system with more detailed and
