@@ -9409,7 +9409,8 @@ word to search."
           dictionary-use-single-buffer t)
 
   (bind-keys :map global-map
-             ("M-#" . +dictionary-search-dwim)))
+             ("C-h d" . +dictionary-search-dwim) ; orig. `apropos-documentation'
+             ("C-h =" . dictionary-search)))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;;;; bibliography ;;;;
