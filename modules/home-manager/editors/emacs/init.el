@@ -3507,6 +3507,17 @@ Optionally move to ARGth match in the given direction."
       (goto-char isearch-other-end))
     (isearch-repeat-backward (or arg 1)))
 
+  (defun +isearch-yank-region ()
+    "If the region is active, add it to the Isearch search string.
+Either bind this to a key in `isearch-mode-map' or add it to
+`isearch-mode-hook'."
+    (interactive)
+    (when (use-region-p)
+      (isearch-yank-string
+       (buffer-substring-no-properties
+        (region-beginning) (region-end)))
+      (deactivate-mark)))
+
   ;; Place the cursor on the opposite end of an Isearch when exitting. Do this
   ;; with `C-RET' while in Isearch.
   (defun +isearch-other-end ()
@@ -3598,6 +3609,7 @@ end of the buffer.")
    ;; The change to `C-g' is important for me as I want to exit the search
    ;; altogether, not resume the search of the previous succesful match.
    ("C-g" . isearch-cancel) ; instead of `isearch-abort'
+   ("C-M-w" . +isearch-yank-region)
    ("<up>" . +isearch-repeat-backward)
    ("<down>" . +isearch-repeat-forward)
    ("<backspace>" . isearch-del-char)
