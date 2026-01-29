@@ -5527,7 +5527,6 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
    :map global-map
    ("C-c C-d" . helpful-at-point)
    :map help-map
-   ("." . helpful-at-point)
    ("f" . helpful-callable)
    ("F" . helpful-function)
    ("k" . helpful-key)
