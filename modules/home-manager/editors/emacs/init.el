@@ -7514,6 +7514,15 @@ the `pydoc' module list before prompting."
   ;; best of both worlds when both are loaded.
   :mode "\\.nix\\'"
   :lsp-ensure nix-ts-mode
+  :lsp-config '((:nixd . (:nixpkgs (:expr "import <nixpkgs> { }")
+                          :formatting (:command [ "nixfmt" ])
+                          :options
+                          (:nixos
+                           (:expr "(builtins.getFlake \"/home/evermind/nix-dotfiles\").nixosConfigurations.erasmus.options")
+                           :home_manager
+                           (:expr "(builtins.getFlake \"/home/evermind/nix-dotfiles\").homeConfigurations.\"evermind@erasmus\".options"))
+                          :diagnostic (:suppress [ "sema-escaping-with"
+                                                   "sema-extra-with" ]))))
   :config
   ;; Make sure packages that try to use nix-mode are redirected to nix-ts-mode
   (add-to-list 'major-mode-remap-alist '(nix-mode . nix-ts-mode))
