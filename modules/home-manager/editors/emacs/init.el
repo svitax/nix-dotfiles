@@ -5412,18 +5412,23 @@ The parameters NAME, ARGS, REST, and STATE are explained in the
              ("a" . describe-face) ; orig. `apropos-command'
              ("C-a" . find-face-definition) ; orig. `about-emacs'
              ("C" . describe-char) ; orig. `describe-coding-system'
-             ("F" . apropos-function) ; parallel to f: `describe-function'
              ("C-f" . find-function) ; orig. `view-emacs-FAQ'
              ("C-h" . embark-prefix-help-command)
              ("K" . describe-keymap)
              ("C-k" . find-function-on-key) ; orig. `Info-goto-emacs-key-command-node'
-             ("L" . apropos-library) ; orig. `describe-language-environment'
              ("C-l" . find-library) ; orig. `view-lossage'
-             ("U" . apropos-user-option)
-             ("V" . apropos-variable) ; parallel to v: `describe-variable'
              ("C-v" . find-variable)
-             ("X" . apropos-command)
-             ("." . display-local-help)))
+             ("." . display-local-help)
+             :prefix-map +apropos-prefix-map :prefix "C-h a"
+             ("a" . apropos)
+             ("d" . apropos-documentation)
+             ("f" . apropos-function) ; parallel to C-h f: `describe-function'
+             ("i" . info-apropos)
+             ("l" . apropos-library) ; parallel to C-h C-l. `find-library'
+             ("u" . apropos-user-option)
+             ("v" . apropos-variable) ; parallel to C-h v: `describe-variable'
+             ("V" . apropos-local-variable)
+             ("x" . apropos-command)))
 
 (use-package helpful
   ;; The `helpful' package enhances Emacs' help system with more detailed and
