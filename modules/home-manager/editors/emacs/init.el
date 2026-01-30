@@ -373,7 +373,7 @@ With prefix argument ARG, prompt for a directory."
     :doc "Prefix map for windows."
     :prefix '+window-prefix-map)
   (defvar-keymap +toggle-prefix-map
-    :doc "Prefix map for minor mode toggles."
+    :doc "Keymap for commands that toggled settings."
     :prefix '+toggle-prefix-map
     "h" #'hl-line-mode)
 
@@ -381,6 +381,7 @@ With prefix argument ARG, prompt for a directory."
              ("C-x" . +prefix-map)
              ("M-s" . +search-prefix-map)
              ("M-g" . +goto-prefix-map)
+             ("C-c x" . +toggle-prefix-map)
              :map +prefix-map
              ;; ("a" . org-agenda-custom) ; abbrev-keymap ("C-a" . ) ; edebug
              ;; ("b" . consult-buffer) ; switch-to-buffer ("C-b" . ibuffer)  ; list-buffers
@@ -405,7 +406,7 @@ With prefix argument ARG, prompt for a directory."
              ("u" . undo) ; vundo? ("C-u" . ) ; upcase-region ; "undo" mnemonic?
              ;; ("v" . vc-prefix-map) ("C-v" . find-sibling-file) ; find-alternate-file
              ("w" . +window-prefix-map) ("C-w" . write-file)
-             ("x" . +toggle-prefix-map) ("C-x" . exchange-point-and-mark)
+             ;; ("x" . ctl-x-x-map) ("C-x" . exchange-point-and-mark)
              ;; ("y" . dape-global-map) ; ("C-y" . ) ; "why" mnemonic
              ;; ("z" . vertico-repeat) ("C-z" . +switch-to-shell-buffer)
              ("(" . kmacro-start-macro) (")" . kmacro-end-macro)
@@ -930,7 +931,7 @@ non-nil."
                   log-view-mode-hook))
     (add-hook mode #'toggle-truncate-lines))
 
-  (bind-keys :map +toggle-prefix-map
+  (bind-keys :map ctl-x-x-map
              ("t" . toggle-truncate-lines)))
 
 (use-package display-line-numbers
@@ -2953,8 +2954,8 @@ Limit list of buffers to those matching the current
              ("k" . +kill-this-buffer)
              ("<right>" . next-buffer)
              ("<left>" . previous-buffer)
-             :map +toggle-prefix-map
-             ("F" . font-lock-update)
+             :map ctl-x-x-map
+             ("f" . font-lock-update)
              ("g" . revert-buffer-quick)
              ("i" . insert-buffer)
              ("n" . clone-buffer)
@@ -4411,6 +4412,7 @@ purposes.  See the documentation of `set-mark' for more information."
   (bind-keys :map global-map
              ("C-SPC" . +set-mark-command)
              :map +prefix-map
+             ("C-x" . exchange-point-and-mark)
              ("C-SPC" . +pop-global-mark)
              ;; Make Emacs repeat the `pop-to-mark-command' and
              ;; `pop-global-mark' commands.
