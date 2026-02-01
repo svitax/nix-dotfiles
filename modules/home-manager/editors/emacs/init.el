@@ -2841,7 +2841,7 @@ together."
   ;; working on the project. These are defined in the user option
   ;; `project-switch-commands' and are activated by an assigned key.
   (setopt project-switch-commands '((project-switch-to-buffer "Buffer" ?b)
-                                    (project-compile "Compile" ?c)
+                                    (+project-compile "Compile" ?c)
                                     (project-find-dir "Dired" ?d)
                                     (project-find-file "File" ?f)
                                     (+project-consult-ripgrep "Grep" ?g)
@@ -2870,7 +2870,7 @@ together."
 
   (bind-keys :map +project-prefix-map
              ;; ("b" . project-switch-to-buffer) ; alt. `consult-project-buffer'
-             ("c" . project-compile)
+             ("c" . +project-compile)
              ("d" . project-find-dir)
              ("D" . project-dired)
              ("e" . project-eshell)
@@ -6434,32 +6434,49 @@ Interactively also sends a terminating newline."
           compilation-ask-about-save nil ; I'm not scared of saving everything
           )
 
-  (defun +compile (&optional arg)
-    "Runs `project-compile'.
-With prefix argument ARG (\\[universal-argument]), prompt for a
-directory to run `compile'."
+  (defun +compile (&optional prompt)
+    "Compile the program including the current buffer. Default: run `make'.
+Runs a shell command in a separate process asynchronously with output
+going to the buffer `*compilation*'.
+
+You can then use the command \\[next-error] to find the next error
+message and move to the source code that caused it.
+
+If optional \\[universal-argument] PROMPT is t, prompt for a directory
+to run `compile'."
     (interactive "P")
-    (if arg
-        (let* ((dir (read-directory-name "Compile in directory: " default-directory nil t))
-               (default-directory dir)
-               (current-prefix-arg nil)  ; prevent propagation to `compile'
-               (compilation-read-command t)
-               (orig (symbol-function 'read-from-minibuffer)))
-          (fset 'read-from-minibuffer
-                (lambda (_prompt initial &rest args)
-                  (apply orig (format "Compile command in %s: " dir) initial args)))
-          (unwind-protect
-              (call-interactively 'compile)
-            (fset 'read-from-minibuffer orig)))
-      ;; This ensures the ensuing interactive call to `compile' uses the buffer
-      ;; local value of `compile-command' of the buffer we called `+compile'
-      ;; from. Calling `project-compile' interactively doesn't seem to do that.
-      ;; (call-interactively 'project-compile)
-      (let ((default-directory (project-root (project-current t)))
-            (compilation-buffer-name-function
-             (or project-compilation-buffer-name-function
-                 compilation-buffer-name-function)))
-        (call-interactively 'compile))))
+    (let ((default-directory
+           (abbreviate-file-name
+            (if prompt
+                (read-directory-name "Compile in directory: "
+                                     default-directory nil t)
+              default-directory)))
+          (compilation-read-command t))
+      (cl-letf* ((orig-read-from-minibuffer
+                  (symbol-function 'read-from-minibuffer))
+                 ((symbol-function 'read-from-minibuffer)
+                  (lambda (_prompt initial &rest args)
+                    (apply orig-read-from-minibuffer
+                           (format "Compile command in %s: " default-directory)
+                           initial args))))
+        (let ((current-prefix-arg (unless prompt current-prefix-arg)))
+          (call-interactively 'compile)))))
+
+  (defun +project-compile ()
+    "Run `compile' in the project root."
+    (declare (interactive-only compile))
+    (interactive)
+    (let* ((default-directory (project-root (project-current t)))
+           (compilation-read-command t))
+      (cl-letf* ((orig-read-from-minibuffer
+                  (symbol-function 'read-from-minibuffer))
+                 ((symbol-function 'read-from-minibuffer)
+                  (lambda (_prompt initial &rest args)
+                    (apply orig-read-from-minibuffer
+                           (format "Compile command in %s: "
+                                   (abbreviate-file-name default-directory))
+                           initial args))))
+        (project-compile))))
 
   (defun +compile-toggle-comint ()
     "Restart compilation with (or without) `comint-mode'."
