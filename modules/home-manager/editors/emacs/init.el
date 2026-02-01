@@ -7861,6 +7861,19 @@ written in lower case and ignore casing while spell-checking."
   ;; buffers with major-mode as `pdf-view-mode' automatically switches to dark
   ;; mode when `modus-themes-toggle' is called.
 
+  ;; Enable `visual-line-mode' in the pdf-annot-edit-contents buffer.
+  (add-hook 'pdf-annot-edit-contents-minor-mode-hook
+            #'+auto-fill-or-visual-line-mode)
+  ;; Enable `visual-line-mode' in the annotations buffer (*Contents*) by
+  ;; advising the function responsible for creating it.
+  (defun +pdf-annot-visual-line (_id _buffer)
+    (let ((contents-buf (get-buffer "*Contents*")))
+      (when (and contents-buf (not visual-line-mode))
+        (with-current-buffer contents-buf
+          (auto-fill-mode -1)
+          (visual-line-mode +1)))))
+  (advice-add 'pdf-annot-list-context-function :after #'+pdf-annot-visual-line)
+
   ;; TODO: pdf-avy-highlight needs pdf-util-convert-program
   ;; I can use `avy' to create highlights in `pdf-view-mode' buffers. The
   ;; workflow is straightforward: call `+pdf-avy-highlight', type an initial
