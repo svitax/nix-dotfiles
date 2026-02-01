@@ -4749,6 +4749,7 @@ If point is already on an overlayed symbol, select them all with
 
   (bind-keys :map global-map
              ("C-," . +symbol-overlay-dwim)
+             ("M-s h ." . +symbol-overlay-dwim) ; orig. `highlight-symbol-at-point'
              :map symbol-overlay-map
              ;; I don't like that symbol-overlay binds one zillion keys.
              ("<" . nil) ; orig. `symbol-overlay-jump-first'
