@@ -2864,7 +2864,7 @@ together."
   (defun +project-consult-ripgrep (&optional dir initial)
     "Search with `ripgrep' for files in DIR with INITIAL input with
 `consult-project-function' set to the default project function."
-    (interactive)
+    (interactive "P")
     (let ((consult-project-function 'consult--default-project-function))
       (+consult-ripgrep-dwim dir initial)))
 
