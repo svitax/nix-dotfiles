@@ -6484,6 +6484,13 @@ directory to run `compile'."
       ;; (c++-ts-mode-hook
       ;;       . (concat "g++ -std=c++17 -Wall -Wextra -Wshadow -Wno-sign-conversion \
       ;; -O2 -I/Users/admin/problems/include " buffer-file-name " && ./a.out"))
+      (c-mode-hook . (let ((file-name
+                            (file-name-nondirectory buffer-file-name))
+                           (exec-name
+                            (file-name-sans-extension
+                             (file-name-nondirectory buffer-file-name))))
+                      (format "gcc %s -o %s && time ./%s "
+                       file-name exec-name exec-name)))
       (go-ts-mode-hook . (concat "go run " buffer-file-name " "))
       ;; (go-ts-mode-hook . "go build -o a.out ")
       (rust-ts-mode-hook . (concat "cargo run "))
@@ -6498,24 +6505,23 @@ directory to run `compile'."
                 (lambda ()
                   (setq-local compile-command command)))))
 
-  (bind-keys
-   :map +prefix-map
-   ("C-," . +compile)
-   ("C-." . recompile)
-   :map compilation-mode-map
-   ("C-d" . +comint-send-eof-and-quit)
-   ("C-x C-q" . +compile-toggle-comint)
-   :map compilation-minor-mode-map
-   ("C-x C-q" . +compile-toggle-comint)
-   :map compilation-shell-minor-mode-map
-   ("C-x C-q" . +compile-toggle-comint)
-   :map minibuffer-local-shell-command-map
-   ("M-r" . +compile-input-from-history)
-   :map +goto-prefix-map
-   ("n" . next-error)
-   ("M-n" . next-error)
-   ("p" . previous-error)
-   ("M-p" . previous-error)))
+  (bind-keys :map global-map
+             ("C-c C-c" . +compile)
+             ("C-c C-." . recompile)
+             :map compilation-mode-map
+             ("C-d" . +comint-send-eof-and-quit)
+             ("C-x C-q" . +compile-toggle-comint)
+             :map compilation-minor-mode-map
+             ("C-x C-q" . +compile-toggle-comint)
+             :map compilation-shell-minor-mode-map
+             ("C-x C-q" . +compile-toggle-comint)
+             :map minibuffer-local-shell-command-map
+             ("M-r" . +compile-input-from-history)
+             :map +goto-prefix-map
+             ("n" . next-error)
+             ("M-n" . next-error)
+             ("p" . previous-error)
+             ("M-p" . previous-error)))
 
 ;; TODO create compile-use-package that adds to compile-commands. or use
 ;; compile-multi-use-package
@@ -6699,7 +6705,7 @@ Set TARGET as the TARGET to build when set."
                   "-k "))
 
   (bind-keys :map global-map
-             ("C-c C-," . compile-multi)))
+             ("C-x C-m" . compile-multi)))
 
 ;; TODO create compile-multi-use-package that adds to compile-multi-config
 ;; Adds :compile keyword to use-package forms
@@ -7310,7 +7316,6 @@ region is active."
              :map emacs-lisp-mode-map
              ("C-M-x" . eval-defun)
              ("C-c C-b" . nil) ; unmap `elisp-byte-compile-buffer'
-             ("C-c C-c" . eval-defun)
              ("C-c C-e" . eval-last-sexp)
              ("C-x C-e" . eval-last-sexp)
              ("C-c C-f" . nil) ; unmap `elisp-byte-compile-file'
@@ -7416,9 +7421,10 @@ delimited by `python-nav-beginning-of-statement' and
           python-indent-offset 4)
 
   (bind-keys :map python-ts-mode-map
+             ("C-M-x" . +python-shell-send-dwim)
              ;; ("C-c C-a" . nil)
              ;; ("C-c C-b" . nil)
-             ("C-c C-c". +python-shell-send-dwim)
+             ;; ("C-c C-c". compile)
              ("C-c C-d" . nil) ; unmap `python-describe-at-point'
              ;; ("C-c C-e" . eval-last-sexp)
              ("C-c C-f" . nil) ; unmap `python-eldoc-at-point'
@@ -7591,7 +7597,10 @@ the `pydoc' module list before prompting."
 
 (use-package cc-mode
   :config
-  (setopt c-basic-offset tab-width))
+  (setopt c-basic-offset tab-width)
+  (bind-keys :map c-mode-map
+             ("C-c C-c" . nil) ; unmap `comment-region'
+             ))
 
 ;; (use-package geiser)
 
@@ -7644,9 +7653,8 @@ the `pydoc' module list before prompting."
   (with-eval-after-load 'executable
     (advice-add 'executable-interpret :before #'+ensure-executable))
 
-  (bind-keys
-   :map sh-mode-map
-   ("C-c C-c" . executable-interpret)))
+  (bind-keys :map sh-mode-map
+             ("C-c C-c" . executable-interpret)))
 
 ;; (use-package conf-mode)
 
