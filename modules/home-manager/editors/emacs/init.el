@@ -3641,6 +3641,8 @@ end of the buffer.")
 
 (defvar +ripgrep (or (executable-find "rg") (executable-find "ripgrep"))
   "Store path to ripgrep executable, else nil.")
+(defvar +fd (or (executable-find "fd") (executable-find "fdfind"))
+  "Store path to fd executable, else nil")
 
 (use-package grep
   ;; `grep' is a wrapper for the Unix program of the same name. Not much to add
@@ -3660,7 +3662,8 @@ end of the buffer.")
           grep-program (or +ripgrep (executable-find "grep"))
           grep-template (if +ripgrep
                             "rg -nH --null -e <R> <F>"
-                          "grep <X> <C> -nH --null -e <R> <F>")))
+                          "grep <X> <C> -nH --null -e <R> <F>")
+          find-program (or +fd (executable-find "find"))))
 
 ;; TODO recursive project search https://www.youtube.com/watch?v=1jBbVUnNbDU
 ;; TODO +xref-find-apropos-documentation (searches doc string)
