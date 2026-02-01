@@ -2803,7 +2803,9 @@ together."
         (delq t completion-at-point-functions))))
   (+capf-setup t)
 
-  (bind-keys :map tempel-map
+  (bind-keys :map global-map
+             ("C-c C-," . tempel-complete)
+             :map tempel-map
              ("C-g" . tempel-done)
              ("M-n" . tempel-next)
              ("M-p" . tempel-previous)))
