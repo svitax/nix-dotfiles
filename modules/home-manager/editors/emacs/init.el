@@ -2841,12 +2841,12 @@ together."
   ;; working on the project. These are defined in the user option
   ;; `project-switch-commands' and are activated by an assigned key.
   (setopt project-switch-commands '((project-switch-to-buffer "Buffer" ?b)
-                                    (project-dired "Dired" ?d)
+                                    (project-compile "Compile" ?c)
+                                    (project-find-dir "Dired" ?d)
                                     (project-find-file "File" ?f)
                                     (+project-consult-ripgrep "Grep" ?g)
-                                    (+shell-pop-to-buffer "Shell" ?z)
+                                    (+shell-pop-to-buffer "Shell" ?s)
                                     (magit-project-status "VC" ?v)
-                                    (project-compile "Compile" ?,)
                                     (project-async-shell-command "Async Command" ?&)
                                     (project-shell-command "Command" ?!)
                                     (keyboard-quit "Cancel" ?\C-g)))
