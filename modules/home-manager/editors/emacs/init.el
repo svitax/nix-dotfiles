@@ -397,7 +397,7 @@ With prefix argument ARG, prompt for a directory."
              ("l" . +bib-prefix-map) ; count-lines-page ; ("C-l" . ) ; downcase-region ; "lib" mnemonic
              ("m" . +mail-prefix-map) ; ("C-m" . ) ; mule-keymap
              ("n" . +narrow-prefix-map) ; ("C-n" . +narrow-or-widen-dwim) ; set-goal-column
-             ;; ("o" . other-window) ("C-o" . guix) ; delete-blank-lines ; "os" mnemonic
+             ;; ("o" . ace-window) ; other-window ("C-o" . guix) ; delete-blank-lines ; "os" mnemonic
              ("p" . +project-prefix-map) ; ("C-p" . ) ; mark-page
              ("q" . kbd-macro-query) ("C-q" . read-only-mode)
              ("r" . +registers-prefix-map) ; ("C-r" . consult-recent-file) ; find-file-read-only
@@ -3015,51 +3015,108 @@ Limit list of buffers to those matching the current
                 "Split the frame if there is a single window."
                 (when (one-window-p) (split-window-sensibly))))
 
-  (bind-keys
-   :map global-map
-   ("M-o" . other-window)
-   :map +prefix-map
-   ("o" . other-window)
-   ("0" . delete-window) ; `s-k' or `s-0'
-   ("1" . delete-other-windows) ; `s-K' or `s-1'
-   ("2" . split-window-below) ; `s-s' or `s-2'
-   ;; ("M-2" . +split-window-below-and-focus) ; lambda emacs
-   ("3" . split-window-right) ; `s-v' or `s-3'
-   ;; ("M-3" . +split-window-right-and-focus) ; lambda emacs
-   ("4" . ctl-x-4-prefix)
-   ("5" . ctl-x-5-prefix)
-   ;; ("6" . )
-   ;; ("7" . )
-   ;; ("8" . )
-   ;; ("9" . )
-   ;; ("*" . )
-   ;; ("&" . )
-   ("+" . balance-windows-area) ; `s-+'
-   ("#" . server-edit) ; `s-#'
-   :map +window-prefix-map
-   ;; TODO make all these into s-* keybinds with sxhkd
-   ("-" . fit-window-to-buffer) ; `s--'
-   ("^" . tear-off-window) ; ^ should be tear or detach
-   ("0" . delete-windows-on)
-   ("1" . delete-other-windows-vertically) ; `s-!'
-   ("2" . split-root-window-below) ; `s-S' or `s-@'
-   ("3" . split-root-window-right) ; `s-V' or `s-\#'
-   ("d" . toggle-window-dedicated)
-   ("q" . quit-window)
-   ("s" . window-toggle-side-windows)
-   ;; windmove
-   ("a" . windmove-up)
-   ("A" . windmove-swap-states-up)
-   ("e" . windmove-right)
-   ("E" . windmove-swap-states-right)
-   ("h" . windmove-down)
-   ("H" . windmove-swap-states-down)
-   ("o" . other-window)
-   ("r" . +window-toggle-split)
-   ;; ("r" . window-layout-transpose) ; Emacs 31
-   ;; ("R" . rotate-windows-back) ; Emacs 31
-   ("y" . windmove-left)
-   ("Y" . windmove-swap-states-left)))
+  (bind-keys :map global-map
+             ("M-o" . other-window)
+             :map +prefix-map
+             ("0" . delete-window) ; `s-k' or `s-0'
+             ("1" . delete-other-windows) ; `s-K' or `s-1'
+             ("2" . split-window-below) ; `s-s' or `s-2'
+             ;; ("M-2" . +split-window-below-and-focus) ; lambda emacs
+             ("3" . split-window-right) ; `s-v' or `s-3'
+             ;; ("M-3" . +split-window-right-and-focus) ; lambda emacs
+             ("4" . ctl-x-4-prefix)
+             ("5" . ctl-x-5-prefix)
+             ;; ("6" . )
+             ;; ("7" . )
+             ;; ("8" . )
+             ;; ("9" . )
+             ;; ("*" . )
+             ;; ("&" . )
+             ("+" . balance-windows-area) ; `s-+'
+             ("#" . server-edit) ; `s-#'
+             :map +window-prefix-map
+             ;; TODO make all these into s-* keybinds with sxhkd
+             ("-" . fit-window-to-buffer) ; `s--'
+             ("^" . tear-off-window) ; ^ should be tear or detach
+             ("0" . delete-windows-on)
+             ("1" . delete-other-windows-vertically) ; `s-!'
+             ("2" . split-root-window-below) ; `s-S' or `s-@'
+             ("3" . split-root-window-right) ; `s-V' or `s-\#'
+             ("d" . toggle-window-dedicated)
+             ("q" . quit-window)
+             ("s" . window-toggle-side-windows)
+             ;; windmove
+             ("a" . windmove-up)
+             ("A" . windmove-swap-states-up)
+             ("e" . windmove-right)
+             ("E" . windmove-swap-states-right)
+             ("h" . windmove-down)
+             ("H" . windmove-swap-states-down)
+             ("o" . other-window)
+             ("r" . +window-toggle-split)
+             ;; ("r" . window-layout-transpose) ; Emacs 31
+             ;; ("R" . rotate-windows-back) ; Emacs 31
+             ("y" . windmove-left)
+             ("Y" . windmove-swap-states-left)))
+
+(use-package ace-window
+  :custom-face
+  (aw-mode-line-face ((t (:inherit (bold mode-line-emphasis)))))
+  (aw-leading-char-face ((t (:height 2.5 :weight normal))))
+  :config
+  (ace-window-display-mode 1)
+
+  (defun +ace-window-prefix ()
+    "Use `ace-window' to display the buffer of the next command.
+The next buffer is the buffer displayed by the next command invoked
+immediately after this command (ignoring reading from the minibuffer).
+Creates a new window before displaying the buffer.
+
+When `switch-to-buffer-obey-display-actions' is non-nil,
+`switch-to-buffer' commands are also supported."
+    (interactive)
+    (display-buffer-override-next-command
+     (lambda (buffer _)
+       (let (window type)
+         (setq
+          window (aw-select (propertize " ACE" 'face 'mode-line-highlight))
+          type 'reuse)
+         (cons window type)))
+     nil "[ace-window]")
+    (message "Use `ace-window' to display the next command buffer..."))
+
+  (defun +aw-take-over-window (window)
+    "Move from current window to WINDOW.
+Delete current window in the process."
+    (let ((buf (current-buffer)))
+      (if (one-window-p)
+          (delete-frame)
+        (delete-window))
+      (aw-switch-to-window window)
+      (switch-to-buffer buf)))
+
+  (setopt aw-keys '(?s ?h ?t ?a ?r ?e ?n ?i ?y) ; Graphite keyboard layout
+          aw-background nil
+          aw-display-mode-overlay nil
+          aw-dispatch-always t
+          aw-dispatch-alist '((?k aw-delete-window "Delete window")
+                              (?x aw-swap-window "Swap windows")
+                              (?m +aw-take-over-window "Move window")
+                              (?c aw-copy-window "Copy window")
+                              (?b aw-switch-buffer-in-window "Select buffer")
+                              (?o aw-flip-window)
+                              (?0 aw-delete-window "Delete window")
+                              (?1 delete-other-windows "Delete other windows")
+                              (?2 aw-split-window-horz "Split horz window")
+                              (?3 aw-split-window-vert "Split vert window")
+                              (?F aw-split-window-fair "Split fair window")
+                              ;; `C-x o g' always selects the minibuffer
+                              (?g switch-to-minibuffer)
+                              (?? aw-show-dispatch-help)))
+
+  (bind-keys :map global-map
+             ("C-x o" . ace-window) ; orig. `other-window'
+             ("C-x 4 o" . +ace-window-prefix)))
 
 (use-package display-buffer
   :no-require

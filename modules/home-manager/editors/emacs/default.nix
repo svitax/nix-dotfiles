@@ -94,6 +94,7 @@ in
               eglot-tempel
               consult-eglot
               dape
+              ace-window
               avy
               link-hint
               logos
