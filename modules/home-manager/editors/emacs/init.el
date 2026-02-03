@@ -6590,11 +6590,13 @@ to run `compile'."
              ("C-c C-." . recompile)
              :map compilation-mode-map
              ("C-d" . +comint-send-eof-and-quit)
+             ("C-c C-d" . +comint-send-eof-and-quit)
              ("C-x C-q" . +compile-toggle-comint)
              :map compilation-minor-mode-map
              ("C-x C-q" . +compile-toggle-comint)
              :map compilation-shell-minor-mode-map
              ("C-x C-q" . +compile-toggle-comint)
+             ("C-c C-d" . +comint-send-eof-and-quit)
              :map minibuffer-local-shell-command-map
              ("M-r" . +compile-input-from-history)
              :map +goto-prefix-map
