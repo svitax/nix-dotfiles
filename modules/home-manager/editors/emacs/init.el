@@ -2870,7 +2870,6 @@ together."
 
   (bind-keys :map +project-prefix-map
              ;; ("b" . project-switch-to-buffer) ; alt. `consult-project-buffer'
-             ("c" . +project-compile)
              ("d" . project-find-dir)
              ("D" . project-dired)
              ("e" . project-eshell)
@@ -6599,6 +6598,8 @@ to run `compile'."
              ("C-c C-d" . +comint-send-eof-and-quit)
              :map minibuffer-local-shell-command-map
              ("M-r" . +compile-input-from-history)
+             :map +project-prefix-map
+             ("c" . +project-compile)
              :map +goto-prefix-map
              ("n" . next-error)
              ("M-n" . next-error)
