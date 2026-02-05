@@ -45,7 +45,7 @@
         name = "lint";
         runtimeInputs = builtins.attrValues {
           inherit (pkgs)
-            nixfmt-rfc-style
+            nixfmt
             deadnix
             statix
             vulnix # TODO integrate vulnix
