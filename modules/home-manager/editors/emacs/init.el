@@ -7018,7 +7018,9 @@ Add a bookmark handler for shell buffer and activate the
              ("s" . +project-shell)
              :map shell-mode-map
              ("M-r" . +consult-history-comint-send)
-             ("C-c C-w" . comint-write-output)))
+             ("C-c C-w" . comint-write-output)
+             :map shell-command-mode-map
+             ("C-c C-d" . +comint-send-eof-and-quit)))
 
 (use-package native-complete
   :disabled t ; NOTE disabled 2025-06-26
