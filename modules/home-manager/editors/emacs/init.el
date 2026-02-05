@@ -3009,10 +3009,10 @@ Limit list of buffers to those matching the current
 
   ;; Make `other-window' split the frame when there's only one window, giving
   ;; the command a use when it has none.
-  (advice-add 'other-window :before
-              (defun +other-window-split-if-single (&rest _)
-                "Split the frame if there is a single window."
-                (when (one-window-p) (split-window-sensibly))))
+  (defun +other-window-split-if-single (&rest _)
+    "Split the frame if there is a single window."
+    (when (one-window-p) (split-window-sensibly)))
+  (advice-add 'other-window :before #'+other-window-split-if-single)
 
   (bind-keys :map global-map
              ("M-o" . other-window)
@@ -3093,6 +3093,8 @@ Delete current window in the process."
         (delete-window))
       (aw-switch-to-window window)
       (switch-to-buffer buf)))
+
+  (advice-add 'aw-flip-window :before #'+other-window-split-if-single)
 
   (setopt aw-keys '(?s ?h ?t ?a ?r ?e ?n ?i ?y) ; Graphite keyboard layout
           aw-background nil
