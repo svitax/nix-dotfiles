@@ -2029,12 +2029,12 @@ This is done to accommodate `+vertico-multiform-minimal'."
 
   (defun +vertico-minimal-complete ()
     "Expand contents and show remaining candidates, if needed.
-This is dote to accommodate `+vertico-multiform-minimal'."
+This is done to accommodate `+vertico-multiform-minimal'."
     (interactive)
     (if (and vertico-unobtrusive-mode
              (> vertico--total 1))
         (progn
-          (minibuffer-complete)
+          (completion-at-point)
           (+vertico-minimal-next))
       (vertico-insert)))
 
@@ -2047,7 +2047,7 @@ first one. Else do `vertico-exit'."
     (cond
      ((and (= vertico--total 1)
            (not (eq 'file (vertico--metadata-get 'category))))
-      (minibuffer-complete)
+      (completion-at-point)
       (vertico-exit))
      ((and vertico-unobtrusive-mode (> vertico--total 1))
       (minibuffer-complete-and-exit)
