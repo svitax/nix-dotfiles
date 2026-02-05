@@ -3014,9 +3014,7 @@ Limit list of buffers to those matching the current
     (when (one-window-p) (split-window-sensibly)))
   (advice-add 'other-window :before #'+other-window-split-if-single)
 
-  (bind-keys :map global-map
-             ("M-o" . other-window)
-             :map +prefix-map
+  (bind-keys :map +prefix-map
              ("0" . delete-window) ; `s-k' or `s-0'
              ("1" . delete-other-windows) ; `s-K' or `s-1'
              ("2" . split-window-below) ; `s-s' or `s-2'
