@@ -7994,8 +7994,10 @@ written in lower case and ignore casing while spell-checking."
   ;; mode when `modus-themes-toggle' is called.
 
   ;; Enable `visual-line-mode' in the pdf-annot-edit-contents buffer.
-  (add-hook 'pdf-annot-edit-contents-minor-mode-hook
-            #'+auto-fill-or-visual-line-mode)
+  (add-hook 'pdf-annot-edit-contents-minor-mode-hook (lambda ()
+                                                       (auto-fill-mode -1)
+                                                       (visual-line-mode +1)))
+
   ;; Enable `visual-line-mode' in the annotations buffer (*Contents*) by
   ;; advising the function responsible for creating it.
   (defun +pdf-annot-visual-line (_id _buffer)
