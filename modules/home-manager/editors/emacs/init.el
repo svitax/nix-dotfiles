@@ -7340,14 +7340,15 @@ library/userland functions"
     :global t
     (if +elisp-mode
         (progn
-          (font-lock-add-keywords
-           'emacs-lisp-mode '((+elisp-highlight-vars-and-faces . +elisp-face)))
+          ;; (font-lock-add-keywords
+          ;;  'emacs-lisp-mode '((+elisp-highlight-vars-and-faces . +elisp-face)))
           (when +elisp-better-lisp-indent
             (advice-add 'calculate-lisp-indent
-                        :override #'+elisp--calculate-lisp-indent-a)))
-      (advice-remove 'calculate-lisp-indent #'+elisp--calculate-lisp-indent)
-      (font-lock-remove-keywords
-       'emacs-lisp-mode '((+elisp-highlight-vars-and-faces . +elisp-face)))))
+                        :override #'+elisp-calculate-lisp-indent)))
+      (advice-remove 'calculate-lisp-indent #'+elisp-calculate-lisp-indent)
+      ;; (font-lock-remove-keywords
+      ;;  'emacs-lisp-mode '((+elisp-highlight-vars-and-faces . +elisp-face)))
+      ))
 
   (+elisp-mode 1)
 
