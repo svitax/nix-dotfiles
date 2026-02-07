@@ -5937,6 +5937,45 @@ designators specifying which revisions to compare."
         (diff-buffer-with-file buffer)
       (call-interactively #'vc-diff)))
 
+  (defun +vc-git-reword-commit ()
+    "Edit current commint message."
+    (interactive)
+    (vc-checkin nil 'git nil nil nil "")
+    (vc-git-log-edit-toggle-amend))
+
+  (defun +vc-git--reset (commit-hash)
+    "Reset to commit HASH."
+    (if (and commit-hash (string-match-p "^[0-9a-f]\\{7,40\\}$" commit-hash))
+        (if (yes-or-no-p (format "Reset current branch to commit %s?"
+                                 commit-hash))
+            (progn
+              (let ((default-directory (vc-root-dir)))
+                (vc-git-command nil 0 nil "reset" "--hard" commit-hash)
+                (message "Reset to commit %s completed." commit-hash)))
+          (message "Reset cancelled."))
+      "Invalid commit hash."))
+
+  (defun +vc-git--commit-hash-at-point ()
+    "Return commit hash at point."
+    (let ((hash (log-view-current-entry nil t)))
+      (cadr hash)))
+
+  (defun +vc-git--select-commit ()
+    (let* ((history-add-new-input nil)
+           (commit-strings (split-string
+                            (shell-command-to-string "git log --oneline")
+                            "\n"
+                            t))
+           (selected (completing-read "Select commit: " commit-strings nil t))
+           (selected-hash (car (split-string selected))))
+      selected-hash))
+
+  (defun +vc-git-reset (&optional hash)
+    (interactive)
+    (+vc-git--reset (or hash
+                        (+vc-git--commit-hash-at-point)
+                        (+vc-git--select-commit))))
+
   (setopt vc-follow-symlinks t
           vc-find-revision-no-save t
           vc-git-log-edit-summary-target-len 50
@@ -5969,6 +6008,7 @@ designators specifying which revisions to compare."
              ("F" . vc-pull) ; symmetric with P: `vc-push'
              ("j" . +vc-dir-jump) ; similar to `dired-jump'
              ("k" . vc-delete-file) ; 'k' for kill==>delete is more common
+             ("R" . +vc-git-reword-commit)
              ("x" . nil) ; unmap `vc-delete-file'
              ("=" . +vc-diff-dwim) ; orig. `vc-diff'
              :map vc-dir-mode-map
@@ -5994,6 +6034,8 @@ designators specifying which revisions to compare."
              ("O" . vc-log-outgoing)
              ("P" . vc-push)
              ("s" . vc-log-search)
+             :map vc-git-log-view-mode-map
+             ("r" . +vc-git-reset)
              :map diff-mode-map
              ("L" . vc-print-root-log)
              ("u" . vc-revert)
