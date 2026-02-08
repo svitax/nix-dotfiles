@@ -6037,6 +6037,7 @@ designators specifying which revisions to compare."
              ("s" . vc-log-search)
              :map vc-git-log-view-mode-map
              ("r" . +vc-git-reset)
+             ("R" . +vc-git-reword-commit)
              :map diff-mode-map
              ("L" . vc-print-root-log)
              ("u" . vc-revert)
