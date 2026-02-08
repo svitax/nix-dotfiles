@@ -397,7 +397,7 @@ With prefix argument ARG, prompt for a directory."
              ("l" . +bib-prefix-map) ; count-lines-page ; ("C-l" . ) ; downcase-region ; "lib" mnemonic
              ("m" . +mail-prefix-map) ; ("C-m" . ) ; mule-keymap
              ("n" . +narrow-prefix-map) ; ("C-n" . +narrow-or-widen-dwim) ; set-goal-column
-             ;; ("o" . ace-window) ; other-window ("C-o" . guix) ; delete-blank-lines ; "os" mnemonic
+             ;; ("o" . other-window) ("C-o" . guix) ; delete-blank-lines ; "os" mnemonic
              ("p" . +project-prefix-map) ; ("C-p" . ) ; mark-page
              ("q" . kbd-macro-query) ("C-q" . read-only-mode)
              ("r" . +registers-prefix-map) ; ("C-r" . consult-recent-file) ; find-file-read-only
@@ -3015,6 +3015,7 @@ Limit list of buffers to those matching the current
   (advice-add 'other-window :before #'+other-window-split-if-single)
 
   (bind-keys :map +prefix-map
+             ("o" . other-window)
              ("0" . delete-window) ; `s-k' or `s-0'
              ("1" . delete-other-windows) ; `s-K' or `s-1'
              ("2" . split-window-below) ; `s-s' or `s-2'
@@ -3114,7 +3115,7 @@ Delete current window in the process."
                               (?? aw-show-dispatch-help)))
 
   (bind-keys :map global-map
-             ("C-x o" . ace-window) ; orig. `other-window'
+             ("M-o" . ace-window)
              ("C-x 4 o" . +ace-window-prefix)))
 
 (use-package display-buffer
