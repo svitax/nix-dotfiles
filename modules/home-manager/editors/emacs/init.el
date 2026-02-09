@@ -508,6 +508,8 @@ With prefix argument ARG, prompt for a directory."
        `(keycast-command ((,c :inherit mode-line :foreground ,fg-mode-line-active :background ,bg-mode-line-active))))))
   (add-hook 'enable-theme-functions #'+modus-themes-customize-faces))
 
+(use-package doric-themes)
+
 ;;;;;;;;;;;;
 ;;;; ui ;;;;
 
