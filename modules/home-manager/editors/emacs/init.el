@@ -389,15 +389,15 @@ With prefix argument ARG, prompt for a directory."
              ;; ("d" . dired) ("C-d" . consult-dir) ; list-directory
              ("e" . kmacro-end-and-call-macro) ; ("C-e" . eval-last-sexp)
              ;; ("f" . ) ; set-fill-column ("C-f" . find-file)
-             ;; ("g" . +guix-prefix-map) ("C-g" . )
+             ;; ("g" . +guix-prefix-map) ("C-g" . ) ; "guix" mnemonic
              ;; ("h" . mark-whole-buffer) ("C-h" . help-map)
              ;; ("i" . +org-capture-inbox) ; insert-file ("C-i" . indent-rigidly)
              ;; ("j" . ) ; ("C-j" . dired-jump)
              ;; ("k" . +kill-this-buffer) ("C-k" . kmacro-keymap)
              ("l" . +bib-prefix-map) ; count-lines-page ; ("C-l" . ) ; downcase-region ; "lib" mnemonic
-             ("m" . +mail-prefix-map) ; ("C-m" . ) ; mule-keymap
+             ;; ("m" . notmuch-mua-new-mail) ; compose-mail ("C-m" . ) ; mule-keymap
              ("n" . +narrow-prefix-map) ; ("C-n" . +narrow-or-widen-dwim) ; set-goal-column
-             ;; ("o" . other-window) ("C-o" . guix) ; delete-blank-lines ; "os" mnemonic
+             ;; ("o" . other-window) ("C-o" . delete-blank-lines)
              ("p" . +project-prefix-map) ; ("C-p" . ) ; mark-page
              ("q" . kbd-macro-query) ("C-q" . read-only-mode)
              ("r" . +registers-prefix-map) ; ("C-r" . consult-recent-file) ; find-file-read-only
