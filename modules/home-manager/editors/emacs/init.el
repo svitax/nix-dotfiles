@@ -8366,45 +8366,6 @@ See also `org-save-all-org-buffers'."
   ;;         org-html-htmlize-output-type nil
   ;;         org-html-head-include-default-style nil)
 
-  ;; For visibility cycling, I now rely on Org Speed Keys (a built-in feature of
-  ;; Org mode).
-  ;;
-  ;; Speed Keys let you trigger commands with a single keystroke when the point
-  ;; is at the beginning of a headline. A number of keys are predefined out of
-  ;; the box; for example, `c' is already mapped to `org-cycle', which is what
-  ;; `TAB' normally does in Org mode.
-  ;;
-  ;; I've customized `org-speed-commands' to only bind editing actions to keys
-  ;; that require the Shift modifier. I like keeping lowercase keys reserved for
-  ;; non-destructive commands. As a next step, I may remap Space and
-  ;; Shift-Space/Backspace to scroll the buffer. That would bring me even closer
-  ;; to a more consistent reading experience.
-
-  (setopt org-use-speed-commands t
-          org-speed-commands
-          '(("Outline Navigation and Visibility")
-            ("n" . (org-speed-move-safe 'org-next-visible-heading))
-            ("p" . (org-speed-move-safe 'org-previous-visible-heading))
-            ("f" . (org-speed-move-safe 'org-forward-heading-same-level))
-            ("b" . (org-speed-move-safe 'org-backward-heading-same-level))
-            ("u" . (org-speed-move-safe 'outline-up-heading))
-            ("j" . org-goto)
-            ("c" . org-cycle)
-            ("C" . org-shifttab)
-            (" " . org-display-outline-path)
-            ("s" . org-toggle-narrow-to-subtree)
-            ("Editing")
-            ("I" . (progn (forward-char 1) (call-interactively
-                                            'org-insert-heading-respect-content)))
-            ("^" . org-sort)
-            ("W" . org-refile)
-            ("@" . org-mark-subtree)
-            ("," . org-mark-subtree)
-            ("T" . org-todo)
-            (":" . org-set-tags-command)
-            ("Misc")
-            ("?" . org-speed-command-help)))
-
   ;; By default, `org-cycle' moves through three visibility states when toggling
   ;; a headline: folded -> children -> subtree -> folded. Personally, I rarely
   ;; want to expand an entire subtree. My preference is to only toggle between a
