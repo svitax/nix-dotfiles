@@ -8366,129 +8366,6 @@ See also `org-save-all-org-buffers'."
   ;;         org-html-htmlize-output-type nil
   ;;         org-html-head-include-default-style nil)
 
-  ;; It's well known that the `TAB' key is heavily overloaded in
-  ;; Emacs. Depending on the context and configuration, it can perform one of
-  ;; four types of actions: line indentation, candidate completion (during
-  ;; editing), or field navigation and visibility cycling (during
-  ;; reading).
-  ;;
-  ;; Personally, I want to move in the opposite direction: removing visibility
-  ;; cycling from the list of `TAB'-triggered actions. Three types of behaviors
-  ;; are already plenty. I'd rather assign visibility control to a more complex
-  ;; keybinding and prioritize field navigation instead. I also value
-  ;; consistency in keybindings, so unifying `TAB' behavior across modes is
-  ;; important to me (granted, if you don't use Info or navigate Help buffers
-  ;; with `TAB', you might not miss that behavior in Org mode).
-  ;;
-  ;; What exactly is considered a "field" is largely up to the user. In general,
-  ;; it should be a structural element in a file where a non-trivial action can
-  ;; be performed, making it useful to have an easy way to jump between
-  ;; them. For my setup, I chose to treat only links and headlines as fields,
-  ;; similar to how Info handles navigation. Of course, others might include
-  ;; property drawers, code blocks, custom buttons, or other interactive
-  ;; elements. I wouldn't overdo it though--too many fields and `TAB' navigation
-  ;; loses its utility.
-
-  (defun +org-next-visible-heading-or-link (&optional arg)
-    "Move to the next visible heading or link, whichever comes first.
-With prefix ARG and the point on a heading(link): jump over subsequent
-headings(links) to the next link(heading), respectively.  This is useful
-to skip over a long series of consecutive headings(links)."
-    (interactive "P")
-    (let ((next-heading (save-excursion
-                          (org-next-visible-heading 1)
-                          (when (org-at-heading-p) (point))))
-          (next-link (save-excursion
-                       (when (+org-next-visible-link) (point)))))
-      (when arg
-        (if (and (org-at-heading-p) next-link)
-            (setq next-heading nil)
-          (if (and (looking-at org-link-any-re) next-heading)
-              (setq next-link nil))))
-      (cond
-       ((and next-heading next-link) (goto-char (min next-heading next-link)))
-       (next-heading (goto-char next-heading))
-       (next-link (goto-char next-link)))))
-
-  (defun +org-previous-visible-heading-or-link (&optional arg)
-    "Move to the previous visible heading or link, whichever comes first.
-With prefix ARG and the point on a heading(link): jump over subsequent
-headings(links) to the previous link(heading), respectively.  This is useful
-to skip over a long series of consecutive headings(links)."
-    (interactive "P")
-    (let ((prev-heading (save-excursion
-                          (org-previous-visible-heading 1)
-                          (when (org-at-heading-p) (point))))
-          (prev-link (save-excursion
-                       (when (+org-next-visible-link t) (point)))))
-      (when arg
-        (if (and (org-at-heading-p) prev-link)
-            (setq prev-heading nil)
-          (if (and (looking-at org-link-any-re) prev-heading)
-              (setq prev-link nil))))
-      (cond
-       ((and prev-heading prev-link) (goto-char (max prev-heading prev-link)))
-       (prev-heading (goto-char prev-heading))
-       (prev-link (goto-char prev-link)))))
-
-  ;; Adapted from org-next-link to only consider visible links
-  (defun +org-next-visible-link (&optional search-backward)
-    "Move forward to the next visible link.
-When SEARCH-BACKWARD is non-nil, move backward."
-    (interactive)
-    (let ((pos (point))
-          (search-fun (if search-backward #'re-search-backward
-                        #'re-search-forward)))
-      ;; Tweak initial position: make sure we do not match current link.
-      (cond
-       ((and (not search-backward) (looking-at org-link-any-re))
-        (goto-char (match-end 0)))
-       (search-backward
-        (pcase (org-in-regexp org-link-any-re nil t)
-          (`(,beg . ,_) (goto-char beg)))))
-      (catch :found
-        (while (funcall search-fun org-link-any-re nil t)
-          (let* ((begin (match-beginning 0)))
-            (unless (org-fold-core-folded-p begin)
-              (let* ((context (save-excursion
-                                (goto-char begin)
-                                (org-element-context)))
-                     (etype (org-element-type context)))
-                (pcase etype
-                  (`node-property
-                   (goto-char begin)
-                   (throw :found t))
-                  (`link
-                   (goto-char (org-element-property :begin context))
-                   (throw :found t)))
-                ))))
-        (goto-char pos)
-        ;; No further link found
-        nil)))
-
-  ;; In +org-tab and +org-shifttab, I preserved the default behavior of
-  ;; `org-cycle' within a table: it navigates between table fields.
-
-  (defun +org-shifttab (&optional arg)
-    "Move to the previous visible heading or link.
-If already at a heading, move first to its beginning.  When inside a table,
-move to the previous field."
-    (interactive "P")
-    (cond
-     ((org-at-table-p) (call-interactively #'org-table-previous-field))
-     ((and (not (bolp)) (org-at-heading-p)) (beginning-of-line))
-     (t (call-interactively #'+org-previous-visible-heading-or-link))))
-
-  (defun +org-tab (&optional arg)
-    "Move to the next visible heading or link.
-When inside a table, re-align the table and move to the next field."
-    (interactive "P")
-    (cond
-     ((org-at-drawer-p) (call-interactively #'org-cycle))
-     ((org-at-table-p) (org-table-justify-field-maybe)
-      (call-interactively #'org-table-next-field))
-     (t (call-interactively #'+org-next-visible-heading-or-link))))
-
   ;; For visibility cycling, I now rely on Org Speed Keys (a built-in feature of
   ;; Org mode).
   ;;
@@ -8560,8 +8437,6 @@ When inside a table, re-align the table and move to the next field."
    ;; I don't like that Org binds one zillion keys, so if I want one for
    ;; something more important, I disable it from here.
    :map org-mode-map
-   ("<tab>" . +org-tab)
-   ("<backtab>" . +org-shifttab)
    ("C-'" . nil)
    ("C-," . nil)
    ("C-<return>" . nil)
