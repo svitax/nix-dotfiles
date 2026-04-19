@@ -9081,7 +9081,8 @@ continue, per `org-agenda-skip-function'."
           denote-known-keywords '("reference" "atlas" "literature" "evergreen")
           ;; Prompt for title, keywords, and signature in Denote commands that
           ;; prompt for user input to construct a Denote file name.
-          denote-prompts '(title keywords signature))
+          denote-prompts '(title keywords signature)
+          denote-org-store-link-to-heading 'id)
 
   ;; Highlight Denote file names in Dired buffers.
   ;;
