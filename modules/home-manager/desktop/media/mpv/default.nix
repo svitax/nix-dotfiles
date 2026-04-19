@@ -29,7 +29,14 @@ in
           mpv-playlistmanager
           reload
           autoload
+          # TODO mpv: enable copy/pasting urls with logging and clipboard support
+          # eisa01.smart-copy-paste-2
+          # TODO mpv: add undo/redo for accidental time jumps
+          # eisa01.undoredo
           mpv-image-viewer.freeze-window
+          # TODO mpv: blacklist playlist entries based on their extension (need
+          # to add script-opts/blacklist_extensions.conf)
+          # occivink.blacklistExtensions
         ];
       };
       # TODO extract out the .conf files for my mpv config so it is easier to
