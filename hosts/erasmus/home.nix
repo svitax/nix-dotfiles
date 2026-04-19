@@ -15,7 +15,7 @@
         discord.enable = true;
       };
       browsers = {
-        chromium.enable = true;
+        chromium.enable = false;
         librewolf.enable = true;
         qutebrowser.enable = true;
       };
