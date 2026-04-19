@@ -146,7 +146,6 @@ in
               ol-notmuch
               shr-tag-pre-highlight
               elpher
-              # leetcode
               gptel
               gptel-quick
               nerd-icons
