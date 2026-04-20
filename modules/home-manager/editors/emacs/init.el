@@ -8213,18 +8213,6 @@ written in lower case and ignore casing while spell-checking."
           org-enforce-todo-dependencies t
           org-enforce-todo-checkbox-dependencies t)
 
-  ;; Org can keep a record of state changes, such as when we set an entry marked
-  ;; with the 'TODO' keyword as 'DONE' or when we reschedule an appointment.
-  ;; This data is stored in 'LOGBOOK' drawer right below the heading. I choose
-  ;; to opt into this feature beacuse it is sometimes useful to capture mistakes
-  ;; or figure out intent in the absence of further clarification (though I do
-  ;; tend to write why something happened).
-  (setopt org-log-done 'time
-          org-log-into-drawer t
-          org-log-note-clock-out nil
-          org-log-redeadline 'time
-          org-log-reschedule 'time)
-
   ;; The refile mechanism is how we can reparent a heading, by moving it from
   ;; one place to another. We do this with the command `org-refile', bound to
   ;; 'C-c C-w' by default. A common workflow where refiling is essential is to
