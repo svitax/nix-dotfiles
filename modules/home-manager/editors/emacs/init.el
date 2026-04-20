@@ -4293,7 +4293,8 @@ There is no dragging the character forward. This is the behavior of
 
   (setopt kill-whole-line t
           kill-do-not-save-duplicates t
-          save-interprogram-paste-before-kill t)
+          save-interprogram-paste-before-kill t
+          backward-delete-char-untabify-method 'hungry)
 
   (bind-keys :map global-map
              ("M-c" . capitalize-dwim)
@@ -8411,7 +8412,13 @@ See also `org-save-all-org-buffers'."
    ("M-g M-o" . consult-org-heading) ; alt. `consult-outline'
    :map org-src-mode-map
    ("M-," . org-edit-src-exit) ; see M-. above
-   ))
+   :repeat-map org-mode-repeat-map
+   ("C-n" . org-next-visible-heading)
+   ("C-p" . org-previous-visible-heading)
+   ("C-f" . org-forward-heading-same-level)
+   ("C-b" . org-backward-heading-same-level)
+   ("C-^" . org-up-element)
+   ("C-_" . org-down-element)))
 
 (use-package org-capture
   :config
