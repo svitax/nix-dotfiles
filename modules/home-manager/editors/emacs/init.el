@@ -6115,6 +6115,7 @@ designators specifying which revisions to compare."
         git-commit-style-convention-checks '(non-empty-second-line))
 
   (setopt magit-diff-refine-hunk t
+          magit-diff-fontify-hunk t
           magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
           magit-commit-diff-inhibit-same-window nil)
 
