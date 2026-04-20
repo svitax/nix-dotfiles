@@ -8393,6 +8393,15 @@ See also `org-save-all-org-buffers'."
       (add-hook hook #'pulsar-recenter-middle)
       (add-hook hook #'pulsar-reveal-entry)))
 
+  (defvar-keymap org-mode-repeat-map
+    :repeat (:hints ((org-next-visible-heading . "next")
+                     (org-previous-visible-heading . "prev")
+                     (org-forward-heading-same-level . "forward")
+                     (org-backward-heading-same-level . "backward")
+                     (org-up-element . "up")
+                     (org-down-element . "down")
+                     (org-cycle . "cycle"))))
+
   (bind-keys
    :map global-map
    ("C-c l" . org-store-link)
