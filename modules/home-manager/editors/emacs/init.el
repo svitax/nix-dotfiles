@@ -6382,17 +6382,17 @@ Respects `diff-hl-disable-on-remote'."
   (bind-keys :map +toggle-prefix-map
              ("d" . diff-hl-mode)
              :map vc-prefix-map
-             ("n" . diff-hl-next-hunk)
-             ("p" . diff-hl-previous-hunk)
              ("S" . diff-hl-stage-dwim)
              ("U" . diff-hl-revert-hunk)
              ("*" . diff-hl-show-hunk)
              ("SPC" . diff-hl-mark-hunk)
+             ("<up>" . diff-hl-previous-hunk)
+             ("<down>" . diff-hl-next-hunk)
              :map diff-hl-mode-map
              ([remap vc-diff] . nil) ; undo the default remapping of `vc-diff'
              :map diff-hl-command-map
-             ("n" . diff-hl-next-hunk)
-             ("p" . diff-hl-previous-hunk)
+             ("<up>" . diff-hl-previous-hunk)
+             ("<down>" . diff-hl-next-hunk)
              ("]" . nil) ; orig. diff-hl-next-hunk
              ("[" . nil) ; orig. diff-hl-previous-hunk
              ("}" . diff-hl-show-hunk-next)
@@ -6400,8 +6400,8 @@ Respects `diff-hl-disable-on-remote'."
              ("U" . diff-hl-revert-hunk)
              ("SPC" . diff-hl-mark-hunk)
              :map diff-hl-repeat-map
-             ("n" . diff-hl-next-hunk)
-             ("p" . diff-hl-previous-hunk)
+             ("<up>" . diff-hl-previous-hunk)
+             ("<down>" . diff-hl-next-hunk)
              ("}" . diff-hl-show-hunk-next)
              ("{" . diff-hl-show-hunk-previous)
              ("*" . diff-hl-show-hunk)
