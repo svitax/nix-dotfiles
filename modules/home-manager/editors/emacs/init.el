@@ -8427,7 +8427,8 @@ See also `org-save-all-org-buffers'."
    ("C-f" . org-forward-heading-same-level)
    ("C-b" . org-backward-heading-same-level)
    ("C-^" . org-up-element)
-   ("C-_" . org-down-element)))
+   ("C-_" . org-down-element)
+   ("TAB" . org-cycle)))
 
 (use-package org-capture
   :config
