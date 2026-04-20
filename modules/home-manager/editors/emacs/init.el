@@ -6366,6 +6366,8 @@ Respects `diff-hl-disable-on-remote'."
   ;; Get realtime feedback in diffs after staging/unstaging hunks.
   (setopt diff-hl-show-staged-changes nil)
 
+  (setopt diff-hl-update-async t)
+
   ;; Recenter to location of diff.
   (advice-add 'diff-hl-next-hunk
               :after (defun +diff-hl-recenter (&optional _) (recenter)))
