@@ -8419,6 +8419,7 @@ See also `org-save-all-org-buffers'."
    ("M-." . org-edit-special) ; mnemonic is global M-. that goes to source (alias for C-c ')
    ("M-g o" . consult-org-heading) ; alt. `consult-outline'
    ("M-g M-o" . consult-org-heading) ; alt. `consult-outline'
+   ("M-g i" . consult-org-heading) ; alt. `consult-outline'
    :map org-src-mode-map
    ("M-," . org-edit-src-exit) ; see M-. above
    :repeat-map org-mode-repeat-map
