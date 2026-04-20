@@ -5998,7 +5998,9 @@ designators specifying which revisions to compare."
              (2 'change-log-list nil lax)
              (3 'change-log-name)
              (4 'change-log-date)))
-          vc-git-revision-complete-only-branches t)
+          vc-git-revision-complete-only-branches t
+          vc-display-failed-async-commands t ; Emacs 31
+          )
 
   (bind-keys :map +prefix-map
              ("v" . vc-prefix-map)
