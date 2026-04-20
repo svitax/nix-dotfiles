@@ -6235,9 +6235,10 @@ Also see `+ediff-store-layout'."
           ediff-show-clashes-only t))
 
 (use-package diff-hl
-  ;; `diff-hl' use the margins or fringes to highlight changes in the current
-  ;; buffer. The indicators are colour-coded to denote whether a change is an
-  ;; addition, removal, or change that includes a bit of both.
+  ;; The `diff-hl' package by Dmitry Gutov applies a highlight to the side of
+  ;; the window on lines that have changes, as tracked by the underlying version
+  ;; control software. The indicators are colour-coded to denote whether a
+  ;; change is an addition, removal, or change that includes a bit of both.
   ;;
   ;; This package offers some more features, such as the ability to move between
   ;; diff hunks while editing the buffers.
@@ -6410,9 +6411,9 @@ Respects `diff-hl-disable-on-remote'."
 
   (with-eval-after-load 'diff-hl-show-hunk
     (bind-keys :map diff-hl-show-hunk-map
-               ;; Unfortunately there's no easier way to change the footer in the
-               ;; `diff-hl-show-hunk-inline-popup' other then redefining the whole
-               ;; function, so it will be misleading with these bindings.
+               ;; Unfortunately there's no easier way to change the footer in
+               ;; the `diff-hl-show-hunk-inline-popup' other then redefining the
+               ;; whole function, so it will be misleading with these bindings.
                ("[" . nil) ; orig. diff-hl-show-hunk-previous
                ("]" . nil) ; orig. diff-hl-show-hunk-next
                ("S" . diff-hl-show-hunk-stage-hunk)
