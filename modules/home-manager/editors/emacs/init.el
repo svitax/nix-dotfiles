@@ -47,6 +47,12 @@
     (advice-add 'native--compile-async-skip-p
                 :around '+native--compile-async-skip-p))
 
+  ;; The default `read-process-output-max' is 64KB, which is still quite
+  ;; conservative. Modern LSP servers like `rust-analyzer' or `clangd' routinely
+  ;; send multi-megabyte responses. Bumping this reduces the number of read
+  ;; calls Emacs has to make:
+  (setopt read-process-output-max (* 4 1024 1024)) ; 4MB
+
   ;; I like starting with a scratch buffer. I know that a lot of users specify a
   ;; dashboard or an Org agenda view, but I prefer to keep things generic in
   ;; this regard. Besides, I would rather not accidentally divulge any potential
