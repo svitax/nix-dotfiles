@@ -1891,6 +1891,14 @@ If PATH is a file, open its parent directory and move point to the file."
 
   (add-to-list 'savehist-additional-variables 'kill-ring)
 
+  ;; The kill ring can accumulate text properties (fonts, overlays, etc.) that
+  ;; bloat the savehist file. Strip them before saving:
+  (add-hook 'savehist-save-hook
+            (lambda ()
+              (setq kill-ring
+                    (mapcar #'substring-no-properties
+                            (cl-remove-if-not #'stringp kill-ring)))))
+
   (savehist-mode))
 
 (use-package marginalia
