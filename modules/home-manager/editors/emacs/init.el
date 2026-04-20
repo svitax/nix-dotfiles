@@ -3683,6 +3683,10 @@ end of the buffer.")
 
   (add-hook 'isearch-mode-end-hook #'+isearch-exit-at-start)
 
+  (with-eval-after-load 'savehist
+    (add-to-list 'savehist-additional-variables 'search-ring)
+    (add-to-list 'savehist-additional-variables 'regexp-search-ring))
+
   (bind-keys
    :map +search-prefix-map
    ("c" . count-matches)
