@@ -10462,18 +10462,37 @@ properly."
     (lambda (url &rest _)
       (funcall
        fn
-       (s-chop-prefix "https://www.google.com/url?q=" url))))
+       (url-unhex-string
+        (car (split-string
+              (s-chop-prefixes '("https://www.google.com/url?q="
+                                 "https://duckduckgo.com/l/?uddg=")
+                               url)
+              "&rut="))))))
+
+  (defun +browse-url-mpv (url &rest _args)
+    "Start an mpv process playing the video stream at URL."
+    (start-process "umpv" nil "umpv" url))
+
+  (defun +browse-url-pdf (url &rest _args)
+    "Fetch remote PDF and open in `pdf-tools' within Emacs."
+    (let ((tmp (make-temp-file "emacs-pdf-" nil ".pdf")))
+      (url-copy-file url tmp t)
+      (find-file-other-window tmp)
+      (pdf-view-mode)))
 
   (setopt browse-url-browser-function 'eww-browse-url
           browse-url-secondary-browser-function 'browse-url-default-browser
           browse-url-handlers `((;; (".*\\.mp4"
                                  ;;  . (lambda (link &rest _) (empv-play-or-enqueue link)))
-                                 ".*\\.mp4"
-                                 . ,(+browse-url-purified-handler #'mpv-play-url))
-                                (".*\\(youtube.com/watch.*\\|youtu.be/.*\\)"
-                                 . ,(+browse-url-purified-handler #'mpv-play-url))
-                                ("."
-                                 . eww-browse-url))))
+                                 ".*\\.mp4$" . ,(+browse-url-purified-handler
+                                                 #'+browse-url-mpv))
+                                (".*\\(youtube\\.com\\|youtu\\.be\\|vimeo\\.com\\|twitch\\.tv\\)"
+                                 . ,(+browse-url-purified-handler
+                                     #'+browse-url-mpv))
+                                ("\\.pdf$" . +browse-url-pdf)
+                                ("^gemini://" . elpher-browse-url-elpher)
+                                ("^gopher://" . elpher-browse-url-elpher)
+                                ("." . eww-browse-url))))
 
 (use-package goto-addr
   ;; The built-in `goto-addr' is used to turn any plain text web URL into a
