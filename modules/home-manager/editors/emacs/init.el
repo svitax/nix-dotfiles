@@ -10952,7 +10952,9 @@ instead of the current one."
   ;; Imenu support for `elpher'.
   (add-hook 'eww-mode-hook '+shr-heading-setup-imenu)
 
-  (setopt elpher-default-url-type "gemini")
+  (setopt elpher-default-url-type "gemini"
+          ;; Make `eww' Pass everything through `browse-url'
+          eww-use-browse-url ".")
 
   (bind-keys
    :map elpher-mode-map
