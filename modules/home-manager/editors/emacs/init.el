@@ -10354,7 +10354,7 @@ NO-DISPLAY is sent forward to `notmuch-search'."
                     no-display))
 
   (bind-keys :map +prefix-map
-             ("m" . notmuch-mua-new-mail)
+             ("m" . notmuch)
              :map notmuch-hello-mode-map
              ("n" . widget-forward)
              ("p" . widget-backward)
