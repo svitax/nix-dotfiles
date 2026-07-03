@@ -5165,6 +5165,9 @@ The parameter NAME, ARGS, REST, and STATE are explained in the
     (eglot-inlay-hints-mode -1))
   (add-hook 'eglot-managed-mode-hook #'+eglot-disable-inlay-hints)
 
+  ;; Turn off code action indications
+  (setopt eglot-code-action-indications '(eldoc-hint))
+
   (setopt eglot-extend-to-xref t)
 
   (bind-keys
