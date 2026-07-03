@@ -11,8 +11,11 @@
 {
   imports = [
     ./hardware-configuration.nix
-    outputs.nixosModules.allModules
+    outputs.nixosModules.allModules # shouldn't need this after autowiring
   ];
+
+  # System architecture for this host
+  # nixpkgs.hostPlatform = "x86_64-linux";
 
   modules = {
     desktop = {

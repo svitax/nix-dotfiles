@@ -4,6 +4,7 @@
   outputs =
     inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
+      # TODO: hoist flake/ dir into flake-module.nix file
       imports = [ ./flake ];
     };
 

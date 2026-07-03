@@ -7,7 +7,6 @@ in
 {
   flake = {
     nixosConfigurations = {
-      # TODO rename this configuration to erasmus
       erasmus = nixosSystem {
         system = "x86_64-linux";
         specialArgs = {
@@ -17,7 +16,6 @@ in
       };
     };
     homeConfigurations = {
-      # TODO rename this configuration to evermind@erasmus
       "evermind@erasmus" = homeManagerConfiguration {
         pkgs = inputs.nixpkgs.legacyPackages.x86_64-linux;
         extraSpecialArgs = {
