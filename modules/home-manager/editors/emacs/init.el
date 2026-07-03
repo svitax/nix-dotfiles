@@ -786,7 +786,7 @@ LOCUS is a cons cell with two buffer positions."
     (setq keycast--this-command-keys (this-single-command-keys)
           keycast--this-command cmd))
   (defun keycast-capture-avy-dispatch (char)
-    (if-let ((cmd (assoc char avy-dispatch-alist)))
+    (if-let* ((cmd (assoc char avy-dispatch-alist)))
         (setq keycast--this-command-keys (make-vector 1 char)
               keycast--this-command (cdr cmd))))
 
@@ -6844,7 +6844,7 @@ Set TARGET as the TARGET to build when set."
   ;; Set the default directory resolver to the current project root.
   (setopt compile-multi-default-directory
           (defun +project-current-root ()
-            (if-let ((proj (project-current)))
+            (if-let* ((proj (project-current)))
                 (project-root proj)
               default-directory)))
 
@@ -9521,16 +9521,16 @@ word to search."
     "Insert Biblio search results into the current buffer or selected
 BibTeX file."
     (interactive)
-    (if-let ((current-mode major-mode)
-             +bibliography-files
-             (bibfiles (length +bibliography-files))
-             (bibfile (cond ((eq bibfiles 1)
-                             (car +bibliography-files))
-                            ((equal major-mode 'bibtex-mode)
-                             (buffer-file-name))
-                            (t
-                             (completing-read
-                              "Select BibTeX file: " +bibliography-files)))))
+    (if-let* ((current-mode major-mode)
+              +bibliography-files
+              (bibfiles (length +bibliography-files))
+              (bibfile (cond ((eq bibfiles 1)
+                              (car +bibliography-files))
+                             ((equal major-mode 'bibtex-mode)
+                              (buffer-file-name))
+                             (t
+                              (completing-read
+                               "Select BibTeX file: " +bibliography-files)))))
         (progn
           (find-file bibfile)
           (goto-char (point-max))
@@ -10543,14 +10543,14 @@ If ARG is negative move backwards, ARG defaults to 1."
     (catch 'return
       (dotimes (_ (abs arg))
         (when (> arg 0) (end-of-line))
-        (if-let ((match
-                  (funcall (if (> arg 0)
-                               #'text-property-search-forward
-                             #'text-property-search-backward)
-                           'face '(shr-h1 shr-h2 shr-h3 shr-h4 shr-h5)
-                           (lambda (tags face)
-                             (cl-loop for x in (if (consp face) face (list face))
-                                      thereis (memq x tags))))))
+        (if-let* ((match
+                   (funcall (if (> arg 0)
+                                #'text-property-search-forward
+                              #'text-property-search-backward)
+                            'face '(shr-h1 shr-h2 shr-h3 shr-h4 shr-h5)
+                            (lambda (tags face)
+                              (cl-loop for x in (if (consp face) face (list face))
+                                       thereis (memq x tags))))))
             (goto-char
              (if (> arg 0) (prop-match-beginning match) (prop-match-end match)))
           (throw 'return nil))
