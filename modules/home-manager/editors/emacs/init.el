@@ -2921,8 +2921,8 @@ window as well."
         (kill-process proc)))
     (let ((kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions)))
       (if (and arg (not (one-window-p)))
-          (kill-buffer-and-window))
-      (kill-this-buffer)))
+          (kill-buffer-and-window)
+        (kill-buffer))))
 
   (defun +rename-buffer-or-file (newname)
     "Change current buffer's name to NEWNAME (a string).
