@@ -22,6 +22,7 @@ in
     programs.firefox = {
       enable = true;
       package = pkgs.librewolf;
+      configPath = "${config.xdg.configHome}/librewolf";
       policies = {
         DontCheckDefaultBrowser = true;
         DisablePocket = true;
@@ -50,7 +51,7 @@ in
       };
     };
 
-    home.file.".librewolf/profiles.ini".text = ''
+    home.file."${config.xdg.configHome}/librewolf/librewolf/profiles.ini".text = ''
       [Profile0]
       Name=default
       IsRelative=1
@@ -62,7 +63,7 @@ in
       Version=2
     '';
 
-    home.file.".librewolf/${cfg.profileName}.default/user.js" = {
+    home.file."${config.xdg.configHome}/librewolf/librewolf/${cfg.profileName}.default/user.js" = {
       source = ./user.js;
     };
   };
