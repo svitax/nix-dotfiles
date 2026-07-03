@@ -1540,7 +1540,7 @@ Add this to `dired-mode-hook'."
     "Go backward in the visited Dired buffer history."
     (interactive)
     (+dired-hist--update)
-    (when-let ((_ (cdr-safe +dired-hist-stack))
+    (when-let* ((_ (cdr-safe +dired-hist-stack))
                (elm (pop +dired-hist-stack)))
       (unless (+dired-hist--match +dired-hist-forward-stack)
         (push elm +dired-hist-forward-stack))
@@ -7262,7 +7262,7 @@ library/userland functions"
                         ;; unquoted plists in macros. It assumes that you won't
                         ;; make a function whose name is a keyword.
                         (and +elisp-calculate-lisp-indent-check-for-keyword
-                             (when-let (char-after (char-after (1+ containing-sexp)))
+                             (when-let* ((char-after (char-after (1+ containing-sexp))))
                                (char-equal char-after ?:)))
 
                         ;; Check for quotes or backquotes around.
@@ -7272,7 +7272,7 @@ library/userland functions"
                                (any-quoted-p nil)
                                (point nil))
                           (or
-                           (when-let (char (char-before last))
+                           (when-let* ((char (char-before last)))
                              (or (char-equal char ?')
                                  (char-equal char ?`)))
                            (progn
@@ -7280,7 +7280,7 @@ library/userland functions"
                                (setq point (pop rest)
                                      any-quoted-p
                                      (or
-                                      (when-let (char (char-before point))
+                                      (when-let* ((char (char-before point)))
                                         (or (char-equal char ?') (char-equal char ?`)))
                                       (save-excursion
                                         (goto-char (1+ point))
@@ -9395,9 +9395,9 @@ With prefix also delete the entire tree from Org."
             (tree-end (save-excursion (org-end-of-subtree t t) (point))))
         (org-map-entries
          (lambda ()
-           (when-let ((note-id-str
+           (when-let* ((note-id-str
                        (org-entry-get nil anki-editor-prop-note-id)))
-             (when-let ((note-id (string-to-number note-id-str)))
+             (when-let* ((note-id (string-to-number note-id-str)))
                (when (> note-id 0)
                  (push note-id note-ids)))))
          nil
@@ -10660,7 +10660,7 @@ Add this function to appropriate major mode hooks such as
   :config
 
   (defun +eww-buffer-name ()
-    (when-let ((string (or (plist-get eww-data :title)
+    (when-let* ((string (or (plist-get eww-data :title)
                            (plist-get eww-data :url))))
       (when (not (string-blank-p string))
         (format "%s" (truncate-string-to-width
