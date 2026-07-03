@@ -7752,7 +7752,7 @@ the `pydoc' module list before prompting."
 
 ;; (use-package go-tag)
 
-(use-package templ-ts-mode)
+;; (use-package templ-ts-mode)
 
 ;; TODO https://sr.ht/~p00f/hare-ts-mode/
 ;; (use-package hare-ts-mode)
