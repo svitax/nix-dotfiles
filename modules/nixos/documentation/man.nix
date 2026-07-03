@@ -17,7 +17,7 @@ in
   config = lib.mkIf cfg.enable {
     documentation.man = {
       enable = true;
-      generateCaches = true;
+      cache.enable = true;
     };
     environment.systemPackages = with pkgs; [
       man-pages
