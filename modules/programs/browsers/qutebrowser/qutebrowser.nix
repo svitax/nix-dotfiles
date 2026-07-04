@@ -1,0 +1,33 @@
+{
+  ...
+}:
+{
+  flake.modules.homeManager.qutebrowser =
+    { pkgs, ... }:
+    {
+      home.packages = [ pkgs.qutebrowser ];
+
+      xdg.mimeApps = {
+        enable = true;
+        defaultApplications = {
+          "text/html" = "org.qutebrowser.qutebrowser.desktop";
+          "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
+          "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
+          "x-scheme-handler/about" = "org.qutebrowser.qutebrowser.desktop";
+          "x-scheme-handler/unknown" = "org.qutebrowser.qutebrowser.desktop";
+        };
+      };
+
+      home.file.".config/qutebrowser/config.py".source = ./config.py;
+      home.file.".config/qutebrowser/all-sites.css".source = ./all-sites.css;
+      home.file.".config/qutebrowser/blocked-hosts".source = ./blocked-hosts;
+      home.file.".config/qutebrowser/greasemonkey" = {
+        source = ./greasemonkey;
+        recursive = true;
+      };
+      home.file.".config/qutebrowser/themes" = {
+        source = ./themes;
+        recursive = true;
+      };
+    };
+}

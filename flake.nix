@@ -1,22 +1,29 @@
 {
-  description = "evrmnd configuration";
+  description = "Dendritic Nix Configuration";
 
-  outputs =
-    inputs@{ flake-parts, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      # TODO: hoist flake/ dir into flake-module.nix file
-      imports = [ ./flake ];
-    };
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
-    flake-parts.url = "github:hercules-ci/flake-parts";
-    home-manager.url = "github:nix-community/home-manager";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nh.url = "github:viperML/nh";
 
-    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+
+    home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    nh.inputs.nixpkgs.follows = "nixpkgs";
+
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
+    import-tree.url = "github:vic/import-tree";
+
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
+
+    kanata-darwin.url = "github:not-in-stock/kanata-darwin";
+    kanata-darwin.inputs.nixpkgs.follows = "nixpkgs";
+
+    amzn-community.url = "git+ssh://git.amazon.com:2222/pkg/AmznNix-Community";
+    amzn-community.inputs.nixpkgs.follows = "nixpkgs";
+    amzn-community.inputs.home-manager.follows = "home-manager";
   };
 }

@@ -1,4 +1,4 @@
-.PHONY: home home-build home-switch os os-build os-switch
+.PHONY: home home-build home-switch os os-build os-switch darwin darwin-build darwin-switch
 
 home: home-build
 
@@ -15,6 +15,14 @@ os-build:
 
 os-switch:
 	nh os switch --no-nom .
+
+darwin: darwin-build
+
+darwin-build:
+	darwin-rebuild build --flake .
+
+darwin-switch:
+	darwin-rebuild switch --flake .
 
 update:
 	nix flake update
